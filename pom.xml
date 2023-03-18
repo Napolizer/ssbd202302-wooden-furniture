@@ -10,7 +10,10 @@
   <name>ssbd02</name>
 
   <developers>
-
+    <developer>
+      <name>Kacper Bednarski</name>
+      <id>236502</id>
+    </developer>
   </developers>
 
   <properties>
