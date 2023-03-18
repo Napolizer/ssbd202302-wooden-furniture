@@ -10,7 +10,10 @@
   <name>ssbd02</name>
 
   <developers>
-
+    <developer>
+      <name>Bartłomiej Dygasiński</name>
+      <id>229872</id>
+    </developer>
   </developers>
 
   <properties>
