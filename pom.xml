@@ -10,7 +10,10 @@
   <name>ssbd02</name>
 
   <developers>
-
+    <developer>
+      <name>Piotr Gągorowski</name>
+      <id>236533</id>
+    </developer>
   </developers>
 
   <properties>
