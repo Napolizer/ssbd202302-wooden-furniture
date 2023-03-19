@@ -10,7 +10,10 @@
   <name>ssbd02</name>
 
   <developers>
-
+    <developer>
+      <name>Jakub Marszał</name>
+      <id>229954</id>
+    </developer>
   </developers>
 
   <properties>
