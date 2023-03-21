@@ -43,6 +43,48 @@
     <junit.version>5.9.1</junit.version>
   </properties>
 
+  <profiles>
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>com.dkanejs.maven.plugins</groupId>
+                    <artifactId>docker-compose-maven-plugin</artifactId>
+                    <version>4.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>pull</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>pull</goal>
+                            </goals>
+                            <configuration>
+                                <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                                <ignorePullFailures>true</ignorePullFailures>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>up</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>up</goal>
+                            </goals>
+                            <configuration>
+                                <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                                <detachedMode>true</detachedMode>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+  </profiles>
+
   <dependencies>
     <dependency>
       <groupId>jakarta.platform</groupId>
