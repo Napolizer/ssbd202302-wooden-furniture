@@ -1,4 +1,17 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-public class Category {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class Category extends AbstractEntity {
+    private Category parentCategory;
+    private CategoryName categoryName;
 }
