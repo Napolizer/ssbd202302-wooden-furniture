@@ -3,14 +3,34 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-    <persistence-unit name="ssbdPU" transaction-type="JTA">
+    <persistence-unit name="ssbd02adminPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd</jta-data-source>
-<!--        <class>pl.lodz.p.it.ssbd2023.ssbd02.entities.Client</class>-->
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <jta-data-source>java:app/jdbc/ssbd02admin</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.sql-load-script-source" value="initial-data-and-settings.sql"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="ssbd02mokPU" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>java:app/jdbc/ssbd02mok</jta-data-source>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.canonicalmodel.prefix" value="mok"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="ssbd02mozPU" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>java:app/jdbc/ssbd02moz</jta-data-source>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.canonicalmodel.prefix" value="moz"/>
         </properties>
     </persistence-unit>
 </persistence>

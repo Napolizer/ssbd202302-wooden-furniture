@@ -63,7 +63,7 @@
                                 <goal>pull</goal>
                             </goals>
                             <configuration>
-                                <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                                <composeFile>${project.basedir}/Docker/docker-compose.yml</composeFile>
                                 <ignorePullFailures>true</ignorePullFailures>
                             </configuration>
                         </execution>

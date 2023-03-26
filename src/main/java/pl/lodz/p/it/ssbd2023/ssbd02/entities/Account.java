@@ -2,33 +2,51 @@ package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Data
 @AllArgsConstructor
-@Builder
-public class Account {
+@SuperBuilder
+@Entity
+public class Account extends AbstractEntity {
     @Column(unique = true, updatable = false, nullable = false)
     private String login;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String email;
+
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
+
     @Column(name = "last_failed_login")
     private LocalDateTime lastFailedLogin;
+
     @Column(name = "last_login_ip_address")
     private String lastLoginIpAddress;
+
     private String locale;
+
     @Column(name = "failed_login_counter")
     private Integer failedLoginCounter;
+
     @Column(name = "blockade_end")
     private LocalDateTime blockadeEnd;
+
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "account_state")
+    @Column(name = "account_state", nullable = false)
     private AccountState accountState;
+
+    @OneToMany(mappedBy = "account")
+    private List<AccessLevel> accessLevels = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
+    private List<Order> orders = new ArrayList<>();
 }

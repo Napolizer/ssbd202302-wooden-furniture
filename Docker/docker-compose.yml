@@ -1,0 +1,12 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ssbd02
+      POSTGRES_USER: ssbd02admin
+      POSTGRES_PASSWORD: dbadmin
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-entrypoint-initdb.d/init-users.sql:/docker-entrypoint-initdb.d/init-users.sql

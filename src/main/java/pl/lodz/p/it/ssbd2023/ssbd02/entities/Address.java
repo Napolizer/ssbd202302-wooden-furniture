@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,22 +8,25 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Embeddable
+@Entity
 @SuperBuilder
-public class Address extends AbstractEntity{
-    @Column(name="COUNTRY")
+public class Address extends AbstractEntity {
+    @Column(nullable = false)
     private String country;
-    @Column(name="CITY")
+
+    @Column(nullable = false)
     private String city;
-    @Column(name="STREET")
+
+    @Column(nullable = false)
     private String street;
-    @Column(name="POSTAL_CODE")
+
+    @Column(name="postal_code", nullable = false)
     private String postalCode;
-    @Column(name="STREET_NUMBER")
+
+    @Column(name="street_number", nullable = false)
     private Integer streetNumber;
 }
