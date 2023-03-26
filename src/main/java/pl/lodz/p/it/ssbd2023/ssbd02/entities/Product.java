@@ -12,23 +12,34 @@ import lombok.*;
 public class Product extends AbstractEntity {
     @Column(nullable = false)
     private Double price;
+
     @Column(nullable = false)
     private Boolean available;
+
     private Byte[] image;
+
     @Column(nullable = false)
     private Double weight;
+
+    @Column(nullable = false)
     private Integer amount;
-    @Column(name = "weight_in_package")
+
+    @Column(name = "weight_in_package", nullable = false)
     private Double weightInPackage;
+
     @Embedded
-    @Column(name = "furniture_dimensions")
+    @Column(name = "furniture_dimensions", nullable = false)
     private Dimensions furnitureDimensions;
+
     @Embedded
-    @Column(name = "package_dimensions")
+    @Column(name = "package_dimensions", nullable = false)
     private Dimensions packageDimensions;
+
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private Color color;
+
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "wood_type")
+    @Column(name = "wood_type", nullable = false)
     private WoodType woodType;
 }
