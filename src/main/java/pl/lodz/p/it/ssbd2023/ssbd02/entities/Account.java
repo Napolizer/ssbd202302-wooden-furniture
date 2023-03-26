@@ -32,6 +32,7 @@ public class Account extends AbstractEntity {
     @Column(name = "last_login_ip_address")
     private String lastLoginIpAddress;
 
+    @Column(nullable = false)
     private String locale;
 
     @Column(name = "failed_login_counter")

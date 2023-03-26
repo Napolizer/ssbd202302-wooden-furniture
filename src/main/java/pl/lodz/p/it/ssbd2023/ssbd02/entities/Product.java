@@ -16,6 +16,7 @@ public class Product extends AbstractEntity {
     @Column(nullable = false)
     private Boolean available;
 
+    @Lob
     private Byte[] image;
 
     @Column(nullable = false)
@@ -28,11 +29,21 @@ public class Product extends AbstractEntity {
     private Double weightInPackage;
 
     @Embedded
-    @Column(name = "furniture_dimensions", nullable = false)
+    @AttributeOverrides({
+            @AttributeOverride(name = "width", column = @Column(name = "furniture_width")),
+            @AttributeOverride(name = "height", column = @Column(name = "furniture_height")),
+            @AttributeOverride(name = "depth", column = @Column(name = "furniture_depth"))
+    })
+    @Column(nullable = false)
     private Dimensions furnitureDimensions;
 
     @Embedded
-    @Column(name = "package_dimensions", nullable = false)
+    @AttributeOverrides({
+            @AttributeOverride(name = "width", column = @Column(name = "package_width")),
+            @AttributeOverride(name = "height", column = @Column(name = "package_height")),
+            @AttributeOverride(name = "depth", column = @Column(name = "package_depth"))
+    })
+    @Column(nullable = false)
     private Dimensions packageDimensions;
 
     @Enumerated(value = EnumType.STRING)

@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Company extends AbstractEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, updatable = false)
     private String nip;
 
     @Column(name = "company_name", nullable = false)
