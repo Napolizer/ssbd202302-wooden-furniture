@@ -16,7 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Category.FIND_ALL_BY_PARENT_CATEGORY,
+                query = "SELECT category FROM Category category WHERE category.parentCategory = :parentCategory")
+})
 public class Category extends AbstractEntity {
+    public static final String FIND_ALL_BY_PARENT_CATEGORY = "Category.findAllByParentCategory";
 
     @OneToOne
     @JoinColumn(name = "parent_category_id")
