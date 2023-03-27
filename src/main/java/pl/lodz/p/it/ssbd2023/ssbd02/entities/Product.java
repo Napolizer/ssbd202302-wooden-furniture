@@ -9,7 +9,22 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
+        query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
+        @NamedQuery(name = Product.FIND_ALL_BY_COLOR,
+        query = "SELECT product FROM Product product WHERE product.color = :color"),
+        @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
+        query = "SELECT product FROM Product product WHERE product.available = true"),
+        @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
+        query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice")
+})
 public class Product extends AbstractEntity {
+    public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
+    public static final String FIND_ALL_BY_COLOR = "Product.findAllByColor";
+    public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
+    public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
+
     @Column(nullable = false)
     private Double price;
 
