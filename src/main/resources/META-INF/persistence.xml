@@ -18,6 +18,7 @@
     <persistence-unit name="ssbd02mokPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd02mok</jta-data-source>
+        <class>pl.lodz.p.it.ssbd2023.ssbd02.entities.Address</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
