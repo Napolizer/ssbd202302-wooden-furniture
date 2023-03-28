@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.impl;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
@@ -10,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.ProductFacadeOperations;
 
 import java.util.List;
 
+@Stateless
 public class ProductFacade extends AbstractFacade<Product> implements ProductFacadeOperations {
 
     @PersistenceContext(unitName = "ssbd02mozPU")
