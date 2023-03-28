@@ -1,10 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.api;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.Facade;
 
 import java.util.List;
 
-public interface AddressFacadeOperations {
+public interface AddressFacadeOperations extends Facade<Address> {
     List<Address> findAllByCountry(String country);
     List<Address> findAllByCity(String city);
     List<Address> findAllByStreet(String street);

@@ -17,8 +17,9 @@ public abstract class AbstractFacade <T extends AbstractEntity> implements Facad
     protected abstract EntityManager getEntityManager();
 
     @Override
-    public void create(T entity) {
+    public T create(T entity) {
         getEntityManager().persist(entity);
+        return entity;
     }
 
     @Override
