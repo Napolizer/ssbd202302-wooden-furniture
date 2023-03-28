@@ -1,9 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +13,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@NamedQueries(@NamedQuery(name = Rate.FIND_ALL_BY_VALUE,
+query = "SELECT rate from Rate rate WHERE rate.value = :value"))
 public class Rate extends AbstractEntity {
+
+    public static final String FIND_ALL_BY_VALUE = "Rate.findAllByValue";
 
     @Column(nullable = false)
     private Integer value;
