@@ -12,7 +12,7 @@ import java.util.List;
 @Stateless
 public class PersonFacade extends AbstractFacade<Person> implements PersonFacadeOperations {
 
-    @PersistenceContext(unitName = "ssbd02mok")
+    @PersistenceContext(unitName = "ssbd02mokPU")
     private EntityManager em;
 
     @Override

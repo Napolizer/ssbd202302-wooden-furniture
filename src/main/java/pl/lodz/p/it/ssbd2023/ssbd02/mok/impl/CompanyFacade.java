@@ -11,7 +11,7 @@ import java.util.List;
 
 @Stateless
 public class CompanyFacade extends AbstractFacade<Company> implements CompanyFacadeOperations {
-    @PersistenceContext(unitName = "ssbd02mok")
+    @PersistenceContext(unitName = "ssbd02mokPU")
     private EntityManager em;
 
     @Override
