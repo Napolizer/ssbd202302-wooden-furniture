@@ -13,11 +13,15 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@NamedQueries(@NamedQuery(name = Rate.FIND_ALL_BY_VALUE,
-query = "SELECT rate from Rate rate WHERE rate.value = :value"))
+@NamedQueries({ @NamedQuery(name = Rate.FIND_ALL_BY_VALUE,
+                        query = "SELECT rate from Rate rate WHERE rate.value = :value"),
+                @NamedQuery(name = Rate.FIND_ALL_BY_PERSON_ID,
+                        query = "SELECT rate from Rate rate WHERE rate.person.id = :personId")}
+)
 public class Rate extends AbstractEntity {
 
     public static final String FIND_ALL_BY_VALUE = "Rate.findAllByValue";
+    public static final String FIND_ALL_BY_PERSON_ID = "Rate.findAllByPerson_Id";
 
     @Column(nullable = false)
     private Integer value;

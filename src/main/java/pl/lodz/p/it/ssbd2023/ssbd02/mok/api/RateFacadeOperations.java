@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RateFacadeOperations {
     List<Rate> findAllByValue(Integer value);
-
+    List<Rate> findAllByPersonId(Long personId);
 }

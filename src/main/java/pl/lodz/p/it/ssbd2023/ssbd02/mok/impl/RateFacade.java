@@ -28,4 +28,11 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
                 .setParameter("value",value)
                 .getResultList();
     }
+
+    @Override
+    public List<Rate> findAllByPersonId(Long personId) {
+        return em.createNamedQuery(Rate.FIND_ALL_BY_PERSON_ID, Rate.class)
+                .setParameter("personId",personId)
+                .getResultList();
+    }
 }
