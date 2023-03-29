@@ -82,11 +82,6 @@
       <version>4.0.1</version>
     </dependency>
       <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-core-jakarta</artifactId>
-          <version>5.6.12.Final</version>
-      </dependency>
-      <dependency>
           <groupId>fish.payara.arquillian</groupId>
           <artifactId>arquillian-payara-server-managed</artifactId>
           <version>${arquillian-payara.version}</version>

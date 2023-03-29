@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +33,10 @@ public class PersonFacadeOperationsIT {
     }
     private static Address address;
     private static Person person;
+    private static Person person2;
+    private static Person person3;
+    private static Company company;
+    private static Company company2;
     private static Address buildAddress() {
         return Address
                 .builder()
@@ -118,19 +123,21 @@ public class PersonFacadeOperationsIT {
                 .postalCode("40-200")
                 .streetNumber(30)
                 .build();
+        company = new Company("NIP", "Company");
+        company2 = new Company("NIP2", "Company2");
 
-        Person person2 = Person.builder()
+        person2 = Person.builder()
                 .firstName("John")
                 .lastName("Smith")
                 .address(address)
-                .company(new Company("NIP", "Company"))
+                .company(company)
                 .build();
 
-        Person person3 = Person.builder()
+        person3 = Person.builder()
                 .firstName("Mark")
                 .lastName("Doe")
                 .address(newAddress)
-                .company(new Company("NIP2", "Company2"))
+                .company(company2)
                 .build();
 
         personFacadeOperations.create(person2);
@@ -171,7 +178,31 @@ public class PersonFacadeOperationsIT {
     @Test
     @Order(9)
     public void findByCompanyNipTest() {
-        personFacadeOperations.findByCompanyNIP("NIP");
+        Optional<Person> personWithNip = personFacadeOperations.findByCompanyNIP("NIP");
+        assertEquals(person2, personWithNip.orElse(null));
+    }
+
+    @Test
+    @Order(10)
+    public void findByAccountLoginTest() {
+//        personFacadeOperations.findByAccountLogin()
+    }
+
+    @Test
+    @Order(11)
+    public void findByAddressId() {
+        List<Person> peopleWithAddress = personFacadeOperations.findAllByAddressId(address.getId());
+        assertEquals(2, peopleWithAddress.size());
+        assertEquals(address, peopleWithAddress.get(0).getAddress());
+        assertEquals(address, peopleWithAddress.get(1).getAddress());
+
+    }
+
+    @Test
+    @Order(12)
+    public void findByCompanyId() {
+        Optional<Person> personWithCompany = personFacadeOperations.findByCompanyId(company.getId());
+        assertEquals(person2, personWithCompany.orElse(null));
     }
 
 }

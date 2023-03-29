@@ -13,6 +13,6 @@ public interface PersonFacadeOperations extends Facade<Person> {
     Optional<Person> findByAccountLogin(String accountLogin);
     List<Person> findAllByAddressId(Long addressId);
     Optional<Person> findByAccountId(Long accountId);
-    List<Person> findAllByCompanyId(Long companyId);
+    Optional<Person> findByCompanyId(Long companyId);
 
 }

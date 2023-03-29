@@ -24,7 +24,7 @@ import lombok.experimental.SuperBuilder;
                 query = "SELECT person FROM Person person WHERE person.address.id = :addressId"),
         @NamedQuery(name = Person.FIND_BY_ACCOUNT_ID,
                 query = "SELECT person FROM Person person WHERE person.account.id = :accountId"),
-        @NamedQuery(name = Person.FIND_ALL_BY_COMPANY_ID,
+        @NamedQuery(name = Person.FIND_BY_COMPANY_ID,
                 query = "SELECT person FROM Person person WHERE person.company.id = :companyId")
 })
 
@@ -35,7 +35,7 @@ public class Person extends AbstractEntity {
     public static final String FIND_BY_ACCOUNT_LOGIN = "Person.findByAccountLogin";
     public static final String FIND_ALL_BY_ADDRESS_ID = "Person.findAllByAddressId";
     public static final String FIND_BY_ACCOUNT_ID = "Person.findByAccountId";
-    public static final String FIND_ALL_BY_COMPANY_ID = "Person.findAllByCompanyId";
+    public static final String FIND_BY_COMPANY_ID = "Person.findByCompanyId";
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -43,15 +43,15 @@ public class Person extends AbstractEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "adress_id", nullable = false)
     private Address address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "account_id")
     private Account account;
 

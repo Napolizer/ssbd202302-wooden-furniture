@@ -8,7 +8,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.api.PersonFacadeOperations;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -79,25 +78,28 @@ public class PersonFacade extends AbstractFacade<Person> implements PersonFacade
         } catch (PersistenceException e) {
             return Optional.empty();
         }
-
     }
 
     @Override
-    public List<Person> findAllByCompanyId(Long companyId) {
-        return em.createNamedQuery(Person.FIND_ALL_BY_COMPANY_ID, Person.class)
-                .setParameter("companyId", companyId)
-                .getResultList();
+    public Optional<Person> findByCompanyId(Long companyId) {
+        try {
+            return Optional.of(em.createNamedQuery(Person.FIND_BY_COMPANY_ID, Person.class)
+                    .setParameter("companyId", companyId)
+                    .getSingleResult());
+        } catch (PersistenceException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Person create(Person entity) {
-        if (entity.getAddress().getId() == null ||
-                em.find(Address.class, entity.getAddress().getId()) == null) {
-            em.persist(entity.getAddress());
-        }
-
-        if (entity.getCompany() != null) em.persist(entity.getCompany());
-        if (entity.getAccount() != null) em.persist(entity.getAccount());
+//        if (entity.getAddress().getId() == null ||
+//                em.find(Address.class, entity.getAddress().getId()) == null) {
+//            em.persist(entity.getAddress());
+//        }
+//  works without cascades
+//        if (entity.getCompany() != null) em.persist(entity.getCompany());
+//        if (entity.getAccount() != null) em.persist(entity.getAccount());
         return super.create(entity);
     }
 }
