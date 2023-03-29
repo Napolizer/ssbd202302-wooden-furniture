@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok;
+package pl.lodz.p.it.ssbd2023.ssbd02.utils;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AbstractEntity;
 
