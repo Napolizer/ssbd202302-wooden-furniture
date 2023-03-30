@@ -4,7 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.api.CategoryFacadeOperations;
 
 import java.util.List;

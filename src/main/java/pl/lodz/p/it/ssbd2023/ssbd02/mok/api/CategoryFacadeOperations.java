@@ -1,7 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.api;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.Facade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.Facade;
 
 import java.util.List;
 
