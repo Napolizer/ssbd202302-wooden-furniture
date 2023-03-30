@@ -7,10 +7,10 @@ import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +37,8 @@ public class PersonFacadeOperationsIT {
     private static Person person3;
     private static Company company;
     private static Company company2;
+    private static Account account1;
+    private static Account account2;
     private static Address buildAddress() {
         return Address
                 .builder()
@@ -142,6 +144,22 @@ public class PersonFacadeOperationsIT {
                 .streetNumber(35)
                 .build();
 
+        account1 = Account.builder()
+                .login("login")
+                .password("password")
+                .email("email")
+                .locale("pl")
+                .accountState(AccountState.ACTIVE)
+                .build();
+
+        account2 = Account.builder()
+                .login("login2")
+                .password("password2")
+                .email("email2")
+                .locale("pl")
+                .accountState(AccountState.ACTIVE)
+                .build();
+
         company = new Company("NIP", "Company");
         company2 = new Company("NIP2", "Company2");
 
@@ -150,6 +168,7 @@ public class PersonFacadeOperationsIT {
                 .lastName("Smith")
                 .address(newAddress)
                 .company(company)
+                .account(account1)
                 .build();
 
         person3 = Person.builder()
@@ -157,6 +176,7 @@ public class PersonFacadeOperationsIT {
                 .lastName("Doe")
                 .address(newAddress2)
                 .company(company2)
+                .account(account2)
                 .build();
 
         personFacadeOperations.create(person2);
@@ -221,6 +241,20 @@ public class PersonFacadeOperationsIT {
     public void findByCompanyId() {
         Optional<Person> personWithCompany = personFacadeOperations.findByCompanyId(company.getId());
         assertEquals(person2, personWithCompany.orElse(null));
+    }
+
+    @Test
+    @Order(13)
+    public void findByAccountId() {
+        Optional<Person> personWithAccount1 = personFacadeOperations.findByAccountId(account1.getId());
+        assertEquals(person2, personWithAccount1.orElse(null));
+    }
+
+    @Test
+    @Order(14)
+    public void findByAccountLogin() {
+        Optional<Person> personWithAccount1Login = personFacadeOperations.findByAccountLogin(account1.getLogin());
+        assertEquals(person2, personWithAccount1Login.orElse(null));
     }
 
 }

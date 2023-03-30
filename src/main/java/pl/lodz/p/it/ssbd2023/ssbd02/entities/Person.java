@@ -52,7 +52,7 @@ public class Person extends AbstractEntity {
     private Company company;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", unique = true)
     private Account account;
 
 }
