@@ -90,16 +90,4 @@ public class PersonFacade extends AbstractFacade<Person> implements PersonFacade
             return Optional.empty();
         }
     }
-
-    @Override
-    public Person create(Person entity) {
-//        if (entity.getAddress().getId() == null ||
-//                em.find(Address.class, entity.getAddress().getId()) == null) {
-//            em.persist(entity.getAddress());
-//        }
-//  works without cascades
-//        if (entity.getCompany() != null) em.persist(entity.getCompany());
-//        if (entity.getAccount() != null) em.persist(entity.getAccount());
-        return super.create(entity);
-    }
 }

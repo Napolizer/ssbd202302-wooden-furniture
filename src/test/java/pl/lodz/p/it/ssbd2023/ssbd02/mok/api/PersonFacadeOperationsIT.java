@@ -83,7 +83,6 @@ public class PersonFacadeOperationsIT {
     @Test
     @Order(4)
     public void tryAddPersonWithoutRequiredFieldsShouldThrowsException() {
-//        address = buildAddress();
         Person wrongPersonNoAddress = Person.builder()
                 .firstName("John")
                 .lastName("Doe")
@@ -108,13 +107,25 @@ public class PersonFacadeOperationsIT {
 
     @Test
     @Order(5)
+    public void tryAddClientWithSameAddressShouldThrowException() {
+        Person wrongPersonWithUsedAddress = Person.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .address(address)
+                .build();
+
+        assertThrows(EJBException.class, () -> personFacadeOperations.create(wrongPersonWithUsedAddress));
+    }
+
+    @Test
+    @Order(6)
     public void findByIdTest() {
         assertDoesNotThrow(() -> personFacadeOperations.find(person.getId()).orElseThrow());
         assertEquals(person, personFacadeOperations.find(person.getId()).orElse(null));
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void init2() {
         Address newAddress = Address.builder()
                 .country("England")
@@ -123,20 +134,28 @@ public class PersonFacadeOperationsIT {
                 .postalCode("40-200")
                 .streetNumber(30)
                 .build();
+        Address newAddress2 = Address.builder()
+                .country("England")
+                .city("London")
+                .street("Fakestreet2")
+                .postalCode("40-200")
+                .streetNumber(35)
+                .build();
+
         company = new Company("NIP", "Company");
         company2 = new Company("NIP2", "Company2");
 
         person2 = Person.builder()
                 .firstName("John")
                 .lastName("Smith")
-                .address(address)
+                .address(newAddress)
                 .company(company)
                 .build();
 
         person3 = Person.builder()
                 .firstName("Mark")
                 .lastName("Doe")
-                .address(newAddress)
+                .address(newAddress2)
                 .company(company2)
                 .build();
 
@@ -192,9 +211,8 @@ public class PersonFacadeOperationsIT {
     @Order(11)
     public void findByAddressId() {
         List<Person> peopleWithAddress = personFacadeOperations.findAllByAddressId(address.getId());
-        assertEquals(2, peopleWithAddress.size());
+        assertEquals(1, peopleWithAddress.size());
         assertEquals(address, peopleWithAddress.get(0).getAddress());
-        assertEquals(address, peopleWithAddress.get(1).getAddress());
 
     }
 
