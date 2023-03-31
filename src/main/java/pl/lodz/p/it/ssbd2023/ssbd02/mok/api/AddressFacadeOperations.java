@@ -10,5 +10,5 @@ public interface AddressFacadeOperations extends Facade<Address> {
     List<Address> findAllByCity(String city);
     List<Address> findAllByStreet(String street);
     List<Address> findAllByPostalCode(String postalCode);
-    List<Address> findAllByStreetNumber(String streetNumber);
+    List<Address> findAllByStreetNumber(Integer streetNumber);
 }

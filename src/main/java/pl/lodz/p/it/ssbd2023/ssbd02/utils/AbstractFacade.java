@@ -45,4 +45,20 @@ public abstract class AbstractFacade <T extends AbstractEntity> implements Facad
         return getEntityManager().createQuery("SELECT entity FROM " + tableName + " entity", entityClass)
                 .getResultList();
     }
+
+    @Override
+    public List<T> findAllPresent() {
+        String tableName = entityClass.getName();
+
+        return getEntityManager().createQuery("SELECT entity FROM " + tableName + " entity WHERE entity.archive = false", entityClass)
+                .getResultList();
+    }
+
+    @Override
+    public List<T> findAllArchived() {
+        String tableName = entityClass.getName();
+
+        return getEntityManager().createQuery("SELECT entity FROM " + tableName + " entity WHERE entity.archive = true", entityClass)
+                .getResultList();
+    }
 }

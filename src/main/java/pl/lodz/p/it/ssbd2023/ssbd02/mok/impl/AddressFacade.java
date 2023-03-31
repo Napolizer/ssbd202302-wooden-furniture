@@ -52,7 +52,7 @@ public class AddressFacade extends AbstractFacade<Address> implements AddressFac
     }
 
     @Override
-    public List<Address> findAllByStreetNumber(String streetNumber) {
+    public List<Address> findAllByStreetNumber(Integer streetNumber) {
         return em.createNamedQuery(Address.FIND_ALL_BY_STREET_NUMBER, Address.class)
                 .setParameter("streetNumber", streetNumber)
                 .getResultList();

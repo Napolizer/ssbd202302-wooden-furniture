@@ -1,7 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.api;
 
+import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.*;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -39,6 +43,11 @@ public class PersonFacadeOperationsIT {
     private static Company company2;
     private static Account account1;
     private static Account account2;
+
+    @PersistenceContext(unitName = "ssbd02adminPU")
+    private EntityManager em;
+    @Resource
+    private UserTransaction utx;
     private static Address buildAddress() {
         return Address
                 .builder()
@@ -224,7 +233,8 @@ public class PersonFacadeOperationsIT {
     @Test
     @Order(10)
     public void findByAccountLoginTest() {
-//        personFacadeOperations.findByAccountLogin()
+        Optional<Person> personWithLogin = personFacadeOperations.findByAccountLogin("login");
+        assertEquals(person2, personWithLogin.orElse(null));
     }
 
     @Test
@@ -255,6 +265,14 @@ public class PersonFacadeOperationsIT {
     public void findByAccountLogin() {
         Optional<Person> personWithAccount1Login = personFacadeOperations.findByAccountLogin(account1.getLogin());
         assertEquals(person2, personWithAccount1Login.orElse(null));
+    }
+
+    @Test
+    @Order(15)
+    public void clean() throws Exception {
+        utx.begin();
+        em.createQuery("DELETE FROM Person");
+        utx.commit();
     }
 
 }

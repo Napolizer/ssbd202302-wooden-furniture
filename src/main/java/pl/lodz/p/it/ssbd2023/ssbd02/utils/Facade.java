@@ -11,4 +11,6 @@ public interface Facade <T extends AbstractEntity> {
     T update(T entity);
     Optional<T> find(Long id);
     List<T> findAll();
+    List<T> findAllPresent();
+    List<T> findAllArchived();
 }
