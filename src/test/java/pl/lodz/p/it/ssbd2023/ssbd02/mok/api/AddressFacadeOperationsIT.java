@@ -50,7 +50,6 @@ public class AddressFacadeOperationsIT {
     public void init() {
         address = Address
                 .builder()
-                .archive(false)
                 .country("Polska")
                 .city("Lodz")
                 .street("Koszykowa")
@@ -59,7 +58,6 @@ public class AddressFacadeOperationsIT {
                 .build();
         secondAddress = Address
                 .builder()
-                .archive(false)
                 .country("Poland")
                 .city("Warszawa")
                 .street("Pilsudskiego")

@@ -20,5 +20,6 @@ public abstract class AbstractEntity {
 
     @Setter
     @Column(columnDefinition = "boolean default false", nullable = false)
+    @Builder.Default
     private Boolean archive = false;
 }
