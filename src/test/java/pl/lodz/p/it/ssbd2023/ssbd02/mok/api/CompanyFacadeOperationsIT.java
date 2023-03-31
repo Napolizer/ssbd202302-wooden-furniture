@@ -157,6 +157,6 @@ public class CompanyFacadeOperationsIT {
     public void shouldDeleteCompany() {
         Company company = companyFacadeOperations.find(persistedCompany.getId()).orElse(null);
         companyFacadeOperations.delete(company);
-        assertEquals(0, companyFacadeOperations.findAll().size());
+        assertEquals(0, companyFacadeOperations.findAllPresent().size());
     }
 }

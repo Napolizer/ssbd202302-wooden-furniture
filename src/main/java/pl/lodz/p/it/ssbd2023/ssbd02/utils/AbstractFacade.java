@@ -23,9 +23,9 @@ public abstract class AbstractFacade <T extends AbstractEntity> implements Facad
     }
 
     @Override
-    public void delete(T entity) {
-        EntityManager entityManager = getEntityManager();
-        entityManager.remove(entityManager.merge(entity));
+    public T delete(T entity) {
+        entity.setArchive(true);
+        return getEntityManager().merge(entity);
     }
 
     @Override
@@ -43,6 +43,22 @@ public abstract class AbstractFacade <T extends AbstractEntity> implements Facad
         String tableName = entityClass.getName();
 
         return getEntityManager().createQuery("SELECT entity FROM " + tableName + " entity", entityClass)
+                .getResultList();
+    }
+
+    @Override
+    public List<T> findAllPresent() {
+        String tableName = entityClass.getName();
+
+        return getEntityManager().createQuery("SELECT entity FROM " + tableName + " entity WHERE entity.archive = false", entityClass)
+                .getResultList();
+    }
+
+    @Override
+    public List<T> findAllArchived() {
+        String tableName = entityClass.getName();
+
+        return getEntityManager().createQuery("SELECT entity FROM " + tableName + " entity WHERE entity.archive = true", entityClass)
                 .getResultList();
     }
 }
