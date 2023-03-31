@@ -8,6 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.api.CompanyFacadeOperations;
 
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class CompanyFacade extends AbstractFacade<Company> implements CompanyFacadeOperations {
@@ -24,10 +25,10 @@ public class CompanyFacade extends AbstractFacade<Company> implements CompanyFac
     }
 
     @Override
-    public Company findByNip(String nip) {
-        return em.createNamedQuery(Company.FIND_BY_NIP, Company.class)
+    public Optional<Company> findByNip(String nip) {
+        return Optional.ofNullable(em.createNamedQuery(Company.FIND_BY_NIP, Company.class)
                 .setParameter("nip", nip)
-                .getSingleResult();
+                .getSingleResult());
     }
 
     @Override
