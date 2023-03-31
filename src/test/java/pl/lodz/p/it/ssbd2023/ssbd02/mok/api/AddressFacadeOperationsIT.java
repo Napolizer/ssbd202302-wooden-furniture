@@ -313,7 +313,8 @@ public class AddressFacadeOperationsIT {
     @Test
     public void properlyDeletesAddress() {
         Address savedAddress = addressFacadeOperations.create(address);
-        addressFacadeOperations.delete(savedAddress);
+        Address deletedAddress = addressFacadeOperations.delete(savedAddress);
+        assertThat(deletedAddress.getArchive(), is(equalTo(true)));
         assertThat(addressFacadeOperations.findAllPresent().size(), is(equalTo(0)));
     }
 
