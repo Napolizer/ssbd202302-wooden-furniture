@@ -27,7 +27,7 @@ public class Company extends AbstractEntity {
     public static final String FIND_BY_NIP = "Company.findByNip";
     public static final String FIND_ALL_BY_COMPANY_NAME = "Company.findAllByCompanyName";
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false, length = 10)
     private String nip;
 
     @Column(name = "company_name", nullable = false)

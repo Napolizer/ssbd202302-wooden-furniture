@@ -15,7 +15,7 @@ CREATE INDEX sales_order_product_product_id ON sales_order_product USING btree (
 
 GRANT SELECT,INSERT,UPDATE ON TABLE account TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE ON TABLE address TO ssbd02mok;
-GRANT SELECT,INSERT,UPDATE ON TABLE company TO ssbd02mok;
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE company TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE ON TABLE person TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE ON TABLE access_level TO ssbd02mok;
 
