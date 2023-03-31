@@ -45,18 +45,18 @@ public class Product extends AbstractEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "width", column = @Column(name = "furniture_width")),
-            @AttributeOverride(name = "height", column = @Column(name = "furniture_height")),
-            @AttributeOverride(name = "depth", column = @Column(name = "furniture_depth"))
+            @AttributeOverride(name = "width", column = @Column(name = "furniture_width", nullable = false)),
+            @AttributeOverride(name = "height", column = @Column(name = "furniture_height", nullable = false)),
+            @AttributeOverride(name = "depth", column = @Column(name = "furniture_depth", nullable = false))
     })
     @Column(nullable = false)
     private Dimensions furnitureDimensions;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "width", column = @Column(name = "package_width")),
-            @AttributeOverride(name = "height", column = @Column(name = "package_height")),
-            @AttributeOverride(name = "depth", column = @Column(name = "package_depth"))
+            @AttributeOverride(name = "width", column = @Column(name = "package_width", nullable = false)),
+            @AttributeOverride(name = "height", column = @Column(name = "package_height", nullable = false)),
+            @AttributeOverride(name = "depth", column = @Column(name = "package_depth", nullable = false))
     })
     @Column(nullable = false)
     private Dimensions packageDimensions;

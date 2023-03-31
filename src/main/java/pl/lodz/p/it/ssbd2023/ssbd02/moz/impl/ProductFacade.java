@@ -23,7 +23,7 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
 
     @Override
     protected EntityManager getEntityManager() {
-        return null;
+        return em;
     }
 
     @Override
