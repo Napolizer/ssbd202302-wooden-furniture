@@ -25,6 +25,12 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
     }
 
     @Override
+    public Rate create(Rate entity) {
+        em.persist(entity.getPerson());
+        return super.create(entity);
+    }
+
+    @Override
     public List<Rate> findAllByValue(Integer value) {
         return em.createNamedQuery(Rate.FIND_ALL_BY_VALUE, Rate.class)
                 .setParameter("value",value)

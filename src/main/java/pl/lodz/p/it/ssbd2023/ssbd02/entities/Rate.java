@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +26,8 @@ public class Rate extends AbstractEntity {
     public static final String FIND_ALL_BY_PERSON_ID = "Rate.findAllByPerson_Id";
 
     @Column(nullable = false)
+    @Min(1)
+    @Max(5)
     private Integer value;
 
     @ManyToOne
