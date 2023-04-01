@@ -26,3 +26,4 @@ GRANT SELECT,INSERT,UPDATE ON TABLE sales_order TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE sales_order_product TO ssbd02moz;
 
 GRANT USAGE, SELECT ON SEQUENCE seq_gen_sequence TO ssbd02mok;
+GRANT USAGE, SELECT ON SEQUENCE seq_gen_sequence TO ssbd02moz;

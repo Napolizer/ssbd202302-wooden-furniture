@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.api;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.Facade;
