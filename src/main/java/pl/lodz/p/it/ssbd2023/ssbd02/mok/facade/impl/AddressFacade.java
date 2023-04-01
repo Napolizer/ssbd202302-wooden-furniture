@@ -1,11 +1,11 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.AbstractFacade;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.api.AddressFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AddressFacadeOperations;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class AddressFacade extends AbstractFacade<Address> implements AddressFac
     }
 
     @Override
-    public List<Address> findAllByStreetNumber(String streetNumber) {
+    public List<Address> findAllByStreetNumber(Integer streetNumber) {
         return em.createNamedQuery(Address.FIND_ALL_BY_STREET_NUMBER, Address.class)
                 .setParameter("streetNumber", streetNumber)
                 .getResultList();

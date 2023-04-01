@@ -1,7 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02;
 
 import org.junit.jupiter.api.Test;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.impl.PersonFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl.PersonFacade;
 
 //public class ExampleTest {
 //}

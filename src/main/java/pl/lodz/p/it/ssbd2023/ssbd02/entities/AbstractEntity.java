@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.Setter;
+import lombok.Builder;
 import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
@@ -20,4 +22,9 @@ public abstract class AbstractEntity {
 
     @Version
     private Long version;
+
+    @Setter
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean archive = false;
 }
