@@ -1,13 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.AbstractFacade;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 import java.util.List;
 import java.util.Optional;
 
