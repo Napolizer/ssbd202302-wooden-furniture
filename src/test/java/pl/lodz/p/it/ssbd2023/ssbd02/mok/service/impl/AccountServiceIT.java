@@ -21,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -142,5 +143,20 @@ public class AccountServiceIT {
     public void failsToGetAccountByIdWhenIdIsMinLong() {
         Optional<Account> accountOptional = accountService.getAccountById(Long.MIN_VALUE);
         assertThat(accountOptional.isPresent(), is(equalTo(false)));
+    }
+
+    @Test
+    public void properlyGetsAllAccounts() {
+        List<Account> accounts = accountService.getAccountList();
+        assertThat(accounts.isEmpty(), is(false));
+        assertThat(accounts.size(), is(equalTo(1)));
+        assertThat(accounts.get(0), is(equalTo(person.getAccount())));
+    }
+
+    @Test
+    public void properlyGetsEmptyAccountList() throws Exception {
+        teardown();
+        List<Account> accounts = accountService.getAccountList();
+        assertThat(accounts.isEmpty(), is(true));
     }
 }
