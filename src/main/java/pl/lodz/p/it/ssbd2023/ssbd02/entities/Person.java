@@ -44,7 +44,7 @@ public class Person extends AbstractEntity {
     private String lastName;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "adress_id", nullable = false, unique = true)
+    @JoinColumn(name = "address_id", nullable = false, unique = true)
     private Address address;
 
     @OneToOne(cascade = CascadeType.PERSIST)
