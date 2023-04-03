@@ -1,9 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,4 +29,8 @@ public class Company extends AbstractEntity {
 
     @Column(name = "company_name", nullable = false)
     private String companyName;
+
+    @OneToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 }
