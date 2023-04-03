@@ -6,6 +6,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
+import java.util.List;
 import java.util.Optional;
 
 @Stateless
@@ -19,5 +20,12 @@ public class AccountService {
 
     public Optional<Account> getAccountById(Long id) {
         return personFacadeOperations.find(id).map(Person::getAccount);
+    }
+
+    public List<Account> getAccountList() {
+        return personFacadeOperations.findAll()
+                .stream()
+                .map(Person::getAccount)
+                .toList();
     }
 }
