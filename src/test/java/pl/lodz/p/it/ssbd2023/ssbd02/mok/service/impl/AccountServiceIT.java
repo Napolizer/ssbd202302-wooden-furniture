@@ -14,10 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.io.File;
@@ -26,6 +23,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(ArquillianExtension.class)
@@ -158,5 +156,32 @@ public class AccountServiceIT {
         teardown();
         List<Account> accounts = accountService.getAccountList();
         assertThat(accounts.isEmpty(), is(true));
+    }
+
+    @Test
+    public void properlyAddsNewAccessLevelToAccount() {
+        AccessLevel newAccessLevel = AccessLevel.builder()
+                        .level(AccessLevelName.CLIENT)
+                        .active(true)
+                        .build();
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        List<AccessLevel> accessLevels = personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels();
+        assertThat(accessLevels.size(), equalTo(1));
+        assertThat(accessLevels.get(0).getLevel(), equalTo(AccessLevelName.CLIENT));
+        assertThat(accessLevels.get(0).getActive(), equalTo(true));
+    }
+
+    @Test
+    public void failsToAddAccessLevelWhenAccessLevelIsAdded() {
+        AccessLevel newAccessLevel = AccessLevel.builder()
+                .level(AccessLevelName.CLIENT)
+                .active(true)
+                .build();
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 }
