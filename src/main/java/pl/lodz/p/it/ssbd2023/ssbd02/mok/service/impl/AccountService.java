@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
@@ -27,5 +28,15 @@ public class AccountService {
                 .stream()
                 .map(Person::getAccount)
                 .toList();
+    }
+
+    public void addNewAccessLevelToAccount(Long id, AccessLevel accessLevel) {
+        Person foundPerson = personFacadeOperations.find(id).orElseThrow();
+        Account foundAccount = foundPerson.getAccount();
+        if (!foundAccount.getAccessLevels().contains(accessLevel)) {
+            foundAccount.getAccessLevels().add(accessLevel);
+            foundPerson.setAccount(foundAccount);
+            personFacadeOperations.update(foundPerson);
+        }
     }
 }
