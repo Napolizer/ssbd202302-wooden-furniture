@@ -18,6 +18,7 @@ public class AccountService {
     @Inject
     private PersonFacadeOperations personFacadeOperations;
 
+
     public Optional<Account> getAccountByLogin(String login) {
         return personFacadeOperations.findByAccountLogin(login).map(Person::getAccount);
     }

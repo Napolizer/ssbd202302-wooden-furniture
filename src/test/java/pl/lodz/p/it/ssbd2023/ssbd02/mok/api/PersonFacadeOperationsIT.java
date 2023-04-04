@@ -170,8 +170,9 @@ public class PersonFacadeOperationsIT {
                 .accountState(AccountState.ACTIVE)
                 .build();
 
-        company = new Company("NIP", "Company");
-        company2 = new Company("NIP2", "Company2");
+        //fixme sth changed
+        company = new Company("NIP", "Company", new Client());
+        company2 = new Company("NIP2", "Company2", new Client());
 
         person2 = Person.builder()
                 .firstName("John")
