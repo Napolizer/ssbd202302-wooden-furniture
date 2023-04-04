@@ -14,6 +14,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
@@ -25,6 +30,9 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountServiceIT {
@@ -201,6 +209,18 @@ public class AccountServiceIT {
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
         accountService.removeAccessLevelFromAccount(person.getId(), accessLevelAdmin);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+    }
+
+    @Test
+    public void properlyEditsAccountInfo() {
+        EditPersonInfoDto editPersonInfoDto = new EditPersonInfoDto("Adam", "John", "Poland","Lodz","Koszykowa","90-200",24);
+        assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
+        assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
+        assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
+        accountService.editAccountInfo(person.getAccount().getLogin(), editPersonInfoDto);
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Adam");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "John");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 24);
     }
 
 
