@@ -39,4 +39,14 @@ public class AccountService {
             personFacadeOperations.update(foundPerson);
         }
     }
+
+    public void removeAccessLevelFromAccount(Long id, AccessLevel accessLevel) {
+        Person foundPerson = personFacadeOperations.find(id).orElseThrow();
+        Account foundAccount = foundPerson.getAccount();
+        if (foundAccount.getAccessLevels().contains(accessLevel)) {
+            foundAccount.getAccessLevels().remove(accessLevel);
+            foundPerson.setAccount(foundAccount);
+            personFacadeOperations.update(foundPerson);
+        }
+    }
 }
