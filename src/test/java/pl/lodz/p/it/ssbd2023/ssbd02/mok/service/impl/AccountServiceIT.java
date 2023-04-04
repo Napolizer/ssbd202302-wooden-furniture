@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.io.File;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(ArquillianExtension.class)
@@ -158,5 +160,17 @@ public class AccountServiceIT {
         teardown();
         List<Account> accounts = accountService.getAccountList();
         assertThat(accounts.isEmpty(), is(true));
+    }
+
+    @Test
+    public void properlyEditsAccountInfo() {
+        EditPersonInfoDto editPersonInfoDto = new EditPersonInfoDto("Adam", "John", "Poland","Lodz","Koszykowa","90-200",24);
+        assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
+        assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
+        assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
+        accountService.editAccountInfo(person.getAccount().getLogin(), editPersonInfoDto);
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Adam");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "John");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 24);
     }
 }
