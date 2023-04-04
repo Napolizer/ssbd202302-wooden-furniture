@@ -4,7 +4,9 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.util.List;
@@ -48,5 +50,14 @@ public class AccountService {
             foundPerson.setAccount(foundAccount);
             personFacadeOperations.update(foundPerson);
         }
+    }
+
+    public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
+        Person person = personFacadeOperations.findByAccountLogin(login).orElse(null);
+        person.setFirstName(editPersonInfoDto.getFirstName());
+        person.setLastName(editPersonInfoDto.getLastName());
+        Address address = new Address(editPersonInfoDto.getCountry(),editPersonInfoDto.getCity(),editPersonInfoDto.getStreet(),editPersonInfoDto.getPostalCode(), editPersonInfoDto.getStreetNumber());
+        person.setAddress(address);
+        personFacadeOperations.update(person);
     }
 }
