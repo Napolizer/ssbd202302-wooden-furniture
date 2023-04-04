@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.CompanyFacadeOperations;
 
@@ -52,6 +53,7 @@ public class CompanyFacadeOperationsIT {
         Company company = Company.builder()
                 .nip(persistedCompanyNip)
                 .companyName(persistedCompanyName)
+                .client(new Client())
                 .build();
 
         assertEquals(0, companyFacadeOperations.findAll().size());
@@ -68,9 +70,11 @@ public class CompanyFacadeOperationsIT {
     public void tryAddCompanyWithoutRequiredFieldsShouldThrowException() {
         Company invalidCompany1 = Company.builder()
                 .nip("1111111111")
+                .client(new Client())
                 .build();
         Company invalidCompany2 = Company.builder()
                 .companyName("New Company")
+                .client(new Client())
                 .build();
 
         assertThrows(EJBException.class, () -> companyFacadeOperations.create(invalidCompany1));
@@ -86,6 +90,7 @@ public class CompanyFacadeOperationsIT {
         Company companyWithNipLengthGreaterThan10 = Company.builder()
                 .nip("11111111111111")
                 .companyName("New Company 11111111111111")
+                .client(new Client())
                 .build();
 
         assertThrows(EJBException.class, () -> companyFacadeOperations.create(companyWithNipLengthGreaterThan10));
@@ -99,6 +104,7 @@ public class CompanyFacadeOperationsIT {
         Company companyWithSameNip = Company.builder()
                 .nip("0456290335")
                 .companyName("New Company")
+                .client(new Client())
                 .build();
 
         assertThrows(EJBException.class, () -> companyFacadeOperations.create(companyWithSameNip));
