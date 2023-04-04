@@ -9,16 +9,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Entity(name = "access_level")
-public class AccessLevel extends AbstractEntity {
-
-    @Enumerated(EnumType.STRING)
-    private AccessLevelName level;
-
-    private Boolean active;
-
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class AccessLevel extends AbstractEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "account_id")
     private Account account;
-
-
 }
