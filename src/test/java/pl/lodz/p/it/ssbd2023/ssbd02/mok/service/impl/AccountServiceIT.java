@@ -20,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.io.File;
@@ -28,6 +29,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -219,5 +221,25 @@ public class AccountServiceIT {
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Adam");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "John");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 24);
+    }
+
+
+    @Test
+    public void properlyEditsAccountInfoAsAdmin() {
+        EditPersonInfoAsAdminDto editPersonInfoAsAdminDto = new EditPersonInfoAsAdminDto("Jack","Smith","Poland","Warsaw","Mickiewicza","92-100",15,"test1@gmail.com");
+        assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
+        assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
+        assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
+        assertEquals(person.getAccount().getEmail(),personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail());
+        accountService.editAccountInfoAsAdmin(person.getAccount().getLogin(),editPersonInfoAsAdminDto);
+
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Jack");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "Smith");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getCountry(), "Poland");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getCity(), "Warsaw");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreet(), "Mickiewicza");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getPostalCode(), "92-100");
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 15);
+        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail(), "test1@gmail.com");
     }
 }

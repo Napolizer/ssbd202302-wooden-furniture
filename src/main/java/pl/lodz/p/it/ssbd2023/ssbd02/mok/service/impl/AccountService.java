@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.util.List;
@@ -58,6 +59,16 @@ public class AccountService {
         person.setLastName(editPersonInfoDto.getLastName());
         Address address = new Address(editPersonInfoDto.getCountry(),editPersonInfoDto.getCity(),editPersonInfoDto.getStreet(),editPersonInfoDto.getPostalCode(), editPersonInfoDto.getStreetNumber());
         person.setAddress(address);
+        personFacadeOperations.update(person);
+    }
+
+    public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+        Person person = personFacadeOperations.findByAccountLogin(login).orElse(null);
+        person.setFirstName(editPersonInfoAsAdminDto.getFirstName());
+        person.setLastName(editPersonInfoAsAdminDto.getLastName());
+        Address address = new Address(editPersonInfoAsAdminDto.getCountry(),editPersonInfoAsAdminDto.getCity(),editPersonInfoAsAdminDto.getStreet(),editPersonInfoAsAdminDto.getPostalCode(), editPersonInfoAsAdminDto.getStreetNumber());
+        person.setAddress(address);
+        person.getAccount().setEmail(editPersonInfoAsAdminDto.getEmail());
         personFacadeOperations.update(person);
     }
 }
