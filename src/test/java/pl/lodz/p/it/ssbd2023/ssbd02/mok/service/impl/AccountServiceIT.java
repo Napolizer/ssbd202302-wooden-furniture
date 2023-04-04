@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.io.File;
@@ -29,6 +30,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountServiceIT {
@@ -160,6 +162,51 @@ public class AccountServiceIT {
         teardown();
         List<Account> accounts = accountService.getAccountList();
         assertThat(accounts.isEmpty(), is(true));
+    }
+
+    @Test
+    public void properlyAddsNewAccessLevelToAccount() {
+        AccessLevel newAccessLevel = new Client();
+
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        List<AccessLevel> accessLevels = personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels();
+        assertThat(accessLevels.size(), equalTo(1));
+        assertTrue(accessLevels.get(0) instanceof Client);
+    }
+
+    @Test
+    public void failsToAddAccessLevelWhenAccessLevelIsAdded() {
+        AccessLevel newAccessLevel = new Client();
+
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+    }
+
+    @Test
+    public void properlyRemovesAccessLevelFromAccount() {
+        AccessLevel newAccessLevel = new Client();
+
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+        accountService.removeAccessLevelFromAccount(person.getId(), newAccessLevel);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+    }
+
+    @Test
+    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() {
+        AccessLevel accessLevelClient = new Client();
+        AccessLevel accessLevelAdmin = new Administrator();
+
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        accountService.addNewAccessLevelToAccount(person.getId(), accessLevelClient);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+        accountService.removeAccessLevelFromAccount(person.getId(), accessLevelAdmin);
+        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 
     @Test
