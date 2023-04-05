@@ -6,7 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.ProductFacadeOperations;
 
 import java.util.List;
