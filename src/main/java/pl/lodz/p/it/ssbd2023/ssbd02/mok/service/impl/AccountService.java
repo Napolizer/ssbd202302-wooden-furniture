@@ -6,6 +6,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
@@ -72,4 +73,15 @@ public class AccountService {
         person.getAccount().setEmail(editPersonInfoAsAdminDto.getEmail());
         personFacadeOperations.update(person);
     }
+
+    public void registerAccount(Person person) {
+        //TODO password hash
+        person.getAccount().setAccountState(AccountState.NOT_VERIFIED);
+        person.getAccount().setFailedLoginCounter(0);
+        person.getAccount().setArchive(false);
+
+        personFacadeOperations.create(person);
+        //TODO send confirmation mail
+    }
+
 }
