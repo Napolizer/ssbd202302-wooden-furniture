@@ -172,7 +172,7 @@ public class AccountServiceIT {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
         List<AccessLevel> accessLevels = personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels();
         assertThat(accessLevels.size(), equalTo(1));
         assertTrue(accessLevels.get(0) instanceof Client);
@@ -183,9 +183,9 @@ public class AccountServiceIT {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 
@@ -194,9 +194,9 @@ public class AccountServiceIT {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addNewAccessLevelToAccount(person.getId(), newAccessLevel);
+        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.removeAccessLevelFromAccount(person.getId(), newAccessLevel);
+        accountService.removeAccessLevelFromAccount(person.getAccount().getId(), newAccessLevel);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
     }
 
@@ -206,9 +206,9 @@ public class AccountServiceIT {
         AccessLevel accessLevelAdmin = new Administrator();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addNewAccessLevelToAccount(person.getId(), accessLevelClient);
+        accountService.addAccessLevelToAccount(person.getAccount().getId(), accessLevelClient);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.removeAccessLevelFromAccount(person.getId(), accessLevelAdmin);
+        accountService.removeAccessLevelFromAccount(person.getAccount().getId(), accessLevelAdmin);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 

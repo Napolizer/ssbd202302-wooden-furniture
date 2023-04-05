@@ -35,8 +35,8 @@ public class AccountService {
                 .toList();
     }
 
-    public void addNewAccessLevelToAccount(Long id, AccessLevel accessLevel) {
-        Person foundPerson = personFacadeOperations.find(id).orElseThrow();
+    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
+        Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
         if (!foundAccount.getAccessLevels().contains(accessLevel)) {
             foundAccount.getAccessLevels().add(accessLevel);
@@ -45,8 +45,8 @@ public class AccountService {
         }
     }
 
-    public void removeAccessLevelFromAccount(Long id, AccessLevel accessLevel) {
-        Person foundPerson = personFacadeOperations.find(id).orElseThrow();
+    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
+        Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
         if (foundAccount.getAccessLevels().contains(accessLevel)) {
             foundAccount.getAccessLevels().remove(accessLevel);
