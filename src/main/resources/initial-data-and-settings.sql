@@ -1,6 +1,6 @@
 CREATE INDEX category_parent_category_id ON category USING btree (parent_category_id);
 CREATE INDEX access_level_account_id ON access_level USING btree (account_id);
-CREATE INDEX person_address_id ON person USING btree (adress_id);
+CREATE INDEX person_address_id ON person USING btree (address_id);
 CREATE INDEX person_company_id ON person USING btree (company_id);
 CREATE INDEX person_account_id ON person USING btree (account_id);
 CREATE INDEX product_product_group_id ON product USING btree (product_group_id);
