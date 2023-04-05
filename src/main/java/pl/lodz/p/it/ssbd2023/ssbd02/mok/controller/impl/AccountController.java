@@ -1,10 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.controller.impl;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 @Path("/account")
@@ -34,4 +37,13 @@ public class AccountController {
         accountService.addAccessLevelToAccount(accountId, newAccessLevel);
         return Response.ok(newAccessLevel).build();
     }
+
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
+        accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+        return Response.status(Response.Status.CREATED).build();
+    }
+
 }
