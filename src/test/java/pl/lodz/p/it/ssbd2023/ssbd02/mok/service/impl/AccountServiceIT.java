@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import jakarta.annotation.Resource;
+import jakarta.ejb.EJBException;
 import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -241,5 +242,59 @@ public class AccountServiceIT {
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getPostalCode(), "92-100");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 15);
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail(), "test1@gmail.com");
+    }
+
+    @Test
+    public void properlyRegistersAccount() {
+        Person personToRegister =
+                Person.builder()
+                        .firstName("Bob")
+                        .lastName("Joe")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Lodz")
+                                .street("Koszykowa")
+                                .postalCode("90-000")
+                                .streetNumber(15)
+                                .build())
+                        .company(null)
+                        .account(Account.builder()
+                                .login("test123")
+                                .password("test123")
+                                .email("test@gmail.com")
+                                .locale("pl")
+                                .build())
+                        .build();
+        assertDoesNotThrow(() -> accountService.registerAccount(personToRegister));
+        Account account = accountService.getAccountByLogin("test123").orElseThrow();
+        assertEquals(2, accountService.getAccountList().size());
+        assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
+        assertEquals(false, account.getArchive());
+        assertEquals(0, account.getFailedLoginCounter());
+    }
+
+    @Test
+    public void failsToRegisterAccountWithSameLogin() {
+        Person personToRegister =
+                Person.builder()
+                        .firstName("Bob")
+                        .lastName("Joe")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Lodz")
+                                .street("Koszykowa")
+                                .postalCode("90-000")
+                                .streetNumber(15)
+                                .build())
+                        .company(null)
+                        .account(Account.builder()
+                                .login("test")
+                                .password("test123")
+                                .email("test@gmail.com")
+                                .locale("pl")
+                                .build())
+                        .build();
+        assertThrows(EJBException.class, () -> accountService.registerAccount(personToRegister));
+        assertEquals(1, accountService.getAccountList().size());
     }
 }
