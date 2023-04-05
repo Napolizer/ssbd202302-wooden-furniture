@@ -30,7 +30,7 @@ public class Company extends AbstractEntity {
     @Column(name = "company_name", nullable = false)
     private String companyName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 }
