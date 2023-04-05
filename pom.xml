@@ -151,6 +151,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M8</version>
+                <configuration>
+                    <environmentVariables>
+                        <MAIL_MAIL>${mail.mail}</MAIL_MAIL>
+                        <MAIL_PASSWORD>${mail.password}</MAIL_PASSWORD>
+                    </environmentVariables>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -187,6 +193,10 @@
                         <payara.home>${project.build.directory}/payara6</payara.home>
                         <arquillian.launch>payara-managed</arquillian.launch>
                     </systemPropertyVariables>
+                    <environmentVariables>
+                        <MAIL_MAIL>${mail.mail}</MAIL_MAIL>
+                        <MAIL_PASSWORD>${mail.password}</MAIL_PASSWORD>
+                    </environmentVariables>
                     <skipTests>false</skipTests>
                     <includes>
                         <include>**/*IT.java</include>
