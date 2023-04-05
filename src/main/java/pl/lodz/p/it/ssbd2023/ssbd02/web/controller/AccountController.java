@@ -1,7 +1,10 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.controller.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;

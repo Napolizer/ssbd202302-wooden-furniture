@@ -9,10 +9,10 @@ import java.util.Optional;
 public interface PersonFacadeOperations extends Facade<Person> {
     List<Person> findAllByFirstName(String firstName);
     List<Person> findAllByLastName(String lastName);
-    Optional<Person> findByCompanyNIP(String companyNIP);
+//    Optional<Person> findByCompanyNIP(String companyNIP);
     Optional<Person> findByAccountLogin(String accountLogin);
     List<Person> findAllByAddressId(Long addressId);
     Optional<Person> findByAccountId(Long accountId);
-    Optional<Person> findByCompanyId(Long companyId);
+//    Optional<Person> findByCompanyId(Long companyId);
 
 }

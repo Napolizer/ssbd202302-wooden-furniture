@@ -40,8 +40,6 @@ public class PersonFacadeOperationsIT {
     private static Person person;
     private static Person person2;
     private static Person person3;
-    private static Company company;
-    private static Company company2;
     private static Account account1;
     private static Account account2;
 
@@ -170,14 +168,10 @@ public class PersonFacadeOperationsIT {
                 .accountState(AccountState.ACTIVE)
                 .build();
 
-        company = new Company("NIP", "Company", new Client());
-        company2 = new Company("NIP2", "Company2", new Client());
-
         person2 = Person.builder()
                 .firstName("John")
                 .lastName("Smith")
                 .address(newAddress)
-                .company(company)
                 .account(account1)
                 .build();
 
@@ -185,7 +179,6 @@ public class PersonFacadeOperationsIT {
                 .firstName("Mark")
                 .lastName("Doe")
                 .address(newAddress2)
-                .company(company2)
                 .account(account2)
                 .build();
 
@@ -226,20 +219,13 @@ public class PersonFacadeOperationsIT {
 
     @Test
     @Order(9)
-    public void findByCompanyNipTest() {
-        Optional<Person> personWithNip = personFacadeOperations.findByCompanyNIP("NIP");
-        assertEquals(person2, personWithNip.orElse(null));
-    }
-
-    @Test
-    @Order(10)
     public void findByAccountLoginTest() {
         Optional<Person> personWithLogin = personFacadeOperations.findByAccountLogin("login");
         assertEquals(person2, personWithLogin.orElse(null));
     }
 
     @Test
-    @Order(11)
+    @Order(10)
     public void findByAddressId() {
         List<Person> peopleWithAddress = personFacadeOperations.findAllByAddressId(address.getId());
         assertEquals(1, peopleWithAddress.size());
@@ -248,28 +234,21 @@ public class PersonFacadeOperationsIT {
     }
 
     @Test
-    @Order(12)
-    public void findByCompanyId() {
-        Optional<Person> personWithCompany = personFacadeOperations.findByCompanyId(company.getId());
-        assertEquals(person2, personWithCompany.orElse(null));
-    }
-
-    @Test
-    @Order(13)
+    @Order(11)
     public void findByAccountId() {
         Optional<Person> personWithAccount1 = personFacadeOperations.findByAccountId(account1.getId());
         assertEquals(person2, personWithAccount1.orElse(null));
     }
 
     @Test
-    @Order(14)
+    @Order(12)
     public void findByAccountLogin() {
         Optional<Person> personWithAccount1Login = personFacadeOperations.findByAccountLogin(account1.getLogin());
         assertEquals(person2, personWithAccount1Login.orElse(null));
     }
 
     @Test
-    @Order(15)
+    @Order(13)
     public void clean() throws Exception {
         utx.begin();
         em.createQuery("DELETE FROM Person");
