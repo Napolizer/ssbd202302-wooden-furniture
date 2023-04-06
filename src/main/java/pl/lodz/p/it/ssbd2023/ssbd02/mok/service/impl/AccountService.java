@@ -104,4 +104,12 @@ public class AccountService {
         }
     }
 
+    public void changePasswordAsAdmin(String login, String newPassword) {
+        Person person = personFacadeOperations.findByAccountLogin(login).orElseThrow();
+        if (!Objects.equals(person.getAccount().getPassword(), newPassword)) {
+            person.getAccount().setPassword(newPassword);
+            personFacadeOperations.update(person);
+        }
+    }
+
 }

@@ -141,4 +141,23 @@ public class AccountController {
         return Response.ok(changedAccount).build();
     }
 
+    @PUT
+    @Path("/login/{login}/changePasswordAsAdmin")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountByLogin(login).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+        Account account = accountService.getAccountByLogin(login).get();
+        if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
+            json.add("error", "Given old password");
+            return Response.status(400).entity(json.build()).build();
+        }
+        accountService.changePasswordAsAdmin(login, changePasswordDto.getPassword());
+        AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountService.getAccountByLogin(login).get());
+        return Response.ok(changedAccount).build();
+    }
+
 }
