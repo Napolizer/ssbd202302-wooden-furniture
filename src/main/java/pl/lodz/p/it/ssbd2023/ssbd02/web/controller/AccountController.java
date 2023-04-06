@@ -61,8 +61,10 @@ public class AccountController {
     @Path("/id/{accountId}/accessLevel/{accessLevel}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
+        var json = Json.createObjectBuilder();
         if (accountService.getAccountById(accountId).isEmpty()) {
-            return Response.status(404).build();
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
         }
 
         AccessLevel newAccessLevel;
@@ -72,13 +74,43 @@ public class AccountController {
             case "Employee" -> newAccessLevel = new Employee();
             case "SalesRep" -> newAccessLevel = new SalesRep();
             default -> {
-                return Response.status(400).build();
+                json.add("error", "Given access level is invalid");
+                return Response.status(400).entity(json.build()).build();
             }
         }
 
         accountService.addAccessLevelToAccount(accountId, newAccessLevel);
-        return Response.ok(newAccessLevel).build();
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+        return Response.ok(account).build();
     }
+
+    @DELETE
+    @Path("/id/{accountId}/accessLevel/{accessLevel}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeAccessLevelFromAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountById(accountId).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+
+        AccessLevel newAccessLevel;
+        switch (accessLevel) {
+            case "Client" -> newAccessLevel = new Client();
+            case "Administrator" -> newAccessLevel = new Administrator();
+            case "Employee" -> newAccessLevel = new Employee();
+            case "SalesRep" -> newAccessLevel = new SalesRep();
+            default -> {
+                json.add("error", "Given access level is invalid");
+                return Response.status(400).entity(json.build()).build();
+            }
+        }
+
+        accountService.removeAccessLevelFromAccount(accountId, newAccessLevel);
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+        return Response.ok(account).build();
+    }
+
 
     @POST
     @Path("/register")

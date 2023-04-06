@@ -38,20 +38,30 @@ public class AccountService {
     public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
-        if (!foundAccount.getAccessLevels().contains(accessLevel)) {
-            foundAccount.getAccessLevels().add(accessLevel);
-            foundPerson.setAccount(foundAccount);
-            personFacadeOperations.update(foundPerson);
+        List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+        for (AccessLevel item : accessLevels) {
+            if (item.getClass() == accessLevel.getClass()) {
+                return;
+            }
         }
+        accessLevels.add(accessLevel);
+        foundAccount.setAccessLevels(accessLevels);
+        foundPerson.setAccount(foundAccount);
+        personFacadeOperations.update(foundPerson);
     }
 
     public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
-        if (foundAccount.getAccessLevels().contains(accessLevel)) {
-            foundAccount.getAccessLevels().remove(accessLevel);
-            foundPerson.setAccount(foundAccount);
-            personFacadeOperations.update(foundPerson);
+        List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+        for (AccessLevel item : accessLevels) {
+            if (item.getClass() == accessLevel.getClass()) {
+                accessLevels.remove(item);
+                foundAccount.setAccessLevels(accessLevels);
+                foundPerson.setAccount(foundAccount);
+                personFacadeOperations.update(foundPerson);
+                return;
+            }
         }
     }
 
