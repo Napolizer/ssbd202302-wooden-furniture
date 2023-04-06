@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;

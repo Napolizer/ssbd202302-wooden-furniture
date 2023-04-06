@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 import java.io.File;
 import java.util.List;

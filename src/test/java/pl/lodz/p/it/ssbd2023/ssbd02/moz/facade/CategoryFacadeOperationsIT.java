@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.CategoryFacadeOperations;
 
 import java.io.File;
 import java.util.ArrayList;
