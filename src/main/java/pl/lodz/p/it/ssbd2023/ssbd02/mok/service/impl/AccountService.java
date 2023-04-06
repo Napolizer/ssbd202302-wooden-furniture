@@ -48,11 +48,8 @@ public class AccountService {
     public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
-        if (foundAccount.getAccessLevels().contains(accessLevel)) {
-            foundAccount.getAccessLevels().remove(accessLevel);
-            foundPerson.setAccount(foundAccount);
-            personFacadeOperations.update(foundPerson);
-        }
+        foundAccount.getAccessLevels().removeIf(level -> level.getClass().equals(accessLevel.getClass()));
+        personFacadeOperations.update(foundPerson);
     }
 
     public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
