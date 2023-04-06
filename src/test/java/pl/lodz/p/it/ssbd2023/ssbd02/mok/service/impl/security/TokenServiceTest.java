@@ -35,78 +35,121 @@ public class TokenServiceTest {
                                         new Employee(),
                                         new SalesRep()))
                                 .build();
-//
-//        accountNoRoles = Account.builder()
-//                                .login("noroles")
-//                                .password("noroles")
-//                                .email("noroles@gmail.com")
-//                                .locale("pl")
-//                                .accountState(AccountState.ACTIVE)
-//                                .build();
-//        administrator = Account.builder()
-//                                .login("admin")
-//                                .password("admin")
-//                                .email("admin@gmail.com")
-//                                .locale("pl")
-//                                .accountState(AccountState.ACTIVE)
-//                                .accessLevels(List.of(
-//                                        AccessLevel.builder()
-//                                                .level(AccessLevelName.ADMIN)
-//                                                .active(true)
-//                                                .build()
-//                                        )
-//                                )
-//                                .build();
-//
-//        client = Account.builder()
-//                                .login("client")
-//                                .password("client")
-//                                .email("client@gmail.com")
-//                                .locale("pl")
-//                                .accountState(AccountState.ACTIVE)
-//                                .accessLevels(List.of(
-//                                        AccessLevel.builder()
-//                                                .level(AccessLevelName.CLIENT)
-//                                                .active(true)
-//                                                .build()
-//                                        )
-//                                )
-//                                .build();
-//
-//        employee = Account.builder()
-//                                .login("employee")
-//                                .password("employee")
-//                                .email("employee@gmail.com")
-//                                .locale("pl")
-//                                .accountState(AccountState.ACTIVE)
-//                                .accessLevels(List.of(
-//                                        AccessLevel.builder()
-//                                                .level(AccessLevelName.EMPLOYEE)
-//                                                .active(true)
-//                                                .build()
-//                                        )
-//                                )
-//                                .build();
-//
-//        salesRep = Account.builder()
-//                                .login("salesRep")
-//                                .password("salesRep")
-//                                .email("salesRep@gmail.com")
-//                                .locale("pl")
-//                                .accountState(AccountState.ACTIVE)
-//                                .accessLevels(List.of(
-//                                        AccessLevel.builder()
-//                                                .level(AccessLevelName.SALES_REP)
-//                                                .active(true)
-//                                                .build()
-//                                        )
-//                                )
-//                                .build();
+
+        accountNoRoles = Account.builder()
+                                .login("noroles")
+                                .password("noroles")
+                                .email("noroles@gmail.com")
+                                .locale("pl")
+                                .accountState(AccountState.ACTIVE)
+                                .build();
+
+        administrator = Account.builder()
+                                .login("admin")
+                                .password("admin")
+                                .email("admin@gmail.com")
+                                .locale("pl")
+                                .accountState(AccountState.ACTIVE)
+                                .accessLevels(List.of(new Administrator()))
+                                .build();
+
+        client = Account.builder()
+                                .login("client")
+                                .password("client")
+                                .email("client@gmail.com")
+                                .locale("pl")
+                                .accountState(AccountState.ACTIVE)
+                                .accessLevels(List.of(new Client()))
+                                .build();
+
+        employee = Account.builder()
+                                .login("employee")
+                                .password("employee")
+                                .email("employee@gmail.com")
+                                .locale("pl")
+                                .accountState(AccountState.ACTIVE)
+                                .accessLevels(List.of(new Employee()))
+                                .build();
+
+        salesRep = Account.builder()
+                                .login("salesRep")
+                                .password("salesRep")
+                                .email("salesRep@gmail.com")
+                                .locale("pl")
+                                .accountState(AccountState.ACTIVE)
+                                .accessLevels(List.of(new SalesRep()))
+                                .build();
     }
 
     @Test
     public void properlyGeneratesTokenTest() {
         String token = tokenService.generateToken(accountAllRoles);
         assertThat(token, is(notNullValue()));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveAllRolesTest() {
+        String token = tokenService.generateToken(accountAllRoles);
+        TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+        assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
+        assertThat(tokenClaims.getAccessLevels().size(), is(4));
+        assertThat(tokenClaims.getAccessLevels(), hasItems(
+                instanceOf(Administrator.class),
+                instanceOf(Client.class),
+                instanceOf(Employee.class),
+                instanceOf(SalesRep.class)
+        ));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveNoRolesTest() {
+        String token = tokenService.generateToken(accountNoRoles);
+        TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+        assertThat(tokenClaims.getAccessLevels(), is(empty()));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveAdministratorRoleTest() {
+        String token = tokenService.generateToken(administrator);
+        TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+        assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
+        assertThat(tokenClaims.getAccessLevels().size(), is(1));
+        assertThat(tokenClaims.getAccessLevels(), hasItem(instanceOf(Administrator.class)));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveClientRoleTest() {
+        String token = tokenService.generateToken(client);
+        TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+        assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
+        assertThat(tokenClaims.getAccessLevels().size(), is(1));
+        assertThat(tokenClaims.getAccessLevels(), hasItem(instanceOf(Client.class)));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveEmployeeRoleTest() {
+        String token = tokenService.generateToken(employee);
+        TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+        assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
+        assertThat(tokenClaims.getAccessLevels().size(), is(1));
+        assertThat(tokenClaims.getAccessLevels(), hasItem(instanceOf(Employee.class)));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveSalesRepRoleTest() {
+        String token = tokenService.generateToken(salesRep);
+        TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+        assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
+        assertThat(tokenClaims.getAccessLevels().size(), is(1));
+        assertThat(tokenClaims.getAccessLevels(), hasItem(instanceOf(SalesRep.class)));
+    }
+
+    @Test
+    public void shouldProperlyRetrieveLoginTest() {
+        for (Account account : List.of(accountAllRoles, accountNoRoles, administrator, client, employee, salesRep)) {
+            String token = tokenService.generateToken(account);
+            TokenClaims tokenClaims = tokenService.getTokenClaims(token);
+            assertThat(tokenClaims.getLogin(), is(account.getLogin()));
+        }
     }
 }
