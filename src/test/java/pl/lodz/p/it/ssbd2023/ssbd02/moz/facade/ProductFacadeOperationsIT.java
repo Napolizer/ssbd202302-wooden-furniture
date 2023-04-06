@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.ProductFacadeOperations;
 
 import java.io.File;
 

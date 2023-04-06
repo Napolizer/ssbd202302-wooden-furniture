@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 import java.io.File;
 import java.util.List;
@@ -70,7 +71,6 @@ public class AccountServiceIT {
                                 .postalCode("90-000")
                                 .streetNumber(12)
                                 .build())
-                        .company(null)
                         .account(Account.builder()
                                 .login("test")
                                 .password("test")
@@ -257,7 +257,6 @@ public class AccountServiceIT {
                                 .postalCode("90-000")
                                 .streetNumber(15)
                                 .build())
-                        .company(null)
                         .account(Account.builder()
                                 .login("test123")
                                 .password("test123")
@@ -286,7 +285,6 @@ public class AccountServiceIT {
                                 .postalCode("90-000")
                                 .streetNumber(15)
                                 .build())
-                        .company(null)
                         .account(Account.builder()
                                 .login("test")
                                 .password("test123")

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.controller.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import jakarta.inject.Inject;
 import jakarta.json.Json;
@@ -12,13 +12,27 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Path("/account")
 public class AccountController {
     @Inject
     private AccountService accountService;
 
     @GET
-    @Path("/account/{accountId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllAccounts() {
+        List<Account> accounts = accountService.getAccountList();
+        List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
+        for (Account account : accounts) {
+            accountsDto.add(new AccountWithoutSensitiveDataDto(account));
+        }
+        return Response.ok(accountsDto).build();
+    }
+
+    @GET
+    @Path("/id/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
         var json = Json.createObjectBuilder();
@@ -31,7 +45,7 @@ public class AccountController {
     }
 
     @GET
-    @Path("/account/{login}")
+    @Path("/login/{login}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAccountByLogin(@PathParam("login")String login) {
         var json = Json.createObjectBuilder();
