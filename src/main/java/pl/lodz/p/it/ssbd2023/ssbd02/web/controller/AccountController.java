@@ -10,10 +10,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/account")
 public class AccountController {
@@ -118,6 +120,25 @@ public class AccountController {
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
         accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @PUT
+    @Path("/login/{login}/changePassword")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changePassword(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountByLogin(login).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+        Account account = accountService.getAccountByLogin(login).get();
+        if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
+            json.add("error", "Given old password");
+            return Response.status(400).entity(json.build()).build();
+        }
+        accountService.changePassword(login, changePasswordDto.getPassword());
+        AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountService.getAccountByLogin(login).get());
+        return Response.ok(changedAccount).build();
     }
 
 }

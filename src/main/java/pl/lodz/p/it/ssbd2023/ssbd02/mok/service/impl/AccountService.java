@@ -7,11 +7,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Stateless
@@ -92,6 +94,14 @@ public class AccountService {
 
         personFacadeOperations.create(person);
         //TODO send confirmation mail
+    }
+
+    public void changePassword(String login, String newPassword) {
+        Person person = personFacadeOperations.findByAccountLogin(login).orElseThrow();
+        if (!Objects.equals(person.getAccount().getPassword(), newPassword)) {
+            person.getAccount().setPassword(newPassword);
+            personFacadeOperations.update(person);
+        }
     }
 
 }
