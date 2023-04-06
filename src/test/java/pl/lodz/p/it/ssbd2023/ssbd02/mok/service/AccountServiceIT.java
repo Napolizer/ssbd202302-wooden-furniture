@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
@@ -294,5 +295,21 @@ public class AccountServiceIT {
                         .build();
         assertThrows(EJBException.class, () -> accountService.registerAccount(personToRegister));
         assertEquals(1, accountService.getAccountList().size());
+    }
+
+    @Test
+    public void properlyChangesPassword() {
+        String newPassword = "newPassword";
+        assertEquals("test", accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+        assertDoesNotThrow(() -> accountService.changePassword(person.getAccount().getLogin(), newPassword));
+        assertEquals(newPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+    }
+
+    @Test
+    public void failsToChangePasswordWhenGivenOldPassword() {
+        String oldPassword = "test";
+        assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+        accountService.changePassword(person.getAccount().getLogin(), oldPassword);
+        assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
     }
 }

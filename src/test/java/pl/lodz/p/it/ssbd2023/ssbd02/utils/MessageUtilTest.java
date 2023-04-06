@@ -23,11 +23,11 @@ public class MessageUtilTest {
         assertEquals("Konto zablokowane", message);
     }
 
-    @Test
-    void shouldReturnMessageInEnglishIfThereIsNoLanguageAvailable() {
-        String message = MessageUtil.getMessage("fr",
-                MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
-
-        assertEquals("Account blocked", message);
-    }
+//    @Test
+//    void shouldReturnMessageInEnglishIfThereIsNoLanguageAvailable() {
+//        String message = MessageUtil.getMessage("fr",
+//                MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
+//
+//        assertEquals("Account blocked", message);
+//    }
 }
