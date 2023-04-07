@@ -2,16 +2,21 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import jakarta.inject.Inject;
 import jakarta.json.Json;
+import jakarta.security.enterprise.AuthenticationException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +26,8 @@ import java.util.Objects;
 public class AccountController {
     @Inject
     private AccountService accountService;
+    @Inject
+    private AuthenticationService authenticationService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -160,4 +167,19 @@ public class AccountController {
         return Response.ok(changedAccount).build();
     }
 
+    @POST
+    @Path("/login")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response login(@NotNull @Valid UserCredentialsDto userCredentialsDto) {
+        var json = Json.createObjectBuilder();
+        try {
+            String token = authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword());
+            json.add("token", token);
+            return Response.ok(json.build()).build();
+        } catch (AuthenticationException e) {
+            json.add("error", e.getMessage());
+            return Response.status(401).entity(json.build()).build();
+        }
+    }
 }
