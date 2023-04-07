@@ -41,7 +41,7 @@ public class Person extends AbstractEntity {
     @JoinColumn(name = "address_id", nullable = false, unique = true)
     private Address address;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "account_id", unique = true)
     private Account account;
 

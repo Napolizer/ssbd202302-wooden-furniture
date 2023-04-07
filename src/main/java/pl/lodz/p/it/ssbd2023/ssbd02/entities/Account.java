@@ -46,8 +46,10 @@ public class Account extends AbstractEntity {
     private AccountState accountState;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
+    @Builder.Default
     private List<AccessLevel> accessLevels = new ArrayList<>();
 
     @OneToMany(mappedBy = "account")
+    @Builder.Default
     private List<Order> orders = new ArrayList<>();
 }
