@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 
 import jakarta.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -7,6 +7,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.io.File;
 

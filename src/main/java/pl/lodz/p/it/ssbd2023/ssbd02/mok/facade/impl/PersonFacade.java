@@ -39,16 +39,16 @@ public class PersonFacade extends AbstractFacade<Person> implements PersonFacade
                 .getResultList();
     }
 
-    @Override
-    public Optional<Person> findByCompanyNIP(String companyNIP) {
-        try {
-            return Optional.of(em.createNamedQuery(Person.FIND_BY_COMPANY_NIP, Person.class)
-                    .setParameter("companyNip", companyNIP)
-                    .getSingleResult());
-        } catch (PersistenceException e) {
-            return Optional.empty();
-        }
-    }
+//    @Override
+//    public Optional<Person> findByCompanyNIP(String companyNIP) {
+//        try {
+//            return Optional.of(em.createNamedQuery(Person.FIND_BY_COMPANY_NIP, Person.class)
+//                    .setParameter("companyNip", companyNIP)
+//                    .getSingleResult());
+//        } catch (PersistenceException e) {
+//            return Optional.empty();
+//        }
+//    }
 
     @Override
     public Optional<Person> findByAccountLogin(String accountLogin) {
@@ -79,14 +79,14 @@ public class PersonFacade extends AbstractFacade<Person> implements PersonFacade
         }
     }
 
-    @Override
-    public Optional<Person> findByCompanyId(Long companyId) {
-        try {
-            return Optional.of(em.createNamedQuery(Person.FIND_BY_COMPANY_ID, Person.class)
-                    .setParameter("companyId", companyId)
-                    .getSingleResult());
-        } catch (PersistenceException e) {
-            return Optional.empty();
-        }
-    }
+//    @Override
+//    public Optional<Person> findByCompanyId(Long companyId) {
+//        try {
+//            return Optional.of(em.createNamedQuery(Person.FIND_BY_COMPANY_ID, Person.class)
+//                    .setParameter("companyId", companyId)
+//                    .getSingleResult());
+//        } catch (PersistenceException e) {
+//            return Optional.empty();
+//        }
+//    }
 }

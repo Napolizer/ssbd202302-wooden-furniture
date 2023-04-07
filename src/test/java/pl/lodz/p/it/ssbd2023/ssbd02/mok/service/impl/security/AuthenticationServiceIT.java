@@ -62,7 +62,6 @@ public class AuthenticationServiceIT {
                                 .postalCode("90-000")
                                 .streetNumber(12)
                                 .build())
-                        .company(null)
                         .account(Account.builder()
                                 .login("test")
                                 .password("test")

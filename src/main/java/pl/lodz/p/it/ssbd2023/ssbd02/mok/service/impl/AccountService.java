@@ -7,11 +7,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Stateless
@@ -38,18 +40,31 @@ public class AccountService {
     public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
-        if (!foundAccount.getAccessLevels().contains(accessLevel)) {
-            foundAccount.getAccessLevels().add(accessLevel);
-            foundPerson.setAccount(foundAccount);
-            personFacadeOperations.update(foundPerson);
+        List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+        for (AccessLevel item : accessLevels) {
+            if (item.getClass() == accessLevel.getClass()) {
+                return;
+            }
         }
+        accessLevels.add(accessLevel);
+        foundAccount.setAccessLevels(accessLevels);
+        foundPerson.setAccount(foundAccount);
+        personFacadeOperations.update(foundPerson);
     }
 
     public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
-        foundAccount.getAccessLevels().removeIf(level -> level.getClass().equals(accessLevel.getClass()));
-        personFacadeOperations.update(foundPerson);
+        List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+        for (AccessLevel item : accessLevels) {
+            if (item.getClass() == accessLevel.getClass()) {
+                accessLevels.remove(item);
+                foundAccount.setAccessLevels(accessLevels);
+                foundPerson.setAccount(foundAccount);
+                personFacadeOperations.update(foundPerson);
+                return;
+            }
+        }
     }
 
     public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
@@ -79,6 +94,22 @@ public class AccountService {
 
         personFacadeOperations.create(person);
         //TODO send confirmation mail
+    }
+
+    public void changePassword(String login, String newPassword) {
+        Person person = personFacadeOperations.findByAccountLogin(login).orElseThrow();
+        if (!Objects.equals(person.getAccount().getPassword(), newPassword)) {
+            person.getAccount().setPassword(newPassword);
+            personFacadeOperations.update(person);
+        }
+    }
+
+    public void changePasswordAsAdmin(String login, String newPassword) {
+        Person person = personFacadeOperations.findByAccountLogin(login).orElseThrow();
+        if (!Objects.equals(person.getAccount().getPassword(), newPassword)) {
+            person.getAccount().setPassword(newPassword);
+            personFacadeOperations.update(person);
+        }
     }
 
 }
