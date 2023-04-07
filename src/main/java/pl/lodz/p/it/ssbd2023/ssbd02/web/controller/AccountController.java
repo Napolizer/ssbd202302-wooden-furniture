@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import jakarta.inject.Inject;
 import jakarta.json.Json;
+import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -122,7 +123,18 @@ public class AccountController {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
-        accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+        if (accountService.getAccountByLogin(accountRegisterDto.getLogin()).isPresent()) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(Json.createObjectBuilder()
+                            .add("error", "Account with given login already exists").build()).build();
+        }
+        try {
+            accountService.registerAccountAsGuest(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+        } catch (MessagingException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Json.createObjectBuilder()
+                            .add("error", "Problem during sending confirmation mail").build()).build();
+        }
         return Response.status(Response.Status.CREATED).build();
     }
 

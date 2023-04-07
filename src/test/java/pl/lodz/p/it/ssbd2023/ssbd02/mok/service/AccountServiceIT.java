@@ -55,6 +55,7 @@ public class AccountServiceIT {
                 .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
                 .addPackages(true, "org.postgresql")
                 .addPackages(true, "org.hamcrest")
+                .addPackages(true, "at.favre.lib")
                 .addAsResource(new File("src/main/resources/"),"");
     }
 
@@ -245,7 +246,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyRegistersAccount() {
+    public void properlyRegistersAccountAsGuest() {
         Person personToRegister =
                 Person.builder()
                         .firstName("Bob")
@@ -264,10 +265,41 @@ public class AccountServiceIT {
                                 .locale("pl")
                                 .build())
                         .build();
-        assertDoesNotThrow(() -> accountService.registerAccount(personToRegister));
+        assertDoesNotThrow(() -> accountService.registerAccountAsGuest(personToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
         assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
+        assertEquals(false, account.getArchive());
+        assertEquals(0, account.getFailedLoginCounter());
+    }
+
+    @Test
+    public void properlyRegistersAccountAsAdmin() {
+        Person personToRegister =
+                Person.builder()
+                        .firstName("Bob")
+                        .lastName("Joe")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Lodz")
+                                .street("Koszykowa")
+                                .postalCode("90-000")
+                                .streetNumber(15)
+                                .build())
+                        .account(Account.builder()
+                                .login("test123")
+                                .password("test123")
+                                .email("test@gmail.com")
+                                .locale("pl")
+                                .accountState(AccountState.ACTIVE)
+                                .accessLevels(List.of(new Client(), new Employee()))
+                                .build())
+                        .build();
+        assertDoesNotThrow(() -> accountService.registerAccountAsAdmin(personToRegister));
+        Account account = accountService.getAccountByLogin("test123").orElseThrow();
+        assertEquals(2, accountService.getAccountList().size());
+        assertEquals(AccountState.ACTIVE, account.getAccountState());
+        assertEquals(2, account.getAccessLevels().size());
         assertEquals(false, account.getArchive());
         assertEquals(0, account.getFailedLoginCounter());
     }
@@ -292,7 +324,7 @@ public class AccountServiceIT {
                                 .locale("pl")
                                 .build())
                         .build();
-        assertThrows(EJBException.class, () -> accountService.registerAccount(personToRegister));
+        assertThrows(EJBException.class, () -> accountService.registerAccountAsGuest(personToRegister));
         assertEquals(1, accountService.getAccountList().size());
     }
 
