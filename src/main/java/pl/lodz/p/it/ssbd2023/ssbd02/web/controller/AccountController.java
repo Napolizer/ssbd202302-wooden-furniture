@@ -11,10 +11,7 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 
@@ -181,5 +178,18 @@ public class AccountController {
             json.add("error", e.getMessage());
             return Response.status(401).entity(json.build()).build();
         }
+    }
+
+    @PUT
+    @Path("/id/{login}/editAccountAsAdmin")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountByLogin(login).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+        accountService.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto);
+        return Response.ok(editPersonInfoAsAdminDto).build();
     }
 }
