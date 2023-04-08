@@ -26,7 +26,7 @@ public class TokenService {
                 .setExpiration(new Date(now + expirationTime))
                 .claim("groups", account.getAccessLevels()
                         .stream()
-                        .map(accessLevel -> accessLevel.getClass().getSimpleName())
+                        .map(AccessLevel::getGroupName)
                         .collect(Collectors.toList()))
                 .signWith(SignatureAlgorithm.HS512, secretKey);
         return builder.compact();
@@ -40,12 +40,12 @@ public class TokenService {
             List<String> groups = claims.get("groups", List.class);
             List<AccessLevel> accessLevels = groups
                     .stream()
-                    .map(accessLevelName -> switch (accessLevelName) {
-                        case "Administrator" -> new Administrator();
-                        case "Client" -> new Client();
-                        case "Employee" -> new Employee();
-                        case "SalesRep" -> new SalesRep();
-                        default -> throw new IllegalStateException("Unexpected value: " + accessLevelName);
+                    .map(groupName -> switch (groupName) {
+                        case "ADMINISTRATORS" -> new Administrator();
+                        case "EMPLOYEES" -> new Employee();
+                        case "SALES_REPS" -> new SalesRep();
+                        case "CLIENTS" -> new Client();
+                        default -> throw new IllegalStateException("Unexpected value: " + groupName);
                     })
                     .collect(Collectors.toList());
             return new TokenClaims(username, accessLevels);
