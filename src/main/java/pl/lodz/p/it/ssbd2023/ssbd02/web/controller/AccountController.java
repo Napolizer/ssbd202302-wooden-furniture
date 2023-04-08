@@ -206,6 +206,19 @@ public class AccountController {
     }
 
     @PATCH
+    @Path("/block/{accountId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response blockAccount(@PathParam("accountId")Long accountId) {
+        try {
+            accountService.blockAccount(accountId);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
+                            .add("error", e.getMessage()).build()).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @PATCH
     @Path("/activate/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response activateAccount(@PathParam("accountId")Long accountId) {
