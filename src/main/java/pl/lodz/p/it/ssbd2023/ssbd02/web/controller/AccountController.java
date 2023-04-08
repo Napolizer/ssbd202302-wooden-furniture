@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
@@ -9,7 +10,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
@@ -31,6 +31,7 @@ public class AccountController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response getAllAccounts() {
         List<Account> accounts = accountService.getAccountList();
         List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
