@@ -47,7 +47,7 @@ public class AuthenticationServiceIT {
                 .addPackages(true, "org.hamcrest")
                 .addPackages(true, "io.jsonwebtoken")
                 .addPackages(true, "javax.xml.bind")
-                .addAsResource(new File("src/main/resources/"), "");
+                .addAsResource(new File("src/test/resources/"), "");
     }
 
     @BeforeEach
