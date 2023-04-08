@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
+package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
 import org.microshed.testing.SharedContainerConfiguration;
 import org.microshed.testing.testcontainers.ApplicationContainer;
