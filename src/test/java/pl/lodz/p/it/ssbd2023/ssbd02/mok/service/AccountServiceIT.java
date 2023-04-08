@@ -63,7 +63,7 @@ public class AccountServiceIT {
                 .addPackages(true, "org.postgresql")
                 .addPackages(true, "org.hamcrest")
                 .addPackages(true, "at.favre.lib")
-                .addAsResource(new File("src/main/resources/"),"");
+                .addAsResource(new File("src/test/resources/"),"");
     }
 
     @BeforeEach
@@ -144,7 +144,7 @@ public class AccountServiceIT {
 
     @Test
     public void properlyGetsAccountById() {
-        Optional<Account> accountOptional = accountService.getAccountById(person.getId());
+        Optional<Account> accountOptional = accountService.getAccountById(person.getAccount().getId());
         assertThat(accountOptional.isPresent(), is(equalTo(true)));
         assertThat(accountOptional.get(), is(equalTo(person.getAccount())));
     }
@@ -157,7 +157,7 @@ public class AccountServiceIT {
 
     @Test
     public void failsToGetAccountByIdWhenIdIsNull() {
-        assertThrows(EJBTransactionRolledbackException.class, () -> accountService.getAccountById(null));
+        assertNull(accountService.getAccountById(null).orElse(null));
     }
 
     @Test

@@ -34,7 +34,7 @@ public class PersonFacadeOperationsIT {
                 .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
                 .addPackages(true, "org.postgresql")
                 .addPackages(true, "org.hamcrest")
-                .addAsResource(new File("src/main/resources/"), "");
+                .addAsResource(new File("src/test/resources/"), "");
     }
     private static Address address;
     private static Person person;
