@@ -124,15 +124,13 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
         if (accountService.getAccountByLogin(accountRegisterDto.getLogin()).isPresent()) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(Json.createObjectBuilder()
+            return Response.status(Response.Status.CONFLICT).entity(Json.createObjectBuilder()
                             .add("error", "Account with given login already exists").build()).build();
         }
         try {
             accountService.registerAccountAsGuest(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
         } catch (MessagingException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Json.createObjectBuilder()
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Json.createObjectBuilder()
                             .add("error", "Problem during sending confirmation mail").build()).build();
         }
         return Response.status(Response.Status.CREATED).build();
@@ -203,5 +201,18 @@ public class AccountController {
         }
         accountService.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto);
         return Response.ok(editPersonInfoAsAdminDto).build();
+    }
+
+    @PATCH
+    @Path("/block/{accountId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response blockAccount(@PathParam("accountId")Long accountId) {
+        try {
+            accountService.blockAccount(accountId);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
+                            .add("error", e.getMessage()).build()).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 }
