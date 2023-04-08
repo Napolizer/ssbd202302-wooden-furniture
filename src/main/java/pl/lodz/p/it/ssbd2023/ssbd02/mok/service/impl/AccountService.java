@@ -4,6 +4,8 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
@@ -124,6 +126,17 @@ public class AccountService {
             person.getAccount().setPassword(newPassword);
             personFacadeOperations.update(person);
         }
+    }
+
+    public void activateAccount(Long id) throws Exception {
+        Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
+        AccountState state = person.getAccount().getAccountState();
+        if(state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE))
+            throw new IllegalAccountStateChangeException();
+
+        person.getAccount().setAccountState(AccountState.ACTIVE);
+        personFacadeOperations.update(person);
+        //TODO email message
     }
 
 }
