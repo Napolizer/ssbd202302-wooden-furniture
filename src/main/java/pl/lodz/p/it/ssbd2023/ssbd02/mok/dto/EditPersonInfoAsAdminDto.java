@@ -1,25 +1,31 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
+import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.PostalCode;
+
 @Data
 public class EditPersonInfoAsAdminDto {
 
-    @NotNull
+    @Capitalized
     private String firstName;
-    @NotNull
+    @Capitalized
     private String lastName;
-    @NotNull
+    @Capitalized
     private String country;
-    @NotNull
+    @Capitalized
     private String city;
-    @NotNull
+    @Capitalized
     private String street;
-    @NotNull
+    @PostalCode
     private String postalCode;
     @NotNull
+    @Positive(message = "Street number must be a positive integer")
     private Integer streetNumber;
-    @NotNull
+    @Email
     private String email;
 
     public EditPersonInfoAsAdminDto(String firstName, String lastName, String country, String city, String street, String postalCode, Integer streetNumber, String email) {
