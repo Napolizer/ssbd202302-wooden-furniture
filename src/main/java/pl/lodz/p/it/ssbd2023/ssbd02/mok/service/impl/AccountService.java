@@ -137,4 +137,15 @@ public class AccountService {
         personFacadeOperations.update(person);
         //TODO email message
     }
+    public void activateAccount(Long id) throws Exception {
+        Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
+        AccountState state = person.getAccount().getAccountState();
+        if(state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE))
+            throw new IllegalAccountStateChangeException();
+
+        person.getAccount().setAccountState(AccountState.ACTIVE);
+        personFacadeOperations.update(person);
+        //TODO email message
+    }
+
 }

@@ -21,6 +21,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
@@ -268,6 +272,24 @@ public class AccountServiceIT {
 
     @Test
     public void properlyRegistersAccountAsGuest() {
+        Person personToRegister =
+                Person.builder()
+                        .firstName("Bob")
+                        .lastName("Joe")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Lodz")
+                                .street("Koszykowa")
+                                .postalCode("90-000")
+                                .streetNumber(15)
+                                .build())
+                        .account(Account.builder()
+                                .login("test123")
+                                .password("test123")
+                                .email("test@gmail.com")
+                                .locale("pl")
+                                .build())
+                        .build();
         assertDoesNotThrow(() -> accountService.registerAccountAsGuest(personToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
@@ -370,4 +392,47 @@ public class AccountServiceIT {
 
     }
 
+
+    @Test
+    public void properlyActivatesBlockedAccount() {
+        personToRegister.getAccount().setAccountState(AccountState.BLOCKED);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertEquals(AccountState.BLOCKED, account.getAccountState());
+        assertDoesNotThrow(() -> accountService.activateAccount(account.getId()));
+        Account changed = accountService.getAccountByLogin(personToRegister.getAccount().getLogin()).orElseThrow();
+        assertEquals(AccountState.ACTIVE, changed.getAccountState());
+    }
+
+    @Test
+    public void properlyActivatesNotVerifiedAccount() {
+        personToRegister.getAccount().setAccountState(AccountState.NOT_VERIFIED);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
+        assertDoesNotThrow(() -> accountService.activateAccount(account.getId()));
+        Account changed = accountService.getAccountByLogin(personToRegister.getAccount().getLogin()).orElseThrow();
+        assertEquals(AccountState.ACTIVE, changed.getAccountState());
+    }
+
+    @Test
+    public void activateAlreadyActivatedAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.activateAccount(account.getId()));
+    }
+
+    @Test
+    public void activateInactiveAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.INACTIVE);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.activateAccount(account.getId()));
+    }
+
+    @Test
+    public void activateNonExistingAccountShouldThrowException() {
+        assertThrows(AccountNotFoundException.class,
+                () -> accountService.activateAccount(Long.MAX_VALUE));
+
+    }
 }
