@@ -32,7 +32,7 @@ public class AccountService {
     }
 
     public Optional<Account> getAccountById(Long id) {
-        return personFacadeOperations.find(id).map(Person::getAccount);
+        return personFacadeOperations.findByAccountId(id).map(Person::getAccount);
     }
 
     public List<Account> getAccountList() {
