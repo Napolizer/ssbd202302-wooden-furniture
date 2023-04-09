@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mappers;
+package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;

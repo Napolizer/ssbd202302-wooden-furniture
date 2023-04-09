@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
@@ -10,7 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
@@ -125,6 +126,7 @@ public class AccountController {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @DenyAll
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
         accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
         return Response.status(Response.Status.CREATED).build();

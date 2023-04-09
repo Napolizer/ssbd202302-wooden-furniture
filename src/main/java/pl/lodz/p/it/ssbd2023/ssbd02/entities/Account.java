@@ -45,11 +45,16 @@ public class Account extends AbstractEntity {
     @Column(name = "account_state", nullable = false)
     private AccountState accountState;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "access_level_account",
+            joinColumns = @JoinColumn(name = "access_level_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
     @Builder.Default
     private List<AccessLevel> accessLevels = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
 }

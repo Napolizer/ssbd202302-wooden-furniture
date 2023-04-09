@@ -6,6 +6,8 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
+import java.time.Duration;
+
 public class AppContainerConfig implements SharedContainerConfiguration {
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres")
@@ -20,5 +22,6 @@ public class AppContainerConfig implements SharedContainerConfiguration {
             .withAppContextRoot("/ssbd02-0.0.4/api/v1")
             .withEnv("DB_HOST", "testpostgres")
             .withReadinessPath("/ssbd02-0.0.4/api/v1/health")
-            .dependsOn(postgres);
+            .dependsOn(postgres)
+            .withStartupTimeout(Duration.ofMinutes(2));
 }

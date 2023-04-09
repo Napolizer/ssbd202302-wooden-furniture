@@ -130,12 +130,9 @@ public class AccountControllerIT {
                     .statusCode(400)
                     .contentType("application/json")
                     .body("errors", hasSize(2))
-                    .body("errors[0].class", equalTo("UserCredentialsDto"))
-                    .body("errors[0].field", equalTo("password"))
-                    .body("errors[0].message", equalTo("must not be blank"))
-                    .body("errors[1].class", equalTo("UserCredentialsDto"))
-                    .body("errors[1].field", equalTo("login"))
-                    .body("errors[1].message", equalTo("must not be blank"));
+                    .body("errors.class", hasItems("UserCredentialsDto", "UserCredentialsDto"))
+                    .body("errors.field", hasItems("password", "login"))
+                    .body("errors.message", hasItems("must not be blank", "must not be blank"));
         }
 
         @Test
