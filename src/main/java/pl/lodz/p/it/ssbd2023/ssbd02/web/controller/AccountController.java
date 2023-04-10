@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.mail.MessagingException;
@@ -10,9 +12,12 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 
@@ -29,6 +34,7 @@ public class AccountController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response getAllAccounts() {
         List<Account> accounts = accountService.getAccountList();
         List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
@@ -122,6 +128,7 @@ public class AccountController {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @DenyAll
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
         if (accountService.getAccountByLogin(accountRegisterDto.getLogin()).isPresent()) {
             return Response.status(Response.Status.CONFLICT)
@@ -229,5 +236,18 @@ public class AccountController {
                     .add("error", e.getMessage()).build()).build();
         }
         return Response.status(Response.Status.OK).build();
+    }
+
+    @PUT
+    @Path("/id/{login}/editOwnAccount")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountByLogin(login).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+        accountService.editAccountInfo(login, editPersonInfoDto);
+        return Response.ok(editPersonInfoDto).build();
     }
 }

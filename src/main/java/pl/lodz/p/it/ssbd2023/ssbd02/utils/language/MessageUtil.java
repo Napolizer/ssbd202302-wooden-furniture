@@ -4,6 +4,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class MessageUtil {
+
+    static {
+        Locale.setDefault(new Locale("default"));
+    }
+
     public static String getMessage(String locale, String messageKey) {
         ResourceBundle bundle = ResourceBundle
                 .getBundle("messages", Locale.forLanguageTag(locale));

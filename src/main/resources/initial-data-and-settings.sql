@@ -13,6 +13,8 @@ CREATE INDEX sales_order_delivery_person_id ON sales_order USING btree (delivery
 CREATE INDEX sales_order_product_order_id ON sales_order_product USING btree (order_id);
 CREATE INDEX sales_order_product_product_id ON sales_order_product USING btree (product_id);
 
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE access_level TO ssbd02mok;
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE access_level_account TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE ON TABLE account TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE ON TABLE administrator TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE ON TABLE address TO ssbd02mok;

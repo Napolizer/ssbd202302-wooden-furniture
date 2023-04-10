@@ -6,7 +6,6 @@ import lombok.Setter;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +32,6 @@ public class AccountWithoutSensitiveDataDto {
     private AccountState accountState;
     @NotNull
     private List<AccessLevel> accessLevels;
-    private List<Order> orders;
 
     public AccountWithoutSensitiveDataDto(Account account) {
         this.id = account.getId();
@@ -48,6 +46,5 @@ public class AccountWithoutSensitiveDataDto {
         this.blockadeEnd = account.getBlockadeEnd();
         this.accountState = account.getAccountState();
         this.accessLevels = account.getAccessLevels();
-        this.orders = account.getOrders();
     }
 }

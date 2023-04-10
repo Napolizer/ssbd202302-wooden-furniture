@@ -11,4 +11,9 @@ public class Client extends AccessLevel {
     @OneToOne
     @JoinColumn(name = "company_id", nullable = true)
     private Company company;
+
+    @Override
+    public String getGroupName() {
+        return "CLIENTS";
+    }
 }

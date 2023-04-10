@@ -10,13 +10,11 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AddressFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.listener.StartupListener;
 
 import java.io.File;
 import java.util.List;
@@ -44,6 +42,7 @@ public class AddressFacadeOperationsIT {
                 .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
                 .addPackages(true, "org.postgresql")
                 .addPackages(true, "org.hamcrest")
+                .deleteClass(StartupListener.class)
                 .addAsResource(new File("src/test/resources/"),"");
     }
 
@@ -75,19 +74,6 @@ public class AddressFacadeOperationsIT {
         em.createQuery("DELETE FROM Address").executeUpdate();
         utx.commit();
     }
-
-
-
-    // CREATE
-    // FIND
-    // DELETE
-    // UPDATE
-    // FIND ALL
-    // FIND ALL BY CITY
-    // FIND ALL BY COUNTRY
-    // FIND ALL BY POSTAL CODE
-    // FIND ALL BY STREET
-    // FIND ALL BY STREET NUMBER
 
     @Test
     public void properlyCreatesAddressWithoutIdTest() {

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -11,7 +14,13 @@ import lombok.experimental.SuperBuilder;
 @Entity(name = "access_level")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AccessLevel extends AbstractEntity {
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @ManyToMany
+    @JoinTable(
+            name = "access_level_account",
+            joinColumns = @JoinColumn(name = "access_level_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
+    private List<Account> accounts = new ArrayList<>();
+
+    public abstract String getGroupName();
 }

@@ -1,10 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
+package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
 import org.microshed.testing.SharedContainerConfiguration;
 import org.microshed.testing.testcontainers.ApplicationContainer;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+
+import java.time.Duration;
 
 public class AppContainerConfig implements SharedContainerConfiguration {
     @Container
@@ -20,5 +22,6 @@ public class AppContainerConfig implements SharedContainerConfiguration {
             .withAppContextRoot("/ssbd02-0.0.4/api/v1")
             .withEnv("DB_HOST", "testpostgres")
             .withReadinessPath("/ssbd02-0.0.4/api/v1/health")
-            .dependsOn(postgres);
+            .dependsOn(postgres)
+            .withStartupTimeout(Duration.ofMinutes(2));
 }

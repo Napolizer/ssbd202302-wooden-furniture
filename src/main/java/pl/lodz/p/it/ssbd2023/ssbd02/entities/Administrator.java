@@ -7,4 +7,8 @@ import lombok.Data;
 @Entity(name="administrator")
 public class Administrator extends AccessLevel {
 
+    @Override
+    public String getGroupName() {
+        return "ADMINISTRATORS";
+    }
 }
