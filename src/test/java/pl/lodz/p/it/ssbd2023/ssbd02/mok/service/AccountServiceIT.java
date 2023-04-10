@@ -19,6 +19,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
@@ -48,6 +54,7 @@ public class AccountServiceIT {
     private AccountService accountService;
 
     private Person person;
+    private Person personToRegister;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -55,6 +62,7 @@ public class AccountServiceIT {
                 .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
                 .addPackages(true, "org.postgresql")
                 .addPackages(true, "org.hamcrest")
+                .addPackages(true, "at.favre.lib")
                 .addAsResource(new File("src/test/resources/"),"");
     }
 
@@ -80,6 +88,24 @@ public class AccountServiceIT {
                                 .build())
                         .build()
         );
+        personToRegister =
+                Person.builder()
+                        .firstName("Bob")
+                        .lastName("Joe")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Lodz")
+                                .street("Koszykowa")
+                                .postalCode("90-000")
+                                .streetNumber(15)
+                                .build())
+                        .account(Account.builder()
+                                .login("test123")
+                                .password("test123")
+                                .email("test@gmail.com")
+                                .locale("pl")
+                                .build())
+                        .build();
     }
 
     @AfterEach
@@ -118,7 +144,7 @@ public class AccountServiceIT {
 
     @Test
     public void properlyGetsAccountById() {
-        Optional<Account> accountOptional = accountService.getAccountById(person.getId());
+        Optional<Account> accountOptional = accountService.getAccountById(person.getAccount().getId());
         assertThat(accountOptional.isPresent(), is(equalTo(true)));
         assertThat(accountOptional.get(), is(equalTo(person.getAccount())));
     }
@@ -131,7 +157,7 @@ public class AccountServiceIT {
 
     @Test
     public void failsToGetAccountByIdWhenIdIsNull() {
-        assertThrows(EJBTransactionRolledbackException.class, () -> accountService.getAccountById(null));
+        assertNull(accountService.getAccountById(null).orElse(null));
     }
 
     @Test
@@ -245,7 +271,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyRegistersAccount() {
+    public void properlyRegistersAccountAsGuest() {
         Person personToRegister =
                 Person.builder()
                         .firstName("Bob")
@@ -264,7 +290,7 @@ public class AccountServiceIT {
                                 .locale("pl")
                                 .build())
                         .build();
-        assertDoesNotThrow(() -> accountService.registerAccount(personToRegister));
+        assertDoesNotThrow(() -> accountService.registerAccountAsGuest(personToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
         assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
@@ -273,26 +299,21 @@ public class AccountServiceIT {
     }
 
     @Test
+    public void properlyRegistersAccountAsAdmin() {
+        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
+        personToRegister.getAccount().setAccessLevels(List.of(new Client(), new Employee()));
+        assertDoesNotThrow(() -> accountService.registerAccountAsAdmin(personToRegister));
+        Account account = accountService.getAccountByLogin("test123").orElseThrow();
+        assertEquals(2, accountService.getAccountList().size());
+        assertEquals(AccountState.ACTIVE, account.getAccountState());
+        assertEquals(2, account.getAccessLevels().size());
+        assertEquals(false, account.getArchive());
+        assertEquals(0, account.getFailedLoginCounter());
+    }
+
+    @Test
     public void failsToRegisterAccountWithSameLogin() {
-        Person personToRegister =
-                Person.builder()
-                        .firstName("Bob")
-                        .lastName("Joe")
-                        .address(Address.builder()
-                                .country("Poland")
-                                .city("Lodz")
-                                .street("Koszykowa")
-                                .postalCode("90-000")
-                                .streetNumber(15)
-                                .build())
-                        .account(Account.builder()
-                                .login("test")
-                                .password("test123")
-                                .email("test@gmail.com")
-                                .locale("pl")
-                                .build())
-                        .build();
-        assertThrows(EJBException.class, () -> accountService.registerAccount(personToRegister));
+        assertThrows(EJBException.class, () -> accountService.registerAccountAsGuest(person));
         assertEquals(1, accountService.getAccountList().size());
     }
 
@@ -326,5 +347,92 @@ public class AccountServiceIT {
         assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
         accountService.changePasswordAsAdmin(person.getAccount().getLogin(), oldPassword);
         assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+    }
+
+    @Test
+    public void properlyBlocksActiveAccount() {
+        Account account = accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow();
+        assertEquals(AccountState.ACTIVE, account.getAccountState());
+        assertDoesNotThrow(() -> accountService.blockAccount(account.getId()));
+        Account changed = accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow();
+        assertEquals(AccountState.BLOCKED, changed.getAccountState());
+    }
+
+    @Test
+    public void blockAlreadyBlockedAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.BLOCKED);
+        Person persisted = personFacadeOperations.create(personToRegister);
+
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.blockAccount(persisted.getAccount().getId()));
+    }
+
+    @Test
+    public void blockInactiveAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.INACTIVE);
+        Person persisted = personFacadeOperations.create(personToRegister);
+
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.blockAccount(persisted.getAccount().getId()));
+    }
+
+    @Test
+    public void blockNotVerifiedAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.NOT_VERIFIED);
+        Person persisted = personFacadeOperations.create(personToRegister);
+
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.blockAccount(persisted.getAccount().getId()));
+    }
+
+    @Test
+    public void blockNonExistingUserShouldThrowException() {
+        assertThrows(AccountNotFoundException.class,
+                () -> accountService.blockAccount(Long.MAX_VALUE));
+
+    }
+
+
+    @Test
+    public void properlyActivatesBlockedAccount() {
+        personToRegister.getAccount().setAccountState(AccountState.BLOCKED);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertEquals(AccountState.BLOCKED, account.getAccountState());
+        assertDoesNotThrow(() -> accountService.activateAccount(account.getId()));
+        Account changed = accountService.getAccountByLogin(personToRegister.getAccount().getLogin()).orElseThrow();
+        assertEquals(AccountState.ACTIVE, changed.getAccountState());
+    }
+
+    @Test
+    public void properlyActivatesNotVerifiedAccount() {
+        personToRegister.getAccount().setAccountState(AccountState.NOT_VERIFIED);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
+        assertDoesNotThrow(() -> accountService.activateAccount(account.getId()));
+        Account changed = accountService.getAccountByLogin(personToRegister.getAccount().getLogin()).orElseThrow();
+        assertEquals(AccountState.ACTIVE, changed.getAccountState());
+    }
+
+    @Test
+    public void activateAlreadyActivatedAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.activateAccount(account.getId()));
+    }
+
+    @Test
+    public void activateInactiveAccountShouldThrowException() {
+        personToRegister.getAccount().setAccountState(AccountState.INACTIVE);
+        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        assertThrows(IllegalAccountStateChangeException.class,
+                () -> accountService.activateAccount(account.getId()));
+    }
+
+    @Test
+    public void activateNonExistingAccountShouldThrowException() {
+        assertThrows(AccountNotFoundException.class,
+                () -> accountService.activateAccount(Long.MAX_VALUE));
+
     }
 }

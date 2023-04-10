@@ -38,11 +38,11 @@ public class Person extends AbstractEntity {
     private String lastName;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "address_id", nullable = false, unique = true)
+    @JoinColumn(name = "address_id", nullable = false, unique = true, updatable = false)
     private Address address;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "account_id", unique = true)
+    @JoinColumn(name = "account_id", unique = true, updatable = false)
     private Account account;
 
 }

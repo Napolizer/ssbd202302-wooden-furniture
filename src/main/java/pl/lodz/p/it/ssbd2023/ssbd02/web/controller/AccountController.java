@@ -4,6 +4,7 @@ import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
+import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
@@ -128,7 +130,18 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     @DenyAll
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
-        accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+        if (accountService.getAccountByLogin(accountRegisterDto.getLogin()).isPresent()) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(Json.createObjectBuilder()
+                            .add("error", "Account with given login already exists").build()).build();
+        }
+        try {
+            accountService.registerAccountAsGuest(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+        } catch (MessagingException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Json.createObjectBuilder()
+                            .add("error", "Problem during sending confirmation mail").build()).build();
+        }
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -184,5 +197,57 @@ public class AccountController {
             json.add("error", e.getMessage());
             return Response.status(401).entity(json.build()).build();
         }
+    }
+
+    @PUT
+    @Path("/id/{login}/editAccountAsAdmin")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountByLogin(login).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+        accountService.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto);
+        return Response.ok(editPersonInfoAsAdminDto).build();
+    }
+
+    @PATCH
+    @Path("/block/{accountId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response blockAccount(@PathParam("accountId")Long accountId) {
+        try {
+            accountService.blockAccount(accountId);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
+                            .add("error", e.getMessage()).build()).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @PATCH
+    @Path("/activate/{accountId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response activateAccount(@PathParam("accountId")Long accountId) {
+        try {
+            accountService.activateAccount(accountId);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
+                    .add("error", e.getMessage()).build()).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @PUT
+    @Path("/id/{login}/editOwnAccount")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) {
+        var json = Json.createObjectBuilder();
+        if (accountService.getAccountByLogin(login).isEmpty()) {
+            json.add("error", "Account not found");
+            return Response.status(404).entity(json.build()).build();
+        }
+        accountService.editAccountInfo(login, editPersonInfoDto);
+        return Response.ok(editPersonInfoDto).build();
     }
 }
