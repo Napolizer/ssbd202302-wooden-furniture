@@ -10,7 +10,7 @@ import java.time.Duration;
 
 public class AppContainerConfig implements SharedContainerConfiguration {
     @Container
-    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres")
+    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15.2")
             .withNetworkAliases("testpostgres")
             .withDatabaseName("ssbd02")
             .withUsername("ssbd02admin")
