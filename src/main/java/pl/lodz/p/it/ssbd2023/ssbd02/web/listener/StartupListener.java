@@ -37,6 +37,7 @@ public class StartupListener implements ServletContextListener {
                         .locale("pl")
                         .accountState(AccountState.ACTIVE)
                         .accessLevels(List.of(new Administrator()))
+                        .failedLoginCounter(0)
                         .build())
                 .build();
         personFacadeOperations.create(admin);
