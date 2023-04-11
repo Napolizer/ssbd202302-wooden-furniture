@@ -13,6 +13,24 @@ import static org.hamcrest.Matchers.*;
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
 public class AccountControllerIT {
+    private String retrieveAdminToken() {
+        return given()
+                .contentType("application/json")
+                .body("""
+                        {
+                            "login": "admin",
+                            "password": "kochamssbd"
+                        }
+                 """)
+                .when()
+                .post("/account/login")
+                .then()
+                .statusCode(200)
+                .contentType("application/json")
+                .extract()
+                .path("token");
+    }
+
     @Nested
     class Login {
         @Test
@@ -158,6 +176,50 @@ public class AccountControllerIT {
                     .then()
                     .statusCode(400)
                     .contentType("text/html");
+        }
+    }
+
+    @Nested
+    class GetAccountByLogin {
+        @Test
+        public void shouldProperlyGetAccountByLoginTest() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/login/admin")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("accountState", equalTo("ACTIVE"))
+                    .body("groups", hasSize(1))
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("archive", equalTo(false))
+                    .body("email", equalTo("admin@gmail.com"))
+                    .body("id", is(notNullValue()))
+                    .body("locale", equalTo("pl"))
+                    .body("login", equalTo("admin"));
+        }
+
+        @Test
+        public void shouldFailToGetAccountByLoginWithoutTokenTest() {
+            given()
+                    .when()
+                    .get("/account/login/admin")
+                    .then()
+                    .statusCode(401)
+                    .contentType("text/html");
+        }
+
+        @Test
+        public void shouldFailToGetAccountByLoginWhenLoginDoesNotExist() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/login/invalid")
+                    .then()
+                    .statusCode(404)
+                    .contentType("application/json")
+                    .body("error", equalTo("Account not found"));
         }
     }
 }

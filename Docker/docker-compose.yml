@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: postgres:15
+    image: postgres:15.2
     environment:
       POSTGRES_DB: ssbd02
       POSTGRES_USER: ssbd02admin
