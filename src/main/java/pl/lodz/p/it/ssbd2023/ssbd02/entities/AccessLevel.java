@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -14,13 +11,9 @@ import java.util.List;
 @Entity(name = "access_level")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AccessLevel extends AbstractEntity {
-    @ManyToMany
-    @JoinTable(
-            name = "access_level_account",
-            joinColumns = @JoinColumn(name = "access_level_id"),
-            inverseJoinColumns = @JoinColumn(name = "account_id")
-    )
-    private List<Account> accounts = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "account_id", updatable = false)
+    private Account account;
 
     public abstract String getGroupName();
 }
