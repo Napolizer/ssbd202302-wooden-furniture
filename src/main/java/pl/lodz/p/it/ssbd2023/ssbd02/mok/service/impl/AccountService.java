@@ -148,4 +148,13 @@ public class AccountService {
         //TODO email message
     }
 
+    public Person updateEmail(Long accountId) {
+        Person person = personFacadeOperations.findByAccountId(accountId).orElseThrow();
+        Account account = person.getAccount();
+        account.setEmail(account.getNewEmail());
+        account.setNewEmail(null);
+        return personFacadeOperations.update(person);
+    }
+
+
 }

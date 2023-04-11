@@ -22,10 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Path("/account")
 public class AccountController {
@@ -253,5 +250,18 @@ public class AccountController {
         }
         accountService.editAccountInfo(login, editPersonInfoDto);
         return Response.ok(editPersonInfoDto).build();
+    }
+
+    @GET
+    @Path("/email/submit/{id}")
+    public Response submitEmail(@PathParam("id") Long accountId) {
+        try {
+            accountService.updateEmail(accountId);
+
+            return Response.ok().build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Not found").build();
+        }
     }
 }

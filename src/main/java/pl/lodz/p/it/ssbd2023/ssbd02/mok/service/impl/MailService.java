@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 import java.util.Properties;
 
@@ -12,6 +13,14 @@ public class MailService {
 
     public void sendMailWithInfoAboutBlockingAccount(String to) throws MessagingException {
         sendMail(to, "Account blocked", "Your account is blocked");
+    }
+
+    public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId) throws MessagingException {
+        sendMail(to,
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
+                "http://localhost:8080/api/v1/accout/email/submit/" + accountId
+                //link do podmiany na strone jak bedzie
+                );
     }
 
     public void sendMail(String to, String subject, String message) throws MessagingException {
