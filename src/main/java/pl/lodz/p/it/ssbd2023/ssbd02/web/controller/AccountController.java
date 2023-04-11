@@ -4,6 +4,7 @@ import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationServ
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Path("/account")
 public class AccountController {
@@ -58,13 +60,15 @@ public class AccountController {
     @GET
     @Path("/login/{login}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByLogin(@PathParam("login")String login) {
-        var json = Json.createObjectBuilder();
-        if (accountService.getAccountByLogin(login).isEmpty()) {
+        JsonObjectBuilder json = Json.createObjectBuilder();
+        Optional<Account> accountOptional = accountService.getAccountByLogin(login);
+        if (accountOptional.isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountByLogin(login).get());
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
     }
 

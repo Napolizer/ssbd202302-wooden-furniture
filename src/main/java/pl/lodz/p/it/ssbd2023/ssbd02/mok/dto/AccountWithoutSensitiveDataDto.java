@@ -28,10 +28,8 @@ public class AccountWithoutSensitiveDataDto {
     private String locale;
     private Integer failedLoginCounter;
     private LocalDateTime blockadeEnd;
-    @NotNull
     private AccountState accountState;
-    @NotNull
-    private List<AccessLevel> accessLevels;
+    private List<String> groups;
 
     public AccountWithoutSensitiveDataDto(Account account) {
         this.id = account.getId();
@@ -45,6 +43,9 @@ public class AccountWithoutSensitiveDataDto {
         this.failedLoginCounter = account.getFailedLoginCounter();
         this.blockadeEnd = account.getBlockadeEnd();
         this.accountState = account.getAccountState();
-        this.accessLevels = account.getAccessLevels();
+        this.groups = account.getAccessLevels()
+                .stream()
+                .map(AccessLevel::getGroupName)
+                .toList();
     }
 }
