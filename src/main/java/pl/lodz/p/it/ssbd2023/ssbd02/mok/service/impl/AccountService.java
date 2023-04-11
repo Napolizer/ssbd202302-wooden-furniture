@@ -2,15 +2,14 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import jakarta.mail.MessagingException;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.PasswordHashService;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,13 +20,19 @@ public class AccountService {
     @Inject
     private PersonFacadeOperations personFacadeOperations;
 
+    @Inject
+    private MailService mailService;
+
+    @Inject
+    private PasswordHashService passwordHashService;
+
 
     public Optional<Account> getAccountByLogin(String login) {
         return personFacadeOperations.findByAccountLogin(login).map(Person::getAccount);
     }
 
     public Optional<Account> getAccountById(Long id) {
-        return personFacadeOperations.find(id).map(Person::getAccount);
+        return personFacadeOperations.findByAccountId(id).map(Person::getAccount);
     }
 
     public List<Account> getAccountList() {
@@ -86,14 +91,25 @@ public class AccountService {
         personFacadeOperations.update(person);
     }
 
-    public void registerAccount(Person person) {
-        //TODO password hash
+    public void registerAccountAsGuest(Person person) throws MessagingException {
+        person.getAccount().setPassword(passwordHashService.hashPassword(person.getAccount().getPassword()));
         person.getAccount().setAccountState(AccountState.NOT_VERIFIED);
+        person.getAccount().setFailedLoginCounter(0);
+        person.getAccount().setArchive(false);
+        personFacadeOperations.create(person);
+
+//        String locale = person.getAccount().getLocale();
+//        mailService.sendMail(person.getAccount().getEmail(),
+//                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CREATED_SUBJECT),
+//                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CREATED_MESSAGE));
+    }
+
+    public void registerAccountAsAdmin(Person person) {
+        person.getAccount().setPassword(passwordHashService.hashPassword(person.getAccount().getPassword()));
         person.getAccount().setFailedLoginCounter(0);
         person.getAccount().setArchive(false);
 
         personFacadeOperations.create(person);
-        //TODO send confirmation mail
     }
 
     public void changePassword(String login, String newPassword) {
@@ -110,6 +126,26 @@ public class AccountService {
             person.getAccount().setPassword(newPassword);
             personFacadeOperations.update(person);
         }
+    }
+
+    public void blockAccount(Long id) throws Exception {
+        Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
+        if(!person.getAccount().getAccountState().equals(AccountState.ACTIVE))
+            throw new IllegalAccountStateChangeException();
+
+        person.getAccount().setAccountState(AccountState.BLOCKED);
+        personFacadeOperations.update(person);
+        //TODO email message
+    }
+    public void activateAccount(Long id) throws Exception {
+        Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
+        AccountState state = person.getAccount().getAccountState();
+        if(state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE))
+            throw new IllegalAccountStateChangeException();
+
+        person.getAccount().setAccountState(AccountState.ACTIVE);
+        personFacadeOperations.update(person);
+        //TODO email message
     }
 
 }
