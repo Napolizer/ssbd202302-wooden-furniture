@@ -4,14 +4,18 @@ import jakarta.ejb.Stateless;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 import java.util.Properties;
 
 @Stateless
 public class MailService {
 
-    public void sendMailWithInfoAboutBlockingAccount(String to) throws MessagingException {
-        sendMail(to, "Account blocked", "Your account is blocked");
+    public void sendMailWithInfoAboutBlockingAccount(String to, String locale) throws MessagingException {
+        sendMail(to,
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT),
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_MESSAGE)
+        );
     }
 
     public void sendMail(String to, String subject, String message) throws MessagingException {

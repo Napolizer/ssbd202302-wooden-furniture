@@ -148,4 +148,12 @@ public class AccountService {
         //TODO email message
     }
 
+    public void updateFailedLoginCounter(Account account) throws AccountNotFoundException {
+        Person person = personFacadeOperations.findByAccountId(account.getId())
+                .orElseThrow(AccountNotFoundException::new);
+        person.getAccount().setFailedLoginCounter(account.getFailedLoginCounter());
+        person.getAccount().setAccountState(account.getAccountState());
+
+        personFacadeOperations.update(person);
+    }
 }

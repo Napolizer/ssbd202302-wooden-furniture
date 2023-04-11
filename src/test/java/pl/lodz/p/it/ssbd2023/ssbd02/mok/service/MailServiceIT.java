@@ -28,6 +28,6 @@ public class MailServiceIT {
 
     @Test
     void shouldSendMailToTemporaryMail() {
-        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com"));
+        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com", "en"));
     }
 }
