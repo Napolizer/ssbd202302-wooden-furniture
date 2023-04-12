@@ -401,4 +401,66 @@ public class AccountControllerIT {
         }
     }
 
+    @Nested
+    @Order(5)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class activateAccount {
+
+        @Test
+        @Order(1)
+        public void shouldFailToActivateAlreadyActiveAccount() {
+            int id = retrieveAccountId("admin");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/activate/" + id)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new IllegalAccountStateChangeException().getMessage()));
+        }
+
+        @Test
+        @Order(2)
+        public void shouldFailToActivateInactiveAccount() {
+            int id = retrieveAccountId("inactive123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/activate/" + id)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new IllegalAccountStateChangeException().getMessage()));
+        }
+
+        @Test
+        @Order(3)
+        public void shouldFailToActivateNotExistingAccount() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/activate/" + Long.MAX_VALUE)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new AccountNotFoundException().getMessage()));
+        }
+
+        @Test
+        @Order(4)
+        public void shouldProperlyActivateNotVerifiedAccount() {
+            int id = retrieveAccountId("notverified123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/activate/" + id)
+                    .then()
+                    .statusCode(200);
+        }
+
+        @Test
+        @Order(5)
+        public void shouldProperlyActivateBlockedAccount() {
+            int id = retrieveAccountId("blocked123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/activate/" + id)
+                    .then()
+                    .statusCode(200);
+        }
+    }
 }
