@@ -4,10 +4,13 @@ import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 import static io.restassured.RestAssured.given;
+
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 @MicroShedTest
@@ -543,6 +546,75 @@ public class AccountControllerIT {
                     .then()
                     .statusCode(401)
                     .contentType("text/html");
+        }
+    }
+
+    @Nested
+    @Order(8)
+    class AddAccessLevelToAccount {
+        @Test
+        @Order(1)
+        public void shouldProperlyAddAccessLevelToAccount() {
+            int id = retrieveAccountId("admin");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/id/" + id + "/accessLevel/SalesRep")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo("SALES_REPS"));
+
+        }
+
+        @Test
+        @Order(2)
+        public void failsToAddAccessLevelWithoutAuthorizationToken() {
+            int id = retrieveAccountId("admin");
+            given()
+                    .when()
+                    .put("/account/id/" + id + "/accessLevel/SalesRep")
+                    .then()
+                    .statusCode(401);
+        }
+
+        @Test
+        @Order(3)
+        public void failsToAddAccessLevelWhenAccountDoesNotExist() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("account/id/0/accessLevel/SalesRep")
+                    .then()
+                    .statusCode(404)
+                    .body("error", equalTo("Account not found"));
+        }
+
+        @Test
+        @Order(4)
+        public void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
+            int id = retrieveAccountId("admin");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/id/" + id + "/accessLevel/NotValidAccessLevel")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo("Given access level is invalid"));
+        }
+
+        @Test
+        @Order(5)
+        public void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
+            int id = retrieveAccountId("admin");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/id/" + id + "/accessLevel/Administrator")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new AccessLevelAlreadyAssignedException().getMessage()));
         }
     }
 }

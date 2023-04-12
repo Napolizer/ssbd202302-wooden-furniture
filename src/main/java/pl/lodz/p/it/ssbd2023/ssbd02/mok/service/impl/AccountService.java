@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
@@ -43,13 +44,13 @@ public class AccountService {
                 .toList();
     }
 
-    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
+    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelAlreadyAssignedException {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
         for (AccessLevel item : accessLevels) {
             if (item.getClass() == accessLevel.getClass()) {
-                return;
+                throw new AccessLevelAlreadyAssignedException();
             }
         }
         accessLevels.add(accessLevel);

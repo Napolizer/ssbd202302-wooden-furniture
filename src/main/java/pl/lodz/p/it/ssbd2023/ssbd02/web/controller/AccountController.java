@@ -12,6 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -78,11 +79,17 @@ public class AccountController {
     @PUT
     @Path("/id/{accountId}/accessLevel/{accessLevel}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
+    @RolesAllowed("ADMINISTRATOR")
+    public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) throws AccessLevelAlreadyAssignedException {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountById(accountId).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
+        }
+
+        if (!accountService.getAccountById(accountId).get().getAccountState().equals(AccountState.ACTIVE)) {
+            json.add("error", "Account is not active");
+            return Response.status(400).entity(json.build()).build();
         }
 
         AccessLevel newAccessLevel;
@@ -96,15 +103,20 @@ public class AccountController {
                 return Response.status(400).entity(json.build()).build();
             }
         }
-
-        accountService.addAccessLevelToAccount(accountId, newAccessLevel);
-        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
-        return Response.ok(account).build();
+        try {
+            accountService.addAccessLevelToAccount(accountId, newAccessLevel);
+            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+            return Response.ok(account).build();
+        } catch (Exception e) {
+            json.add("error", e.getMessage());
+            return Response.status(400).entity(json.build()).build();
+        }
     }
 
     @DELETE
     @Path("/id/{accountId}/accessLevel/{accessLevel}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response removeAccessLevelFromAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountById(accountId).isEmpty()) {
