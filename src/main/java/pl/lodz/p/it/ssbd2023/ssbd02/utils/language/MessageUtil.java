@@ -18,5 +18,6 @@ public class MessageUtil {
     public static class MessageKey {
         public static final String EMAIL_ACCOUNT_BLOCKED_SUBJECT = "mok.email.account.blocked.subject";
         public static final String EMAIL_ACCOUNT_BLOCKED_MESSAGE = "mok.email.account.blocked.message";
+        public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
     }
 }

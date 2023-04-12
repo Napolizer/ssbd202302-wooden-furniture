@@ -18,6 +18,14 @@ public class MailService {
         );
     }
 
+    public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId) throws MessagingException {
+        sendMail(to,
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
+                "http://localhost:8080/api/v1/accout/email/submit/" + accountId
+                //link do podmiany na strone jak bedzie
+                );
+    }
+
     public void sendMail(String to, String subject, String message) throws MessagingException {
         Session session = getSession();
 

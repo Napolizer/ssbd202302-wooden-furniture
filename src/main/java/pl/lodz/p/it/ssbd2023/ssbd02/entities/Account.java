@@ -52,4 +52,6 @@ public class Account extends AbstractEntity {
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
+
+    private String newEmail;
 }
