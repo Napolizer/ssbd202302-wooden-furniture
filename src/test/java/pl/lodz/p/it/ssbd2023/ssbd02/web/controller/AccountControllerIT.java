@@ -519,4 +519,30 @@ public class AccountControllerIT {
                     .body("error", equalTo("Account not found"));
         }
     }
+
+    @Nested
+    @Order(7)
+    class GetAllAccounts {
+        @Test
+        public void shouldProperlyGetAllAccountsTest() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("size()", is(greaterThan(0)));
+        }
+
+        @Test
+        public void shouldFailToGetAllAccountsWithoutTokenTest() {
+            given()
+                    .when()
+                    .get("/account")
+                    .then()
+                    .statusCode(401)
+                    .contentType("text/html");
+        }
+    }
 }
