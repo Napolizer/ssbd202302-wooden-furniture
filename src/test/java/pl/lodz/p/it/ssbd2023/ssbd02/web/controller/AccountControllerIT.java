@@ -1,18 +1,22 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class AccountControllerIT {
+
     private String retrieveAdminToken() {
         return given()
                 .contentType("application/json")
@@ -32,6 +36,7 @@ public class AccountControllerIT {
     }
 
     @Nested
+    @Order(1)
     class Login {
         @Test
         @Order(1)
@@ -180,6 +185,7 @@ public class AccountControllerIT {
     }
 
     @Nested
+    @Order(2)
     class GetAccountByLogin {
         @Test
         public void shouldProperlyGetAccountByLoginTest() {
@@ -220,6 +226,105 @@ public class AccountControllerIT {
                     .statusCode(404)
                     .contentType("application/json")
                     .body("error", equalTo("Account not found"));
+        }
+    }
+
+    @Nested
+    @Order(3)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class createAccount {
+        @Test
+        @Order(1)
+        public void shouldProperlyCreateActiveUser() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.activeAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(201);
+        }
+
+        @Test
+        @Order(2)
+        public void shouldProperlyCreateInactiveUser() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.inactiveAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(201);
+        }
+
+        @Test
+        @Order(3)
+        public void shouldProperlyCreateBlockedUser() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.blockedAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(201);
+        }
+
+        @Test
+        @Order(4)
+        public void shouldProperlyCreateNotVerifiedUser() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.notVerifiedAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(201);
+        }
+
+        @Test
+        @Order(5)
+        public void shouldFailToCreateAccountWithSameLogin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.sameLoginAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new LoginAlreadyExistsException().getMessage()));
+        }
+
+        @Test
+        @Order(6)
+        public void shouldFailToCreateAccountWithSameEmail() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.sameEmailAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new EmailAlreadyExistsException().getMessage()));
+        }
+
+        @Test
+        @Order(7)
+        public void shouldFailToCreateAccountWithInvalidAccessLevel() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.invalidAccessLevelAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new InvalidAccessLevelException().getMessage()));
         }
     }
 }
