@@ -5,7 +5,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
-import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -46,13 +46,15 @@ public class AccountController {
     @GET
     @Path("/id/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
-        var json = Json.createObjectBuilder();
-        if (accountService.getAccountById(accountId).isEmpty()) {
+        JsonObjectBuilder json = Json.createObjectBuilder();
+        Optional<Account> accountOptional = accountService.getAccountById(accountId);
+        if (accountOptional.isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
     }
 
@@ -74,11 +76,17 @@ public class AccountController {
     @PUT
     @Path("/id/{accountId}/accessLevel/{accessLevel}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
+    @RolesAllowed("ADMINISTRATOR")
+    public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) throws AccessLevelAlreadyAssignedException {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountById(accountId).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
+        }
+
+        if (!accountService.getAccountById(accountId).get().getAccountState().equals(AccountState.ACTIVE)) {
+            json.add("error", "Account is not active");
+            return Response.status(400).entity(json.build()).build();
         }
 
         AccessLevel newAccessLevel;
@@ -92,15 +100,20 @@ public class AccountController {
                 return Response.status(400).entity(json.build()).build();
             }
         }
-
-        accountService.addAccessLevelToAccount(accountId, newAccessLevel);
-        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
-        return Response.ok(account).build();
+        try {
+            accountService.addAccessLevelToAccount(accountId, newAccessLevel);
+            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+            return Response.ok(account).build();
+        } catch (Exception e) {
+            json.add("error", e.getMessage());
+            return Response.status(400).entity(json.build()).build();
+        }
     }
 
     @DELETE
     @Path("/id/{accountId}/accessLevel/{accessLevel}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response removeAccessLevelFromAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountById(accountId).isEmpty()) {
@@ -131,17 +144,26 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     @DenyAll
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
-        if (accountService.getAccountByLogin(accountRegisterDto.getLogin()).isPresent()) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(Json.createObjectBuilder()
-                            .add("error", "Account with given login already exists").build()).build();
-        }
         try {
-            accountService.registerAccountAsGuest(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
-        } catch (MessagingException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Json.createObjectBuilder()
-                            .add("error", "Problem during sending confirmation mail").build()).build();
+                            .add("error", e.getMessage()).build()).build();
+        }
+        return Response.status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
+    public Response createAccount(@Valid AccountCreateDto accountCreateDto) {
+        try {
+            accountService.createAccount(DtoToEntityMapper.mapAccountCreateDtoToPerson(accountCreateDto));
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
+                    .add("error", e.getMessage()).build()).build();
         }
         return Response.status(Response.Status.CREATED).build();
     }
@@ -216,6 +238,7 @@ public class AccountController {
     @PATCH
     @Path("/block/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response blockAccount(@PathParam("accountId")Long accountId) {
         try {
             accountService.blockAccount(accountId);
@@ -229,6 +252,7 @@ public class AccountController {
     @PATCH
     @Path("/activate/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response activateAccount(@PathParam("accountId")Long accountId) {
         try {
             accountService.activateAccount(accountId);

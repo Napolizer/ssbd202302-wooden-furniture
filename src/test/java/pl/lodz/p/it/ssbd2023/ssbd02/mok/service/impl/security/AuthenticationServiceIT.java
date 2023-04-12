@@ -69,6 +69,7 @@ public class AuthenticationServiceIT {
                                 .locale("pl")
                                 .accountState(AccountState.ACTIVE)
                                 .accessLevels(List.of(new Client()))
+                                .failedLoginCounter(0)
                                 .build())
                         .build();
         personFacadeOperations.create(person);
@@ -149,4 +150,31 @@ public class AuthenticationServiceIT {
             authenticationService.login(person.getAccount().getLogin(), null);
         });
     }
+
+    @Test
+    public void shouldCorrectlyIncrementCounter() {
+        assertEquals(0, person.getAccount().getFailedLoginCounter());
+        assertThrows(InvalidCredentialsException.class, () -> {
+            authenticationService.login(person.getAccount().getLogin(), "wrongOne");
+        });
+        Person refreshedPerson = personFacadeOperations.findByAccountId(person.getAccount().getId())
+                .orElseThrow();
+        assertEquals(1, refreshedPerson.getAccount().getFailedLoginCounter());
+    }
+
+//    @Test
+//    public void shouldBlockAccountAfterThreeFailureAttempts() {
+//        assertEquals(0, person.getAccount().getFailedLoginCounter());
+//        assertEquals(AccountState.ACTIVE, person.getAccount().getAccountState());
+//
+//        for (int i = 0; i < 3; i++) {
+//            assertThrows(InvalidCredentialsException.class, () -> {
+//                authenticationService.login(person.getAccount().getLogin(), "wrongOne");
+//            });
+//        }
+//
+//        Person refreshedPerson = personFacadeOperations.find(person.getId()).orElseThrow();
+//        assertEquals(0, refreshedPerson.getAccount().getFailedLoginCounter());
+//        assertEquals(AccountState.BLOCKED, refreshedPerson.getAccount().getAccountState());
+//    }
 }

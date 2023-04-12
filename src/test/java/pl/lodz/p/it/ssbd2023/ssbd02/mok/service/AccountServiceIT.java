@@ -19,10 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
@@ -102,7 +99,7 @@ public class AccountServiceIT {
                         .account(Account.builder()
                                 .login("test123")
                                 .password("test123")
-                                .email("test@gmail.com")
+                                .email("test123@gmail.com")
                                 .locale("pl")
                                 .build())
                         .build();
@@ -194,7 +191,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyAddsNewAccessLevelToAccount() {
+    public void properlyAddsNewAccessLevelToAccount() throws AccessLevelAlreadyAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
@@ -205,18 +202,18 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void failsToAddAccessLevelWhenAccessLevelIsAdded() {
+    public void failsToAddAccessLevelWhenAccessLevelIsAdded() throws AccessLevelAlreadyAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
         accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
+        assertThrows(AccessLevelAlreadyAssignedException.class, () -> accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel));
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 
     @Test
-    public void properlyRemovesAccessLevelFromAccount() {
+    public void properlyRemovesAccessLevelFromAccount() throws AccessLevelAlreadyAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
@@ -227,7 +224,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() {
+    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() throws AccessLevelAlreadyAssignedException {
         AccessLevel accessLevelClient = new Client();
         AccessLevel accessLevelAdmin = new Administrator();
 
@@ -271,26 +268,8 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyRegistersAccountAsGuest() {
-        Person personToRegister =
-                Person.builder()
-                        .firstName("Bob")
-                        .lastName("Joe")
-                        .address(Address.builder()
-                                .country("Poland")
-                                .city("Lodz")
-                                .street("Koszykowa")
-                                .postalCode("90-000")
-                                .streetNumber(15)
-                                .build())
-                        .account(Account.builder()
-                                .login("test123")
-                                .password("test123")
-                                .email("test@gmail.com")
-                                .locale("pl")
-                                .build())
-                        .build();
-        assertDoesNotThrow(() -> accountService.registerAccountAsGuest(personToRegister));
+    public void properlyRegistersAccount() {
+        assertDoesNotThrow(() -> accountService.registerAccount(personToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
         assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
@@ -299,10 +278,10 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyRegistersAccountAsAdmin() {
+    public void properlyCreatesAccount() {
         personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
         personToRegister.getAccount().setAccessLevels(List.of(new Client(), new Employee()));
-        assertDoesNotThrow(() -> accountService.registerAccountAsAdmin(personToRegister));
+        assertDoesNotThrow(() -> accountService.createAccount(personToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
         assertEquals(AccountState.ACTIVE, account.getAccountState());
@@ -313,7 +292,8 @@ public class AccountServiceIT {
 
     @Test
     public void failsToRegisterAccountWithSameLogin() {
-        assertThrows(EJBException.class, () -> accountService.registerAccountAsGuest(person));
+        personToRegister.getAccount().setLogin(person.getAccount().getLogin());
+        assertThrows(Exception.class, () -> accountService.registerAccount(personToRegister));
         assertEquals(1, accountService.getAccountList().size());
     }
 
@@ -442,7 +422,7 @@ public class AccountServiceIT {
         personToRegister.getAccount().setNewEmail("newEmail@gmail.com");
 
         Account account = personFacadeOperations.create(personToRegister).getAccount();
-        assertEquals("test@gmail.com", account.getEmail());
+        assertEquals("test123@gmail.com", account.getEmail());
         assertEquals("newEmail@gmail.com", account.getNewEmail());
 
         Account accountAfterUpdate = accountService.updateEmail(account.getId()).getAccount();

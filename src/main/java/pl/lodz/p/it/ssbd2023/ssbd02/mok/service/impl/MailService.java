@@ -11,8 +11,11 @@ import java.util.Properties;
 @Stateless
 public class MailService {
 
-    public void sendMailWithInfoAboutBlockingAccount(String to) throws MessagingException {
-        sendMail(to, "Account blocked", "Your account is blocked");
+    public void sendMailWithInfoAboutBlockingAccount(String to, String locale) throws MessagingException {
+        sendMail(to,
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT),
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_MESSAGE)
+        );
     }
 
     public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId) throws MessagingException {

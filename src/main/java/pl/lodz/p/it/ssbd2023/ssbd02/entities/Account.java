@@ -20,7 +20,7 @@ public class Account extends AbstractEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(name = "last_login")

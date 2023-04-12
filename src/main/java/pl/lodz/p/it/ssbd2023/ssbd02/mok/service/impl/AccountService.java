@@ -2,10 +2,12 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.mail.MessagingException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
@@ -42,13 +44,13 @@ public class AccountService {
                 .toList();
     }
 
-    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
+    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelAlreadyAssignedException {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
         for (AccessLevel item : accessLevels) {
             if (item.getClass() == accessLevel.getClass()) {
-                return;
+                throw new AccessLevelAlreadyAssignedException();
             }
         }
         accessLevels.add(accessLevel);
@@ -91,25 +93,30 @@ public class AccountService {
         personFacadeOperations.update(person);
     }
 
-    public void registerAccountAsGuest(Person person) throws MessagingException {
+    public void registerAccount(Person person) throws Exception {
+        checkIfPersonExists(person);
         person.getAccount().setPassword(passwordHashService.hashPassword(person.getAccount().getPassword()));
         person.getAccount().setAccountState(AccountState.NOT_VERIFIED);
         person.getAccount().setFailedLoginCounter(0);
-        person.getAccount().setArchive(false);
         personFacadeOperations.create(person);
 
-//        String locale = person.getAccount().getLocale();
-//        mailService.sendMail(person.getAccount().getEmail(),
-//                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CREATED_SUBJECT),
-//                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CREATED_MESSAGE));
+        //TODO confirmation email
     }
 
-    public void registerAccountAsAdmin(Person person) {
+    public void createAccount(Person person) throws Exception {
+        checkIfPersonExists(person);
         person.getAccount().setPassword(passwordHashService.hashPassword(person.getAccount().getPassword()));
         person.getAccount().setFailedLoginCounter(0);
-        person.getAccount().setArchive(false);
 
         personFacadeOperations.create(person);
+    }
+
+    private void checkIfPersonExists(Person person) throws Exception {
+        if(personFacadeOperations.findByAccountLogin(person.getAccount().getLogin()).isPresent())
+            throw new LoginAlreadyExistsException();
+
+        if(personFacadeOperations.findByAccountEmail(person.getAccount().getEmail()).isPresent())
+            throw new EmailAlreadyExistsException();
     }
 
     public void changePassword(String login, String newPassword) {
@@ -148,6 +155,14 @@ public class AccountService {
         //TODO email message
     }
 
+    public void updateFailedLoginCounter(Account account) throws AccountNotFoundException {
+        Person person = personFacadeOperations.findByAccountId(account.getId())
+                .orElseThrow(AccountNotFoundException::new);
+        person.getAccount().setFailedLoginCounter(account.getFailedLoginCounter());
+        person.getAccount().setAccountState(account.getAccountState());
+
+        personFacadeOperations.update(person);
+    }
     public Person updateEmail(Long accountId) {
         Person person = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account account = person.getAccount();

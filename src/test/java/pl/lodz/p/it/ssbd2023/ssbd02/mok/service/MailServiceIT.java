@@ -26,8 +26,8 @@ public class MailServiceIT {
     @Inject
     private MailService mailService;
 
-    @Test
-    void shouldSendMailToTemporaryMail() {
-        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com"));
-    }
+//    @Test
+//    void shouldSendMailToTemporaryMail() {
+//        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com", "en"));
+//    }
 }

@@ -18,6 +18,8 @@ import lombok.experimental.SuperBuilder;
                 query = "SELECT person FROM Person person WHERE person.lastName = :lastName"),
         @NamedQuery(name = Person.FIND_BY_ACCOUNT_LOGIN,
                 query = "SELECT person FROM Person person WHERE person.account.login = :accountLogin"),
+        @NamedQuery(name = Person.FIND_BY_ACCOUNT_EMAIL,
+                query = "SELECT person FROM Person person WHERE person.account.email = :accountEmail"),
         @NamedQuery(name = Person.FIND_ALL_BY_ADDRESS_ID,
                 query = "SELECT person FROM Person person WHERE person.address.id = :addressId"),
         @NamedQuery(name = Person.FIND_BY_ACCOUNT_ID,
@@ -28,6 +30,7 @@ public class Person extends AbstractEntity {
     public static final String FIND_ALL_BY_FIRST_NAME = "Person.findAllByFirstName";
     public static final String FIND_ALL_BY_LAST_NAME = "Person.findAllByLastName";
     public static final String FIND_BY_ACCOUNT_LOGIN = "Person.findByAccountLogin";
+    public static final String FIND_BY_ACCOUNT_EMAIL = "Person.findByAccountEmail";
     public static final String FIND_ALL_BY_ADDRESS_ID = "Person.findAllByAddressId";
     public static final String FIND_BY_ACCOUNT_ID = "Person.findByAccountId";
 

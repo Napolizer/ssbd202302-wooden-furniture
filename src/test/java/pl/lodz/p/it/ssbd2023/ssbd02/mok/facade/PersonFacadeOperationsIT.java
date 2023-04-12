@@ -251,6 +251,13 @@ public class PersonFacadeOperationsIT {
 
     @Test
     @Order(13)
+    public void findByAccountEmailTest() {
+        Optional<Person> personWithEmail = personFacadeOperations.findByAccountEmail("email");
+        assertEquals(person2, personWithEmail.orElse(null));
+    }
+
+    @Test
+    @Order(14)
     public void clean() throws Exception {
         utx.begin();
         em.createQuery("DELETE FROM Person");

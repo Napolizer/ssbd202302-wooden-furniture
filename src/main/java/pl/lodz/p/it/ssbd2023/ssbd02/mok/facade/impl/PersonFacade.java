@@ -62,6 +62,17 @@ public class PersonFacade extends AbstractFacade<Person> implements PersonFacade
     }
 
     @Override
+    public Optional<Person> findByAccountEmail(String accountEmail) {
+        try {
+            return Optional.of(em.createNamedQuery(Person.FIND_BY_ACCOUNT_EMAIL, Person.class)
+                    .setParameter("accountEmail", accountEmail)
+                    .getSingleResult());
+        } catch (PersistenceException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Person> findAllByAddressId(Long addressId) {
         return em.createNamedQuery(Person.FIND_ALL_BY_ADDRESS_ID, Person.class)
                 .setParameter("addressId", addressId)
