@@ -50,12 +50,13 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
-        var json = Json.createObjectBuilder();
-        if (accountService.getAccountById(accountId).isEmpty()) {
+        JsonObjectBuilder json = Json.createObjectBuilder();
+        Optional<Account> accountOptional = accountService.getAccountById(accountId);
+        if (accountOptional.isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
     }
 
