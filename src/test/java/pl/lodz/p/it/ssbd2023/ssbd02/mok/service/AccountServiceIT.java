@@ -19,8 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -194,7 +193,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyAddsNewAccessLevelToAccount() {
+    public void properlyAddsNewAccessLevelToAccount() throws AccessLevelAlreadyAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
@@ -205,18 +204,18 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void failsToAddAccessLevelWhenAccessLevelIsAdded() {
+    public void failsToAddAccessLevelWhenAccessLevelIsAdded() throws AccessLevelAlreadyAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
         accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
+        assertThrows(AccessLevelAlreadyAssignedException.class, () -> accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel));
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 
     @Test
-    public void properlyRemovesAccessLevelFromAccount() {
+    public void properlyRemovesAccessLevelFromAccount() throws AccessLevelAlreadyAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
@@ -227,7 +226,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() {
+    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() throws AccessLevelAlreadyAssignedException {
         AccessLevel accessLevelClient = new Client();
         AccessLevel accessLevelAdmin = new Administrator();
 
