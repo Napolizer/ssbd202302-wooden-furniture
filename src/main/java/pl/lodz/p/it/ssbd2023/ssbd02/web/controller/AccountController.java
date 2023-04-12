@@ -241,6 +241,7 @@ public class AccountController {
     @PATCH
     @Path("/activate/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response activateAccount(@PathParam("accountId")Long accountId) {
         try {
             accountService.activateAccount(accountId);
