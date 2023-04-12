@@ -463,4 +463,60 @@ public class AccountControllerIT {
                     .statusCode(200);
         }
     }
+
+    @Nested
+    @Order(6)
+    class GetAccountByAccountId {
+        @Test
+        public void shouldProperlyGetAccountByAccountIdTest() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/id/" + retrieveAccountId("admin"))
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("accountState", equalTo("ACTIVE"))
+                    .body("groups", hasSize(1))
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("archive", equalTo(false))
+                    .body("email", equalTo("admin@gmail.com"))
+                    .body("id", is(notNullValue()))
+                    .body("locale", equalTo("pl"))
+                    .body("login", equalTo("admin"));
+        }
+
+        @Test
+        public void shouldFailToGetAccountByAccountIdWithoutTokenTest() {
+            given()
+                    .when()
+                    .get("/account/id/555")
+                    .then()
+                    .statusCode(401)
+                    .contentType("text/html");
+        }
+
+        @Test
+        public void shouldFailToGetAccountByAccountIdNoneIdGiven() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/id")
+                    .then()
+                    .statusCode(404)
+                    .contentType("text/html");
+        }
+
+        @Test
+        public void shouldFailToGetAccountByAccountIdWhenAccountIdDoesNotExist() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/id/555")
+                    .then()
+                    .statusCode(404)
+                    .contentType("application/json")
+                    .body("error", equalTo("Account not found"));
+        }
+    }
 }
