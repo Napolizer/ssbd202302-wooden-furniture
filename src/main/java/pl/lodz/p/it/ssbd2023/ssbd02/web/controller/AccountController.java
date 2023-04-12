@@ -48,6 +48,7 @@ public class AccountController {
     @GET
     @Path("/id/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountById(accountId).isEmpty()) {
