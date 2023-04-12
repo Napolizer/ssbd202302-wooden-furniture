@@ -11,6 +11,7 @@ public interface PersonFacadeOperations extends Facade<Person> {
     List<Person> findAllByLastName(String lastName);
 //    Optional<Person> findByCompanyNIP(String companyNIP);
     Optional<Person> findByAccountLogin(String accountLogin);
+    Optional<Person> findByAccountEmail(String accountEmail);
     List<Person> findAllByAddressId(Long addressId);
     Optional<Person> findByAccountId(Long accountId);
 //    Optional<Person> findByCompanyId(Long companyId);
