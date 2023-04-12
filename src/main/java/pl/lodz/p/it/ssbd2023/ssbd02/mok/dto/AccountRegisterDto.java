@@ -4,9 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.*;
 
 @Data
+@SuperBuilder
+@NoArgsConstructor
 public class AccountRegisterDto {
     @Capitalized
     private String firstName;
