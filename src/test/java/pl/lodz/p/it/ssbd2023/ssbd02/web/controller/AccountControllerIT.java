@@ -3,9 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
@@ -33,6 +31,17 @@ public class AccountControllerIT {
                 .contentType("application/json")
                 .extract()
                 .path("token");
+    }
+
+    private int retrieveAccountId(String login) {
+        return given()
+                .header("Authorization", "Bearer " + retrieveAdminToken())
+                .when()
+                .get("/account/login/" + login)
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("id");
     }
 
     @Nested
@@ -327,4 +336,69 @@ public class AccountControllerIT {
                     .body("error", equalTo(new InvalidAccessLevelException().getMessage()));
         }
     }
+
+    @Nested
+    @Order(4)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class blockAccount {
+
+        @Test
+        @Order(1)
+        public void shouldFailToBlockAlreadyBlockedAccount() {
+            int id = retrieveAccountId("blocked123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/block/" + id)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new IllegalAccountStateChangeException().getMessage()));
+        }
+
+        @Test
+        @Order(2)
+        public void shouldFailToBlockInactiveAccount() {
+            int id = retrieveAccountId("inactive123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/block/" + id)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new IllegalAccountStateChangeException().getMessage()));
+        }
+
+        @Test
+        @Order(3)
+        public void shouldFailToBlockNotVerifiedAccount() {
+            int id = retrieveAccountId("notverified123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/block/" + id)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new IllegalAccountStateChangeException().getMessage()));
+        }
+
+        @Test
+        @Order(4)
+        public void shouldFailToBlockNotExistingAccount() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/block/" + Long.MAX_VALUE)
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new AccountNotFoundException().getMessage()));
+        }
+
+        @Test
+        @Order(5)
+        public void shouldProperlyBlockActiveAccount() {
+            int id = retrieveAccountId("active123");
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .patch("/account/block/" + id)
+                    .then()
+                    .statusCode(200);
+        }
+    }
+
 }

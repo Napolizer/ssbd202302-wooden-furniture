@@ -227,6 +227,7 @@ public class AccountController {
     @PATCH
     @Path("/block/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response blockAccount(@PathParam("accountId")Long accountId) {
         try {
             accountService.blockAccount(accountId);
