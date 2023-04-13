@@ -3,11 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
@@ -59,7 +55,7 @@ public class AccountService {
         personFacadeOperations.update(foundPerson);
     }
 
-    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
+    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelNotAssignedException {
         Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
         Account foundAccount = foundPerson.getAccount();
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
@@ -72,6 +68,7 @@ public class AccountService {
                 return;
             }
         }
+        throw new AccessLevelNotAssignedException();
     }
 
     public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
