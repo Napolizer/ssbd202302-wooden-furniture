@@ -20,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
@@ -213,7 +214,7 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyRemovesAccessLevelFromAccount() throws AccessLevelAlreadyAssignedException {
+    public void properlyRemovesAccessLevelFromAccount() throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException {
         AccessLevel newAccessLevel = new Client();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
@@ -224,14 +225,15 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() throws AccessLevelAlreadyAssignedException {
+    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException {
         AccessLevel accessLevelClient = new Client();
         AccessLevel accessLevelAdmin = new Administrator();
 
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
         accountService.addAccessLevelToAccount(person.getAccount().getId(), accessLevelClient);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.removeAccessLevelFromAccount(person.getAccount().getId(), accessLevelAdmin);
+        assertThrows(AccessLevelNotAssignedException.class,
+                () -> accountService.removeAccessLevelFromAccount(person.getAccount().getId(), accessLevelAdmin));
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 

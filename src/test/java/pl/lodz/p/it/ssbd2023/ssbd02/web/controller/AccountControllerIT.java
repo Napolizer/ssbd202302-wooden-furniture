@@ -1,10 +1,14 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import io.restassured.http.ContentType;
+import jakarta.ejb.Init;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
@@ -555,26 +559,51 @@ public class AccountControllerIT {
         @Test
         @Order(1)
         public void shouldProperlyAddAccessLevelToAccount() {
-            int id = retrieveAccountId("admin");
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
                     .when()
-                    .put("/account/id/" + id + "/accessLevel/SalesRep")
+                    .get("/account/id/" + retrieveAccountId("admin"))
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"));
+
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
                     .then()
                     .statusCode(200)
                     .contentType("application/json")
                     .body("groups[0]", equalTo("ADMINISTRATORS"))
                     .body("groups[1]", equalTo("SALES_REPS"));
 
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/id/" + retrieveAccountId("admin"))
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo("SALES_REPS"));
+
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
+                    .then()
+                    .statusCode(200)
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo(null));
         }
 
         @Test
         @Order(2)
         public void failsToAddAccessLevelWithoutAuthorizationToken() {
-            int id = retrieveAccountId("admin");
             given()
                     .when()
-                    .put("/account/id/" + id + "/accessLevel/SalesRep")
+                    .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
                     .then()
                     .statusCode(401);
         }
@@ -588,30 +617,28 @@ public class AccountControllerIT {
                     .put("account/id/0/accessLevel/SalesRep")
                     .then()
                     .statusCode(404)
-                    .body("error", equalTo("Account not found"));
+                    .body("error", equalTo(new AccountNotFoundException().getMessage()));
         }
 
         @Test
         @Order(4)
         public void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
-            int id = retrieveAccountId("admin");
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
                     .when()
-                    .put("/account/id/" + id + "/accessLevel/NotValidAccessLevel")
+                    .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/NotValidAccessLevel")
                     .then()
                     .statusCode(400)
-                    .body("error", equalTo("Given access level is invalid"));
+                    .body("error", equalTo(new InvalidAccessLevelException().getMessage()));
         }
 
         @Test
         @Order(5)
         public void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
-            int id = retrieveAccountId("admin");
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
                     .when()
-                    .put("/account/id/" + id + "/accessLevel/Administrator")
+                    .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/Administrator")
                     .then()
                     .statusCode(400)
                     .body("error", equalTo(new AccessLevelAlreadyAssignedException().getMessage()));
@@ -619,9 +646,102 @@ public class AccountControllerIT {
     }
 
     @Nested
+    @Order(9)
+    class RemoveAccessLevelFromAccount {
+        @Test
+        @Order(1)
+        public void failsToRemoveAccessLevelWithoutAuthorizationToken() {
+            given()
+                    .when()
+                    .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/Administrator")
+                    .then()
+                    .statusCode(401);
+        }
+
+        @Test
+        @Order(2)
+        public void failsToRemoveAccessLevelWhenAccountDoesNotExist() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("account/id/0/accessLevel/Administrator")
+                    .then()
+                    .statusCode(404)
+                    .body("error", equalTo(new AccountNotFoundException().getMessage()));
+        }
+
+        @Test
+        @Order(3)
+        public void failsToRemoveAccessLevelWhenAccessLevelIsInvalid() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/NotValidAccessLevel")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new InvalidAccessLevelException().getMessage()));
+        }
+
+        @Test
+        @Order(4)
+        public void failsToAddAccessLevelWhenAccessLevelIsNotAssigned() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/Client")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new AccessLevelNotAssignedException().getMessage()));
+        }
+
+        @Test
+        @Order(5)
+        public void properlyRemovesAccessLevelFromAccount() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo("SALES_REPS"));
+
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/id/" + retrieveAccountId("admin"))
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo("SALES_REPS"));
+
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
+                    .then()
+                    .statusCode(200)
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo(null));
+
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/id/" + retrieveAccountId("admin"))
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"))
+                    .body("groups[1]", equalTo(null));
+        }
+    }
+
+    @Nested
     @Order(10)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    class editOwnAccount {
+    class EditOwnAccount {
 
         @Test
         @Order(1)
@@ -662,5 +782,51 @@ public class AccountControllerIT {
                     .body("error", equalTo("Account not found"));
         }
 
+    }
+
+    @Nested
+    @Order(11)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class EditAccountAsAdmin {
+
+        @Test
+        @Order(1)
+        public void editOtherUserAsAdmin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.editedAccountAsAdminExampleJson)
+                    .when()
+                    .put("/account/login/accounttoedit123/editAccountAsAdmin")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json");
+        }
+
+        @Test
+        @Order(2)
+        public void shouldUserHaveCorrectNewValues() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/login/accounttoedit123")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("email", equalTo("johndoe@example.com"));
+        }
+
+        @Test
+        @Order(3)
+        public void failsIfGivenInvalidLogin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/login/invalidLogin/editAccountAsAdmin")
+                    .then()
+                    .statusCode(404)
+                    .contentType("application/json")
+                    .body("error", equalTo("Account not found"));
+        }
     }
 }

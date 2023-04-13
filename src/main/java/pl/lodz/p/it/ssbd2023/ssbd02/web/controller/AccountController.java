@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -96,7 +97,7 @@ public class AccountController {
             case "Employee" -> newAccessLevel = new Employee();
             case "SalesRep" -> newAccessLevel = new SalesRep();
             default -> {
-                json.add("error", "Given access level is invalid");
+                json.add("error", new InvalidAccessLevelException().getMessage());
                 return Response.status(400).entity(json.build()).build();
             }
         }
@@ -128,14 +129,18 @@ public class AccountController {
             case "Employee" -> newAccessLevel = new Employee();
             case "SalesRep" -> newAccessLevel = new SalesRep();
             default -> {
-                json.add("error", "Given access level is invalid");
+                json.add("error", new InvalidAccessLevelException().getMessage());
                 return Response.status(400).entity(json.build()).build();
             }
         }
-
-        accountService.removeAccessLevelFromAccount(accountId, newAccessLevel);
-        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
-        return Response.ok(account).build();
+        try {
+            accountService.removeAccessLevelFromAccount(accountId, newAccessLevel);
+            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+            return Response.ok(account).build();
+        } catch (Exception e) {
+            json.add("error", e.getMessage());
+            return Response.status(400).entity(json.build()).build();
+        }
     }
 
 
@@ -223,8 +228,10 @@ public class AccountController {
     }
 
     @PUT
-    @Path("/id/{login}/editAccountAsAdmin")
+    @Path("/login/{login}/editAccountAsAdmin")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountByLogin(login).isEmpty()) {
