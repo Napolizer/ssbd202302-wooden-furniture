@@ -1,10 +1,14 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import io.restassured.http.ContentType;
+import jakarta.ejb.Init;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
@@ -615,6 +619,64 @@ public class AccountControllerIT {
                     .then()
                     .statusCode(400)
                     .body("error", equalTo(new AccessLevelAlreadyAssignedException().getMessage()));
+        }
+    }
+
+    @Nested
+    @Order(9)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class editAccountAsAdmin {
+
+        @Test
+        @Order(1)
+        public void shouldProperlyCreateAccountToEdit() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.accountToEditJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(201);
+        }
+        @Test
+        @Order(2)
+        public void editOtherUserAsAdmin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.editedAccountAsAdminExampleJson)
+                    .when()
+                    .put("/account/login/accounttoedit123/editAccountAsAdmin")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json");
+        }
+
+        @Test
+        @Order(3)
+        public void shouldUserHaveCorrectNewValues() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .get("/account/login/accounttoedit123")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json")
+                    .body("email", equalTo("johndoe@example.com"));
+        }
+
+        @Test
+        @Order(4)
+        public void failsIfGivenInvalidLogin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/login/invalidLogin/editAccountAsAdmin")
+                    .then()
+                    .statusCode(404)
+                    .contentType("application/json")
+                    .body("error", equalTo("Account not found"));
         }
     }
 }

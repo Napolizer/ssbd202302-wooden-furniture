@@ -223,8 +223,10 @@ public class AccountController {
     }
 
     @PUT
-    @Path("/id/{login}/editAccountAsAdmin")
+    @Path("/login/{login}/editAccountAsAdmin")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMINISTRATOR")
     public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountByLogin(login).isEmpty()) {
@@ -264,8 +266,8 @@ public class AccountController {
     }
 
     @PUT
-    @Path("/id/{login}/editOwnAccount")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/login/{login}/editOwnAccount")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountByLogin(login).isEmpty()) {

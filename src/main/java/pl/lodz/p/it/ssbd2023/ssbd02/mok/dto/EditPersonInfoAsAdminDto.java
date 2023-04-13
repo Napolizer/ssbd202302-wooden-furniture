@@ -38,4 +38,8 @@ public class EditPersonInfoAsAdminDto {
         this.streetNumber = streetNumber;
         this.email = email;
     }
+
+    public EditPersonInfoAsAdminDto() {
+
+    }
 }
