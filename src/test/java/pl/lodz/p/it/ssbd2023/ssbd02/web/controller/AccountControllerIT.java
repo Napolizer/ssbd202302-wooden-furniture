@@ -741,7 +741,7 @@ public class AccountControllerIT {
     @Nested
     @Order(10)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    class editAccountAsAdmin {
+    class EditOwnAccount {
 
         @Test
         @Order(1)
@@ -755,8 +755,42 @@ public class AccountControllerIT {
                     .then()
                     .statusCode(201);
         }
+
         @Test
         @Order(2)
+        public void editOwnAccount() {
+            given()
+                    .contentType("application/json")
+                    .body(InitData.editedAccountExampleJson)
+                    .when()
+                    .put("/account/login/accounttoedit123/editOwnAccount")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json");
+        }
+
+        @Test
+        @Order(3)
+        public void failsIfGivenInvalidLogin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/login/invalidLogin/editOwnAccount")
+                    .then()
+                    .statusCode(404)
+                    .contentType("application/json")
+                    .body("error", equalTo("Account not found"));
+        }
+
+    }
+
+    @Nested
+    @Order(11)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class EditAccountAsAdmin {
+
+        @Test
+        @Order(1)
         public void editOtherUserAsAdmin() {
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -770,7 +804,7 @@ public class AccountControllerIT {
         }
 
         @Test
-        @Order(3)
+        @Order(2)
         public void shouldUserHaveCorrectNewValues() {
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -783,7 +817,7 @@ public class AccountControllerIT {
         }
 
         @Test
-        @Order(4)
+        @Order(3)
         public void failsIfGivenInvalidLogin() {
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())

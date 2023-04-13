@@ -36,4 +36,8 @@ public class EditPersonInfoDto {
         this.postalCode = postalCode;
         this.streetNumber = streetNumber;
     }
+
+    public EditPersonInfoDto() {
+
+    }
 }
