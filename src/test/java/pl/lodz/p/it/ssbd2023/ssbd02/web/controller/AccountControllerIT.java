@@ -617,4 +617,50 @@ public class AccountControllerIT {
                     .body("error", equalTo(new AccessLevelAlreadyAssignedException().getMessage()));
         }
     }
+
+    @Nested
+    @Order(10)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class editOwnAccount {
+
+        @Test
+        @Order(1)
+        public void shouldProperlyCreateAccountToEdit() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.accountToEditJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(201);
+        }
+
+        @Test
+        @Order(2)
+        public void editOwnAccount() {
+            given()
+                    .contentType("application/json")
+                    .body(InitData.editedAccountExampleJson)
+                    .when()
+                    .put("/account/login/accounttoedit123/editOwnAccount")
+                    .then()
+                    .statusCode(200)
+                    .contentType("application/json");
+        }
+
+        @Test
+        @Order(3)
+        public void failsIfGivenInvalidLogin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .when()
+                    .put("/account/login/invalidLogin/editOwnAccount")
+                    .then()
+                    .statusCode(404)
+                    .contentType("application/json")
+                    .body("error", equalTo("Account not found"));
+        }
+
+    }
 }

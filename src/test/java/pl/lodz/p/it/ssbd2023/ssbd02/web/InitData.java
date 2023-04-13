@@ -2,6 +2,40 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
 public class InitData {
 
+    public static String editedAccountExampleJson = """
+                        {
+                             "firstName": "Adam",
+        "lastName": "Doe",
+        "country": "USA",
+        "city": "Warsaw",
+        "street": "Wladyslawa",
+        "postalCode": "95-200",
+            "streetNumber": 20
+                        }
+                 """;
+
+    public static String accountToEditJson  = """
+    {
+        "firstName": "John",
+        "lastName": "Boe",
+        "country": "Poland",
+        "city": "Lodz",
+        "street": "Karpacka",
+        "streetNumber": 55,
+        "postalCode": "93-539",
+        "password": "Password123!",
+        "locale": "pl",
+        "accessLevels": [
+            {
+                "name": "Employee"
+            }
+        ],
+        "login": "accounttoedit123",
+        "email": "toedit@example.com",
+        "accountState": "ACTIVE"
+    }
+""";
+
     public static String activeAccountJson  = """
     {
         "firstName": "John",

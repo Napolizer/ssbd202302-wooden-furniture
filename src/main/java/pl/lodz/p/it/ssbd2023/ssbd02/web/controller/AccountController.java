@@ -264,8 +264,9 @@ public class AccountController {
     }
 
     @PUT
-    @Path("/id/{login}/editOwnAccount")
+    @Path("/login/{login}/editOwnAccount")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) {
         var json = Json.createObjectBuilder();
         if (accountService.getAccountByLogin(login).isEmpty()) {
