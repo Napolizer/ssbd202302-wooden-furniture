@@ -232,7 +232,8 @@ public class AccountServiceIT {
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
         accountService.addAccessLevelToAccount(person.getAccount().getId(), accessLevelClient);
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.removeAccessLevelFromAccount(person.getAccount().getId(), accessLevelAdmin);
+        assertThrows(AccessLevelNotAssignedException.class,
+                () -> accountService.removeAccessLevelFromAccount(person.getAccount().getId(), accessLevelAdmin));
         assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
     }
 

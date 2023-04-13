@@ -2,6 +2,28 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
 public class InitData {
 
+    public static String accountToEditJson  = """
+    {
+        "firstName": "John",
+        "lastName": "Boe",
+        "country": "Poland",
+        "city": "Lodz",
+        "street": "Karpacka",
+        "streetNumber": 55,
+        "postalCode": "93-539",
+        "password": "Password123!",
+        "locale": "pl",
+        "accessLevels": [
+            {
+                "name": "Employee"
+            }
+        ],
+        "login": "accounttoedit123",
+        "email": "toedit@example.com",
+        "accountState": "ACTIVE"
+    }
+""";
+
     public static String activeAccountJson  = """
     {
         "firstName": "John",
@@ -155,5 +177,29 @@ public class InitData {
         "accountState": "ACTIVE"
     }
 """;
+    public static String editedAccountExampleJson = """
+                        {
+                             "firstName": "Adam",
+        "lastName": "Doe",
+        "country": "USA",
+        "city": "Warsaw",
+        "street": "Wladyslawa",
+        "postalCode": "95-200",
+            "streetNumber": 20
+                        }
+                 """;
+
+    public static String editedAccountAsAdminExampleJson = """
+            {
+              "firstName": "John",
+              "lastName": "Doe",
+              "country": "United States",
+              "city": "New York",
+              "street": "Broadway",
+              "postalCode": "10-001",
+              "streetNumber": 123,
+              "email": "johndoe@example.com"
+            }
+            """;
 
 }
