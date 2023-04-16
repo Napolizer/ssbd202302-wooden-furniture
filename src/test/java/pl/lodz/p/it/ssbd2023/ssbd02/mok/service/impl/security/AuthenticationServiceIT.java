@@ -152,13 +152,15 @@ public class AuthenticationServiceIT {
     }
 
     @Test
-    public void shouldCorrectlyIncrementCounter() {
+    public void shouldCorrectlyIncrementCounter() throws Exception {
         assertEquals(0, person.getAccount().getFailedLoginCounter());
         assertThrows(InvalidCredentialsException.class, () -> {
             authenticationService.login(person.getAccount().getLogin(), "wrongOne");
         });
+        utx.begin();
         Person refreshedPerson = personFacadeOperations.findByAccountId(person.getAccount().getId())
                 .orElseThrow();
+        utx.commit();
         assertEquals(1, refreshedPerson.getAccount().getFailedLoginCounter());
     }
 

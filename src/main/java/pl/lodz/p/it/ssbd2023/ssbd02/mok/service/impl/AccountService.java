@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Stateful;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
@@ -13,17 +15,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Stateless
+@Stateful
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AccountService {
     @Inject
     private PersonFacadeOperations personFacadeOperations;
 
     @Inject
-    private MailService mailService;
-
-    @Inject
     private PasswordHashService passwordHashService;
-
 
     public Optional<Account> getAccountByLogin(String login) {
         return personFacadeOperations.findByAccountLogin(login).map(Person::getAccount);

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;

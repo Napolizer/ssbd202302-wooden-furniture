@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class PersonFacade extends AbstractFacade<Person> implements PersonFacadeOperations {
 
     @PersistenceContext(unitName = "ssbd02mokPU")
