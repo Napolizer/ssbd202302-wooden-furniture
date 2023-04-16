@@ -33,9 +33,9 @@ GRANT SELECT,INSERT,UPDATE ON TABLE sales_order_product TO ssbd02moz;
 GRANT USAGE, SELECT ON SEQUENCE seq_gen_sequence TO ssbd02mok;
 GRANT USAGE, SELECT ON SEQUENCE seq_gen_sequence TO ssbd02moz;
 
-INSERT INTO category (id, version, category_name, parent_category_id) VALUES (1, 1, 'Bed', null),(2, 1, 'Case Furniture', null),(3, 1, 'Seat', null),(4, 1, 'Table', null),(5, 1, 'Single Bed', 1),(6, 1, 'Double Bed', 1),(7, 1, 'Kids', 1),(8, 1, 'Wardrobe', 2),(9, 1, 'Dresser', 2),(10, 1, 'Locker', 2),(11, 1, 'Desk', 2),(12, 1, 'Chair', 3),(13, 1, 'Stool', 3),(14, 1, 'Armchair', 3),(15, 1, 'Round Table', 4),(16, 1, 'Rectangular Table', 4);
-INSERT INTO account (id, version, account_state, email, failed_login_counter, locale, login, password) VALUES (nextval('seq_gen_sequence'), 1, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'admin', 'kochamssbd');
-INSERT INTO address (id, version, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, 'Lodz', 'Poland', '93-590', 'Aleje Testowe', '55');
-INSERT INTO person (id, version, first_name, last_name, account_id, address_id) VALUES (nextval('seq_gen_sequence'), 1, 'Admin', 'Root', (SELECT id FROM account WHERE login = 'admin'), (SELECT id FROM address WHERE street = 'Aleje Testowe'));
-INSERT INTO access_level (id, version, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, 'administrator', (SELECT id FROM account WHERE login = 'admin'));
+INSERT INTO category (id, version, archive, category_name, parent_category_id) VALUES (1, 1, false, 'Bed', null),(2, 1, false, 'Case Furniture', null),(3, 1, false, 'Seat', null),(4, 1, false, 'Table', null),(5, 1, false, 'Single Bed', 1),(6, 1, false, 'Double Bed', 1),(7, 1, false, 'Kids', 1),(8, 1, false, 'Wardrobe', 2),(9, 1, false, 'Dresser', 2),(10, 1, false, 'Locker', 2),(11, 1, false, 'Desk', 2),(12, 1, false, 'Chair', 3),(13, 1, false, 'Stool', 3),(14, 1, 'Armchair', 3),(15, 1, false, 'Round Table', 4),(16, 1, false, 'Rectangular Table', 4);
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'admin', 'kochamssbd');
+INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Aleje Testowe', '55');
+INSERT INTO person (id, version, archive, first_name, last_name, account_id, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Admin', 'Root', (SELECT id FROM account WHERE login = 'admin'), (SELECT id FROM address WHERE street = 'Aleje Testowe'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, 'administrator', (SELECT id FROM account WHERE login = 'admin'));
 INSERT INTO administrator (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'administrator'));
