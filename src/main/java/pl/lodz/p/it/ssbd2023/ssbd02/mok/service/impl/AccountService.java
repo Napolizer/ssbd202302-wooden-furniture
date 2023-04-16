@@ -9,7 +9,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.PasswordHashService;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,8 +20,6 @@ public class AccountService {
     @Inject
     private PersonFacadeOperations personFacadeOperations;
 
-    @Inject
-    private PasswordHashService passwordHashService;
 
     public Optional<Account> getAccountByLogin(String login) {
         return personFacadeOperations.findByAccountLogin(login).map(Person::getAccount);
@@ -89,25 +86,19 @@ public class AccountService {
         personFacadeOperations.update(person);
     }
 
-    public void registerAccount(Person person) throws Exception {
-        checkIfPersonExists(person);
-        person.getAccount().setPassword(passwordHashService.hashPassword(person.getAccount().getPassword()));
+    public void registerAccount(Person person) {
         person.getAccount().setAccountState(AccountState.NOT_VERIFIED);
+        person.getAccount().getAccessLevels().add(new Client());
         person.getAccount().setFailedLoginCounter(0);
-        personFacadeOperations.create(person);
-
-        //TODO confirmation email
-    }
-
-    public void createAccount(Person person) throws Exception {
-        checkIfPersonExists(person);
-        person.getAccount().setPassword(passwordHashService.hashPassword(person.getAccount().getPassword()));
-        person.getAccount().setFailedLoginCounter(0);
-
         personFacadeOperations.create(person);
     }
 
-    private void checkIfPersonExists(Person person) throws Exception {
+    public void createAccount(Person person) {
+        person.getAccount().setFailedLoginCounter(0);
+        personFacadeOperations.create(person);
+    }
+
+    public void checkIfPersonExists(Person person) throws Exception {
         if(personFacadeOperations.findByAccountLogin(person.getAccount().getLogin()).isPresent())
             throw new LoginAlreadyExistsException();
 
