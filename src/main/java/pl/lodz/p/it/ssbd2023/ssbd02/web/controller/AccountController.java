@@ -222,7 +222,7 @@ public class AccountController {
     public Response login(@NotNull @Valid UserCredentialsDto userCredentialsDto) {
         var json = Json.createObjectBuilder();
         try {
-            String token = authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword());
+            String token = accountEndpoint.login(userCredentialsDto);
             json.add("token", token);
             return Response.ok(json.build()).build();
         } catch (AuthenticationException e) {
