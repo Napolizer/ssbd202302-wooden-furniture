@@ -40,7 +40,7 @@ public class Person extends AbstractEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "address_id", nullable = false, unique = true, updatable = false)
     private Address address;
 
