@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class CompanyFacade extends AbstractFacade<Company> implements CompanyFacadeOperations {
     @PersistenceContext(unitName = "ssbd02mokPU")
     private EntityManager em;

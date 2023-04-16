@@ -15,6 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
@@ -31,6 +32,9 @@ public class AccountController {
     private AccountService accountService;
     @Inject
     private AuthenticationService authenticationService;
+
+    @Inject
+    private AccountEndpoint accountEndpoint;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -150,7 +154,7 @@ public class AccountController {
     @DenyAll
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
         try {
-            accountService.registerAccount(DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto));
+            accountEndpoint.registerAccount(accountRegisterDto);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Json.createObjectBuilder()

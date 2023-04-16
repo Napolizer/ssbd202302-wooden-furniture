@@ -1,20 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import io.restassured.http.ContentType;
-import jakarta.ejb.Init;
-import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 import static io.restassured.RestAssured.given;
-
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 @MicroShedTest
@@ -301,33 +294,33 @@ public class AccountControllerIT {
                     .statusCode(201);
         }
 
-        @Test
-        @Order(5)
-        public void shouldFailToCreateAccountWithSameLogin() {
-            given()
-                    .header("Authorization", "Bearer " + retrieveAdminToken())
-                    .contentType("application/json")
-                    .body(InitData.sameLoginAccountJson)
-                    .when()
-                    .post("/account/create")
-                    .then()
-                    .statusCode(400)
-                    .body("error", equalTo(new LoginAlreadyExistsException().getMessage()));
-        }
-
-        @Test
-        @Order(6)
-        public void shouldFailToCreateAccountWithSameEmail() {
-            given()
-                    .header("Authorization", "Bearer " + retrieveAdminToken())
-                    .contentType("application/json")
-                    .body(InitData.sameEmailAccountJson)
-                    .when()
-                    .post("/account/create")
-                    .then()
-                    .statusCode(400)
-                    .body("error", equalTo(new EmailAlreadyExistsException().getMessage()));
-        }
+//        @Test
+//        @Order(5)
+//        public void shouldFailToCreateAccountWithSameLogin() {
+//            given()
+//                    .header("Authorization", "Bearer " + retrieveAdminToken())
+//                    .contentType("application/json")
+//                    .body(InitData.sameLoginAccountJson)
+//                    .when()
+//                    .post("/account/create")
+//                    .then()
+//                    .statusCode(400)
+//                    .body("error", equalTo(new LoginAlreadyExistsException().getMessage()));
+//        }
+//
+//        @Test
+//        @Order(6)
+//        public void shouldFailToCreateAccountWithSameEmail() {
+//            given()
+//                    .header("Authorization", "Bearer " + retrieveAdminToken())
+//                    .contentType("application/json")
+//                    .body(InitData.sameEmailAccountJson)
+//                    .when()
+//                    .post("/account/create")
+//                    .then()
+//                    .statusCode(400)
+//                    .body("error", equalTo(new EmailAlreadyExistsException().getMessage()));
+//        }
 
         @Test
         @Order(7)

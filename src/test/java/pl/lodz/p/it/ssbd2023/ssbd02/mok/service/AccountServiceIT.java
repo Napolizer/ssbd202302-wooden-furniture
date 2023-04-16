@@ -6,7 +6,7 @@ import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.UserTransaction;
+import jakarta.transaction.*;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -238,27 +238,35 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyEditsAccountInfo() {
+    public void properlyEditsAccountInfo() throws Exception {
+        utx.begin();
         EditPersonInfoDto editPersonInfoDto = new EditPersonInfoDto("Adam", "John", "Poland","Lodz","Koszykowa","90-200",24);
         assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
         assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
         assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
         accountService.editAccountInfo(person.getAccount().getLogin(), editPersonInfoDto);
+        utx.commit();
+
+        utx.begin();
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Adam");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "John");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 24);
+        utx.commit();
     }
 
 
     @Test
-    public void properlyEditsAccountInfoAsAdmin() {
+    public void properlyEditsAccountInfoAsAdmin() throws Exception {
+        utx.begin();
         EditPersonInfoAsAdminDto editPersonInfoAsAdminDto = new EditPersonInfoAsAdminDto("Jack","Smith","Poland","Warsaw","Mickiewicza","92-100",15,"test1@gmail.com");
         assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
         assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
         assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
         assertEquals(person.getAccount().getEmail(),personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail());
         accountService.editAccountInfoAsAdmin(person.getAccount().getLogin(),editPersonInfoAsAdminDto);
+        utx.commit();
 
+        utx.begin();
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Jack");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "Smith");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getCountry(), "Poland");
@@ -267,6 +275,7 @@ public class AccountServiceIT {
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getPostalCode(), "92-100");
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 15);
         assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail(), "test1@gmail.com");
+        utx.commit();
     }
 
     @Test

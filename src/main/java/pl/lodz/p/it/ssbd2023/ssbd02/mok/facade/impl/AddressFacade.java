@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
@@ -10,6 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AddressFacadeOperations;
 import java.util.List;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AddressFacade extends AbstractFacade<Address> implements AddressFacadeOperations {
     @PersistenceContext(unitName = "ssbd02mokPU")
     private EntityManager em;
