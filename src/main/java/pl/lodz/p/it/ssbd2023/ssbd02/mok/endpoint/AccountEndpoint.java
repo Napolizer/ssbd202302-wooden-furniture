@@ -76,4 +76,8 @@ public class AccountEndpoint {
     public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelNotAssignedException {
         accountService.removeAccessLevelFromAccount(accountId, accessLevel);
     }
+
+    public void changePassword(String login, String newPassword) {
+        accountService.changePassword(login, newPassword);
+    }
 }
