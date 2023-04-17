@@ -137,7 +137,7 @@ public class AccountController {
             }
         }
         try {
-            accountService.removeAccessLevelFromAccount(accountId, newAccessLevel);
+            accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
             AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
             return Response.ok(account).build();
         } catch (Exception e) {
