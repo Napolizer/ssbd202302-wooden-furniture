@@ -139,7 +139,6 @@ public class AccountService {
 
         person.getAccount().setAccountState(AccountState.ACTIVE);
         personFacadeOperations.update(person);
-        //TODO email message
     }
 
     public void updateFailedLoginCounter(Account account) throws AccountNotFoundException {

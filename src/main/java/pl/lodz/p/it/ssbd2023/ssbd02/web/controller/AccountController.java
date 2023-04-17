@@ -265,7 +265,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response activateAccount(@PathParam("accountId")Long accountId) {
         try {
-            accountService.activateAccount(accountId);
+            accountEndpoint.activateAccount(accountId);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
                     .add("error", e.getMessage()).build()).build();

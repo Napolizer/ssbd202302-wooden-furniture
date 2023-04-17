@@ -49,6 +49,11 @@ public class AccountEndpoint {
         //TODO email message
     }
 
+    public void activateAccount(Long id) throws Exception {
+        accountService.activateAccount(id);
+        //TODO email message
+    }
+
     public Optional<Account> getAccountByAccountId(Long accountId) {
         return accountService.getAccountById(accountId);
     }
