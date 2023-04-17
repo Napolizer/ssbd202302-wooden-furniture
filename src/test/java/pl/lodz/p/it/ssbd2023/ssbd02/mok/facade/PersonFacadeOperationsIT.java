@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.listener.StartupListener;
 
 import java.io.File;
 import java.util.List;
@@ -35,7 +34,6 @@ public class PersonFacadeOperationsIT {
                 .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
                 .addPackages(true, "org.postgresql")
                 .addPackages(true, "org.hamcrest")
-                .deleteClass(StartupListener.class)
                 .addAsResource(new File("src/test/resources/"), "");
     }
     private static Address address;
