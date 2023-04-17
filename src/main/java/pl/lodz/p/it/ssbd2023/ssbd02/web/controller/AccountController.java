@@ -54,7 +54,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
         JsonObjectBuilder json = Json.createObjectBuilder();
-        Optional<Account> accountOptional = accountService.getAccountById(accountId);
+        Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
         if (accountOptional.isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
@@ -69,7 +69,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByLogin(@PathParam("login")String login) {
         JsonObjectBuilder json = Json.createObjectBuilder();
-        Optional<Account> accountOptional = accountService.getAccountByLogin(login);
+        Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
         if (accountOptional.isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
