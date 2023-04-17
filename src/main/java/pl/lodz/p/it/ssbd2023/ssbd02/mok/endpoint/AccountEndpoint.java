@@ -80,4 +80,8 @@ public class AccountEndpoint {
     public void changePassword(String login, String newPassword) {
         accountService.changePassword(login, newPassword);
     }
+
+    public void changePasswordAsAdmin(String login, String newPassword) {
+        accountService.changePasswordAsAdmin(login, newPassword);
+    }
 }
