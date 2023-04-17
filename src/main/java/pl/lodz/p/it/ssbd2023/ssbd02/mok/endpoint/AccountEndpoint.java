@@ -71,4 +71,8 @@ public class AccountEndpoint {
     public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelAlreadyAssignedException {
         accountService.addAccessLevelToAccount(accountId, accessLevel);
     }
+
+    public void changePassword(String login, String newPassword) {
+        accountService.changePassword(login, newPassword);
+    }
 }

@@ -83,12 +83,12 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) throws AccessLevelAlreadyAssignedException {
         var json = Json.createObjectBuilder();
-        if (accountService.getAccountById(accountId).isEmpty()) {
+        if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
 
-        if (!accountService.getAccountById(accountId).get().getAccountState().equals(AccountState.ACTIVE)) {
+        if (!accountEndpoint.getAccountByAccountId(accountId).get().getAccountState().equals(AccountState.ACTIVE)) {
             json.add("error", "Account is not active");
             return Response.status(400).entity(json.build()).build();
         }
@@ -120,7 +120,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response removeAccessLevelFromAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
         var json = Json.createObjectBuilder();
-        if (accountService.getAccountById(accountId).isEmpty()) {
+        if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
@@ -181,16 +181,16 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
         var json = Json.createObjectBuilder();
-        if (accountService.getAccountByLogin(login).isEmpty()) {
+        if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        Account account = accountService.getAccountByLogin(login).get();
+        Account account = accountEndpoint.getAccountByLogin(login).get();
         if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
             json.add("error", "Given old password");
             return Response.status(400).entity(json.build()).build();
         }
-        accountService.changePassword(login, changePasswordDto.getPassword());
+        accountEndpoint.changePassword(login, changePasswordDto.getPassword());
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountService.getAccountByLogin(login).get());
         return Response.ok(changedAccount).build();
     }
