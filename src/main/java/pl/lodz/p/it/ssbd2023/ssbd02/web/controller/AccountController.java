@@ -16,7 +16,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedExc
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
@@ -169,7 +168,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response createAccount(@Valid AccountCreateDto accountCreateDto) {
         try {
-            accountService.createAccount(DtoToEntityMapper.mapAccountCreateDtoToPerson(accountCreateDto));
+            accountEndpoint.createAccount(accountCreateDto);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
                     .add("error", e.getMessage()).build()).build();

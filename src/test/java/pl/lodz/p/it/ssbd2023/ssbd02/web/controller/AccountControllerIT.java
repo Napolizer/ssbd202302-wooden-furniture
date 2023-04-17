@@ -294,33 +294,33 @@ public class AccountControllerIT {
                     .statusCode(201);
         }
 
-//        @Test
-//        @Order(5)
-//        public void shouldFailToCreateAccountWithSameLogin() {
-//            given()
-//                    .header("Authorization", "Bearer " + retrieveAdminToken())
-//                    .contentType("application/json")
-//                    .body(InitData.sameLoginAccountJson)
-//                    .when()
-//                    .post("/account/create")
-//                    .then()
-//                    .statusCode(400)
-//                    .body("error", equalTo(new LoginAlreadyExistsException().getMessage()));
-//        }
-//
-//        @Test
-//        @Order(6)
-//        public void shouldFailToCreateAccountWithSameEmail() {
-//            given()
-//                    .header("Authorization", "Bearer " + retrieveAdminToken())
-//                    .contentType("application/json")
-//                    .body(InitData.sameEmailAccountJson)
-//                    .when()
-//                    .post("/account/create")
-//                    .then()
-//                    .statusCode(400)
-//                    .body("error", equalTo(new EmailAlreadyExistsException().getMessage()));
-//        }
+        @Test
+        @Order(5)
+        public void shouldFailToCreateAccountWithSameLogin() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.sameLoginAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new LoginAlreadyExistsException().getMessage()));
+        }
+
+        @Test
+        @Order(6)
+        public void shouldFailToCreateAccountWithSameEmail() {
+            given()
+                    .header("Authorization", "Bearer " + retrieveAdminToken())
+                    .contentType("application/json")
+                    .body(InitData.sameEmailAccountJson)
+                    .when()
+                    .post("/account/create")
+                    .then()
+                    .statusCode(400)
+                    .body("error", equalTo(new EmailAlreadyExistsException().getMessage()));
+        }
 
         @Test
         @Order(7)
