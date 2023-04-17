@@ -106,7 +106,7 @@ public class AccountController {
         }
         try {
             accountEndpoint.addAccessLevelToAccount(accountId, newAccessLevel);
-            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
             return Response.ok(account).build();
         } catch (Exception e) {
             json.add("error", e.getMessage());
@@ -138,7 +138,7 @@ public class AccountController {
         }
         try {
             accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
-            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountService.getAccountById(accountId).get());
+            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
             return Response.ok(account).build();
         } catch (Exception e) {
             json.add("error", e.getMessage());
@@ -191,7 +191,7 @@ public class AccountController {
             return Response.status(400).entity(json.build()).build();
         }
         accountEndpoint.changePassword(login, changePasswordDto.getPassword());
-        AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountService.getAccountByLogin(login).get());
+        AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
         return Response.ok(changedAccount).build();
     }
 
@@ -200,17 +200,17 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
         var json = Json.createObjectBuilder();
-        if (accountService.getAccountByLogin(login).isEmpty()) {
+        if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        Account account = accountService.getAccountByLogin(login).get();
+        Account account = accountEndpoint.getAccountByLogin(login).get();
         if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
             json.add("error", "Given old password");
             return Response.status(400).entity(json.build()).build();
         }
-        accountService.changePasswordAsAdmin(login, changePasswordDto.getPassword());
-        AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountService.getAccountByLogin(login).get());
+        accountEndpoint.changePasswordAsAdmin(login, changePasswordDto.getPassword());
+        AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
         return Response.ok(changedAccount).build();
     }
 
