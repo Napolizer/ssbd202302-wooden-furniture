@@ -129,8 +129,8 @@ public class AccountService {
 
         person.getAccount().setAccountState(AccountState.BLOCKED);
         personFacadeOperations.update(person);
-        //TODO email message
     }
+
     public void activateAccount(Long id) throws Exception {
         Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
         AccountState state = person.getAccount().getAccountState();
