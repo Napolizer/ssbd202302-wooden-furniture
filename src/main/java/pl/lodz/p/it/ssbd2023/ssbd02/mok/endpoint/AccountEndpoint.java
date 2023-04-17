@@ -39,6 +39,11 @@ public class AccountEndpoint {
         accountService.createAccount(person);
     }
 
+    public void blockAccount(Long id) throws Exception {
+        accountService.blockAccount(id);
+        //TODO email message
+    }
+
     public Optional<Account> getAccountByAccountId(Long accountId) {
         return accountService.getAccountById(accountId);
     }

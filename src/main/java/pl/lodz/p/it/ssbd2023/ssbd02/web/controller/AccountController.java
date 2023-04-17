@@ -251,7 +251,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response blockAccount(@PathParam("accountId")Long accountId) {
         try {
-            accountService.blockAccount(accountId);
+            accountEndpoint.blockAccount(accountId);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
                             .add("error", e.getMessage()).build()).build();
