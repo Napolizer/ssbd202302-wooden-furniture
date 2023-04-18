@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationServ
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.PasswordHashService;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Stateful
@@ -63,6 +64,10 @@ public class AccountEndpoint {
 
     public Optional<Account> getAccountByLogin(String login) {
         return accountService.getAccountByLogin(login);
+    }
+
+    public List<Account> getAccountList() {
+        return accountService.getAccountList();
     }
 
     public String login(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
