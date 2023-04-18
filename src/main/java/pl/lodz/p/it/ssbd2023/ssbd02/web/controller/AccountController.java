@@ -237,11 +237,11 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
         var json = Json.createObjectBuilder();
-        if (accountService.getAccountByLogin(login).isEmpty()) {
+        if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        accountService.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto);
+        accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto);
         return Response.ok(editPersonInfoAsAdminDto).build();
     }
 
