@@ -279,11 +279,11 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) {
         var json = Json.createObjectBuilder();
-        if (accountService.getAccountByLogin(login).isEmpty()) {
+        if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        accountService.editAccountInfo(login, editPersonInfoDto);
+        accountEndpoint.editAccountInfo(login, editPersonInfoDto);
         return Response.ok(editPersonInfoDto).build();
     }
 
