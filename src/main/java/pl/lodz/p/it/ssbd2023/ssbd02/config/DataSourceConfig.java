@@ -42,6 +42,17 @@ import java.sql.Connection;
         transactional = true,
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
+@DataSourceDefinition(
+        name = "java:app/jdbc/ssbd02auth",
+        className = "org.postgresql.ds.PGSimpleDataSource",
+        user = "ssbd02auth",
+        password = "dbauth",
+        serverName = "${ENV=DB_HOST:localhost}",
+        portNumber = 5432,
+        databaseName = "ssbd02",
+        transactional = true,
+        isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
+
 @Stateless
 public class DataSourceConfig {
     @PersistenceContext(unitName = "ssbd02adminPU")
