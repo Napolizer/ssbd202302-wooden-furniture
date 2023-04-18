@@ -24,7 +24,7 @@ public class Category extends AbstractEntity {
     public static final String FIND_ALL_BY_PARENT_CATEGORY = "Category.findAllByParentCategory";
 
     @OneToOne
-    @JoinColumn(name = "parent_category_id")
+    @JoinColumn(name = "parent_category_id", unique = true)
     private Category parentCategory;
 
     @Enumerated(value = EnumType.STRING)
