@@ -39,7 +39,7 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response getAllAccounts() {
-        List<Account> accounts = accountService.getAccountList();
+        List<Account> accounts = accountEndpoint.getAccountList();
         List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
         for (Account account : accounts) {
             accountsDto.add(new AccountWithoutSensitiveDataDto(account));
