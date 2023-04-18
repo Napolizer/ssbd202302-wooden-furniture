@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedExc
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
@@ -89,6 +90,10 @@ public class AccountEndpoint {
 
     public void changePasswordAsAdmin(String login, String newPassword) {
         accountService.changePasswordAsAdmin(login, newPassword);
+    }
+
+    public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
+        accountService.editAccountInfo(login,editPersonInfoDto);
     }
 
     public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
