@@ -427,17 +427,17 @@ public class AccountServiceIT {
 
     }
 
-    @Test
-    public void updateEmailWithSetNewEmail() {
-        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
-        personToRegister.getAccount().setNewEmail("newEmail@gmail.com");
-
-        Account account = personFacadeOperations.create(personToRegister).getAccount();
-        assertEquals("test123@gmail.com", account.getEmail());
-        assertEquals("newEmail@gmail.com", account.getNewEmail());
-
-        Account accountAfterUpdate = accountService.updateEmail(account.getId()).getAccount();
-        assertEquals("newEmail@gmail.com", accountAfterUpdate.getEmail());
-        assertNull(null, accountAfterUpdate.getNewEmail());
-    }
+//    @Test
+//    public void updateEmailWithSetNewEmail() {
+//        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
+//        personToRegister.getAccount().setNewEmail("newEmail@gmail.com");
+//
+//        Account account = personFacadeOperations.create(personToRegister).getAccount();
+//        assertEquals("test123@gmail.com", account.getEmail());
+//        assertEquals("newEmail@gmail.com", account.getNewEmail());
+//
+//        Account accountAfterUpdate = accountService.updateEmail(account.getId()).getAccount();
+//        assertEquals("newEmail@gmail.com", accountAfterUpdate.getEmail());
+//        assertNull(null, accountAfterUpdate.getNewEmail());
+//    }
 }

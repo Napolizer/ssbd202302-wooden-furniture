@@ -28,14 +28,14 @@ public class ProductGroup extends AbstractEntity {
     private Double averageRating;
 
     @OneToMany
-    @JoinColumn(name = "product_group_id")
+    @JoinColumn(name = "product_group_id", nullable = false)
     private List<Product> products = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn(name = "product_group_id")
+    @JoinColumn(name = "product_group_id", nullable = false)
     private List<Rate> rates = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 }

@@ -1,2 +1,3 @@
 CREATE USER ssbd02mok WITH PASSWORD 'dbmok';
 CREATE USER ssbd02moz WITH PASSWORD 'dbmoz';
+CREATE USER ssbd02auth WITH PASSWORD 'dbauth';
