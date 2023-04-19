@@ -23,7 +23,7 @@ import java.util.List;
 public class Category extends AbstractEntity {
     public static final String FIND_ALL_BY_PARENT_CATEGORY = "Category.findAllByParentCategory";
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 

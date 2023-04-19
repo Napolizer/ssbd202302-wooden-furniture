@@ -9,7 +9,7 @@ import lombok.Data;
 @Entity(name = "client")
 public class Client extends AccessLevel {
     @OneToOne
-    @JoinColumn(name = "company_id", nullable = true)
+    @JoinColumn(name = "company_id", nullable = true, unique = true)
     private Company company;
 
     @Override
