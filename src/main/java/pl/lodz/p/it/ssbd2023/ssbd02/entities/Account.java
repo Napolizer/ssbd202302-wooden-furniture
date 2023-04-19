@@ -53,5 +53,5 @@ public class Account extends AbstractEntity {
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
 
-    private String newEmail;
+//    private String newEmail;
 }

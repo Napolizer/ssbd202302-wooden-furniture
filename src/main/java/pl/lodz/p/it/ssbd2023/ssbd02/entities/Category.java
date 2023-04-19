@@ -32,5 +32,6 @@ public class Category extends AbstractEntity {
     private CategoryName categoryName;
 
     @OneToMany(mappedBy = "category")
+    @JoinColumn(nullable = false)
     private List<ProductGroup> productGroups = new ArrayList<>();
 }

@@ -287,16 +287,16 @@ public class AccountController {
         return Response.ok(editPersonInfoDto).build();
     }
 
-    @GET
-    @Path("/email/submit/{id}")
-    public Response submitEmail(@PathParam("id") Long accountId) {
-        try {
-            accountService.updateEmail(accountId);
-
-            return Response.ok().build();
-
-        } catch (Exception e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Not found").build();
-        }
-    }
+//    @GET
+//    @Path("/email/submit/{id}")
+//    public Response submitEmail(@PathParam("id") Long accountId) {
+//        try {
+//            accountService.updateEmail(accountId);
+//
+//            return Response.ok().build();
+//
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.NOT_FOUND).entity("Not found").build();
+//        }
+//    }
 }

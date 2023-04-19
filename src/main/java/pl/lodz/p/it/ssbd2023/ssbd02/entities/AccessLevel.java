@@ -10,9 +10,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity(name = "access_level")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype", columnDefinition = "varchar(31) NOT NULL")
 public abstract class AccessLevel extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "account_id", updatable = false)
+    @JoinColumn(name = "account_id", updatable = false, nullable = false)
     private Account account;
 
     public abstract String getGroupName();
