@@ -39,3 +39,11 @@ INSERT INTO address (id, version, archive, city, country, postal_code, street, s
 INSERT INTO person (id, version, archive, first_name, last_name, account_id, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Admin', 'Root', (SELECT id FROM account WHERE login = 'admin'), (SELECT id FROM address WHERE street = 'Aleje Testowe'));
 INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'administrator', (SELECT id FROM account WHERE login = 'admin'));
 INSERT INTO administrator (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'administrator'));
+
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'user1@gmail.com', 0, 'pl', 'user1', 'kochamssbd123');
+INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Politechniki', '50');
+INSERT INTO person (id, version, archive, first_name, last_name, account_id, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'User1', 'User123', (SELECT id FROM account WHERE login = 'user1'), (SELECT id FROM address WHERE street = 'Politechniki'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'employee', (SELECT id FROM account WHERE login = 'user1'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'user1'));
+INSERT INTO employee (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'employee'));
+INSERT INTO client (id, company_id) VALUES ((SELECT id FROM access_level WHERE dtype = 'client'), NULL);
