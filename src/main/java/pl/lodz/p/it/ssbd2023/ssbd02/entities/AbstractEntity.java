@@ -21,6 +21,7 @@ public abstract class AbstractEntity {
     private Long id;
 
     @Version
+    @Column(nullable = false)
     private Long version;
 
     @Setter
