@@ -34,8 +34,8 @@ GRANT SELECT ON administrator TO ssbd02auth;
 GRANT SELECT ON employee TO ssbd02auth;
 GRANT SELECT ON sales_rep TO ssbd02auth;
 
-GRANT USAGE, SELECT ON SEQUENCE seq_gen_sequence TO ssbd02mok;
-GRANT USAGE, SELECT ON SEQUENCE seq_gen_sequence TO ssbd02moz;
+GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02mok;
+GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02moz;
 
 
 
