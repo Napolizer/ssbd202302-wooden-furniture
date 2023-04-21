@@ -24,7 +24,7 @@ public abstract class AbstractEntity {
     private Long version;
 
     @Setter
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false not null")
     @Builder.Default
     private Boolean archive = false;
 }

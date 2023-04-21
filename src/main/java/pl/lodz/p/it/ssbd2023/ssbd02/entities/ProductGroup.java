@@ -19,9 +19,6 @@ import java.util.List;
 public class ProductGroup extends AbstractEntity {
 
     @Column(nullable = false)
-    private Boolean archive;
-
-    @Column(nullable = false)
     private String name;
 
     @Column(name = "average_rating")
