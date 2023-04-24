@@ -34,4 +34,14 @@
             <property name="eclipselink.canonicalmodel.prefix" value="moz"/>
         </properties>
     </persistence-unit>
+
+    <persistence-unit name="ssbd02authPU" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>java:app/jdbc/ssbd02auth</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.canonicalmodel.prefix" value="auth"/>
+        </properties>
+    </persistence-unit>
 </persistence>
