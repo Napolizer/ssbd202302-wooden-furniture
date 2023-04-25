@@ -10,6 +10,7 @@ import jakarta.security.enterprise.AuthenticationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
@@ -17,7 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.PasswordHashService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.BCryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 import java.util.List;
@@ -31,23 +32,21 @@ public class AccountEndpoint {
     private AccountService accountService;
     @Inject
     private AuthenticationService authenticationService;
-    @Inject
-    private PasswordHashService passwordHashService;
 
     public void registerAccount(AccountRegisterDto accountRegisterDto) throws Exception {
-        Person person = DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto);
-        accountService.checkIfAccountExists(person);
-        person.getAccount().setPassword(passwordHashService.hashPassword(accountRegisterDto.getPassword()));
-        accountService.registerAccount(person);
+        Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
+        accountService.checkIfAccountExists(account);
+        account.setPassword(BCryptHashUtils.hashPassword(accountRegisterDto.getPassword()));
+        accountService.registerAccount(account);
 
         //TODO confirmation email
     }
 
     public void createAccount(AccountCreateDto accountCreateDto) throws Exception {
-        Person person = DtoToEntityMapper.mapAccountCreateDtoToPerson(accountCreateDto);
-        accountService.checkIfAccountExists(person);
-        person.getAccount().setPassword(passwordHashService.hashPassword(accountCreateDto.getPassword()));
-        accountService.createAccount(person);
+        Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
+        accountService.checkIfAccountExists(account);
+        account.setPassword(BCryptHashUtils.hashPassword(accountCreateDto.getPassword()));
+        accountService.createAccount(account);
     }
 
     public void blockAccount(Long id) throws Exception {
@@ -76,27 +75,30 @@ public class AccountEndpoint {
         return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword());
     }
 
-    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelAlreadyAssignedException {
+    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel)
+            throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
         accountService.addAccessLevelToAccount(accountId, accessLevel);
     }
 
-    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelNotAssignedException {
+    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelNotAssignedException, AccountNotFoundException {
         accountService.removeAccessLevelFromAccount(accountId, accessLevel);
     }
 
-    public void changePassword(String login, String newPassword) {
+    public void changePassword(String login, String newPassword) throws AccountNotFoundException {
         accountService.changePassword(login, newPassword);
     }
 
-    public void changePasswordAsAdmin(String login, String newPassword) {
+    public void changePasswordAsAdmin(String login, String newPassword) throws AccountNotFoundException {
         accountService.changePasswordAsAdmin(login, newPassword);
     }
 
-    public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
-        accountService.editAccountInfo(login,editPersonInfoDto);
+    public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) throws AccountNotFoundException {
+        accountService.editAccountInfo(login, DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto));
     }
 
-    public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
-        accountService.editAccountInfoAsAdmin(login,editPersonInfoAsAdminDto);
+    public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto)
+            throws AccountNotFoundException {
+        accountService.editAccountInfoAsAdmin(login,
+                DtoToEntityMapper.mapEditPersonInfoAsAdminDtoToAccount(editPersonInfoAsAdminDto));
     }
 }

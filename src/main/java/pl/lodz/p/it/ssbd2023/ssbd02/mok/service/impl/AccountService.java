@@ -68,37 +68,43 @@ public class AccountService {
         throw new AccessLevelNotAssignedException();
     }
 
-    public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto)
+    public void editAccountInfo(String login, Account accountWithChanges)
             throws AccountNotFoundException {
 
         Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-        account.getPerson().setFirstName(editPersonInfoDto.getFirstName());
-        account.getPerson().setLastName(editPersonInfoDto.getLastName());
+        Person personWithChanges = accountWithChanges.getPerson();
+        Address addressWithChanges = personWithChanges.getAddress();
+
+        account.getPerson().setFirstName(personWithChanges.getFirstName());
+        account.getPerson().setLastName(personWithChanges.getLastName());
 
         Address address = account.getPerson().getAddress();
-        address.setCountry(editPersonInfoDto.getCountry());
-        address.setCity(editPersonInfoDto.getCity());
-        address.setStreet(editPersonInfoDto.getStreet());
-        address.setPostalCode(editPersonInfoDto.getPostalCode());
-        address.setStreetNumber(editPersonInfoDto.getStreetNumber());
+        address.setCountry(addressWithChanges.getCountry());
+        address.setCity(addressWithChanges.getCity());
+        address.setStreet(addressWithChanges.getStreet());
+        address.setPostalCode(addressWithChanges.getPostalCode());
+        address.setStreetNumber(addressWithChanges.getStreetNumber());
 
         accountFacade.update(account);
     }
 
-    public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto)
+    public void editAccountInfoAsAdmin(String login, Account accountWithChanges)
             throws AccountNotFoundException {
 
         Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-        account.setEmail(editPersonInfoAsAdminDto.getEmail());
-        account.getPerson().setFirstName(editPersonInfoAsAdminDto.getFirstName());
-        account.getPerson().setLastName(editPersonInfoAsAdminDto.getLastName());
+        Person personWithChanges = accountWithChanges.getPerson();
+        Address addressWithChanges = personWithChanges.getAddress();
+
+        account.setEmail(accountWithChanges.getEmail());
+        account.getPerson().setFirstName(personWithChanges.getFirstName());
+        account.getPerson().setLastName(personWithChanges.getLastName());
 
         Address address = account.getPerson().getAddress();
-        address.setCountry(editPersonInfoAsAdminDto.getCountry());
-        address.setCity(editPersonInfoAsAdminDto.getCity());
-        address.setStreet(editPersonInfoAsAdminDto.getStreet());
-        address.setPostalCode(editPersonInfoAsAdminDto.getPostalCode());
-        address.setStreetNumber(editPersonInfoAsAdminDto.getStreetNumber());
+        address.setCountry(addressWithChanges.getCountry());
+        address.setCity(addressWithChanges.getCity());
+        address.setStreet(addressWithChanges.getStreet());
+        address.setPostalCode(addressWithChanges.getPostalCode());
+        address.setStreetNumber(addressWithChanges.getStreetNumber());
 
         accountFacade.update(account);
     }
