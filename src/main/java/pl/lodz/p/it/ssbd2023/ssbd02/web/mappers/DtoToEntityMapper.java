@@ -2,9 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +36,35 @@ public final class DtoToEntityMapper {
         person.getAccount().setAccessLevels(accessLevels);
 
         return person;
+    }
+
+    public static Person mapEditPersonInfoAsAdminDtoToPerson(EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+        return Person.builder()
+                .firstName(editPersonInfoAsAdminDto.getFirstName())
+                .lastName(editPersonInfoAsAdminDto.getLastName())
+                .address(Address.builder()
+                        .country(editPersonInfoAsAdminDto.getCountry())
+                        .city(editPersonInfoAsAdminDto.getCity())
+                        .street(editPersonInfoAsAdminDto.getStreet())
+                        .postalCode(editPersonInfoAsAdminDto.getPostalCode())
+                        .streetNumber(editPersonInfoAsAdminDto.getStreetNumber()).build())
+                .account(Account.builder()
+                        .email(editPersonInfoAsAdminDto.getEmail())
+                        .build())
+                .build();
+    }
+
+    public static Person mapEditPersonInfoDtoToPerson(EditPersonInfoDto editPersonInfoDto) {
+        return Person.builder()
+                .firstName(editPersonInfoDto.getFirstName())
+                .lastName(editPersonInfoDto.getLastName())
+                .address(Address.builder()
+                        .country(editPersonInfoDto.getCountry())
+                        .city(editPersonInfoDto.getCity())
+                        .street(editPersonInfoDto.getStreet())
+                        .postalCode(editPersonInfoDto.getPostalCode())
+                        .streetNumber(editPersonInfoDto.getStreetNumber()).build())
+                .build();
     }
 
     public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto)

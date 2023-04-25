@@ -27,19 +27,4 @@ public class EditPersonInfoAsAdminDto {
     private Integer streetNumber;
     @Email
     private String email;
-
-    public EditPersonInfoAsAdminDto(String firstName, String lastName, String country, String city, String street, String postalCode, Integer streetNumber, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.postalCode = postalCode;
-        this.streetNumber = streetNumber;
-        this.email = email;
-    }
-
-    public EditPersonInfoAsAdminDto() {
-
-    }
 }
