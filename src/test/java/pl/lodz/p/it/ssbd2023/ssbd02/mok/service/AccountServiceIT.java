@@ -1,8 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 
 import jakarta.annotation.Resource;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,9 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedExc
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
@@ -239,12 +235,22 @@ public class AccountServiceIT {
 
     @Test
     public void properlyEditsAccountInfo() throws Exception {
+        Person person = Person.builder()
+                .firstName("Adam")
+                .lastName("John")
+                .address(Address.builder()
+                    .country("Poland")
+                    .city("Lodz")
+                    .street("Koszykowa")
+                    .postalCode("90-200")
+                    .streetNumber(24)
+                    .build())
+                .build();
         utx.begin();
-        EditPersonInfoDto editPersonInfoDto = new EditPersonInfoDto("Adam", "John", "Poland","Lodz","Koszykowa","90-200",24);
-        assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
-        assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
-        assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
-        accountService.editAccountInfo(person.getAccount().getLogin(), editPersonInfoDto);
+        assertEquals(this.person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
+        assertEquals(this.person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
+        assertEquals(this.person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(this.person.getAddress().getId()).get(0).getAddress().getStreetNumber());
+        accountService.editAccountInfo(this.person.getAccount().getLogin(), person);
         utx.commit();
 
         utx.begin();
@@ -257,13 +263,26 @@ public class AccountServiceIT {
 
     @Test
     public void properlyEditsAccountInfoAsAdmin() throws Exception {
+        Person person = Person.builder()
+                .firstName("Jack")
+                .lastName("Smith")
+                .address(Address.builder()
+                        .country("Poland")
+                        .city("Warsaw")
+                        .street("Mickiewicza")
+                        .postalCode("92-100")
+                        .streetNumber(15)
+                        .build())
+                .account(Account.builder()
+                        .email("test1@gmail.com")
+                        .build())
+                .build();
         utx.begin();
-        EditPersonInfoAsAdminDto editPersonInfoAsAdminDto = new EditPersonInfoAsAdminDto("Jack","Smith","Poland","Warsaw","Mickiewicza","92-100",15,"test1@gmail.com");
-        assertEquals(person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
-        assertEquals(person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
-        assertEquals(person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(person.getAddress().getId()).get(0).getAddress().getStreetNumber());
-        assertEquals(person.getAccount().getEmail(),personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail());
-        accountService.editAccountInfoAsAdmin(person.getAccount().getLogin(),editPersonInfoAsAdminDto);
+        assertEquals(this.person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
+        assertEquals(this.person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
+        assertEquals(this.person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(this.person.getAddress().getId()).get(0).getAddress().getStreetNumber());
+        assertEquals(this.person.getAccount().getEmail(),personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail());
+        accountService.editAccountInfoAsAdmin(this.person.getAccount().getLogin(), person);
         utx.commit();
 
         utx.begin();
