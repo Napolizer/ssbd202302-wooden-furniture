@@ -19,5 +19,16 @@ public class MessageUtil {
         public static final String EMAIL_ACCOUNT_BLOCKED_SUBJECT = "mok.email.account.blocked.subject";
         public static final String EMAIL_ACCOUNT_BLOCKED_MESSAGE = "mok.email.account.blocked.message";
         public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
+        public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED="exception.mok.account.access.level.already.assigned";
+        public static final String ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED="exception.mok.account.access.level.not.assigned";
+        public static final String ACCOUNT_NOT_FOUND="exception.mok.account.not.found";
+        public static final String ACCOUNT_EMAIL_ALREADY_EXISTS="exception.mok.account.email.already.exists";
+        public static final String ACCOUNT_CHANGE_STATE="exception.mok.account.change.state";
+        public static final String ACCOUNT_ACCESS_LEVEL="exception.mok.account.access.level";
+        public static final String ACCOUNT_LOGIN="exception.mok.account.login";
+        public static final String ACCOUNT_ARCHIVE="exception.mok.account.archive";
+        public static final String ACCOUNT_BLOCKED="exception.mok.account.blocked";
+        public static final String ACCOUNT_INACTIVE="exception.mok.account.inactive";
+        public static final String ACCOUNT_CREDENTIALS="exception.mok.account.credentials";
     }
 }
