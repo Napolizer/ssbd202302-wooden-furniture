@@ -17,7 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.PasswordHashService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.BCryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 import java.util.List;
@@ -31,13 +31,11 @@ public class AccountEndpoint {
     private AccountService accountService;
     @Inject
     private AuthenticationService authenticationService;
-    @Inject
-    private PasswordHashService passwordHashService;
 
     public void registerAccount(AccountRegisterDto accountRegisterDto) throws Exception {
         Person person = DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto);
         accountService.checkIfPersonExists(person);
-        person.getAccount().setPassword(passwordHashService.hashPassword(accountRegisterDto.getPassword()));
+        person.getAccount().setPassword(BCryptHashUtils.hashPassword(accountRegisterDto.getPassword()));
         accountService.registerAccount(person);
 
         //TODO confirmation email
@@ -46,7 +44,7 @@ public class AccountEndpoint {
     public void createAccount(AccountCreateDto accountCreateDto) throws Exception {
         Person person = DtoToEntityMapper.mapAccountCreateDtoToPerson(accountCreateDto);
         accountService.checkIfPersonExists(person);
-        person.getAccount().setPassword(passwordHashService.hashPassword(accountCreateDto.getPassword()));
+        person.getAccount().setPassword(BCryptHashUtils.hashPassword(accountCreateDto.getPassword()));
         accountService.createAccount(person);
     }
 

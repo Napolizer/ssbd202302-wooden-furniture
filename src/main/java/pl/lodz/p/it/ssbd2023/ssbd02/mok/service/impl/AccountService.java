@@ -87,8 +87,10 @@ public class AccountService {
     }
 
     public void registerAccount(Person person) {
+        Client client = new Client();
+        client.setAccount(person.getAccount());
+        person.getAccount().getAccessLevels().add(client);
         person.getAccount().setAccountState(AccountState.NOT_VERIFIED);
-        person.getAccount().getAccessLevels().add(new Client());
         person.getAccount().setFailedLoginCounter(0);
         personFacadeOperations.create(person);
     }
