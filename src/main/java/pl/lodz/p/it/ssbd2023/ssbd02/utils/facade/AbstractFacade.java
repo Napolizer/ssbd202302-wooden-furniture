@@ -23,7 +23,7 @@ public abstract class AbstractFacade <T extends AbstractEntity> implements Facad
     }
 
     @Override
-    public T delete(T entity) {
+    public T archive(T entity) {
         entity.setArchive(true);
         return getEntityManager().merge(entity);
     }

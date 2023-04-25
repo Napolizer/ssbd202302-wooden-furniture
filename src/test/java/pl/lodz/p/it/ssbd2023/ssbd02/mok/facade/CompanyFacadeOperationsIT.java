@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.postgresql.util.PSQLException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.CompanyFacadeOperations;
@@ -179,7 +178,7 @@ public class CompanyFacadeOperationsIT {
     public void shouldDeleteCompany() throws Exception {
         utx.begin();
         Company company = companyFacadeOperations.find(persistedCompany.getId()).orElse(null);
-        companyFacadeOperations.delete(company);
+        companyFacadeOperations.archive(company);
         assertEquals(0, companyFacadeOperations.findAllPresent().size());
         utx.commit();
     }
