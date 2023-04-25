@@ -22,7 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedExcepti
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class AccountServiceIT {
     @Resource
     private UserTransaction utx;
     @Inject
-    private PersonFacadeOperations personFacadeOperations;
+    private AccountFacadeOperations accountFacade;
     @Inject
     private AccountService accountService;
 

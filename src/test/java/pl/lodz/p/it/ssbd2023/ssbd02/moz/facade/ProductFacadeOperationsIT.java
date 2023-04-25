@@ -170,7 +170,7 @@ class ProductFacadeOperationsIT {
         Product savedProduct = productFacadeOperations.create(validProduct);
         assertThat(savedProduct, is(notNullValue()));
         assertThat(productFacadeOperations.findAll().size(), is(equalTo(1)));
-        productFacadeOperations.delete(savedProduct);
+        productFacadeOperations.archive(savedProduct);
         assertThat(productFacadeOperations.find(savedProduct.getId()).get().getArchive(), is(equalTo(true)));
         assertThat(productFacadeOperations.findAll().size(), is(equalTo(1)));
     }
@@ -181,10 +181,10 @@ class ProductFacadeOperationsIT {
         Product savedProduct = productFacadeOperations.create(validProduct);
         assertThat(savedProduct, is(notNullValue()));
         assertThat(productFacadeOperations.findAll().size(), is(equalTo(1)));
-        productFacadeOperations.delete(savedProduct);
+        productFacadeOperations.archive(savedProduct);
         assertThat(productFacadeOperations.find(savedProduct.getId()).get().getArchive(), is(equalTo(true)));
         assertThat(productFacadeOperations.findAll().size(), is(equalTo(1)));
-        assertThrows(EJBException.class, () -> productFacadeOperations.delete(savedProduct));
+        assertThrows(EJBException.class, () -> productFacadeOperations.archive(savedProduct));
     }
 
     @Test

@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.*;
-import org.eclipse.persistence.indirection.IndirectList;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -164,7 +163,7 @@ public class CategoryFacadeOperationsIT {
         assertEquals(0, categoryFacadeOperations.findAll().size());
         assertDoesNotThrow(() -> categoryFacadeOperations.create(category));
         assertEquals(1, categoryFacadeOperations.findAll().size());
-        categoryFacadeOperations.delete(category);
+        categoryFacadeOperations.archive(category);
         assertTrue(categoryFacadeOperations.find(category.getId()).orElseThrow().getArchive());
         assertEquals(1, categoryFacadeOperations.findAll().size());
     }
@@ -174,10 +173,10 @@ public class CategoryFacadeOperationsIT {
         assertEquals(0, categoryFacadeOperations.findAll().size());
         assertDoesNotThrow(() -> categoryFacadeOperations.create(category));
         assertEquals(1, categoryFacadeOperations.findAll().size());
-        categoryFacadeOperations.delete(category);
+        categoryFacadeOperations.archive(category);
         assertTrue(categoryFacadeOperations.find(category.getId()).orElseThrow().getArchive());
         assertEquals(1, categoryFacadeOperations.findAll().size());
-        assertThrows(EJBException.class, () -> categoryFacadeOperations.delete(category));
+        assertThrows(EJBException.class, () -> categoryFacadeOperations.archive(category));
     }
 
     @Test

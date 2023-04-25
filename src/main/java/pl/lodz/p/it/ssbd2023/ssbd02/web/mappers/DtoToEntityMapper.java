@@ -8,62 +8,77 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class DtoToEntityMapper {
-    public static Person mapAccountRegisterDtoToPerson(AccountRegisterDto accountRegisterDto) {
-        return Person.builder()
+    public static Account mapAccountRegisterDtoToAccount(AccountRegisterDto accountRegisterDto) {
+        Address address = Address.builder()
+                .country(accountRegisterDto.getCountry())
+                .city(accountRegisterDto.getCity())
+                .postalCode(accountRegisterDto.getPostalCode())
+                .street(accountRegisterDto.getStreet())
+                .streetNumber(accountRegisterDto.getStreetNumber()).build();
+
+        Person person = Person.builder()
                 .firstName(accountRegisterDto.getFirstName())
                 .lastName(accountRegisterDto.getLastName())
-                .address(Address.builder()
-                        .country(accountRegisterDto.getCountry())
-                        .city(accountRegisterDto.getCity())
-                        .postalCode(accountRegisterDto.getPostalCode())
-                        .street(accountRegisterDto.getStreet())
-                        .streetNumber(accountRegisterDto.getStreetNumber()).build())
-                .account(Account.builder()
-                        .login(accountRegisterDto.getLogin())
-                        .email(accountRegisterDto.getEmail())
-                        .password(accountRegisterDto.getPassword())
-                        .locale(accountRegisterDto.getLocale()).build()).build();
+                .address(address).build();
+
+        return Account.builder()
+                .login(accountRegisterDto.getLogin())
+                .email(accountRegisterDto.getEmail())
+                .password(accountRegisterDto.getPassword())
+                .locale(accountRegisterDto.getLocale())
+                .person(person).build();
     }
 
-    public static Person mapAccountCreateDtoToPerson(AccountCreateDto accountCreateDto) throws Exception {
-        Person person = mapAccountRegisterDtoToPerson(accountCreateDto);
-        person.getAccount().setAccountState(accountCreateDto.getAccountState());
+
+    public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) throws Exception {
+        Account account = mapAccountRegisterDtoToAccount(accountCreateDto);
+        account.setAccountState(accountCreateDto.getAccountState());
         List<AccessLevel> accessLevels = new ArrayList<>();
+
         for (AccessLevelDto accessLevel: accountCreateDto.getAccessLevels()) {
             AccessLevel mapped = mapAccessLevelDtoToAccessLevel(accessLevel);
             accessLevels.add(mapped);
         }
-        person.getAccount().setAccessLevels(accessLevels);
+        account.setAccessLevels(accessLevels);
 
-        return person;
+        return account;
     }
 
-    public static Person mapEditPersonInfoAsAdminDtoToPerson(EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
-        return Person.builder()
+    public static Account mapEditPersonInfoAsAdminDtoToAccount(EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+        Address address = Address.builder()
+                .country(editPersonInfoAsAdminDto.getCountry())
+                .city(editPersonInfoAsAdminDto.getCity())
+                .street(editPersonInfoAsAdminDto.getStreet())
+                .postalCode(editPersonInfoAsAdminDto.getPostalCode())
+                .streetNumber(editPersonInfoAsAdminDto.getStreetNumber()).build();
+
+        Person person = Person.builder()
                 .firstName(editPersonInfoAsAdminDto.getFirstName())
                 .lastName(editPersonInfoAsAdminDto.getLastName())
-                .address(Address.builder()
-                        .country(editPersonInfoAsAdminDto.getCountry())
-                        .city(editPersonInfoAsAdminDto.getCity())
-                        .street(editPersonInfoAsAdminDto.getStreet())
-                        .postalCode(editPersonInfoAsAdminDto.getPostalCode())
-                        .streetNumber(editPersonInfoAsAdminDto.getStreetNumber()).build())
-                .account(Account.builder()
-                        .email(editPersonInfoAsAdminDto.getEmail())
-                        .build())
+                .address(address).build();
+
+        return Account.builder()
+                .email(editPersonInfoAsAdminDto.getEmail())
+                .person(person)
                 .build();
     }
 
-    public static Person mapEditPersonInfoDtoToPerson(EditPersonInfoDto editPersonInfoDto) {
-        return Person.builder()
+
+    public static Account mapEditPersonInfoDtoToAccount(EditPersonInfoDto editPersonInfoDto) {
+        Address address = Address.builder()
+                .country(editPersonInfoDto.getCountry())
+                .city(editPersonInfoDto.getCity())
+                .street(editPersonInfoDto.getStreet())
+                .postalCode(editPersonInfoDto.getPostalCode())
+                .streetNumber(editPersonInfoDto.getStreetNumber()).build();
+
+        Person person = Person.builder()
                 .firstName(editPersonInfoDto.getFirstName())
                 .lastName(editPersonInfoDto.getLastName())
-                .address(Address.builder()
-                        .country(editPersonInfoDto.getCountry())
-                        .city(editPersonInfoDto.getCity())
-                        .street(editPersonInfoDto.getStreet())
-                        .postalCode(editPersonInfoDto.getPostalCode())
-                        .streetNumber(editPersonInfoDto.getStreetNumber()).build())
+                .address(address).build();
+
+        return Account.builder()
+                .person(person)
                 .build();
     }
 

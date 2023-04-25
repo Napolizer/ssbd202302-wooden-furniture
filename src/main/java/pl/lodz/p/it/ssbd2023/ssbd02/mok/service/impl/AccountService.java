@@ -8,7 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,136 +18,163 @@ import java.util.Optional;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AccountService {
     @Inject
-    private PersonFacadeOperations personFacadeOperations;
+    private AccountFacadeOperations accountFacade;
 
 
     public Optional<Account> getAccountByLogin(String login) {
-        return personFacadeOperations.findByAccountLogin(login).map(Person::getAccount);
+        return accountFacade.findByLogin(login);
     }
 
     public Optional<Account> getAccountById(Long id) {
-        return personFacadeOperations.findByAccountId(id).map(Person::getAccount);
+        return accountFacade.findById(id);
     }
 
     public List<Account> getAccountList() {
-        return personFacadeOperations.findAll()
-                .stream()
-                .map(Person::getAccount)
-                .toList();
+        return accountFacade.findAll();
     }
 
-    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelAlreadyAssignedException {
-        Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
-        Account foundAccount = foundPerson.getAccount();
+    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel)
+            throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
+
+        Account foundAccount = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+
         for (AccessLevel item : accessLevels) {
             if (item.getClass() == accessLevel.getClass()) {
                 throw new AccessLevelAlreadyAssignedException();
             }
         }
+
         accessLevels.add(accessLevel);
         foundAccount.setAccessLevels(accessLevels);
-        foundPerson.setAccount(foundAccount);
-        personFacadeOperations.update(foundPerson);
+        accountFacade.update(foundAccount);
     }
 
-    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) throws AccessLevelNotAssignedException {
-        Person foundPerson = personFacadeOperations.findByAccountId(accountId).orElseThrow();
-        Account foundAccount = foundPerson.getAccount();
+    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel)
+            throws AccessLevelNotAssignedException, AccountNotFoundException {
+
+
+        Account foundAccount = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+
         for (AccessLevel item : accessLevels) {
             if (item.getClass() == accessLevel.getClass()) {
                 accessLevels.remove(item);
                 foundAccount.setAccessLevels(accessLevels);
-                foundPerson.setAccount(foundAccount);
-                personFacadeOperations.update(foundPerson);
+                accountFacade.update(foundAccount);
                 return;
             }
         }
         throw new AccessLevelNotAssignedException();
     }
 
-    public void editAccountInfo(String login, Person person) {
-        Person personToUpdate = personFacadeOperations.findByAccountLogin(login).orElse(null);
-        personToUpdate.setFirstName(person.getFirstName());
-        personToUpdate.setLastName(person.getLastName());
-        personToUpdate.setAddress(person.getAddress());
-        personFacadeOperations.update(personToUpdate);
+    public void editAccountInfo(String login, Account accountWithChanges)
+            throws AccountNotFoundException {
+
+        Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+        Person personWithChanges = accountWithChanges.getPerson();
+        Address addressWithChanges = personWithChanges.getAddress();
+
+        account.getPerson().setFirstName(personWithChanges.getFirstName());
+        account.getPerson().setLastName(personWithChanges.getLastName());
+
+        Address address = account.getPerson().getAddress();
+        address.setCountry(addressWithChanges.getCountry());
+        address.setCity(addressWithChanges.getCity());
+        address.setStreet(addressWithChanges.getStreet());
+        address.setPostalCode(addressWithChanges.getPostalCode());
+        address.setStreetNumber(addressWithChanges.getStreetNumber());
+
+        accountFacade.update(account);
     }
 
-    public void editAccountInfoAsAdmin(String login, Person person) {
-        Person personToUpdate = personFacadeOperations.findByAccountLogin(login).orElse(null);
-        personToUpdate.setFirstName(person.getFirstName());
-        personToUpdate.setLastName(person.getLastName());
-        personToUpdate.setAddress(person.getAddress());
-        personToUpdate.getAccount().setEmail(person.getAccount().getEmail());
-        personFacadeOperations.update(personToUpdate);
+    public void editAccountInfoAsAdmin(String login, Account accountWithChanges)
+            throws AccountNotFoundException {
+
+        Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+        Person personWithChanges = accountWithChanges.getPerson();
+        Address addressWithChanges = personWithChanges.getAddress();
+
+        account.setEmail(accountWithChanges.getEmail());
+        account.getPerson().setFirstName(personWithChanges.getFirstName());
+        account.getPerson().setLastName(personWithChanges.getLastName());
+
+        Address address = account.getPerson().getAddress();
+        address.setCountry(addressWithChanges.getCountry());
+        address.setCity(addressWithChanges.getCity());
+        address.setStreet(addressWithChanges.getStreet());
+        address.setPostalCode(addressWithChanges.getPostalCode());
+        address.setStreetNumber(addressWithChanges.getStreetNumber());
+
+        accountFacade.update(account);
     }
 
-    public void registerAccount(Person person) {
-        Client client = new Client();
-        client.setAccount(person.getAccount());
-        person.getAccount().getAccessLevels().add(client);
-        person.getAccount().setAccountState(AccountState.NOT_VERIFIED);
-        person.getAccount().setFailedLoginCounter(0);
-        personFacadeOperations.create(person);
+    public void registerAccount(Account account) {
+        account.setAccountState(AccountState.NOT_VERIFIED);
+        account.getAccessLevels().add(new Client());
+        account.setFailedLoginCounter(0);
+        accountFacade.create(account);
     }
 
-    public void createAccount(Person person) {
-        person.getAccount().setFailedLoginCounter(0);
-        personFacadeOperations.create(person);
+    public void createAccount(Account account) {
+        account.setFailedLoginCounter(0);
+        accountFacade.create(account);
     }
 
-    public void checkIfPersonExists(Person person) throws Exception {
-        if(personFacadeOperations.findByAccountLogin(person.getAccount().getLogin()).isPresent())
+    public void checkIfAccountExists(Account account) throws Exception {
+        if(accountFacade.findByLogin(account.getLogin()).isPresent())
             throw new LoginAlreadyExistsException();
 
-        if(personFacadeOperations.findByAccountEmail(person.getAccount().getEmail()).isPresent())
+        if(accountFacade.findByEmail(account.getEmail()).isPresent())
             throw new EmailAlreadyExistsException();
     }
 
-    public void changePassword(String login, String newPassword) {
-        Person person = personFacadeOperations.findByAccountLogin(login).orElseThrow();
-        if (!Objects.equals(person.getAccount().getPassword(), newPassword)) {
-            person.getAccount().setPassword(newPassword);
-            personFacadeOperations.update(person);
+    public void changePassword(String login, String newPassword) throws AccountNotFoundException {
+        Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+        if (!Objects.equals(account.getPassword(), newPassword)) {
+            account.setPassword(newPassword);
+            accountFacade.update(account);
         }
     }
 
-    public void changePasswordAsAdmin(String login, String newPassword) {
-        Person person = personFacadeOperations.findByAccountLogin(login).orElseThrow();
-        if (!Objects.equals(person.getAccount().getPassword(), newPassword)) {
-            person.getAccount().setPassword(newPassword);
-            personFacadeOperations.update(person);
+    public void changePasswordAsAdmin(String login, String newPassword) throws AccountNotFoundException {
+        Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+        if (!Objects.equals(account.getPassword(), newPassword)) {
+            account.setPassword(newPassword);
+            accountFacade.update(account);
         }
     }
 
     public void blockAccount(Long id) throws Exception {
-        Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
-        if(!person.getAccount().getAccountState().equals(AccountState.ACTIVE))
+        Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
+
+        if(!account.getAccountState().equals(AccountState.ACTIVE))
             throw new IllegalAccountStateChangeException();
 
-        person.getAccount().setAccountState(AccountState.BLOCKED);
-        personFacadeOperations.update(person);
+        account.setAccountState(AccountState.BLOCKED);
+        accountFacade.update(account);
     }
 
     public void activateAccount(Long id) throws Exception {
-        Person person = personFacadeOperations.findByAccountId(id).orElseThrow(AccountNotFoundException::new);
-        AccountState state = person.getAccount().getAccountState();
+        Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
+        AccountState state = account.getAccountState();
+
         if(state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE))
             throw new IllegalAccountStateChangeException();
 
-        person.getAccount().setAccountState(AccountState.ACTIVE);
-        personFacadeOperations.update(person);
+        account.setAccountState(AccountState.ACTIVE);
+        accountFacade.update(account);
     }
 
     public void updateFailedLoginCounter(Account account) throws AccountNotFoundException {
-        Person person = personFacadeOperations.findByAccountId(account.getId())
-                .orElseThrow(AccountNotFoundException::new);
-        person.getAccount().setFailedLoginCounter(account.getFailedLoginCounter());
-        person.getAccount().setAccountState(account.getAccountState());
 
-        personFacadeOperations.update(person);
+        Account found = accountFacade.findById(account.getId()).orElseThrow(AccountNotFoundException::new);
+        found.setFailedLoginCounter(account.getFailedLoginCounter());
+        found.setAccountState(account.getAccountState());
+
+        accountFacade.update(found);
     }
 //    public Person updateEmail(Long accountId) {
 //        Person person = personFacadeOperations.findByAccountId(accountId).orElseThrow();

@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade;
 
 import jakarta.annotation.Resource;
-import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -216,7 +215,7 @@ public class AddressFacadeOperationsIT {
         assertThat(foundAddress2, is(notNullValue()));
         assertThat(foundAddress2, is(equalTo(savedAddress2)));
 
-        addressFacadeOperations.delete(savedAddress2);
+        addressFacadeOperations.archive(savedAddress2);
         foundPresentAddresses = addressFacadeOperations.findAllPresent();
         assertThat(foundPresentAddresses.size(), is(equalTo(1)));
         assertThat(foundPresentAddresses.get(0), is(equalTo(savedAddress1)));
@@ -232,7 +231,7 @@ public class AddressFacadeOperationsIT {
         List<Address> foundArchivedAddresses = addressFacadeOperations.findAllArchived();
         assertThat(foundArchivedAddresses.size(), is(equalTo(0)));
 
-        addressFacadeOperations.delete(savedAddress2);
+        addressFacadeOperations.archive(savedAddress2);
         foundArchivedAddresses = addressFacadeOperations.findAllArchived();
         assertThat(foundArchivedAddresses.size(), is(equalTo(1)));
         Address foundAddress = foundArchivedAddresses.get(0);
@@ -302,7 +301,7 @@ public class AddressFacadeOperationsIT {
     @Test
     public void properlyDeletesAddress() {
         Address savedAddress = addressFacadeOperations.create(address);
-        Address deletedAddress = addressFacadeOperations.delete(savedAddress);
+        Address deletedAddress = addressFacadeOperations.archive(savedAddress);
         assertThat(deletedAddress.getArchive(), is(equalTo(true)));
         assertThat(addressFacadeOperations.findAllPresent().size(), is(equalTo(0)));
     }

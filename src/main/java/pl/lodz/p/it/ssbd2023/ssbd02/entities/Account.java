@@ -13,7 +13,27 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Account.FIND_BY_ACCOUNT_ID,
+                query = "SELECT account FROM Account account WHERE account.id = :id"),
+        @NamedQuery(name = Account.FIND_BY_LOGIN,
+                query = "SELECT account FROM Account account WHERE account.login = :login"),
+        @NamedQuery(name = Account.FIND_BY_EMAIL,
+                query = "SELECT account FROM Account account WHERE account.email = :email"),
+        @NamedQuery(name = Account.FIND_ALL_BY_FIRST_NAME,
+                query = "SELECT account FROM Account account WHERE account.person.firstName = :firstName"),
+        @NamedQuery(name = Account.FIND_ALL_BY_LAST_NAME,
+                query = "SELECT account FROM Account account WHERE account.person.lastName = :lastName"),
+        @NamedQuery(name = Account.FIND_ALL_BY_ADDRESS_ID,
+                query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId")
+})
 public class Account extends AbstractEntity {
+    public static final String FIND_ALL_BY_FIRST_NAME = "Account.findAllByFirstName";
+    public static final String FIND_ALL_BY_LAST_NAME = "Account.findAllByLastName";
+    public static final String FIND_BY_LOGIN = "Account.findByLogin";
+    public static final String FIND_BY_EMAIL = "Account.findByEmail";
+    public static final String FIND_ALL_BY_ADDRESS_ID = "Account.findAllByAddressId";
+    public static final String FIND_BY_ACCOUNT_ID = "Account.findByAccountId";
     @Column(unique = true, updatable = false, nullable = false)
     private String login;
 
@@ -22,6 +42,10 @@ public class Account extends AbstractEntity {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "person_id", unique = true, nullable = false)
+    private Person person;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;

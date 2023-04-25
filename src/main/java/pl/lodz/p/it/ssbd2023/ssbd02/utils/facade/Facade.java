@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface Facade <T extends AbstractEntity> {
     T create(T entity);
-    T delete(T entity);
+    T archive(T entity);
     T update(T entity);
     Optional<T> find(Long id);
     List<T> findAll();
