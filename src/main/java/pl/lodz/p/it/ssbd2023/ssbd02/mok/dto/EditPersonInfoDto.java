@@ -26,18 +26,4 @@ public class EditPersonInfoDto {
     @NotNull
     @Positive(message = "Street number must be a positive integer")
     private Integer streetNumber;
-
-    public EditPersonInfoDto(String firstName, String lastName, String country, String city, String street, String postalCode, Integer streetNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.postalCode = postalCode;
-        this.streetNumber = streetNumber;
-    }
-
-    public EditPersonInfoDto() {
-
-    }
 }

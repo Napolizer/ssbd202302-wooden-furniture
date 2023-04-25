@@ -67,23 +67,21 @@ public class AccountService {
         throw new AccessLevelNotAssignedException();
     }
 
-    public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
-        Person person = personFacadeOperations.findByAccountLogin(login).orElse(null);
-        person.setFirstName(editPersonInfoDto.getFirstName());
-        person.setLastName(editPersonInfoDto.getLastName());
-        Address address = new Address(editPersonInfoDto.getCountry(),editPersonInfoDto.getCity(),editPersonInfoDto.getStreet(),editPersonInfoDto.getPostalCode(), editPersonInfoDto.getStreetNumber());
-        person.setAddress(address);
-        personFacadeOperations.update(person);
+    public void editAccountInfo(String login, Person person) {
+        Person personToUpdate = personFacadeOperations.findByAccountLogin(login).orElse(null);
+        personToUpdate.setFirstName(person.getFirstName());
+        personToUpdate.setLastName(person.getLastName());
+        personToUpdate.setAddress(person.getAddress());
+        personFacadeOperations.update(personToUpdate);
     }
 
-    public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
-        Person person = personFacadeOperations.findByAccountLogin(login).orElse(null);
-        person.setFirstName(editPersonInfoAsAdminDto.getFirstName());
-        person.setLastName(editPersonInfoAsAdminDto.getLastName());
-        Address address = new Address(editPersonInfoAsAdminDto.getCountry(),editPersonInfoAsAdminDto.getCity(),editPersonInfoAsAdminDto.getStreet(),editPersonInfoAsAdminDto.getPostalCode(), editPersonInfoAsAdminDto.getStreetNumber());
-        person.setAddress(address);
-        person.getAccount().setEmail(editPersonInfoAsAdminDto.getEmail());
-        personFacadeOperations.update(person);
+    public void editAccountInfoAsAdmin(String login, Person person) {
+        Person personToUpdate = personFacadeOperations.findByAccountLogin(login).orElse(null);
+        personToUpdate.setFirstName(person.getFirstName());
+        personToUpdate.setLastName(person.getLastName());
+        personToUpdate.setAddress(person.getAddress());
+        personToUpdate.getAccount().setEmail(person.getAccount().getEmail());
+        personFacadeOperations.update(personToUpdate);
     }
 
     public void registerAccount(Person person) {

@@ -93,10 +93,10 @@ public class AccountEndpoint {
     }
 
     public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
-        accountService.editAccountInfo(login,editPersonInfoDto);
+        accountService.editAccountInfo(login, DtoToEntityMapper.mapEditPersonInfoDtoToPerson(editPersonInfoDto));
     }
 
     public void editAccountInfoAsAdmin(String login, EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
-        accountService.editAccountInfoAsAdmin(login,editPersonInfoAsAdminDto);
+        accountService.editAccountInfoAsAdmin(login, DtoToEntityMapper.mapEditPersonInfoAsAdminDtoToPerson(editPersonInfoAsAdminDto));
     }
 }
