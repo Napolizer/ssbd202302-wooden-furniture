@@ -36,7 +36,7 @@ public class AccountEndpoint {
 
     public void registerAccount(AccountRegisterDto accountRegisterDto) throws Exception {
         Person person = DtoToEntityMapper.mapAccountRegisterDtoToPerson(accountRegisterDto);
-        accountService.checkIfPersonExists(person);
+        accountService.checkIfAccountExists(person);
         person.getAccount().setPassword(passwordHashService.hashPassword(accountRegisterDto.getPassword()));
         accountService.registerAccount(person);
 
@@ -45,7 +45,7 @@ public class AccountEndpoint {
 
     public void createAccount(AccountCreateDto accountCreateDto) throws Exception {
         Person person = DtoToEntityMapper.mapAccountCreateDtoToPerson(accountCreateDto);
-        accountService.checkIfPersonExists(person);
+        accountService.checkIfAccountExists(person);
         person.getAccount().setPassword(passwordHashService.hashPassword(accountCreateDto.getPassword()));
         accountService.createAccount(person);
     }
