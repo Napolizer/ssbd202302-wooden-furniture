@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
@@ -179,7 +180,7 @@ public class AccountController {
     @PUT
     @Path("/login/{login}/changePassword")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changePassword(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
+    public Response changePassword(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) throws AccountNotFoundException {
         var json = Json.createObjectBuilder();
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
@@ -190,7 +191,7 @@ public class AccountController {
             json.add("error", "Given old password");
             return Response.status(400).entity(json.build()).build();
         }
-        accountEndpoint.changePassword(login, changePasswordDto.getPassword());
+        accountEndpoint.changePassword(login, changePasswordDto.getPassword()); //FIXME handle exception
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
         return Response.ok(changedAccount).build();
     }
@@ -198,7 +199,7 @@ public class AccountController {
     @PUT
     @Path("/login/{login}/changePasswordAsAdmin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
+    public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) throws AccountNotFoundException {
         var json = Json.createObjectBuilder();
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
@@ -209,7 +210,7 @@ public class AccountController {
             json.add("error", "Given old password");
             return Response.status(400).entity(json.build()).build();
         }
-        accountEndpoint.changePasswordAsAdmin(login, changePasswordDto.getPassword());
+        accountEndpoint.changePasswordAsAdmin(login, changePasswordDto.getPassword()); //FIXME handle exception
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
         return Response.ok(changedAccount).build();
     }
@@ -235,13 +236,13 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
-    public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+    public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) throws AccountNotFoundException {
         var json = Json.createObjectBuilder();
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto);
+        accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto); //FIXME handle exception
         return Response.ok(editPersonInfoAsAdminDto).build();
     }
 
@@ -277,13 +278,13 @@ public class AccountController {
     @Path("/login/{login}/editOwnAccount")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) {
+    public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) throws AccountNotFoundException {
         var json = Json.createObjectBuilder();
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
             json.add("error", "Account not found");
             return Response.status(404).entity(json.build()).build();
         }
-        accountEndpoint.editAccountInfo(login, editPersonInfoDto);
+        accountEndpoint.editAccountInfo(login, editPersonInfoDto); //FIXME handle exception
         return Response.ok(editPersonInfoDto).build();
     }
 
