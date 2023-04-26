@@ -1,0 +1,33 @@
+<div class="background"></div>
+<div class="container">
+  <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
+    <div class="image-container">
+      <img class="background-image" src="assets/images/login-page-furnitures.jpg" alt="">
+    </div>
+    <div class="form-container">
+      <p class="form-title">MebleX</p>
+      <p class="form-description">Login to continue</p>
+      <div class="form">
+        <div class="login-container">
+          <mat-form-field hintLabel="Max 20 characters" appearance="fill" class="input">
+            <mat-label>Enter your login</mat-label>
+            <input matInput #login maxlength="20" placeholder="Ex. Nougat" type="text">
+            <mat-hint align="end">{{login.value.length}}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="password-container">
+          <mat-form-field appearance="fill" class="input">
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="button-container">
+            <button mat-button color="primary" class="login-button">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
