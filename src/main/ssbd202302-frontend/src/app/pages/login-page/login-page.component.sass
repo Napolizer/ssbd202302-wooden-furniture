@@ -72,7 +72,57 @@ $border-radius: 10px
         max-width: 500px
 
     .button-container
+      margin-top: 10px
       margin-bottom: 20px
 
 .input
   width: 40%
+
+@media(max-width: 1600px)
+  .container
+    padding-left: 200px
+    padding-right: 200px
+    .panel
+      .image-container
+        max-width: 400px
+
+        .background-image
+          max-width: 400px
+
+@media(max-width: 1280px)
+  .input
+    width: 50%
+  .container
+    padding-left: 100px
+    padding-right: 100px
+    .panel
+      .image-container
+        max-width: 300px
+
+        .background-image
+          max-width: 300px
+
+@media(max-width: 900px)
+  .input
+    width: 60%
+  .container
+    padding-left: 100px
+    padding-right: 100px
+    .panel
+      .form-container
+        border-bottom-right-radius: 0
+        border-top-right-radius: 0
+
+        .form-title
+          font-size: 30px
+          margin-top: 20px
+
+        .form-description
+          font-size: 20px
+      .image-container
+        display: none
+
+@media(max-width: 400px)
+  .container
+    padding-left: 10px
+    padding-right: 10px
