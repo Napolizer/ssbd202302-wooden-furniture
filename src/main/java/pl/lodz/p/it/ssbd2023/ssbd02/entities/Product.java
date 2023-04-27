@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "product", indexes = @Index(name = "product_product_group_id", columnList = "product_group_id", unique = true))
 @NamedQueries({
         @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),

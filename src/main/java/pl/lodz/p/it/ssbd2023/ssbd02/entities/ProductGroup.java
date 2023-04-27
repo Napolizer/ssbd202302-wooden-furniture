@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "product_group")
+@Table(name = "product_group", indexes = @Index(name = "product_group_category_id", columnList = "category_id", unique = true))
 public class ProductGroup extends AbstractEntity {
 
     @Column(nullable = false)

@@ -17,6 +17,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity(name = "sales_order")
+@Table(name = "sales_order", indexes = {
+        @Index(name = "sales_order_account_id", columnList = "account_id", unique = true),
+        @Index(name = "sales_order_delivery_person_id", columnList = "delivery_person_id", unique = true),
+        @Index(name = "sales_order_delivery_address_id", columnList = "delivery_address_id", unique = true)
+})
 public class Order extends AbstractEntity {
 
     @Column(nullable = false, updatable = false, name = "creation_date")
@@ -36,7 +41,8 @@ public class Order extends AbstractEntity {
     @JoinTable(
             name = "sales_order_product",
             joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
+            inverseJoinColumns = @JoinColumn(name = "product_id"),
+            indexes = @Index(name = "sales_order_product_product_id", columnList = "product_id", unique = true)
     )
     private List<Product> products = new ArrayList<>();
 

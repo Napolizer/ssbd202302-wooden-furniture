@@ -15,6 +15,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Table(name = "rate", indexes = {
+        @Index(name = "rate_person_id", columnList = "person_id", unique = true),
+        @Index(name = "rate_product_group_id", columnList = "product_group_id", unique = true)
+})
 @NamedQueries({ @NamedQuery(name = Rate.FIND_ALL_BY_VALUE,
                         query = "SELECT rate from Rate rate WHERE rate.value = :value"),
                 @NamedQuery(name = Rate.FIND_ALL_BY_PERSON_ID,
