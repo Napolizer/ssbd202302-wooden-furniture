@@ -4,35 +4,35 @@
     <div class="image-container">
       <img class="background-image" src="assets/images/login-page-furnitures.jpg" alt="">
     </div>
-    <div class="form-container">
+    <form class="form-container" [formGroup]="loginForm">
       <p class="form-title">Meble Drewniane</p>
       <p class="form-description">Login to continue</p>
       <div class="form">
         <div class="login-container">
           <mat-form-field hintLabel="Max 20 characters" appearance="fill" class="input">
             <mat-label>Enter your login</mat-label>
-            <input matInput #login placeholder="login" type="text" [(ngModel)]="loginField" required pattern="^[a-zA-Z][a-zA-Z0-9]*$" minlength="6" maxlength="20">
+            <input matInput #login placeholder="login" type="text" formControlName="login" required pattern="^[a-zA-Z][a-zA-Z0-9]*$" minlength="6" maxlength="20">
             <mat-error *ngIf="login.validity.patternMismatch">Login must start with a letter and contain only letters and digits</mat-error>
             <mat-error *ngIf="login.validity.tooShort">Login must contain at least 6 characters</mat-error>
             <mat-hint align="end">{{login.value.length}}/20</mat-hint>
           </mat-form-field>
         </div>
         <div class="password-container">
-          <mat-form-field appearance="fill" class="input">
+          <mat-form-field hintLabel="Max 32 characters" appearance="fill" class="input">
             <mat-label>Enter your password</mat-label>
-            <input #password matInput [type]="hide ? 'password' : 'text'" placeholder="password" [(ngModel)]="passwordField" required pattern="^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$" minlength="8" maxlength="32">
+            <input #password matInput [type]="hide ? 'password' : 'text'" placeholder="password" formControlName="password" required pattern="^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$" minlength="8" maxlength="32">
             <mat-error *ngIf="password.validity.patternMismatch">Password must contain at least one capital letter and one special character</mat-error>
             <mat-error *ngIf="password.validity.tooShort">Password must contain at least 8 characters</mat-error>
-            <mat-error *ngIf="password.validity.tooLong">Password must contain at most 32 characters</mat-error>
+            <mat-hint align="end">{{password.value.length}}/32</mat-hint>
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
           </mat-form-field>
         </div>
         <div class="button-container">
-            <button mat-button color="primary" class="login-button" (click)="onLoginClicked()">Login</button>
+            <button mat-button color="primary" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">Login</button>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>

@@ -5,6 +5,7 @@ import {AlertService} from '@full-fledged/alerts';
 import {Router} from '@angular/router';
 import {TokenService} from '../../services/token.service';
 import {Subject, takeUntil} from 'rxjs';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-login-page',
@@ -33,8 +34,10 @@ import {Subject, takeUntil} from 'rxjs';
 export class LoginPageComponent implements OnInit, OnDestroy {
   hide = true;
   loaded = false;
-  loginField = '';
-  passwordField = '';
+  loginForm = new FormGroup({
+    login: new FormControl(''),
+    password: new FormControl('')
+  });
   destroy = new Subject<boolean>();
 
   constructor(
@@ -60,7 +63,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   onLoginClicked(): void {
-    this.authenticationService.login(this.loginField, this.passwordField)
+    this.authenticationService.login(this.loginForm.value['login'] ?? '', this.loginForm.value['password'] ?? '')
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: token => {
