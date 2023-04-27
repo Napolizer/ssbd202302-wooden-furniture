@@ -19,9 +19,9 @@ public class AppContainerConfig implements SharedContainerConfiguration {
 
     @Container
     public static ApplicationContainer container = new ApplicationContainer()
-            .withAppContextRoot("/ssbd02-Wv0.0.6/api/v1")
+            .withAppContextRoot("/ssbd02-0.0.7/api/v1")
             .withEnv("DB_HOST", "testpostgres")
-            .withReadinessPath("/ssbd02-Wv0.0.6/api/v1/health")
+            .withReadinessPath("/ssbd02-0.0.7/api/v1/health")
             .dependsOn(postgres)
             .withStartupTimeout(Duration.ofMinutes(2));
 }
