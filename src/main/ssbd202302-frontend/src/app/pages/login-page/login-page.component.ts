@@ -3,6 +3,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '@full-fledged/alerts';
 import {Router} from '@angular/router';
+import {TokenService} from '../../services/token.service';
 
 @Component({
   selector: 'app-login-page',
@@ -37,7 +38,8 @@ export class LoginPageComponent implements OnInit {
   constructor(
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +55,7 @@ export class LoginPageComponent implements OnInit {
   onLoginClicked(): void {
     this.authenticationService.login(this.loginField, this.passwordField).then(async token => {
       this.alertService.success('You have successfully logged in!');
+      this.tokenService.saveToken(token);
       await this.router.navigate(['/home']);
     }).catch(e => {
       this.alertService.danger('Error occurred: ' + e.error.message);

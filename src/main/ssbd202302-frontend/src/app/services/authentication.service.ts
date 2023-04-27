@@ -12,7 +12,7 @@ export class AuthenticationService {
     private httpClient: HttpClient
   ) {}
 
-  login(login: string, password: string): Promise<Object> {
+  login(login: string, password: string): Promise<string> {
     return lastValueFrom(this.httpClient.post(`${environment.apiBaseUrl}/account/login`, {
       login: login,
       password: password
