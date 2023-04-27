@@ -16,14 +16,8 @@ import lombok.experimental.SuperBuilder;
                 query = "SELECT person FROM Person person WHERE person.firstName = :firstName"),
         @NamedQuery(name = Person.FIND_ALL_BY_LAST_NAME,
                 query = "SELECT person FROM Person person WHERE person.lastName = :lastName"),
-        @NamedQuery(name = Person.FIND_BY_ACCOUNT_LOGIN,
-                query = "SELECT person FROM Person person WHERE person.account.login = :accountLogin"),
-        @NamedQuery(name = Person.FIND_BY_ACCOUNT_EMAIL,
-                query = "SELECT person FROM Person person WHERE person.account.email = :accountEmail"),
         @NamedQuery(name = Person.FIND_ALL_BY_ADDRESS_ID,
-                query = "SELECT person FROM Person person WHERE person.address.id = :addressId"),
-        @NamedQuery(name = Person.FIND_BY_ACCOUNT_ID,
-                query = "SELECT person FROM Person person WHERE person.account.id = :accountId")
+                query = "SELECT person FROM Person person WHERE person.address.id = :addressId")
 })
 
 public class Person extends AbstractEntity {
