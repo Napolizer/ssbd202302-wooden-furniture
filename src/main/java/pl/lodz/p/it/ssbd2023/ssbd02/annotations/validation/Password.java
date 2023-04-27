@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$",
          message = "Password must contain at least one uppercase letter " +
                  "and one special character from the following set: !@#$%^&+=")
-@Size(min = 8, max = 32, message = "the length of the field must be between {min} and {max} characters.")
+@Size(min = 8, max = 32, message = "The length of the field must be between {min} and {max} characters.")
 public @interface Password {
     String message() default "\"Password must contain at least one uppercase letter \" +\n" +
             "                 \"and one special character from the following set: !@#$%^&+=\"";
