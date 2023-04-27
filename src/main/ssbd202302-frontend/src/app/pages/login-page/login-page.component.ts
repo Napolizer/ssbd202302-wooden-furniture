@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '@full-fledged/alerts';
 import {Router} from '@angular/router';
 import {TokenService} from '../../services/token.service';
+import {Subject, takeUntil} from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -29,11 +30,12 @@ import {TokenService} from '../../services/token.service';
     ]),
   ]
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, OnDestroy {
   hide = true;
   loaded = false;
   loginField = '';
   passwordField = '';
+  destroy = new Subject<boolean>();
 
   constructor(
     private alertService: AlertService,
@@ -48,17 +50,27 @@ export class LoginPageComponent implements OnInit {
     }, 100);
   }
 
+  ngOnDestroy(): void {
+    this.destroy.next(true);
+    this.destroy.unsubscribe();
+  }
+
   getFormAnimationState(): string {
     return this.loaded ? 'loaded' : 'unloaded';
   }
 
   onLoginClicked(): void {
-    this.authenticationService.login(this.loginField, this.passwordField).then(async token => {
-      this.alertService.success('You have successfully logged in!');
-      this.tokenService.saveToken(token);
-      await this.router.navigate(['/home']);
-    }).catch(e => {
-      this.alertService.danger('Error occurred: ' + e.error.message);
-    });
+    this.authenticationService.login(this.loginField, this.passwordField)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: token => {
+          this.alertService.success('You have successfully logged in!');
+          this.tokenService.saveToken(token);
+          void this.router.navigate(['/home']);
+        },
+        error: e => {
+          this.alertService.danger('Error occurred: ' + e.error.message);
+        }
+      })
   }
 }
