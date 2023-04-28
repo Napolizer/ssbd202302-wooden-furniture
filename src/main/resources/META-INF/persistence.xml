@@ -7,6 +7,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd02admin</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
@@ -19,6 +20,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd02mok</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.canonicalmodel.prefix" value="mok"/>
@@ -29,6 +31,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd02moz</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.canonicalmodel.prefix" value="moz"/>
@@ -39,6 +42,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd02auth</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.canonicalmodel.prefix" value="auth"/>
