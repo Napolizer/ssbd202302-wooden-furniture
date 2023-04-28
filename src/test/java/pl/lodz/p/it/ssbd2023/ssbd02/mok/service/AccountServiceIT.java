@@ -47,8 +47,8 @@ public class AccountServiceIT {
     @Inject
     private AccountService accountService;
 
-    private Person person;
-    private Person personToRegister;
+    private Account account;
+    private Account accountToRegister;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -62,28 +62,31 @@ public class AccountServiceIT {
 
     @BeforeEach
     public void setup() {
-        person = personFacadeOperations.create(
-                Person.builder()
-                        .firstName("John")
-                        .lastName("Doe")
-                        .address(Address.builder()
-                                .country("Poland")
-                                .city("Lodz")
-                                .street("Koszykowa")
-                                .postalCode("90-000")
-                                .streetNumber(12)
+        account = accountFacade.create(
+                Account.builder()
+                        .login("test")
+                        .password("test")
+                        .email("test@gmail.com")
+                        .person(Person.builder()
+                                .firstName("John")
+                                .lastName("Doe")
+                                .address(Address.builder()
+                                        .country("Poland")
+                                        .city("Lodz")
+                                        .street("Koszykowa")
+                                        .postalCode("90-000")
+                                        .streetNumber(12)
+                                        .build())
                                 .build())
-                        .account(Account.builder()
-                                .login("test")
-                                .password("test")
-                                .email("test@gmail.com")
-                                .locale("pl")
-                                .accountState(AccountState.ACTIVE)
-                                .build())
+                        .locale("pl")
+                        .accountState(AccountState.ACTIVE)
                         .build()
         );
-        personToRegister =
-                Person.builder()
+        accountToRegister = Account.builder()
+                .login("test123")
+                .password("test123")
+                .email("test123@gmail.com")
+                .person(Person.builder()
                         .firstName("Bob")
                         .lastName("Joe")
                         .address(Address.builder()
@@ -93,14 +96,10 @@ public class AccountServiceIT {
                                 .postalCode("90-000")
                                 .streetNumber(15)
                                 .build())
-                        .account(Account.builder()
-                                .login("test123")
-                                .password("test123")
-                                .email("test123@gmail.com")
-                                .locale("pl")
-                                .build())
-                        .build();
-    }
+                        .build())
+                .locale("pl")
+                .build();
+   }
 
     @AfterEach
     public void teardown() throws Exception {
@@ -113,9 +112,9 @@ public class AccountServiceIT {
 
     @Test
     public void properlyGetsAccountByLogin() {
-        Optional<Account> accountOptional = accountService.getAccountByLogin(person.getAccount().getLogin());
+        Optional<Account> accountOptional = accountService.getAccountByLogin(account.getLogin());
         assertThat(accountOptional.isPresent(), is(equalTo(true)));
-        assertThat(accountOptional.get(), is(equalTo(person.getAccount())));
+        assertThat(accountOptional.get(), is(equalTo(account)));
     }
 
     @Test
@@ -138,9 +137,9 @@ public class AccountServiceIT {
 
     @Test
     public void properlyGetsAccountById() {
-        Optional<Account> accountOptional = accountService.getAccountById(person.getAccount().getId());
+        Optional<Account> accountOptional = accountService.getAccountById(account.getId());
         assertThat(accountOptional.isPresent(), is(equalTo(true)));
-        assertThat(accountOptional.get(), is(equalTo(person.getAccount())));
+        assertThat(accountOptional.get(), is(equalTo(account)));
     }
 
     @Test
@@ -177,7 +176,7 @@ public class AccountServiceIT {
         List<Account> accounts = accountService.getAccountList();
         assertThat(accounts.isEmpty(), is(false));
         assertThat(accounts.size(), is(equalTo(1)));
-        assertThat(accounts.get(0), is(equalTo(person.getAccount())));
+        assertThat(accounts.get(0), is(equalTo(account)));
     }
 
     @Test
@@ -188,118 +187,120 @@ public class AccountServiceIT {
     }
 
     @Test
-    public void properlyAddsNewAccessLevelToAccount() throws AccessLevelAlreadyAssignedException {
+    public void properlyAddsNewAccessLevelToAccount() throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
         AccessLevel newAccessLevel = new Client();
 
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
-        List<AccessLevel> accessLevels = personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels();
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+        accountService.addAccessLevelToAccount(account.getId(), newAccessLevel);
+        List<AccessLevel> accessLevels = accountFacade.find(account.getId()).orElseThrow().getAccessLevels();
         assertThat(accessLevels.size(), equalTo(1));
         assertTrue(accessLevels.get(0) instanceof Client);
     }
 
     @Test
-    public void failsToAddAccessLevelWhenAccessLevelIsAdded() throws AccessLevelAlreadyAssignedException {
+    public void failsToAddAccessLevelWhenAccessLevelIsAdded() throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
         AccessLevel newAccessLevel = new Client();
 
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        assertThrows(AccessLevelAlreadyAssignedException.class, () -> accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel));
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+        accountService.addAccessLevelToAccount(account.getId(), newAccessLevel);
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+        assertThrows(AccessLevelAlreadyAssignedException.class, () -> accountService.addAccessLevelToAccount(account.getId(), newAccessLevel));
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
     }
 
     @Test
-    public void properlyRemovesAccessLevelFromAccount() throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException {
+    public void properlyRemovesAccessLevelFromAccount() throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException {
         AccessLevel newAccessLevel = new Client();
 
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addAccessLevelToAccount(person.getAccount().getId(), newAccessLevel);
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
-        accountService.removeAccessLevelFromAccount(person.getAccount().getId(), newAccessLevel);
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+        accountService.addAccessLevelToAccount(account.getId(), newAccessLevel);
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+        accountService.removeAccessLevelFromAccount(account.getId(), newAccessLevel);
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
     }
 
     @Test
-    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException {
+    public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded() throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
         AccessLevel accessLevelClient = new Client();
         AccessLevel accessLevelAdmin = new Administrator();
 
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(0));
-        accountService.addAccessLevelToAccount(person.getAccount().getId(), accessLevelClient);
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+        accountService.addAccessLevelToAccount(account.getId(), accessLevelClient);
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
         assertThrows(AccessLevelNotAssignedException.class,
-                () -> accountService.removeAccessLevelFromAccount(person.getAccount().getId(), accessLevelAdmin));
-        assertThat(personFacadeOperations.find(person.getId()).orElseThrow().getAccount().getAccessLevels().size(), equalTo(1));
+                () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelAdmin));
+        assertThat(accountFacade.find(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
     }
 
     @Test
     public void properlyEditsAccountInfo() throws Exception {
-        Person person = Person.builder()
-                .firstName("Adam")
-                .lastName("John")
-                .address(Address.builder()
-                    .country("Poland")
-                    .city("Lodz")
-                    .street("Koszykowa")
-                    .postalCode("90-200")
-                    .streetNumber(24)
-                    .build())
+        Account editedAccount = Account.builder()
+                .person(Person.builder()
+                        .firstName("Adam")
+                        .lastName("John")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Lodz")
+                                .street("Koszykowa")
+                                .postalCode("90-200")
+                                .streetNumber(24)
+                                .build())
+                        .build())
                 .build();
         utx.begin();
-        assertEquals(this.person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
-        assertEquals(this.person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
-        assertEquals(this.person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(this.person.getAddress().getId()).get(0).getAddress().getStreetNumber());
-        accountService.editAccountInfo(this.person.getAccount().getLogin(), person);
+        assertEquals(account.getPerson().getFirstName(), accountFacade.findByLogin("test").get().getPerson().getFirstName());
+        assertEquals(account.getPerson().getLastName(), accountFacade.findByLogin("test").get().getPerson().getLastName());
+        assertEquals(account.getPerson().getAddress().getStreetNumber(), accountFacade.findByLogin("test").get().getPerson().getAddress().getStreetNumber());
+        accountService.editAccountInfo(account.getLogin(), editedAccount);
         utx.commit();
 
         utx.begin();
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Adam");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "John");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 24);
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getFirstName(), "Adam");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getLastName(), "John");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getAddress().getStreetNumber(), 24);
         utx.commit();
     }
 
 
     @Test
     public void properlyEditsAccountInfoAsAdmin() throws Exception {
-        Person person = Person.builder()
-                .firstName("Jack")
-                .lastName("Smith")
-                .address(Address.builder()
-                        .country("Poland")
-                        .city("Warsaw")
-                        .street("Mickiewicza")
-                        .postalCode("92-100")
-                        .streetNumber(15)
-                        .build())
-                .account(Account.builder()
-                        .email("test1@gmail.com")
+        Account editedAccount = Account.builder()
+                .email("test1@gmail.com")
+                .person(Person.builder()
+                        .firstName("Jack")
+                        .lastName("Smith")
+                        .address(Address.builder()
+                                .country("Poland")
+                                .city("Warsaw")
+                                .street("Mickiewicza")
+                                .postalCode("92-100")
+                                .streetNumber(15)
+                                .build())
                         .build())
                 .build();
         utx.begin();
-        assertEquals(this.person.getFirstName(), personFacadeOperations.findByAccountLogin("test").get().getFirstName());
-        assertEquals(this.person.getLastName(), personFacadeOperations.findByAccountLogin("test").get().getLastName());
-        assertEquals(this.person.getAddress().getStreetNumber(), personFacadeOperations.findAllByAddressId(this.person.getAddress().getId()).get(0).getAddress().getStreetNumber());
-        assertEquals(this.person.getAccount().getEmail(),personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail());
-        accountService.editAccountInfoAsAdmin(this.person.getAccount().getLogin(), person);
+        assertEquals(account.getPerson().getFirstName(), accountFacade.findByLogin("test").get().getPerson().getFirstName());
+        assertEquals(account.getPerson().getLastName(), accountFacade.findByLogin("test").get().getPerson().getLastName());
+        assertEquals(account.getPerson().getAddress().getStreetNumber(), accountFacade.findByLogin("test").get().getPerson().getAddress().getStreetNumber());
+        assertEquals(account.getEmail(),accountFacade.findByLogin("test").get().getEmail());
+        accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount);
         utx.commit();
 
         utx.begin();
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getFirstName(), "Jack");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getLastName(), "Smith");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getCountry(), "Poland");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getCity(), "Warsaw");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreet(), "Mickiewicza");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getPostalCode(), "92-100");
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAddress().getStreetNumber(), 15);
-        assertEquals(personFacadeOperations.findByAccountLogin("test").get().getAccount().getEmail(), "test1@gmail.com");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getFirstName(), "Jack");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getLastName(), "Smith");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getAddress().getCountry(), "Poland");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getAddress().getCity(), "Warsaw");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getAddress().getStreet(), "Mickiewicza");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getAddress().getPostalCode(), "92-100");
+        assertEquals(accountFacade.findByLogin("test").get().getPerson().getAddress().getStreetNumber(), 15);
+        assertEquals(accountFacade.findByLogin("test").get().getEmail(), "test1@gmail.com");
         utx.commit();
     }
 
     @Test
     public void properlyRegistersAccount() {
-        assertDoesNotThrow(() -> accountService.registerAccount(personToRegister));
+        assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
         assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
@@ -309,9 +310,9 @@ public class AccountServiceIT {
 
     @Test
     public void properlyCreatesAccount() {
-        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
-        personToRegister.getAccount().setAccessLevels(List.of(new Client(), new Employee()));
-        assertDoesNotThrow(() -> accountService.createAccount(personToRegister));
+        accountToRegister.setAccountState(AccountState.ACTIVE);
+        accountToRegister.setAccessLevels(List.of(new Client(), new Employee()));
+        assertDoesNotThrow(() -> accountService.createAccount(accountToRegister));
         Account account = accountService.getAccountByLogin("test123").orElseThrow();
         assertEquals(2, accountService.getAccountList().size());
         assertEquals(AccountState.ACTIVE, account.getAccountState());
@@ -322,119 +323,116 @@ public class AccountServiceIT {
 
     @Test
     public void failsToRegisterAccountWithSameLogin() {
-        personToRegister.getAccount().setLogin(person.getAccount().getLogin());
-        assertThrows(Exception.class, () -> accountService.registerAccount(personToRegister));
+        accountToRegister.setLogin(account.getLogin());
+        assertThrows(Exception.class, () -> accountService.registerAccount(accountToRegister));
         assertEquals(1, accountService.getAccountList().size());
     }
 
     @Test
     public void properlyChangesPassword() {
         String newPassword = "newPassword";
-        assertEquals("test", accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
-        assertDoesNotThrow(() -> accountService.changePassword(person.getAccount().getLogin(), newPassword));
-        assertEquals(newPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+        assertEquals("test", accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+        assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword));
+        assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     }
 
     @Test
-    public void failsToChangePasswordWhenGivenOldPassword() {
-        String oldPassword = person.getAccount().getPassword();
-        assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
-        accountService.changePassword(person.getAccount().getLogin(), oldPassword);
-        assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+    public void failsToChangePasswordWhenGivenOldPassword() throws AccountNotFoundException {
+        String oldPassword = account.getPassword();
+        assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+        accountService.changePassword(account.getLogin(), oldPassword);
+        assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     }
 
     @Test
     public void properlyChangesPasswordAsAdmin() {
         String newPassword = "newPassword";
-        assertEquals("test", accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
-        assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(person.getAccount().getLogin(), newPassword));
-        assertEquals(newPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+        assertEquals("test", accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+        assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin(), newPassword));
+        assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     }
 
     @Test
-    public void failsToChangePasswordAsAdminWhenGivenOldPassword() {
-        String oldPassword = person.getAccount().getPassword();
-        assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
-        accountService.changePasswordAsAdmin(person.getAccount().getLogin(), oldPassword);
-        assertEquals(oldPassword, accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow().getPassword());
+    public void failsToChangePasswordAsAdminWhenGivenOldPassword() throws AccountNotFoundException {
+        String oldPassword = account.getPassword();
+        assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+        accountService.changePasswordAsAdmin(account.getLogin(), oldPassword);
+        assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     }
 
     @Test
     public void properlyBlocksActiveAccount() {
-        Account account = accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow();
         assertEquals(AccountState.ACTIVE, account.getAccountState());
         assertDoesNotThrow(() -> accountService.blockAccount(account.getId()));
-        Account changed = accountService.getAccountByLogin(person.getAccount().getLogin()).orElseThrow();
-        assertEquals(AccountState.BLOCKED, changed.getAccountState());
+        assertEquals(AccountState.BLOCKED, account.getAccountState());
     }
 
     @Test
     public void blockAlreadyBlockedAccountShouldThrowException() {
-        personToRegister.getAccount().setAccountState(AccountState.BLOCKED);
-        Person persisted = personFacadeOperations.create(personToRegister);
+        accountToRegister.setAccountState(AccountState.BLOCKED);
+        Account persisted = accountFacade.create(accountToRegister);
 
         assertThrows(IllegalAccountStateChangeException.class,
-                () -> accountService.blockAccount(persisted.getAccount().getId()));
+                () -> accountService.blockAccount(persisted.getId()));
     }
 
     @Test
     public void blockInactiveAccountShouldThrowException() {
-        personToRegister.getAccount().setAccountState(AccountState.INACTIVE);
-        Person persisted = personFacadeOperations.create(personToRegister);
+        accountToRegister.setAccountState(AccountState.INACTIVE);
+        Account persisted = accountFacade.create(accountToRegister);
 
         assertThrows(IllegalAccountStateChangeException.class,
-                () -> accountService.blockAccount(persisted.getAccount().getId()));
+                () -> accountService.blockAccount(persisted.getId()));
     }
 
     @Test
     public void blockNotVerifiedAccountShouldThrowException() {
-        personToRegister.getAccount().setAccountState(AccountState.NOT_VERIFIED);
-        Person persisted = personFacadeOperations.create(personToRegister);
+        accountToRegister.setAccountState(AccountState.NOT_VERIFIED);
+        Account persisted = accountFacade.create(accountToRegister);
 
         assertThrows(IllegalAccountStateChangeException.class,
-                () -> accountService.blockAccount(persisted.getAccount().getId()));
+                () -> accountService.blockAccount(persisted.getId()));
     }
 
     @Test
     public void blockNonExistingUserShouldThrowException() {
         assertThrows(AccountNotFoundException.class,
                 () -> accountService.blockAccount(Long.MAX_VALUE));
-
     }
 
 
     @Test
     public void properlyActivatesBlockedAccount() {
-        personToRegister.getAccount().setAccountState(AccountState.BLOCKED);
-        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        accountToRegister.setAccountState(AccountState.BLOCKED);
+        Account account = accountFacade.create(accountToRegister);
         assertEquals(AccountState.BLOCKED, account.getAccountState());
         assertDoesNotThrow(() -> accountService.activateAccount(account.getId()));
-        Account changed = accountService.getAccountByLogin(personToRegister.getAccount().getLogin()).orElseThrow();
+        Account changed = accountService.getAccountByLogin(accountToRegister.getLogin()).orElseThrow();
         assertEquals(AccountState.ACTIVE, changed.getAccountState());
     }
 
     @Test
     public void properlyActivatesNotVerifiedAccount() {
-        personToRegister.getAccount().setAccountState(AccountState.NOT_VERIFIED);
-        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        accountToRegister.setAccountState(AccountState.NOT_VERIFIED);
+        Account account = accountFacade.create(accountToRegister);
         assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
         assertDoesNotThrow(() -> accountService.activateAccount(account.getId()));
-        Account changed = accountService.getAccountByLogin(personToRegister.getAccount().getLogin()).orElseThrow();
+        Account changed = accountService.getAccountByLogin(accountToRegister.getLogin()).orElseThrow();
         assertEquals(AccountState.ACTIVE, changed.getAccountState());
     }
 
     @Test
     public void activateAlreadyActivatedAccountShouldThrowException() {
-        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
-        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        accountToRegister.setAccountState(AccountState.ACTIVE);
+        Account account = accountFacade.create(accountToRegister);
         assertThrows(IllegalAccountStateChangeException.class,
                 () -> accountService.activateAccount(account.getId()));
     }
 
     @Test
     public void activateInactiveAccountShouldThrowException() {
-        personToRegister.getAccount().setAccountState(AccountState.INACTIVE);
-        Account account = personFacadeOperations.create(personToRegister).getAccount();
+        accountToRegister.setAccountState(AccountState.INACTIVE);
+        Account account = accountFacade.create(accountToRegister);
         assertThrows(IllegalAccountStateChangeException.class,
                 () -> accountService.activateAccount(account.getId()));
     }
@@ -443,7 +441,6 @@ public class AccountServiceIT {
     public void activateNonExistingAccountShouldThrowException() {
         assertThrows(AccountNotFoundException.class,
                 () -> accountService.activateAccount(Long.MAX_VALUE));
-
     }
 
 //    @Test
