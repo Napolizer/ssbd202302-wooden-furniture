@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Entity(name = "access_level")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "dtype", columnDefinition = "varchar(31) NOT NULL")
-@Table(name = "access_level", indexes = @Index(name = "access_level_account_id", columnList = "account_id", unique = true))
+@Table(name = "access_level", indexes = @Index(name = "access_level_account_id", columnList = "account_id"))
 public abstract class AccessLevel extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "account_id", updatable = false, nullable = false)

@@ -3,10 +3,13 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.AccountFacadeExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
@@ -15,6 +18,10 @@ import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Interceptors({
+        GenericFacadeExceptionsInterceptor.class,
+        AccountFacadeExceptionsInterceptor.class
+})
 public class AccountFacade extends AbstractFacade<Account> implements AccountFacadeOperations {
 
     @PersistenceContext(unitName = "ssbd02mokPU")
@@ -27,6 +34,20 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
 
     public AccountFacade() {
         super(Account.class);
+    }
+
+    @Override
+    public Account create(Account entity) {
+        Account account = super.create(entity);
+        em.flush();
+        return account;
+    }
+
+    @Override
+    public Account update(Account entity) {
+        Account account = super.update(entity);
+        em.flush();
+        return account;
     }
 
     @Override

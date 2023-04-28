@@ -4,8 +4,11 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
 import java.util.List;
@@ -14,6 +17,9 @@ import java.util.Optional;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({
+        GenericServiceExceptionsInterceptor.class
+})
 public class AccountService {
     @Inject
     private AccountFacadeOperations accountFacade;
@@ -31,27 +37,22 @@ public class AccountService {
         return accountFacade.findAll();
     }
 
-    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel)
-            throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
-
+    public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
         Account foundAccount = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
         for (AccessLevel item : accessLevels) {
             if (item.getClass() == accessLevel.getClass()) {
-                throw new AccessLevelAlreadyAssignedException();
+                throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
             }
         }
-
+        accessLevel.setAccount(foundAccount);
         accessLevels.add(accessLevel);
         foundAccount.setAccessLevels(accessLevels);
         accountFacade.update(foundAccount);
     }
 
-    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel)
-            throws AccessLevelNotAssignedException, AccountNotFoundException {
-
-
+    public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
         Account foundAccount = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
         List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
@@ -63,12 +64,10 @@ public class AccountService {
                 return;
             }
         }
-        throw new AccessLevelNotAssignedException();
+        throw ApplicationExceptionFactory.createAccessLevelNotAssignedException();
     }
 
-    public void editAccountInfo(String login, Account accountWithChanges)
-            throws AccountNotFoundException {
-
+    public void editAccountInfo(String login, Account accountWithChanges) {
         Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
         Person personWithChanges = accountWithChanges.getPerson();
         Address addressWithChanges = personWithChanges.getAddress();
@@ -86,8 +85,7 @@ public class AccountService {
         accountFacade.update(account);
     }
 
-    public void editAccountInfoAsAdmin(String login, Account accountWithChanges)
-            throws AccountNotFoundException {
+    public void editAccountInfoAsAdmin(String login, Account accountWithChanges) {
 
         Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
         Person personWithChanges = accountWithChanges.getPerson();
@@ -109,7 +107,9 @@ public class AccountService {
 
     public void registerAccount(Account account) {
         account.setAccountState(AccountState.NOT_VERIFIED);
-        account.getAccessLevels().add(new Client());
+        Client client = new Client();
+        client.setAccount(account);
+        account.getAccessLevels().add(client);
         account.setFailedLoginCounter(0);
         accountFacade.create(account);
     }
@@ -119,15 +119,7 @@ public class AccountService {
         accountFacade.create(account);
     }
 
-    public void checkIfAccountExists(Account account) throws Exception {
-        if(accountFacade.findByLogin(account.getLogin()).isPresent())
-            throw new LoginAlreadyExistsException();
-
-        if(accountFacade.findByEmail(account.getEmail()).isPresent())
-            throw new EmailAlreadyExistsException();
-    }
-
-    public void changePassword(String login, String newPassword) throws AccountNotFoundException {
+    public void changePassword(String login, String newPassword) {
         Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
         if (!Objects.equals(account.getPassword(), newPassword)) {
@@ -136,7 +128,7 @@ public class AccountService {
         }
     }
 
-    public void changePasswordAsAdmin(String login, String newPassword) throws AccountNotFoundException {
+    public void changePasswordAsAdmin(String login, String newPassword) {
         Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
         if (!Objects.equals(account.getPassword(), newPassword)) {
@@ -145,29 +137,28 @@ public class AccountService {
         }
     }
 
-    public void blockAccount(Long id) throws Exception {
+    public void blockAccount(Long id) {
         Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
 
         if(!account.getAccountState().equals(AccountState.ACTIVE))
-            throw new IllegalAccountStateChangeException();
+            throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
 
         account.setAccountState(AccountState.BLOCKED);
         accountFacade.update(account);
     }
 
-    public void activateAccount(Long id) throws Exception {
+    public void activateAccount(Long id) {
         Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
         AccountState state = account.getAccountState();
 
         if(state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE))
-            throw new IllegalAccountStateChangeException();
+            throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
 
         account.setAccountState(AccountState.ACTIVE);
         accountFacade.update(account);
     }
 
-    public void updateFailedLoginCounter(Account account) throws AccountNotFoundException {
-
+    public void updateFailedLoginCounter(Account account) {
         Account found = accountFacade.findById(account.getId()).orElseThrow(AccountNotFoundException::new);
         found.setFailedLoginCounter(account.getFailedLoginCounter());
         found.setAccountState(account.getAccountState());

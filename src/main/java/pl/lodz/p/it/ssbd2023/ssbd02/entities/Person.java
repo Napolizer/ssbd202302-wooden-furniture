@@ -11,23 +11,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
-@NamedQueries({
-        @NamedQuery(name = Person.FIND_ALL_BY_FIRST_NAME,
-                query = "SELECT person FROM Person person WHERE person.firstName = :firstName"),
-        @NamedQuery(name = Person.FIND_ALL_BY_LAST_NAME,
-                query = "SELECT person FROM Person person WHERE person.lastName = :lastName"),
-        @NamedQuery(name = Person.FIND_ALL_BY_ADDRESS_ID,
-                query = "SELECT person FROM Person person WHERE person.address.id = :addressId")
-})
-
 public class Person extends AbstractEntity {
-    public static final String FIND_ALL_BY_FIRST_NAME = "Person.findAllByFirstName";
-    public static final String FIND_ALL_BY_LAST_NAME = "Person.findAllByLastName";
-    public static final String FIND_BY_ACCOUNT_LOGIN = "Person.findByAccountLogin";
-    public static final String FIND_BY_ACCOUNT_EMAIL = "Person.findByAccountEmail";
-    public static final String FIND_ALL_BY_ADDRESS_ID = "Person.findAllByAddressId";
-    public static final String FIND_BY_ACCOUNT_ID = "Person.findByAccountId";
-
     @Column(name = "first_name", nullable = false)
     private String firstName;
 

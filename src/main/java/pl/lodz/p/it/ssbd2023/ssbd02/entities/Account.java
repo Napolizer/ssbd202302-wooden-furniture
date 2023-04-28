@@ -69,7 +69,7 @@ public class Account extends AbstractEntity {
     @Column(name = "account_state", nullable = false)
     private AccountState accountState;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @Builder.Default
     private List<AccessLevel> accessLevels = new ArrayList<>();
 
