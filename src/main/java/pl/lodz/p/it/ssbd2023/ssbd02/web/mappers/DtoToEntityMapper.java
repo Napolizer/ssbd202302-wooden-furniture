@@ -1,7 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 
 import java.util.ArrayList;
@@ -30,13 +30,14 @@ public final class DtoToEntityMapper {
     }
 
 
-    public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) throws Exception {
+    public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) {
         Account account = mapAccountRegisterDtoToAccount(accountCreateDto);
         account.setAccountState(accountCreateDto.getAccountState());
         List<AccessLevel> accessLevels = new ArrayList<>();
 
         for (AccessLevelDto accessLevel: accountCreateDto.getAccessLevels()) {
             AccessLevel mapped = mapAccessLevelDtoToAccessLevel(accessLevel);
+            mapped.setAccount(account);
             accessLevels.add(mapped);
         }
         account.setAccessLevels(accessLevels);
@@ -82,9 +83,7 @@ public final class DtoToEntityMapper {
                 .build();
     }
 
-    public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto)
-            throws InvalidAccessLevelException {
-
+    public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto) {
         switch (accessLevelDto.getName()) {
             case "Client" -> {
                 return new Client();
@@ -98,7 +97,7 @@ public final class DtoToEntityMapper {
             case "SalesRep" -> {
                 return new SalesRep();
             }
-            default -> throw new InvalidAccessLevelException();
+            default -> throw ExceptionFactory.createInvalidAccessLevel();
         }
     }
 }

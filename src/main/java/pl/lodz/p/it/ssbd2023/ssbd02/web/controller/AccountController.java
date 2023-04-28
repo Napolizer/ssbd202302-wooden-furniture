@@ -1,38 +1,30 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
-import jakarta.json.JsonObjectBuilder;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Path("/account")
 public class AccountController {
-    @Inject
-    private AccountService accountService;
-    @Inject
-    private AuthenticationService authenticationService;
-
     @Inject
     private AccountEndpoint accountEndpoint;
 
@@ -53,11 +45,9 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
-        JsonObjectBuilder json = Json.createObjectBuilder();
         Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
         if (accountOptional.isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
         AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
@@ -68,11 +58,9 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response getAccountByLogin(@PathParam("login")String login) {
-        JsonObjectBuilder json = Json.createObjectBuilder();
         Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
         if (accountOptional.isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
         AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
@@ -82,37 +70,19 @@ public class AccountController {
     @Path("/id/{accountId}/accessLevel/{accessLevel}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
-    public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) throws AccessLevelAlreadyAssignedException {
-        var json = Json.createObjectBuilder();
+    public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
         if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
 
         if (!accountEndpoint.getAccountByAccountId(accountId).get().getAccountState().equals(AccountState.ACTIVE)) {
-            json.add("error", "Account is not active");
-            return Response.status(400).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotActive();
         }
 
-        AccessLevel newAccessLevel;
-        switch (accessLevel) {
-            case "Client" -> newAccessLevel = new Client();
-            case "Administrator" -> newAccessLevel = new Administrator();
-            case "Employee" -> newAccessLevel = new Employee();
-            case "SalesRep" -> newAccessLevel = new SalesRep();
-            default -> {
-                json.add("error", new InvalidAccessLevelException().getMessage());
-                return Response.status(400).entity(json.build()).build();
-            }
-        }
-        try {
-            accountEndpoint.addAccessLevelToAccount(accountId, newAccessLevel);
-            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
-            return Response.ok(account).build();
-        } catch (Exception e) {
-            json.add("error", e.getMessage());
-            return Response.status(400).entity(json.build()).build();
-        }
+        AccessLevel newAccessLevel = DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
+        accountEndpoint.addAccessLevelToAccount(accountId, newAccessLevel);
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
+        return Response.ok(account).build();
     }
 
     @DELETE
@@ -120,46 +90,22 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response removeAccessLevelFromAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
-        var json = Json.createObjectBuilder();
         if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
 
-        AccessLevel newAccessLevel;
-        switch (accessLevel) {
-            case "Client" -> newAccessLevel = new Client();
-            case "Administrator" -> newAccessLevel = new Administrator();
-            case "Employee" -> newAccessLevel = new Employee();
-            case "SalesRep" -> newAccessLevel = new SalesRep();
-            default -> {
-                json.add("error", new InvalidAccessLevelException().getMessage());
-                return Response.status(400).entity(json.build()).build();
-            }
-        }
-        try {
-            accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
-            AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
-            return Response.ok(account).build();
-        } catch (Exception e) {
-            json.add("error", e.getMessage());
-            return Response.status(400).entity(json.build()).build();
-        }
+        AccessLevel newAccessLevel = DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
+        accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
+        AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
+        return Response.ok(account).build();
     }
 
 
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    @DenyAll
     public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
-        try {
-            accountEndpoint.registerAccount(accountRegisterDto);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Json.createObjectBuilder()
-                            .add("error", e.getMessage()).build()).build();
-        }
+        accountEndpoint.registerAccount(accountRegisterDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -168,12 +114,7 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response createAccount(@Valid AccountCreateDto accountCreateDto) {
-        try {
-            accountEndpoint.createAccount(accountCreateDto);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
-                    .add("error", e.getMessage()).build()).build();
-        }
+        accountEndpoint.createAccount(accountCreateDto);
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -181,15 +122,12 @@ public class AccountController {
     @Path("/login/{login}/changePassword")
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) throws AccountNotFoundException {
-        var json = Json.createObjectBuilder();
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
         Account account = accountEndpoint.getAccountByLogin(login).get();
         if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-            json.add("error", "Given old password");
-            return Response.status(400).entity(json.build()).build();
+            throw ExceptionFactory.createOldPasswordGiven();
         }
         accountEndpoint.changePassword(login, changePasswordDto.getPassword()); //FIXME handle exception
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
@@ -199,16 +137,13 @@ public class AccountController {
     @PUT
     @Path("/login/{login}/changePasswordAsAdmin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) throws AccountNotFoundException {
-        var json = Json.createObjectBuilder();
+    public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
         Account account = accountEndpoint.getAccountByLogin(login).get();
         if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-            json.add("error", "Given old password");
-            return Response.status(400).entity(json.build()).build();
+            throw ExceptionFactory.createOldPasswordGiven();
         }
         accountEndpoint.changePasswordAsAdmin(login, changePasswordDto.getPassword()); //FIXME handle exception
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
@@ -226,7 +161,7 @@ public class AccountController {
             json.add("token", token);
             return Response.ok(json.build()).build();
         } catch (AuthenticationException e) {
-            json.add("message", e.getMessage());
+            json.add("error", e.getMessage());
             return Response.status(401).entity(json.build()).build();
         }
     }
@@ -236,11 +171,9 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
-    public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) throws AccountNotFoundException {
-        var json = Json.createObjectBuilder();
+    public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto){
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
         accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto); //FIXME handle exception
         return Response.ok(editPersonInfoAsAdminDto).build();
@@ -251,12 +184,7 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response blockAccount(@PathParam("accountId")Long accountId) {
-        try {
-            accountEndpoint.blockAccount(accountId);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
-                            .add("error", e.getMessage()).build()).build();
-        }
+        accountEndpoint.blockAccount(accountId);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -265,12 +193,7 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMINISTRATOR")
     public Response activateAccount(@PathParam("accountId")Long accountId) {
-        try {
-            accountEndpoint.activateAccount(accountId);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(Json.createObjectBuilder()
-                    .add("error", e.getMessage()).build()).build();
-        }
+        accountEndpoint.activateAccount(accountId);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -278,11 +201,9 @@ public class AccountController {
     @Path("/login/{login}/editOwnAccount")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto) throws AccountNotFoundException {
-        var json = Json.createObjectBuilder();
+    public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto)  {
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            json.add("error", "Account not found");
-            return Response.status(404).entity(json.build()).build();
+            throw ExceptionFactory.createAccountNotFound();
         }
         accountEndpoint.editAccountInfo(login, editPersonInfoDto); //FIXME handle exception
         return Response.ok(editPersonInfoDto).build();

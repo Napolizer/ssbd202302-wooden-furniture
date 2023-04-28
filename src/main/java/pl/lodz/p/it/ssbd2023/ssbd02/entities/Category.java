@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(indexes = @Index(name = "category_parent_category_id", columnList = "parent_category_id", unique = true))
+@Table(indexes = @Index(name = "category_parent_category_id", columnList = "parent_category_id"))
 @NamedQueries({
         @NamedQuery(name = Category.FIND_ALL_BY_PARENT_CATEGORY,
                 query = "SELECT category FROM Category category WHERE category.parentCategory = :parentCategory")
