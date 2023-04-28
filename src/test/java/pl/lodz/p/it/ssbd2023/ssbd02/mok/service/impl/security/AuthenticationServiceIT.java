@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.PersonFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
 import java.io.File;
 import java.util.List;
@@ -36,9 +36,9 @@ public class AuthenticationServiceIT {
     @Inject
     private TokenService tokenService;
     @Inject
-    private PersonFacadeOperations personFacadeOperations;
-    private Person person;
+    private AccountFacadeOperations accountFacade;
 
+    private Account account;
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
@@ -52,7 +52,15 @@ public class AuthenticationServiceIT {
 
     @BeforeEach
     public void setUp() {
-        person = Person.builder()
+        account = Account.builder()
+                .login("test")
+                .password("test")
+                .email("test@gmail.com")
+                .locale("pl")
+                .accountState(AccountState.ACTIVE)
+                .accessLevels(List.of(new Client()))
+                .failedLoginCounter(0)
+                .person(Person.builder()
                         .firstName("John")
                         .lastName("Doe")
                         .address(Address.builder()
@@ -62,17 +70,9 @@ public class AuthenticationServiceIT {
                                 .postalCode("90-000")
                                 .streetNumber(12)
                                 .build())
-                        .account(Account.builder()
-                                .login("test")
-                                .password("test")
-                                .email("test@gmail.com")
-                                .locale("pl")
-                                .accountState(AccountState.ACTIVE)
-                                .accessLevels(List.of(new Client()))
-                                .failedLoginCounter(0)
-                                .build())
-                        .build();
-        personFacadeOperations.create(person);
+                        .build())
+                .build();
+        accountFacade.create(account);
     }
 
     @AfterEach
@@ -87,7 +87,7 @@ public class AuthenticationServiceIT {
     @Test
     public void shouldProperlyLoginTest() {
         assertDoesNotThrow(() -> {
-            String token = authenticationService.login(person.getAccount().getLogin(), person.getAccount().getPassword());
+            String token = authenticationService.login(account.getLogin(), account.getPassword());
             assertNotNull(token);
             List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
             assertThat(accessLevels, is(not(empty())));
@@ -105,35 +105,35 @@ public class AuthenticationServiceIT {
 
     @Test
     public void shouldFailToLoginIfAccountWithGivenLoginIsInactive() {
-        person.getAccount().setAccountState(AccountState.INACTIVE);
-        personFacadeOperations.update(person);
+        account.setAccountState(AccountState.INACTIVE);
+        accountFacade.update(account);
         assertThrows(AccountIsInactiveException.class, () -> {
-            authenticationService.login(person.getAccount().getLogin(), person.getAccount().getPassword());
+            authenticationService.login(account.getLogin(), account.getPassword());
         });
     }
 
     @Test
     public void shouldFailToLoginIfAccountWithGivenLoginIsBlocked() {
-        person.getAccount().setAccountState(AccountState.BLOCKED);
-        personFacadeOperations.update(person);
+        account.setAccountState(AccountState.BLOCKED);
+        accountFacade.update(account);
         assertThrows(AccountBlockedException.class, () -> {
-            authenticationService.login(person.getAccount().getLogin(), person.getAccount().getPassword());
+            authenticationService.login(account.getLogin(), account.getPassword());
         });
     }
 
     @Test
     public void shouldFailToLoginIfAccountWithGivenLoginIsArchived() {
-        person.getAccount().setArchive(true);
-        personFacadeOperations.update(person);
+        account.setArchive(true);
+        accountFacade.update(account);
         assertThrows(AccountArchiveException.class, () -> {
-            authenticationService.login(person.getAccount().getLogin(), person.getAccount().getPassword());
+            authenticationService.login(account.getLogin(), account.getPassword());
         });
     }
 
     @Test
     public void shouldFailToLoginIfPasswordIsInvalid() {
         assertThrows(InvalidCredentialsException.class, () -> {
-            authenticationService.login(person.getAccount().getLogin(), "invalid");
+            authenticationService.login(account.getLogin(), "invalid");
         });
     }
 
@@ -147,21 +147,21 @@ public class AuthenticationServiceIT {
     @Test
     public void shouldFailToLoginIfPasswordIsNull() {
         assertThrows(InvalidCredentialsException.class, () -> {
-            authenticationService.login(person.getAccount().getLogin(), null);
+            authenticationService.login(account.getLogin(), null);
         });
     }
 
     @Test
     public void shouldCorrectlyIncrementCounter() throws Exception {
-        assertEquals(0, person.getAccount().getFailedLoginCounter());
+        assertEquals(0, account.getFailedLoginCounter());
         assertThrows(InvalidCredentialsException.class, () -> {
-            authenticationService.login(person.getAccount().getLogin(), "wrongOne");
+            authenticationService.login(account.getLogin(), "wrongOne");
         });
         utx.begin();
-        Person refreshedPerson = personFacadeOperations.findByAccountId(person.getAccount().getId())
+        Account refreshedAccount = accountFacade.findById(account.getId())
                 .orElseThrow();
         utx.commit();
-        assertEquals(1, refreshedPerson.getAccount().getFailedLoginCounter());
+        assertEquals(1, refreshedAccount.getFailedLoginCounter());
     }
 
 //    @Test
