@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
@@ -47,7 +47,7 @@ public class AccountController {
     public Response getAccountByAccountId(@PathParam("accountId")Long accountId) {
         Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
         if (accountOptional.isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
         AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
@@ -60,7 +60,7 @@ public class AccountController {
     public Response getAccountByLogin(@PathParam("login")String login) {
         Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
         if (accountOptional.isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
         AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(accountOptional.get());
         return Response.ok(account).build();
@@ -72,11 +72,11 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response addAccessLevelToAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
         if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
 
         if (!accountEndpoint.getAccountByAccountId(accountId).get().getAccountState().equals(AccountState.ACTIVE)) {
-            throw ExceptionFactory.createAccountNotActive();
+            throw ApplicationExceptionFactory.createAccountNotActiveException();
         }
 
         AccessLevel newAccessLevel = DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
@@ -91,7 +91,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response removeAccessLevelFromAccount(@PathParam("accountId")Long accountId, @PathParam("accessLevel")String accessLevel) {
         if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
 
         AccessLevel newAccessLevel = DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
@@ -123,11 +123,11 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) throws AccountNotFoundException {
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
         Account account = accountEndpoint.getAccountByLogin(login).get();
         if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-            throw ExceptionFactory.createOldPasswordGiven();
+            throw ApplicationExceptionFactory.createOldPasswordGivenException();
         }
         accountEndpoint.changePassword(login, changePasswordDto.getPassword()); //FIXME handle exception
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
@@ -139,11 +139,11 @@ public class AccountController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePasswordAsAdmin(@PathParam("login")String login, @Valid ChangePasswordDto changePasswordDto) {
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
         Account account = accountEndpoint.getAccountByLogin(login).get();
         if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-            throw ExceptionFactory.createOldPasswordGiven();
+            throw ApplicationExceptionFactory.createOldPasswordGivenException();
         }
         accountEndpoint.changePasswordAsAdmin(login, changePasswordDto.getPassword()); //FIXME handle exception
         AccountWithoutSensitiveDataDto changedAccount = new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
@@ -173,7 +173,7 @@ public class AccountController {
     @RolesAllowed("ADMINISTRATOR")
     public Response editAccountAsAdmin(@PathParam("login") String login, @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto){
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
         accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoAsAdminDto); //FIXME handle exception
         return Response.ok(editPersonInfoAsAdminDto).build();
@@ -203,7 +203,7 @@ public class AccountController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editOwnAccount(@PathParam("login") String login, @Valid EditPersonInfoDto editPersonInfoDto)  {
         if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-            throw ExceptionFactory.createAccountNotFound();
+            throw ApplicationExceptionFactory.createAccountNotFoundException();
         }
         accountEndpoint.editAccountInfo(login, editPersonInfoDto); //FIXME handle exception
         return Response.ok(editPersonInfoDto).build();

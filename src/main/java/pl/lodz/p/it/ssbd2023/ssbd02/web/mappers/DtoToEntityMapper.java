@@ -1,7 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public final class DtoToEntityMapper {
             case "SalesRep" -> {
                 return new SalesRep();
             }
-            default -> throw ExceptionFactory.createInvalidAccessLevel();
+            default -> throw ApplicationExceptionFactory.createInvalidAccessLevelException();
         }
     }
 }

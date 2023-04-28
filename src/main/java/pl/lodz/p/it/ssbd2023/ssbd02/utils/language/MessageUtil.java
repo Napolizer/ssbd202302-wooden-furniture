@@ -32,6 +32,9 @@ public class MessageUtil {
         public static final String ACCOUNT_INACTIVE="exception.mok.account.inactive";
         public static final String ACCOUNT_CREDENTIALS="exception.mok.account.credentials";
         public static final String ACCOUNT_OLD_PASSWORD="exception.mok.account.old.password";
-        public static final String UNKNOWN_ERROR="exception.mok.unknown.error";
+        public static final String ERROR_UNKNOWN_EXCEPTION ="exception.unknown.error";
+        public static final String ERROR_OPTIMISTIC_LOCK ="exception.optimistic.lock";
+        public static final String ERROR_GENERAL_PERSISTENCE ="exception.general.persistence";
+        public static final String ERROR_ACCESS_DENIED ="exception.access.denied";
     }
 }

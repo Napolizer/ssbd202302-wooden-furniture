@@ -3,22 +3,25 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownException;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.AccountFacadeExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+
 import java.util.List;
 import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Interceptors({
+        GenericFacadeExceptionsInterceptor.class,
+        AccountFacadeExceptionsInterceptor.class
+})
 public class AccountFacade extends AbstractFacade<Account> implements AccountFacadeOperations {
 
     @PersistenceContext(unitName = "ssbd02mokPU")
@@ -35,40 +38,16 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
 
     @Override
     public Account create(Account entity) {
-        try {
-            Account account = super.create(entity);
-            em.flush();
-            return account;
-        } catch (PersistenceException pe) {
-            if (pe.getMessage().contains("account_login_key")) {
-                throw ExceptionFactory.createLoginAlreadyExists(pe);
-            } else if (pe.getMessage().contains("account_email_key")) {
-                throw ExceptionFactory.createEmailAlreadyExists(pe);
-            } else {
-                throw ExceptionFactory.createUnknown(pe);
-            }
-        } catch (Exception e) {
-            throw ExceptionFactory.createUnknown(e);
-        }
+        Account account = super.create(entity);
+        em.flush();
+        return account;
     }
 
     @Override
     public Account update(Account entity) {
-        try {
-            Account account = super.update(entity);
-            em.flush();
-            return account;
-        } catch (PersistenceException pe) {
-            if (pe.getMessage().contains("account_login_key")) {
-                throw ExceptionFactory.createLoginAlreadyExists(pe);
-            } else if (pe.getMessage().contains("account_email_key")) {
-                throw ExceptionFactory.createEmailAlreadyExists(pe);
-            } else {
-                throw ExceptionFactory.createUnknown(pe);
-            }
-        } catch (Exception e) {
-            throw ExceptionFactory.createUnknown(e);
-        }
+        Account account = super.update(entity);
+        em.flush();
+        return account;
     }
 
     @Override

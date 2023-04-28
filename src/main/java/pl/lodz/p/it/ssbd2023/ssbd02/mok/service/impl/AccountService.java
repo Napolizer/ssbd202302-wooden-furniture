@@ -4,9 +4,11 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.Optional;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({
+        GenericServiceExceptionsInterceptor.class
+})
 public class AccountService {
     @Inject
     private AccountFacadeOperations accountFacade;
@@ -38,7 +43,7 @@ public class AccountService {
 
         for (AccessLevel item : accessLevels) {
             if (item.getClass() == accessLevel.getClass()) {
-                throw ExceptionFactory.createAccessLevelAlreadyAssigned();
+                throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
             }
         }
         accessLevel.setAccount(foundAccount);
@@ -59,7 +64,7 @@ public class AccountService {
                 return;
             }
         }
-        throw ExceptionFactory.createAccessLevelNotAssigned();
+        throw ApplicationExceptionFactory.createAccessLevelNotAssignedException();
     }
 
     public void editAccountInfo(String login, Account accountWithChanges) {
@@ -136,7 +141,7 @@ public class AccountService {
         Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
 
         if(!account.getAccountState().equals(AccountState.ACTIVE))
-            throw ExceptionFactory.createIllegalAccountStateChange();
+            throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
 
         account.setAccountState(AccountState.BLOCKED);
         accountFacade.update(account);
@@ -147,7 +152,7 @@ public class AccountService {
         AccountState state = account.getAccountState();
 
         if(state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE))
-            throw ExceptionFactory.createIllegalAccountStateChange();
+            throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
 
         account.setAccountState(AccountState.ACTIVE);
         accountFacade.update(account);
