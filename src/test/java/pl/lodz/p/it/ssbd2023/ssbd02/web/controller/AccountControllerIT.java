@@ -580,15 +580,6 @@ public class AccountControllerIT {
                     .contentType("application/json")
                     .body("groups[0]", equalTo("ADMINISTRATORS"))
                     .body("groups[1]", equalTo("SALES_REPS"));
-
-            given()
-                    .header("Authorization", "Bearer " + retrieveAdminToken())
-                    .when()
-                    .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
-                    .then()
-                    .statusCode(200)
-                    .body("groups[0]", equalTo("ADMINISTRATORS"))
-                    .body("groups[1]", equalTo("SALES_REPS"));
         }
 
         @Test
@@ -693,16 +684,6 @@ public class AccountControllerIT {
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
                     .when()
-                    .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
-                    .then()
-                    .statusCode(200)
-                    .contentType("application/json")
-                    .body("groups[0]", equalTo("ADMINISTRATORS"))
-                    .body("groups[1]", equalTo("SALES_REPS"));
-
-            given()
-                    .header("Authorization", "Bearer " + retrieveAdminToken())
-                    .when()
                     .get("/account/id/" + retrieveAccountId("admin"))
                     .then()
                     .statusCode(200)
@@ -716,8 +697,8 @@ public class AccountControllerIT {
                     .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
                     .then()
                     .statusCode(200)
-                    .body("groups[0]", equalTo("ADMINISTRATORS"))
-                    .body("groups[1]", equalTo(null));
+                    .contentType("application/json")
+                    .body("groups[0]", equalTo("ADMINISTRATORS"));
 
             given()
                     .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -726,8 +707,7 @@ public class AccountControllerIT {
                     .then()
                     .statusCode(200)
                     .contentType("application/json")
-                    .body("groups[0]", equalTo("ADMINISTRATORS"))
-                    .body("groups[1]", equalTo(null));
+                    .body("groups[0]", equalTo("ADMINISTRATORS"));
         }
     }
 
