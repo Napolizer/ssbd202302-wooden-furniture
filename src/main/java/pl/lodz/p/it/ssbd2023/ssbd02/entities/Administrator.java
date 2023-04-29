@@ -4,11 +4,11 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 
 @Data
-@Entity(name="administrator")
+@Entity(name = "administrator")
 public class Administrator extends AccessLevel {
 
-    @Override
-    public String getGroupName() {
-        return "ADMINISTRATORS";
-    }
+  @Override
+  public String getGroupName() {
+    return "ADMINISTRATORS";
+  }
 }

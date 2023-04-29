@@ -7,8 +7,8 @@ import lombok.Data;
 @Entity(name = "employee")
 public class Employee extends AccessLevel {
 
-    @Override
-    public String getGroupName() {
-        return "EMPLOYEES";
-    }
+  @Override
+  public String getGroupName() {
+    return "EMPLOYEES";
+  }
 }
