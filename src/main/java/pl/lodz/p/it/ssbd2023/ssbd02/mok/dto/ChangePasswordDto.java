@@ -5,6 +5,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Password;
 
 @Data
 public class ChangePasswordDto {
-    @Password
-    private String password;
+  @Password
+  private String password;
 }

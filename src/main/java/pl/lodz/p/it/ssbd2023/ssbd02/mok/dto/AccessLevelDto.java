@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccessLevelDto {
-    @NotNull
-    private String name;
+  @NotNull
+  private String name;
 }
