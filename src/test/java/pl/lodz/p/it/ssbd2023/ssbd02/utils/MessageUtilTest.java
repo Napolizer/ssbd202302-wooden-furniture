@@ -1,35 +1,33 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
-import java.util.Locale;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class MessageUtilTest {
 
-    @Test
-    void shouldReturnMessageInEnglish() {
-        String message = MessageUtil.getMessage("en",
-                MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
+  @Test
+  void shouldReturnMessageInEnglish() {
+    String message = MessageUtil.getMessage("en",
+        MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
 
-        assertEquals("Account blocked", message);
-    }
+    assertEquals("Account blocked", message);
+  }
 
-    @Test
-    void shouldReturnMessageInPolish() {
-        String message = MessageUtil.getMessage("pl",
-                MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
+  @Test
+  void shouldReturnMessageInPolish() {
+    String message = MessageUtil.getMessage("pl",
+        MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
 
-        assertEquals("Konto zablokowane", message);
-    }
+    assertEquals("Konto zablokowane", message);
+  }
 
-    @Test
-    void shouldReturnMessageInEnglishIfThereIsNoLanguageAvailable() {
-        String message = MessageUtil.getMessage("fr",
-                MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
+  @Test
+  void shouldReturnMessageInEnglishIfThereIsNoLanguageAvailable() {
+    String message = MessageUtil.getMessage("fr",
+        MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT);
 
-        assertEquals("Account blocked", message);
-    }
+    assertEquals("Account blocked", message);
+  }
 }

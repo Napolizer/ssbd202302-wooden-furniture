@@ -36,6 +36,7 @@
   </module>
 
   <module name="TreeWalker">
+    <property name="tabWidth" value="2"/>
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">
       <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
