@@ -8,9 +8,9 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/health")
 public class HealthController {
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getHealth() {
-        return Response.ok("OK").build();
-    }
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response getHealth() {
+    return Response.ok("OK").build();
+  }
 }
