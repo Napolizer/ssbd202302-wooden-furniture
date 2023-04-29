@@ -4,7 +4,6 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,9 +14,11 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = {})
 @NotNull(message = "Field cannot be empty")
 @Pattern(regexp = "^[\\p{Lu}][\\p{L}\\p{M}*\\s-]*$",
-         message = "Field must start with a capital letter and contain only letters")
+    message = "Field must start with a capital letter and contain only letters")
 public @interface Capitalized {
-    String message() default "Field must start with a capital letter and contain only letters";
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+  String message() default "Field must start with a capital letter and contain only letters";
+
+  Class<?>[] groups() default {};
+
+  Class<? extends Payload>[] payload() default {};
 }
