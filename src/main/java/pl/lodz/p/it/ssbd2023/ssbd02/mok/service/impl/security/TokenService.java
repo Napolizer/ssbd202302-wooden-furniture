@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.ejb.Stateless;
 import jakarta.validation.ValidationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 
 import java.util.Date;
 import java.util.List;

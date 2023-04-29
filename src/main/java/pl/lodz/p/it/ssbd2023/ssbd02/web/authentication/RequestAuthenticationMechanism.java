@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.core.HttpHeaders;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 
 import java.util.Set;

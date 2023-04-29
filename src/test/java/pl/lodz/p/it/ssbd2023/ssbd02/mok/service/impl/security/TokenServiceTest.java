@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 
 import java.util.List;
 

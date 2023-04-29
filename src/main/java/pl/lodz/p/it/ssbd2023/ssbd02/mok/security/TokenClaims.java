@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.entities.security;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
