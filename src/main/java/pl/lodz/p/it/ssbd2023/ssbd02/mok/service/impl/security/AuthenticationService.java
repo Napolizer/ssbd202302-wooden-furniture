@@ -13,7 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveExcepti
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.BCryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 public class AuthenticationService {
@@ -48,7 +48,7 @@ public class AuthenticationService {
       throw new AccountIsInactiveException();
     }
 
-    if (!BCryptHashUtils.verifyPassword(password, account.getPassword())) {
+    if (!CryptHashUtils.verifyPassword(password, account.getPassword())) {
       tryBlockAccount(account);
       throw new InvalidCredentialsException();
     }

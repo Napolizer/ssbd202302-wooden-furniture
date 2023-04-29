@@ -16,7 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.BCryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Stateful
@@ -30,14 +30,14 @@ public class AccountEndpoint {
 
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
-    account.setPassword(BCryptHashUtils.hashPassword(accountRegisterDto.getPassword()));
+    account.setPassword(CryptHashUtils.hashPassword(accountRegisterDto.getPassword()));
     accountService.registerAccount(account);
     //TODO confirmation email
   }
 
   public void createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
-    account.setPassword(BCryptHashUtils.hashPassword(accountCreateDto.getPassword()));
+    account.setPassword(CryptHashUtils.hashPassword(accountCreateDto.getPassword()));
     accountService.createAccount(account);
   }
 
