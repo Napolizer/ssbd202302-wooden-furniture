@@ -7,11 +7,16 @@ import jakarta.ws.rs.core.Response;
 
 @ApplicationException(rollback = true)
 public class BaseWebApplicationException extends WebApplicationException {
-    public BaseWebApplicationException(String message, Response.Status statusCode) {
-        super(Response.status(statusCode).entity(Json.createObjectBuilder().add("error", message).build()).build());
-    }
-    public BaseWebApplicationException(String message, Throwable cause, Response.Status statusCode) {
-        super(cause, Response.status(statusCode).entity(Json.createObjectBuilder().add("error", message).build()).build());
-    }
+  public BaseWebApplicationException(String message, Response.Status statusCode) {
+    super(
+        Response.status(statusCode).entity(Json.createObjectBuilder().add("error", message).build())
+            .build());
+  }
+
+  public BaseWebApplicationException(String message, Throwable cause, Response.Status statusCode) {
+    super(cause,
+        Response.status(statusCode).entity(Json.createObjectBuilder().add("error", message).build())
+            .build());
+  }
 
 }

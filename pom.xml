@@ -45,6 +45,8 @@
       <maven-failsafe-plugin.version>3.0.0-M9</maven-failsafe-plugin.version>
       <payara.version>6.2023.1</payara.version>
       <arquillian-payara.version>3.0.alpha6</arquillian-payara.version>
+      <project.build.sourceDirectories>${basedir}/src/main/java</project.build.sourceDirectories>
+      <checkstyle.config.location>${basedir}/checkstyle.xml</checkstyle.config.location>
   </properties>
 
   <dependencies>
@@ -251,6 +253,35 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>10.9.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <violationSeverity>warning</violationSeverity>
+                    <failsOnError>true</failsOnError>
+                    <consoleOutput>true</consoleOutput>
+                    <configLocation>${checkstyle.config.location}</configLocation>
+                    <sourceDirectories>${project.build.sourceDirectories}</sourceDirectories>
+                    <propertyExpansion>suppressionFile=${checkstyle.config.location}</propertyExpansion>
+                </configuration>
             </plugin>
         </plugins>
     </build>

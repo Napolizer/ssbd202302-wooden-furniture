@@ -10,21 +10,21 @@ import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.PostalCode;
 @Data
 public class EditPersonInfoAsAdminDto {
 
-    @Capitalized
-    private String firstName;
-    @Capitalized
-    private String lastName;
-    @Capitalized
-    private String country;
-    @Capitalized
-    private String city;
-    @Capitalized
-    private String street;
-    @PostalCode
-    private String postalCode;
-    @NotNull
-    @Positive(message = "Street number must be a positive integer")
-    private Integer streetNumber;
-    @Email
-    private String email;
+  @Capitalized
+  private String firstName;
+  @Capitalized
+  private String lastName;
+  @Capitalized
+  private String country;
+  @Capitalized
+  private String city;
+  @Capitalized
+  private String street;
+  @PostalCode
+  private String postalCode;
+  @NotNull
+  @Positive(message = "Street number must be a positive integer")
+  private Integer streetNumber;
+  @Email
+  private String email;
 }

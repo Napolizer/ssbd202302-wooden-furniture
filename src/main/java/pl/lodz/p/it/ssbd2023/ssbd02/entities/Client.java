@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 @Entity(name = "client")
 public class Client extends AccessLevel {
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "company_id", nullable = true, unique = true)
-    private Company company;
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+  @JoinColumn(name = "company_id", nullable = true, unique = true)
+  private Company company;
 
-    @Override
-    public String getGroupName() {
-        return "CLIENTS";
-    }
+  @Override
+  public String getGroupName() {
+    return "CLIENTS";
+  }
 }
