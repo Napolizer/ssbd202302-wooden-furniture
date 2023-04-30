@@ -1,17 +1,15 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.UserTransaction;
+import jakarta.transaction.*;
+
 import java.io.File;
 import java.util.List;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -24,7 +22,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountFacadeOperationsIT {
@@ -48,7 +49,7 @@ public class AccountFacadeOperationsIT {
   }
 
   @BeforeEach
-  public void setup() {
+  public void setup() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     address = Address.builder()
         .country("England")
         .city("London")
@@ -62,35 +63,29 @@ public class AccountFacadeOperationsIT {
         .lastName("Smith")
         .address(address)
         .build();
-
-    account = accountFacadeOperations.create(
-        Account.builder()
-            .login("login")
-            .password("password")
-            .email("email")
-            .person(person)
-            .locale("pl")
-            .accountState(AccountState.ACTIVE)
-            .build()
-    );
+    utx.begin();
+    account = Account.builder()
+              .login("login")
+              .password("password")
+              .email("email")
+              .person(person)
+              .locale("pl")
+              .accountState(AccountState.ACTIVE)
+              .build();
+    utx.commit();
   }
 
   @AfterEach
   public void teardown() throws Exception {
     utx.begin();
+    em.createQuery("DELETE FROM Account").executeUpdate();
     em.createQuery("DELETE FROM Person").executeUpdate();
     em.createQuery("DELETE FROM Address").executeUpdate();
-    em.createQuery("DELETE FROM Account").executeUpdate();
     utx.commit();
   }
 
   @Test
-  public void shouldReturnEmptyCollection() {
-    assertEquals(0, accountFacadeOperations.findAll().size());
-  }
-
-  @Test
-  public void properlyGetsAllAccounts() {
+  public void properlyGetsAllAccounts() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     Address address2 = Address.builder()
         .country("Poland")
         .city("Warsaw")
@@ -99,29 +94,41 @@ public class AccountFacadeOperationsIT {
         .streetNumber(20)
         .build();
 
-    person.setAddress(address2);
+    Person person2 = Person.builder()
+            .firstName("Jan")
+            .lastName("Dzban")
+            .address(address2)
+            .build();
 
     Account account2 = Account.builder()
         .login("login2")
         .password("password")
-        .email("email")
-        .person(person)
+        .email("email1")
+        .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .build();
 
     assertEquals(0, accountFacadeOperations.findAll().size());
+
+    utx.begin();
     accountFacadeOperations.create(account);
+    utx.commit();
     assertEquals(1, accountFacadeOperations.findAll().size());
+
+    utx.begin();
     accountFacadeOperations.create(account2);
+    utx.commit();
     assertEquals(2, accountFacadeOperations.findAll().size());
   }
 
   @Test
-  public void properlyAddsAccount() {
+  public void properlyAddsAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     assertEquals(0, accountFacadeOperations.findAll().size());
 
+    utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
+    utx.commit();
 
     List<Account> allAccounts = accountFacadeOperations.findAll();
 
@@ -208,7 +215,7 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void failsToAddNewAccountWithAlreadyAssignedAddress() {
+  public void failsToAddNewAccountWithAlreadyAssignedAddress() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     Person wrongPersonWithAlreadyAssignedAddress = Person.builder()
         .firstName("John")
         .lastName("Doe")
@@ -218,31 +225,37 @@ public class AccountFacadeOperationsIT {
     Account wrongAccountWithAlreadyAssignedAddress = Account.builder()
         .login("login")
         .password("password")
-        .email("email")
+        .email("email1")
         .person(wrongPersonWithAlreadyAssignedAddress)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .build();
 
+    utx.begin();
     assertDoesNotThrow(() -> accountFacadeOperations.create(account));
-    assertThrows(EJBException.class,
-        () -> accountFacadeOperations.create(wrongAccountWithAlreadyAssignedAddress));
+    utx.commit();
+
+    utx.begin();
+    assertThrows(BaseWebApplicationException.class, () -> accountFacadeOperations.create(wrongAccountWithAlreadyAssignedAddress));
+    utx.rollback();
   }
 
   @Test
-  public void properlyGetsAccountById() {
+  public void properlyGetsAccountById() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
+    utx.commit();
     assertEquals(persistedAccount,
         accountFacadeOperations.find(persistedAccount.getId()).orElse(null));
   }
 
   @Test
   public void failsToGetAccountByIdWhenAccountDoesNotExist() {
-    assertThrows(EJBException.class, () -> accountFacadeOperations.find(0L));
+    assertTrue(accountFacadeOperations.find(0L).isEmpty());
   }
 
   @Test
-  public void properlyGetsAllAccountsByFirstName() {
+  public void properlyGetsAllAccountsByFirstName() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     Address address2 = Address.builder()
         .country("Poland")
         .city("Warsaw")
@@ -251,13 +264,17 @@ public class AccountFacadeOperationsIT {
         .streetNumber(20)
         .build();
 
-    person.setAddress(address2);
+    Person person2 = Person.builder()
+            .firstName("John")
+            .lastName("Smith")
+            .address(address2)
+            .build();
 
     Account account2 = Account.builder()
         .login("login2")
         .password("password")
-        .email("email")
-        .person(person)
+        .email("email1")
+        .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .build();
@@ -270,21 +287,22 @@ public class AccountFacadeOperationsIT {
         .streetNumber(10)
         .build();
 
-    Person person2 = Person.builder()
+    Person person3 = Person.builder()
         .firstName("Jan")
         .lastName("Dzban")
         .address(address3)
         .build();
 
     Account account3 = Account.builder()
-        .login("login2")
+        .login("login3")
         .password("password")
-        .email("email")
-        .person(person2)
+        .email("email2")
+        .person(person3)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .build();
 
+    utx.begin();
     assertDoesNotThrow(() -> accountFacadeOperations.create(account));
     assertDoesNotThrow(() -> accountFacadeOperations.create(account2));
     assertDoesNotThrow(() -> accountFacadeOperations.create(account3));
@@ -304,10 +322,12 @@ public class AccountFacadeOperationsIT {
 
     List<Account> accountsWithNameKizo = accountFacadeOperations.findAllByFirstName(nameKizo);
     assertEquals(0, accountsWithNameKizo.size());
+
+    utx.commit();
   }
 
   @Test
-  public void properlyGetsAllAccountsByLastName() {
+  public void properlyGetsAllAccountsByLastName() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     Address address2 = Address.builder()
         .country("Poland")
         .city("Warsaw")
@@ -316,13 +336,17 @@ public class AccountFacadeOperationsIT {
         .streetNumber(20)
         .build();
 
-    person.setAddress(address2);
+    Person person2 = Person.builder()
+            .firstName("John")
+            .lastName("Smith")
+            .address(address2)
+            .build();
 
     Account account2 = Account.builder()
         .login("login2")
         .password("password")
-        .email("email")
-        .person(person)
+        .email("email1")
+        .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .build();
@@ -335,21 +359,22 @@ public class AccountFacadeOperationsIT {
         .streetNumber(10)
         .build();
 
-    Person person2 = Person.builder()
+    Person person3 = Person.builder()
         .firstName("Jan")
         .lastName("Dzban")
         .address(address3)
         .build();
 
     Account account3 = Account.builder()
-        .login("login2")
+        .login("login3")
         .password("password")
-        .email("email")
-        .person(person2)
+        .email("email2")
+        .person(person3)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .build();
 
+    utx.begin();
     assertDoesNotThrow(() -> accountFacadeOperations.create(account));
     assertDoesNotThrow(() -> accountFacadeOperations.create(account2));
     assertDoesNotThrow(() -> accountFacadeOperations.create(account3));
@@ -372,13 +397,17 @@ public class AccountFacadeOperationsIT {
     List<Account> accountsWithLastNameKizo =
         accountFacadeOperations.findAllByLastName(lastNameKizo);
     assertEquals(0, accountsWithLastNameKizo.size());
+
+    utx.commit();
   }
 
   @Test
-  public void properlyGetsAccountByLogin() {
+  public void properlyGetsAccountByLogin() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
     assertEquals(persistedAccount,
         accountFacadeOperations.findByLogin(persistedAccount.getLogin()).orElse(null));
+    utx.commit();
   }
 
   @Test
@@ -387,20 +416,24 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void properlyGetsAccountsByAddressId() {
+  public void properlyGetsAccountsByAddressId() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
     assertDoesNotThrow(() -> accountFacadeOperations.create(account));
     List<Account> accountsWithSameAddress =
         accountFacadeOperations.findAllByAddressId(address.getId());
+    utx.commit();
     assertEquals(1, accountsWithSameAddress.size());
     assertEquals(address, accountsWithSameAddress.get(0).getPerson().getAddress());
 
   }
 
   @Test
-  public void properlyGetsAccountByEmail() {
+  public void properlyGetsAccountByEmail() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
     assertEquals(persistedAccount,
         accountFacadeOperations.findByEmail(persistedAccount.getEmail()).orElse(null));
+    utx.commit();
   }
 
   @Test
