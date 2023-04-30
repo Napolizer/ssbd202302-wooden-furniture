@@ -15,9 +15,12 @@ import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.UserTransaction;
+import jakarta.security.enterprise.AuthenticationException;
+import jakarta.transaction.*;
+
 import java.io.File;
 import java.util.List;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -37,6 +40,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
 public class AuthenticationServiceIT {
@@ -52,6 +56,7 @@ public class AuthenticationServiceIT {
   private AccountFacadeOperations accountFacade;
 
   private Account account;
+  private String password = "test123";
 
   @Deployment
   public static WebArchive createDeployment() {
@@ -61,18 +66,19 @@ public class AuthenticationServiceIT {
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
         .addPackages(true, "javax.xml.bind")
+            .addPackages(true, "at.favre")
         .addAsResource(new File("src/test/resources/"), "");
   }
 
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
     account = Account.builder()
         .login("test")
-        .password("test")
+        .password(CryptHashUtils.hashPassword(password))
         .email("test@gmail.com")
         .locale("pl")
         .accountState(AccountState.ACTIVE)
-        .accessLevels(List.of(new Client()))
         .failedLoginCounter(0)
         .person(Person.builder()
             .firstName("John")
@@ -87,27 +93,33 @@ public class AuthenticationServiceIT {
             .build())
         .build();
     accountFacade.create(account);
+    Client client = Client.builder()
+            .company(null)
+            .account(account)
+            .build();
+    account.setAccessLevels(List.of(client));
+    accountFacade.update(account);
+    utx.commit();
   }
 
   @AfterEach
   public void tearDown() throws Exception {
     utx.begin();
+    em.createQuery("DELETE FROM access_level").executeUpdate();
+    em.createQuery("DELETE FROM Account").executeUpdate();
     em.createQuery("DELETE FROM Person").executeUpdate();
     em.createQuery("DELETE FROM Address").executeUpdate();
-    em.createQuery("DELETE FROM Account").executeUpdate();
     utx.commit();
   }
 
   @Test
-  public void shouldProperlyLoginTest() {
-    assertDoesNotThrow(() -> {
-      String token = authenticationService.login(account.getLogin(), account.getPassword());
+  public void shouldProperlyLoginTest() throws AuthenticationException {
+      String token = authenticationService.login(account.getLogin(), password);
       assertNotNull(token);
       List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
       assertThat(accessLevels, is(not(empty())));
       assertThat(accessLevels.size(), is(equalTo(1)));
       assertThat(accessLevels.get(0), is(instanceOf(Client.class)));
-    });
   }
 
   @Test
@@ -118,30 +130,30 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginIsInactive() {
+  public void shouldFailToLoginIfAccountWithGivenLoginIsInactive() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     account.setAccountState(AccountState.INACTIVE);
+    utx.begin();
     accountFacade.update(account);
-    assertThrows(AccountIsInactiveException.class, () -> {
-      authenticationService.login(account.getLogin(), account.getPassword());
-    });
+    utx.commit();
+    assertThrows(AccountIsInactiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginIsBlocked() {
+  public void shouldFailToLoginIfAccountWithGivenLoginIsBlocked() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     account.setAccountState(AccountState.BLOCKED);
+    utx.begin();
     accountFacade.update(account);
-    assertThrows(AccountBlockedException.class, () -> {
-      authenticationService.login(account.getLogin(), account.getPassword());
-    });
+    utx.commit();
+    assertThrows(AccountBlockedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginIsArchived() {
+  public void shouldFailToLoginIfAccountWithGivenLoginIsArchived() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     account.setArchive(true);
+    utx.begin();
     accountFacade.update(account);
-    assertThrows(AccountArchiveException.class, () -> {
-      authenticationService.login(account.getLogin(), account.getPassword());
-    });
+    utx.commit();
+    assertThrows(AccountArchiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
   }
 
   @Test

@@ -6,6 +6,7 @@ import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -26,9 +27,13 @@ public class AuthenticationService {
   private TokenService tokenService;
 
   public String login(String login, String password) throws AuthenticationException {
+    if (password == null) {
+      throw ApplicationExceptionFactory.createInvalidCredentialsException();
+    }
+
     Account account = accountService
         .getAccountByLogin(login)
-        .orElseThrow(InvalidCredentialsException::new);
+        .orElseThrow(ApplicationExceptionFactory::createInvalidCredentialsException);
 
     validateAccount(account, password);
 
@@ -37,20 +42,20 @@ public class AuthenticationService {
 
   private void validateAccount(Account account, String password) throws AuthenticationException {
     if (account.getArchive()) {
-      throw new AccountArchiveException();
+      throw ApplicationExceptionFactory.createAccountArchiveException();
     }
 
     if (account.getAccountState() == AccountState.BLOCKED) {
-      throw new AccountBlockedException();
+      throw ApplicationExceptionFactory.createAccountBlockedException();
     }
 
     if (account.getAccountState() == AccountState.INACTIVE) {
-      throw new AccountIsInactiveException();
+      throw ApplicationExceptionFactory.createAccountIsInactiveException();
     }
 
     if (!CryptHashUtils.verifyPassword(password, account.getPassword())) {
       tryBlockAccount(account);
-      throw new InvalidCredentialsException();
+      throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
   }
 
