@@ -1,0 +1,75 @@
+$border-radius: 10px
+
+.mat-card-header
+  display: flex
+  justify-content: center
+  align-items: center
+  padding-top: 20px
+  margin-bottom: 30px
+
+  .profile-image
+    background-image: url('../../../assets/images/profile-picture.jpg')
+    background-size: cover
+
+  .mat-card-title
+    font-family: Lato, sans-serif
+    font-size: 28px
+
+.container
+  position: fixed
+  width: 100%
+  height: 100%
+  padding-top: 100px
+  padding-left: 450px
+  padding-right: 450px
+  box-sizing: border-box
+  font-family: Lato, sans-serif
+
+  .panel
+    display: flex
+    flex-direction: row
+    justify-content: space-evenly
+    border-radius: $border-radius
+    padding: 3px
+
+    .form-container
+      flex-grow: 1
+      background-color: #f8f8f8
+      border-bottom-right-radius: $border-radius
+      border-top-right-radius: $border-radius
+
+.profile-container
+  display: flex
+  flex-direction: column
+  margin: 50px
+  padding: 0 25px 50px
+  border: 2px ridge rgba(255, 255, 255, 0.5)
+  border-radius: 10px
+
+  .row
+    flex-grow: 1
+    display: flex
+    font-family: Lato, sans-serif
+    text-align: center
+    margin-top: 40px
+
+    .entry
+      flex-grow: 1
+      flex-direction: column
+      display: flex
+      margin-top: 20px
+
+      .title
+        flex-grow: 1
+        font-family: Montserrat, sans-serif
+        font-size: 28px
+
+      .content
+        flex-grow: 1
+        padding-top: 5px
+        font-size: 18px
+
+      .border
+        width: 220px
+        margin: auto
+        border-bottom: 2px ridge rgba(255, 255, 255, 0.5)

@@ -13,12 +13,23 @@ import {MatButtonModule} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AlertModule} from '@full-fledged/alerts';
+import {MatListModule} from "@angular/material/list";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { AccountPageComponent } from './pages/account-page/account-page.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
-    HomePageComponent
+    HomePageComponent,
+    ToolbarComponent,
+    AccountPageComponent
   ],
     imports: [
         BrowserModule,
@@ -33,7 +44,14 @@ import {AlertModule} from '@full-fledged/alerts';
         MatButtonModule,
         FormsModule,
         AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatListModule,
+        MatSidenavModule,
+        MatExpansionModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatCardModule
     ],
   providers: [],
   bootstrap: [AppComponent]
