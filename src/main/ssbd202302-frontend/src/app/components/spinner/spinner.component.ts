@@ -11,7 +11,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
         opacity: 1
       })),
       state('unloaded', style({
-        opacity: 0
+        opacity: 0,
+        'display': 'none'
       })),
       transition('loaded => unloaded', [
         animate('0.6s ease-in')
