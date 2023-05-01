@@ -9,18 +9,18 @@
       />
     </div>
     <mat-stepper class="form-container" linear #stepper>
-      <mat-step [stepControl]="accountForm" [editable]="editable">
+      <mat-step [stepControl]="accountForm">
         <form [formGroup]="accountForm">
-          <ng-template matStepLabel>Fill out account details</ng-template>
-          <p class="form-title">Meble Drewniane</p>
+          <ng-template matStepLabel>{{'register.stepper.first' | translate}}</ng-template>
+          <p class="form-title">{{'register.title' | translate}}</p>
           <div class="form">
             <div class="form-account">
               <mat-form-field
-                hintLabel="Max 32 characters"
+                hintLabel="{{'register.hint.max.32' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Email</mat-label>
+                <mat-label>{{'register.label.email' | translate}}</mat-label>
                 <input
                   matInput
                   #email
@@ -32,21 +32,21 @@
                 />
                 <mat-error
                   *ngIf="accountForm.get('email')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error *ngIf="accountForm.get('email')?.hasError('email')"
-                  >Invalid format</mat-error
+                  >{{'register.validity.format' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ email.value.length }}/32</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-account">
               <mat-form-field
-                hintLabel="Max 20 characters"
+                hintLabel="{{'register.hint.max.20' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Login</mat-label>
+                <mat-label>{{'register.label.login' | translate}}</mat-label>
                 <input
                   matInput
                   #login
@@ -57,26 +57,25 @@
                 />
                 <mat-error
                   *ngIf="accountForm.get('login')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error *ngIf="accountForm.get('login')?.hasError('pattern')"
-                  >Login must start with a letter and contain only letters and
-                  digits</mat-error
+                  >{{'login.validity.patternMismatch' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="accountForm.get('login')?.hasError('minlength')"
-                  >Login must contain at least 6 characters</mat-error
+                  >{{'login.validity.tooShort' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ login.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-account">
               <mat-form-field
-                hintLabel="Max 32 characters"
+                hintLabel="{{'register.hint.max.32' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Password</mat-label>
+                <mat-label>{{'register.label.password' | translate}}</mat-label>
                 <input
                   #password
                   matInput
@@ -87,16 +86,15 @@
                 />
                 <mat-error
                   *ngIf="accountForm.get('password')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="accountForm.get('password')?.hasError('pattern')"
-                  >Password must contain at least one capital letter and one
-                  special character</mat-error
+                  >{{'login.password.validity.patternMismatch' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="accountForm.get('password')?.hasError('minlength')"
-                  >Password must contain at least 8 characters</mat-error
+                  >{{'login.password.validity.tooShort' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ password.value.length }}/32</mat-hint>
                 <button
@@ -114,11 +112,11 @@
             </div>
             <div class="form-account">
               <mat-form-field
-                hintLabel="Max 32 characters"
+                hintLabel="{{'register.hint.max.32' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Confirm password</mat-label>
+                <mat-label>{{'register.label.confirmPassword' | translate}}</mat-label>
                 <input
                   #confirmPassword
                   matInput
@@ -131,13 +129,13 @@
                   *ngIf="
                     accountForm.get('confirmPassword')?.hasError('required')
                   "
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="
                     accountForm.get('confirmPassword')?.hasError('notmatching')
                   "
-                  >Passwords do not match</mat-error
+                  >{{'register.validity.password.notmatching' | translate}}</mat-error
                 >
                 <mat-hint align="end"
                   >{{ confirmPassword.value.length }}/32</mat-hint
@@ -157,23 +155,23 @@
             </div>
           </div>
           <div class="button-container">
-            <button mat-button matStepperNext mats>Next</button>
+            <button mat-button matStepperNext mats>{{'register.button.next' | translate}}</button>
           </div>
         </form>
       </mat-step>
 
-      <mat-step [stepControl]="personForm" [editable]="editable">
+      <mat-step [stepControl]="personForm">
         <form [formGroup]="personForm">
-          <ng-template matStepLabel>Fill out personal details</ng-template>
-          <p class="form-title">Meble Drewniane</p>
+          <ng-template matStepLabel>{{'register.stepper.second' | translate}}</ng-template>
+          <p class="form-title">{{'register.title' | translate}}</p>
           <div class="form">
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 20 characters"
+                hintLabel="{{'register.hint.max.20' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>First name</mat-label>
+                <mat-label>{{'register.label.firstName' | translate}}</mat-label>
                 <input
                   matInput
                   #firstName
@@ -184,23 +182,22 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('firstName')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('firstName')?.hasError('pattern')"
-                  >Field must start with a capital letter and contain only
-                  letters</mat-error
+                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ firstName.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 20 characters"
+                hintLabel="{{'register.hint.max.20' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Last name</mat-label>
+                <mat-label>{{'register.label.lastName' | translate}}</mat-label>
                 <input
                   matInput
                   #lastName
@@ -211,23 +208,22 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('lastName')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('lastName')?.hasError('pattern')"
-                  >Field must start with a capital letter and contain only
-                  letters</mat-error
+                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ lastName.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 20 characters"
+                hintLabel="{{'register.hint.max.20' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Street</mat-label>
+                <mat-label>{{'register.label.street' | translate}}</mat-label>
                 <input
                   matInput
                   #street
@@ -238,22 +234,21 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('street')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error *ngIf="personForm.get('street')?.hasError('pattern')"
-                  >Field must start with a capital letter and contain only
-                  letters</mat-error
+                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ street.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 4 digits"
+                hintLabel="{{'register.hint.max.4' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Street number</mat-label>
+                <mat-label>{{'register.label.streetNumber' | translate}}</mat-label>
                 <input
                   matInput
                   #streetNumber
@@ -265,15 +260,11 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('streetNumber')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('streetNumber')?.hasError('min')"
-                  >Field must be a positive integer</mat-error
-                >
-                <mat-error
-                  *ngIf="personForm.get('streetNumber')?.hasError('max')"
-                  >Field can have a maximum of 4 digits</mat-error
+                  >{{'register.validity.number.min' | translate}}</mat-error
                 >
                 <mat-hint align="end"
                   >{{ streetNumber.value.length }}/4</mat-hint
@@ -282,11 +273,11 @@
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 20 characters"
+                hintLabel="{{'register.hint.max.20' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>City</mat-label>
+                <mat-label>{{'register.label.city' | translate}}</mat-label>
                 <input
                   matInput
                   #city
@@ -296,22 +287,21 @@
                   required
                 />
                 <mat-error *ngIf="personForm.get('city')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error *ngIf="personForm.get('city')?.hasError('pattern')"
-                  >Field must start with a capital letter and contain only
-                  letters</mat-error
+                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ city.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 6 characters"
+                hintLabel="{{'register.hint.max.6' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Postal code</mat-label>
+                <mat-label>{{'register.label.postalCode' | translate}}</mat-label>
                 <input
                   matInput
                   #postalCode
@@ -323,22 +313,22 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('postalCode')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('postalCode')?.hasError('pattern')"
-                  >Invalid format</mat-error
+                  >{{'register.validity.format' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ postalCode.value.length }}/6</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="Max 20 characters"
+                hintLabel="{{'register.hint.max.20' | translate}}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>Country</mat-label>
+                <mat-label>{{'register.label.country' | translate}}</mat-label>
                 <input
                   matInput
                   #country
@@ -349,19 +339,18 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('country')?.hasError('required')"
-                  >You must enter a value</mat-error
+                  >{{'register.validity.required' | translate}}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('country')?.hasError('pattern')"
-                  >Field must start with a capital letter and contain only
-                  letters</mat-error
+                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
                 >
                 <mat-hint align="end">{{ country.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field appearance="fill" class="input">
-                <mat-label>Language</mat-label>
+                <mat-label>{{'register.label.language' | translate}}</mat-label>
                 <mat-select required formControlName="locale">
                   <mat-option
                     *ngFor="let language of languages"
@@ -374,13 +363,13 @@
             </div>
             <div class="form-person">
               <div class="button-container">
-                <button mat-button matStepperPrevious mats>Back</button>
+                <button mat-button matStepperPrevious mats>{{'register.button.back' | translate}}</button>
               </div>
             </div>
             <div class="form-person">
               <div class="button-container">
                 <button mat-button (click)="onCreateAccount()" mats>
-                  Create account
+                  {{'register.button.sign' | translate}}
                 </button>
               </div>
             </div>
@@ -388,16 +377,14 @@
         </form>
       </mat-step>
       <mat-step>
-        <ng-template matStepLabel>Confirm email address</ng-template>
-        <p class="form-title">Congratulations!</p>
+        <ng-template matStepLabel>{{'register.stepper.third' | translate}}</ng-template>
+        <p class="form-title">{{'register.confirm.title' | translate}}</p>
         <p>
-          Your account has been successfully created! We have just sent an
-          activation link to your registered email address. Once your account is
-          activated, you will be able to log in and start exploring our wide
-          range of furniture collections.
+          {{'register.confirm.first' | translate}}
+          <br><br>{{'register.confirm.second' | translate}}
         </p>
         <p>
-          We hope you find what you're looking for and enjoy shopping with us!
+          {{'register.confirm.third' | translate}}<a routerLink="/login">{{'register.confirm.fourth' | translate}}</a>
         </p>
       </mat-step>
     </mat-stepper>

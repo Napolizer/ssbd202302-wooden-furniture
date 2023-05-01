@@ -7,7 +7,6 @@ import {
   trigger,
 } from '@angular/animations';
 import { AlertService } from '@full-fledged/alerts';
-import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import {
   FormControl,
@@ -16,9 +15,10 @@ import {
 } from '@angular/forms';
 import { AccountService } from 'src/app/services/account.service';
 import { CustomValidators } from 'src/app/utils/custom.validators';
-import { AccountRegister } from 'src/app/model/AccountRegister';
+import { AccountRegister } from 'src/app/interfaces/AccountRegister';
 import { MatStepper } from '@angular/material/stepper';
 import { HttpErrorResponse} from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 
 interface Language {
   value: string;
@@ -52,22 +52,18 @@ interface Language {
   ],
 })
 export class RegisterPageComponent implements OnInit, OnDestroy {
-  @ViewChild('stepper') private myStepper: MatStepper
-  accountForm : FormGroup
-  personForm : FormGroup
+  @ViewChild('stepper') private myStepper: MatStepper;
+  accountForm : FormGroup;
+  personForm : FormGroup;
   hide = true;
   loaded = false;
-  editable = true;
   destroy = new Subject<boolean>();
-  languages: Language[] = [
-    {value: 'pl', viewValue: 'Polish'},
-    {value: 'us', viewValue: 'English'},
-  ];
-  
+  languages: Language[] = [];
+
   constructor(
     private alertService: AlertService,
     private accountService: AccountService,
-    private router: Router
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -103,11 +99,11 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([Validators.required])
         ),
-        
+
       },
       { validators: Validators.compose([CustomValidators.MatchPasswords]) }
     );
-  
+
     this.personForm = new FormGroup(
       {
         firstName: new FormControl(
@@ -180,6 +176,17 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         ),
       }
     );
+    this.translate.get('register.label.language.pl')
+    .pipe(takeUntil(this.destroy))
+    .subscribe(msg => {
+      this.languages.push({value: 'pl', viewValue: msg as string})
+    });
+
+    this.translate.get('register.label.language.en')
+    .pipe(takeUntil(this.destroy))
+    .subscribe(msg => {
+      this.languages.push({ value: 'en', viewValue: msg as string})
+    });
   }
 
   ngOnDestroy(): void {
@@ -211,27 +218,24 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.myStepper.next()
-            this.editable = false
           },
           error: (e: HttpErrorResponse) => {
-            if (e.status === 409) {
-              if(e.error.message === 'exception.mok.account.login.already.exists') {
-                this.alertService.danger('Account with given login already exists')
+            const message = e.error.message as string;
+            this.translate.get(e.error.message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.danger(msg);
+              if (message.includes('login')) {
                 this.accountForm.get('login')?.setErrors({'incorrect': true});
-              } else if(e.error.message === 'exception.mok.account.email.already.exists') {
-                this.alertService.danger('Account with given email already exists')
+              } else if (message.includes('email')) {
                 this.accountForm.get('email')?.setErrors({'incorrect': true});
               }
               this.myStepper.previous()
-            } else {
-              this.alertService.danger('Unknown exception has occurred');
-              this.myStepper.reset()
-            }
+            });
           }
         })
     } else {
       this.accountForm.markAllAsTouched()
     }
-
   }
 }

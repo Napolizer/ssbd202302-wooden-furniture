@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AccountService} from "../../services/account.service";
-import {first, Subject, takeUntil} from "rxjs";
-import {FormControl, FormGroup} from "@angular/forms";
-import {Account} from "../../interfaces/account";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AccountService } from '../../services/account.service';
+import { first, Subject, takeUntil } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Account } from '../../interfaces/Account';
 
 @Component({
   selector: 'app-account-page',
