@@ -71,7 +71,7 @@ public class AccountController {
   @GET
   @Path("/login/{login}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed({"ADMINISTRATOR", "EMPLOYEE", "SALES_REP", "USER"})
   public Response getAccountByLogin(@PathParam("login") String login) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
     if (accountOptional.isEmpty()) {
@@ -190,7 +190,7 @@ public class AccountController {
       json.add("token", token);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
-      json.add("error", e.getMessage());
+      json.add("message", e.getMessage());
       return Response.status(401).entity(json.build()).build();
     }
   }

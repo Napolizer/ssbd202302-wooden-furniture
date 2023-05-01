@@ -13,16 +13,30 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {AlertModule} from '@full-fledged/alerts';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
+import {MatListModule} from "@angular/material/list";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { AccountPageComponent } from './pages/account-page/account-page.component';
+import {MatCardModule} from "@angular/material/card";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     HomePageComponent,
-    RegisterPageComponent
+    RegisterPageComponent,
+    HomePageComponent,
+    ToolbarComponent,
+    AccountPageComponent
   ],
     imports: [
         BrowserModule,
@@ -39,9 +53,27 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
         MatSelectModule,
         FormsModule,
         AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatListModule,
+        MatSidenavModule,
+        MatExpansionModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatCardModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+          }
+        })
     ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+    return new TranslateHttpLoader(http);
+}

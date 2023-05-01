@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="panel">
+    <form class="form-container" [formGroup]="accountForm">
+      <mat-card class="profile-card">
+        <mat-card-header>
+          <div mat-card-avatar class="profile-image"></div>
+          <mat-card-title>Administrator</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="profile-container">
+            <div class="row">
+              <div class="entry">
+                <p class="title">Login</p>
+                <p class="content">{{account.login}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Email</p>
+                <p class="content">{{account.email}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Locale</p>
+                <p class="content">{{account.locale}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Last Login</p>
+                <p class="content">2023-04-29 19:27</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Last Failed Login</p>
+                <p class="content">2023-04-28 8:10</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Last Login IP address</p>
+                <p class="content">192.168.8.10</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Account State</p>
+                <p class="content">{{account.accountState}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Blockade End</p>
+                <p class="content">2023-04-30 12:00</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Groups</p>
+                <p class="content">{{account.groups?.join(',')}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary">EDIT</button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</div>
