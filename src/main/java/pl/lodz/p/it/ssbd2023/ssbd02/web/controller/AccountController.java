@@ -190,7 +190,7 @@ public class AccountController {
       json.add("token", token);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
-      json.add("error", e.getMessage());
+      json.add("message", e.getMessage());
       return Response.status(401).entity(json.build()).build();
     }
   }

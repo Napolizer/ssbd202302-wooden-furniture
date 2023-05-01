@@ -81,7 +81,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         error: e => {
           combineLatest([
             this.translate.get('exception.occurred'),
-            this.translate.get(e.error.error)
+            this.translate.get(e.error.message || 'exception.unknown')
           ]).pipe(takeUntil(this.destroy), map(data => ({
             title: data[0],
             message: data[1]

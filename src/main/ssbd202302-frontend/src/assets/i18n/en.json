@@ -13,5 +13,9 @@
   "login.success": "You have successfully logged in!",
 
   "exception.occurred": "Exception occurred",
-  "exception.mok.account.credentials": "Invalid login or password"
+  "exception.unknown": "Unknown",
+  "exception.mok.account.credentials": "Invalid login or password",
+  "exception.mok.account.archive": "Account is archive",
+  "exception.mok.account.blocked": "Account is blocked",
+  "exception.mok.account.inactive": "Account is inactive"
 }

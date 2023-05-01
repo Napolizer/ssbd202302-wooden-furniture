@@ -13,5 +13,9 @@
   "login.success": "Zalogowano pomyślnie!",
 
   "exception.occurred": "Wystąpił błąd",
-  "exception.mok.account.credentials": "Nieprawidłowy login lub hasło"
+  "exception.unknown": "Nieznany",
+  "exception.mok.account.credentials": "Nieprawidłowy login lub hasło",
+  "exception.mok.account.archive": "Konto jest archiwalne",
+  "exception.mok.account.blocked": "Konto jest zablokowane",
+  "exception.mok.account.inactive": "Konto jest nieaktywne"
 }
