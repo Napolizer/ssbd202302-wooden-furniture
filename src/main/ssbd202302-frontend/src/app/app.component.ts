@@ -10,9 +10,9 @@ export class AppComponent {
   title = 'ssbd202302-frontend';
 
   constructor(
-    private translateService: TranslateService
+    private translate: TranslateService
   ) {
-    translateService.setDefaultLang('en');
-    translateService.use(translateService.getBrowserLang() || 'en');
+    translate.setDefaultLang('en');
+    translate.use(translate.getBrowserLang() || 'en');
   }
 }

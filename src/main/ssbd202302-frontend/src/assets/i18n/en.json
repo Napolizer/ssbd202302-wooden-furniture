@@ -9,5 +9,9 @@
   "login.validity.tooShort": "Login must contain at least 6 characters",
   "login.password.tip": "Max 32 characters",
   "login.password.validity.patternMismatch": "Password must contain at least one capital letter and one special character",
-  "login.password.validity.tooShort": "Password must contain at least 8 characters"
+  "login.password.validity.tooShort": "Password must contain at least 8 characters",
+  "login.success": "You have successfully logged in!",
+
+  "exception.occurred": "Exception occurred",
+  "exception.mok.account.credentials": "Invalid login or password"
 }
