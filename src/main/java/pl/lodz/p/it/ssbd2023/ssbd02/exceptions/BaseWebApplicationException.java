@@ -9,13 +9,13 @@ import jakarta.ws.rs.core.Response;
 public class BaseWebApplicationException extends WebApplicationException {
   public BaseWebApplicationException(String message, Response.Status statusCode) {
     super(
-        Response.status(statusCode).entity(Json.createObjectBuilder().add("error", message).build())
+        Response.status(statusCode).entity(Json.createObjectBuilder().add("message", message).build())
             .build());
   }
 
   public BaseWebApplicationException(String message, Throwable cause, Response.Status statusCode) {
     super(cause,
-        Response.status(statusCode).entity(Json.createObjectBuilder().add("error", message).build())
+        Response.status(statusCode).entity(Json.createObjectBuilder().add("message", message).build())
             .build());
   }
 
