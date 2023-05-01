@@ -4,8 +4,9 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '@full-fledged/alerts';
 import {Router} from '@angular/router';
 import {TokenService} from '../../services/token.service';
-import {Subject, takeUntil} from 'rxjs';
+import {combineLatest, first, map, Subject, takeUntil} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-login-page',
@@ -44,7 +45,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -64,15 +66,29 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   onLoginClicked(): void {
     this.authenticationService.login(this.loginForm.value['login'] ?? '', this.loginForm.value['password'] ?? '')
-      .pipe(takeUntil(this.destroy))
+      .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: token => {
-          this.alertService.success('You have successfully logged in!');
           this.tokenService.saveToken(token);
-          void this.router.navigate(['/home']);
+
+          this.translate.get('login.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.router.navigate(['/home']);
+            });
         },
         error: e => {
-          this.alertService.danger('Error occurred: ' + e.error.message);
+          combineLatest([
+            this.translate.get('exception.occurred'),
+            this.translate.get(e.error.message || 'exception.unknown')
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
+            title: data[0],
+            message: data[1]
+          })))
+            .subscribe(data => {
+              this.alertService.danger(`${data.title}: ${data.message}`);
+            });
         }
       })
   }

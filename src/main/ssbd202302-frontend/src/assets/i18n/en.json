@@ -1,0 +1,21 @@
+{
+  "login.title": "Wooden Furniture",
+  "login.subtitle": "Login to continue",
+  "login.enterLogin": "Enter your login",
+  "login.enterPassword": "Enter your password",
+  "login.login": "Login",
+  "login.login.tip": "Max 20 characters",
+  "login.validity.patternMismatch": "Login must start with a letter and contain only letters and digits",
+  "login.validity.tooShort": "Login must contain at least 6 characters",
+  "login.password.tip": "Max 32 characters",
+  "login.password.validity.patternMismatch": "Password must contain at least one capital letter and one special character",
+  "login.password.validity.tooShort": "Password must contain at least 8 characters",
+  "login.success": "You have successfully logged in!",
+
+  "exception.occurred": "Exception occurred",
+  "exception.unknown": "Unknown",
+  "exception.mok.account.credentials": "Invalid login or password",
+  "exception.mok.account.archive": "Account is archive",
+  "exception.mok.account.blocked": "Account is blocked",
+  "exception.mok.account.inactive": "Account is inactive"
+}

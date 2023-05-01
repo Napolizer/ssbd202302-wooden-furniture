@@ -11,14 +11,30 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {AlertModule} from '@full-fledged/alerts';
+import {MatListModule} from "@angular/material/list";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { AccountPageComponent } from './pages/account-page/account-page.component';
+import {MatCardModule} from "@angular/material/card";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
-    HomePageComponent
+    HomePageComponent,
+    ToolbarComponent,
+    AccountPageComponent,
+    SpinnerComponent
   ],
     imports: [
         BrowserModule,
@@ -33,9 +49,28 @@ import {AlertModule} from '@full-fledged/alerts';
         MatButtonModule,
         FormsModule,
         AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatListModule,
+        MatSidenavModule,
+        MatExpansionModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatCardModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        MatProgressSpinnerModule
     ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+    return new TranslateHttpLoader(http);
+}
