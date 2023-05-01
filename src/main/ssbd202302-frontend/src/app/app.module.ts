@@ -24,6 +24,8 @@ import { AccountPageComponent } from './pages/account-page/account-page.componen
 import {MatCardModule} from "@angular/material/card";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
     LoginPageComponent,
     HomePageComponent,
     ToolbarComponent,
-    AccountPageComponent
+    AccountPageComponent,
+    SpinnerComponent
   ],
     imports: [
         BrowserModule,
@@ -55,12 +58,13 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
         MatMenuModule,
         MatCardModule,
         TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpClient]
-          }
-        })
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        MatProgressSpinnerModule
     ],
   providers: [],
   bootstrap: [AppComponent]
