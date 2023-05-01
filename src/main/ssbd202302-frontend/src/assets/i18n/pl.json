@@ -1,0 +1,13 @@
+{
+  "login.title": "Meble Drewniane",
+  "login.subtitle": "Logowanie",
+  "login.enterLogin": "Podaj swój login",
+  "login.enterPassword": "Podaj swoje hasło",
+  "login.login": "Zaloguj",
+  "login.login.tip": "Maksymalnie 20 znaków",
+  "login.validity.patternMismatch": "Login musi rozpocząć się literą, oraz zawierać jedynie litery i cyfry",
+  "login.validity.tooShort": "Login musi zawierać conajmniej 6 znaków",
+  "login.password.tip": "Maksymalnie 32 znaki",
+  "login.password.validity.patternMismatch": "Hasło musi zawierać conajmniej jedną dużą literę, oraz jeden znak specjalny",
+  "login.password.validity.tooShort": "Hasło musi zawierać przynajmniej 8 znaków"
+}
