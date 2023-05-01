@@ -69,9 +69,14 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: token => {
-          this.alertService.success('');
           this.tokenService.saveToken(token);
-          void this.router.navigate(['/home']);
+
+          this.translate.get('login.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.router.navigate(['/home']);
+            });
         },
         error: e => {
           combineLatest([

@@ -10,7 +10,7 @@
   "login.password.tip": "Maksymalnie 32 znaki",
   "login.password.validity.patternMismatch": "Hasło musi zawierać conajmniej jedną dużą literę, oraz jeden znak specjalny",
   "login.password.validity.tooShort": "Hasło musi zawierać przynajmniej 8 znaków",
-  "login.success": "Logowanie zakończone powodzeniem!",
+  "login.success": "Zalogowano pomyślnie!",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.mok.account.credentials": "Nieprawidłowy login lub hasło"
