@@ -3,7 +3,7 @@
     <div class="image-container">
       <img class="background-image" src="assets/images/login-page-furnitures.jpg" alt="">
     </div>
-    <form class="form-container" [formGroup]="loginForm">
+    <form class="form-container" [formGroup]="loginForm" (submit)="loginForm.valid && onLoginClicked()">
       <p class="form-title">{{'login.title' | translate}}</p>
       <p class="form-description">{{'login.subtitle' | translate}}</p>
       <div class="form">
@@ -23,13 +23,13 @@
             <mat-error *ngIf="password.validity.patternMismatch">{{'login.password.validity.patternMismatch' | translate}}</mat-error>
             <mat-error *ngIf="password.validity.tooShort">{{'login.password.validity.tooShort' | translate}}</mat-error>
             <mat-hint align="end">{{password.value.length}}/32</mat-hint>
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
           </mat-form-field>
         </div>
         <div class="button-container">
-            <button mat-button color="primary" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>
+            <button mat-button color="primary" type="submit" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>
         </div>
       </div>
     </form>
