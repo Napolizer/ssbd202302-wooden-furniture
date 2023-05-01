@@ -71,7 +71,7 @@ public class AccountController {
   @GET
   @Path("/login/{login}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed({"ADMINISTRATOR", "EMPLOYEE", "SALES_REP", "USER"})
   public Response getAccountByLogin(@PathParam("login") String login) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
     if (accountOptional.isEmpty()) {

@@ -11,19 +11,19 @@
             <div class="row">
               <div class="entry">
                 <p class="title">Login</p>
-                <p class="content">Administrator</p>
+                <p class="content">{{account.login}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
                 <p class="title">Email</p>
-                <p class="content">admin@gmail.com</p>
+                <p class="content">{{account.email}}</p>
                 <div class="border"></div>
               </div>
             </div>
             <div class="row">
               <div class="entry">
                 <p class="title">Locale</p>
-                <p class="content">PL</p>
+                <p class="content">{{account.locale}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
@@ -47,7 +47,7 @@
             <div class="row">
               <div class="entry">
                 <p class="title">Account State</p>
-                <p class="content">BLOCKED</p>
+                <p class="content">{{account.accountState}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
@@ -56,8 +56,8 @@
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">Roles</p>
-                <p class="content">Administrator, Employee</p>
+                <p class="title">Groups</p>
+                <p class="content">{{account.groups?.join(',')}}</p>
                 <div class="border"></div>
               </div>
             </div>
