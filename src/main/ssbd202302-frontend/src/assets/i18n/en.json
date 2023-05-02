@@ -56,5 +56,6 @@
   "exception.mok.account.inactive": "Account is inactive",
   "exception.mok.account.login.already.exists": "Account with given login already exists",
   "exception.mok.account.email.already.exists": "Account with given email already exists",
-  "exception.general.database": "Database error occurred"
+  "exception.general.database": "Database error occurred",
+  "exception.mail.service": "Mail service error occurred"
 }

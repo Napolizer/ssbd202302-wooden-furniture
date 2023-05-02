@@ -56,5 +56,6 @@
   "exception.mok.account.inactive": "Konto jest nieaktywne",
   "exception.mok.account.login.already.exists": "Konto z podaną nazwą użytkownika już istnieje",
   "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje",
-  "exception.general.database": "Wystąpił problem z bazą danych"
+  "exception.general.database": "Wystąpił problem z bazą danych",
+  "exception.mail.service": "Wystąpił problem podczas wysyłania wiadomości email"
 }

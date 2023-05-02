@@ -5,7 +5,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import java.util.ArrayList;
+import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,6 +26,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 public class AccountService {
   @Inject
   private AccountFacadeOperations accountFacade;
+  @Inject
+  private MailService mailService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -130,6 +132,12 @@ public class AccountService {
     account.getAccessLevels().add(client);
     account.setFailedLoginCounter(0);
     accountFacade.create(account);
+    try {
+      mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
+              account.getLocale(), "test", account.getLogin());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void createAccount(Account account) {
