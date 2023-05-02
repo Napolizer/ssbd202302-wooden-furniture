@@ -33,8 +33,8 @@ public class AccountControllerIT {
         .contentType("application/json")
         .body("""
                    {
-                       "login": "admin",
-                       "password": "kochamssbd"
+                       "login": "Administrator",
+                       "password": "Kochamssbd!"
                    }
             """)
         .when()
@@ -67,8 +67,8 @@ public class AccountControllerIT {
           .contentType("application/json")
           .body("""
                      {
-                         "login": "admin",
-                         "password": "kochamssbd"
+                         "login": "Administrator",
+                         "password": "Kochamssbd!"
                      }
               """)
           .when()
@@ -96,7 +96,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(401)
           .contentType("application/json")
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CREDENTIALS));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CREDENTIALS));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(401)
           .contentType("application/json")
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CREDENTIALS));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CREDENTIALS));
     }
 
     @Test
@@ -214,7 +214,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/login/admin")
+          .get("/account/login/Administrator")
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -225,7 +225,7 @@ public class AccountControllerIT {
           .body("email", equalTo("admin@gmail.com"))
           .body("id", is(notNullValue()))
           .body("locale", equalTo("pl"))
-          .body("login", equalTo("admin"));
+          .body("login", equalTo("Administrator"));
     }
 
     @Test
@@ -247,7 +247,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(404)
           .contentType("application/json")
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
   }
 
@@ -318,7 +318,7 @@ public class AccountControllerIT {
           .post("/account/create")
           .then()
           .statusCode(409)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_LOGIN_ALREADY_EXISTS));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_LOGIN_ALREADY_EXISTS));
     }
 
     @Test
@@ -332,7 +332,7 @@ public class AccountControllerIT {
           .post("/account/create")
           .then()
           .statusCode(409)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS));
     }
 
     @Test
@@ -346,7 +346,7 @@ public class AccountControllerIT {
           .post("/account/create")
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
     }
   }
 
@@ -364,7 +364,7 @@ public class AccountControllerIT {
           .patch("/account/block/" + id)
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
     }
 
     @Test
@@ -376,7 +376,7 @@ public class AccountControllerIT {
           .patch("/account/block/" + id)
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
     }
 
     @Test
@@ -388,7 +388,7 @@ public class AccountControllerIT {
           .patch("/account/block/" + id)
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
     }
 
     @Test
@@ -399,7 +399,7 @@ public class AccountControllerIT {
           .patch("/account/block/" + Long.MAX_VALUE)
           .then()
           .statusCode(404)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
 
     @Test
@@ -422,13 +422,13 @@ public class AccountControllerIT {
     @Test
     @Order(1)
     public void shouldFailToActivateAlreadyActiveAccount() {
-      int id = retrieveAccountId("admin");
+      int id = retrieveAccountId("Administrator");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/activate/" + id)
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
     }
 
     @Test
@@ -440,7 +440,7 @@ public class AccountControllerIT {
           .patch("/account/activate/" + id)
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
     }
 
     @Test
@@ -451,7 +451,7 @@ public class AccountControllerIT {
           .patch("/account/activate/" + Long.MAX_VALUE)
           .then()
           .statusCode(404)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
 
     @Test
@@ -485,7 +485,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("admin"))
+          .get("/account/id/" + retrieveAccountId("Administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -496,7 +496,7 @@ public class AccountControllerIT {
           .body("email", equalTo("admin@gmail.com"))
           .body("id", is(notNullValue()))
           .body("locale", equalTo("pl"))
-          .body("login", equalTo("admin"));
+          .body("login", equalTo("Administrator"));
     }
 
     @Test
@@ -529,7 +529,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(404)
           .contentType("application/json")
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
   }
 
@@ -568,7 +568,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("admin"))
+          .get("/account/id/" + retrieveAccountId("Administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -577,7 +577,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
+          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/SalesRep")
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -587,7 +587,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("admin"))
+          .get("/account/id/" + retrieveAccountId("Administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -600,7 +600,7 @@ public class AccountControllerIT {
     public void failsToAddAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
-          .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
+          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/SalesRep")
           .then()
           .statusCode(401);
     }
@@ -614,7 +614,7 @@ public class AccountControllerIT {
           .put("account/id/0/accessLevel/SalesRep")
           .then()
           .statusCode(404)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
 
     @Test
@@ -623,10 +623,10 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/NotValidAccessLevel")
+          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/NotValidAccessLevel")
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
     }
 
     @Test
@@ -635,10 +635,10 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("admin") + "/accessLevel/Administrator")
+          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/Administrator")
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED));
     }
   }
 
@@ -650,7 +650,7 @@ public class AccountControllerIT {
     public void failsToRemoveAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
-          .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/Administrator")
+          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/Administrator")
           .then()
           .statusCode(401);
     }
@@ -664,7 +664,7 @@ public class AccountControllerIT {
           .put("account/id/0/accessLevel/Administrator")
           .then()
           .statusCode(404)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
 
     @Test
@@ -673,10 +673,10 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/NotValidAccessLevel")
+          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/NotValidAccessLevel")
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
     }
 
     @Test
@@ -685,10 +685,10 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/Client")
+          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/Client")
           .then()
           .statusCode(400)
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED));
     }
 
     @Test
@@ -697,7 +697,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("admin"))
+          .get("/account/id/" + retrieveAccountId("Administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -707,7 +707,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("admin") + "/accessLevel/SalesRep")
+          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/SalesRep")
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -716,7 +716,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("admin"))
+          .get("/account/id/" + retrieveAccountId("Administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
@@ -765,7 +765,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(404)
           .contentType("application/json")
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
 
   }
@@ -812,7 +812,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(404)
           .contentType("application/json")
-          .body("error", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
   }
 }

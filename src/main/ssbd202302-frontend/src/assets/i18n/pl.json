@@ -49,11 +49,12 @@
   "register.confirm.fourth": "możesz się teraz zalogować.",
 
   "exception.occurred": "Wystąpił błąd",
-  "exception.unknown": "Nieznany",
+  "exception.unknown": "Nieznany błąd",
   "exception.mok.account.credentials": "Nieprawidłowy login lub hasło",
   "exception.mok.account.archive": "Konto jest archiwalne",
   "exception.mok.account.blocked": "Konto jest zablokowane",
   "exception.mok.account.inactive": "Konto jest nieaktywne",
   "exception.mok.account.login.already.exists": "Konto z podaną nazwą użytkownika już istnieje",
-  "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje"
+  "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje",
+  "exception.general.database": "Wystąpił problem z bazą danych"
 }

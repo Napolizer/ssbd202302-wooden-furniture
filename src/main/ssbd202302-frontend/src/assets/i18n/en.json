@@ -49,11 +49,12 @@
   "register.confirm.fourth": "you can now log in.",
 
   "exception.occurred": "Exception occurred",
-  "exception.unknown": "Unknown",
+  "exception.unknown": "Unknown error",
   "exception.mok.account.credentials": "Invalid login or password",
   "exception.mok.account.archive": "Account is archive",
   "exception.mok.account.blocked": "Account is blocked",
   "exception.mok.account.inactive": "Account is inactive",
   "exception.mok.account.login.already.exists": "Account with given login already exists",
-  "exception.mok.account.email.already.exists": "Account with given email already exists"
+  "exception.mok.account.email.already.exists": "Account with given email already exists",
+  "exception.general.database": "Database error occurred"
 }
