@@ -15,6 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
@@ -27,6 +28,9 @@ public class AccountEndpoint {
   private AccountService accountService;
   @Inject
   private AuthenticationService authenticationService;
+
+  @Inject
+  private MailService mailService;
 
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
@@ -70,10 +74,14 @@ public class AccountEndpoint {
 
   public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
     accountService.addAccessLevelToAccount(accountId, accessLevel);
+    Account foundAccount = getAccountByAccountId(accountId).get();
+    //mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
     accountService.removeAccessLevelFromAccount(accountId, accessLevel);
+    Account foundAccount = getAccountByAccountId(accountId).get();
+    //mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
   public void changePassword(String login, String newPassword) {

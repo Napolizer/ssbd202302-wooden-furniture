@@ -17,6 +17,14 @@ public class MessageUtil {
   public static class MessageKey {
     public static final String EMAIL_ACCOUNT_BLOCKED_SUBJECT = "mok.email.account.blocked.subject";
     public static final String EMAIL_ACCOUNT_BLOCKED_MESSAGE = "mok.email.account.blocked.message";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT =
+            "mok.email.account.access.level.added.subject";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE =
+            "mok.email.account.access.level.added.message";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT =
+            "mok.email.account.access.level.removed.subject";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE =
+            "mok.email.account.access.level.removed.message";
     public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
     public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED =
         "exception.mok.account.access.level.already.assigned";
@@ -41,5 +49,6 @@ public class MessageUtil {
     public static final String ERROR_OPTIMISTIC_LOCK = "exception.optimistic.lock";
     public static final String ERROR_GENERAL_PERSISTENCE = "exception.general.persistence";
     public static final String ERROR_ACCESS_DENIED = "exception.access.denied";
+
   }
 }
