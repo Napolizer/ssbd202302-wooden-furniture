@@ -102,4 +102,8 @@ public class AccountEndpoint {
     accountService.editAccountInfoAsAdmin(login,
         DtoToEntityMapper.mapEditPersonInfoAsAdminDtoToAccount(editPersonInfoAsAdminDto));
   }
+
+  public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
+    return accountService.changeAccessLevel(accountId, accessLevel);
+  }
 }

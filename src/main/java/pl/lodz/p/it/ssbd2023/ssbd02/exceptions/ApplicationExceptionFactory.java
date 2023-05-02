@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
@@ -42,6 +43,10 @@ public final class ApplicationExceptionFactory {
 
   public static InvalidAccessLevelException createInvalidAccessLevelException() {
     return new InvalidAccessLevelException();
+  }
+
+  public static MoreThanOneAccessLevelAssignedException createMoreThanOneAccessLevelAssignedException() {
+    return new MoreThanOneAccessLevelAssignedException();
   }
 
   public static LoginAlreadyExistsException createLoginAlreadyExistsException(Throwable cause) {

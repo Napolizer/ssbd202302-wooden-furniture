@@ -5,6 +5,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -68,6 +69,20 @@ public class AccountService {
       }
     }
     throw ApplicationExceptionFactory.createAccessLevelNotAssignedException();
+  }
+
+  public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
+    Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+    List<AccessLevel> accessLevels = account.getAccessLevels();
+
+    if (accessLevels.size() == 1) {
+      accessLevels.set(0, accessLevel);
+      accessLevel.setAccount(account);
+      account.setAccessLevels(accessLevels);
+      accountFacade.update(account);
+      return account;
+    }
+    throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
   }
 
   public void editAccountInfo(String login, Account accountWithChanges) {
