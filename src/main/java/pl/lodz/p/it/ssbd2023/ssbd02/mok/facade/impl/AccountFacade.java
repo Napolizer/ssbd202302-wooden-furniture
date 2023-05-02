@@ -22,9 +22,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
     AccountFacadeExceptionsInterceptor.class
 })
 public class AccountFacade extends AbstractFacade<Account> implements AccountFacadeOperations {
-//  @Inject
-//  AddressFacadeOperations addressFacadeOperations;
-
   @PersistenceContext(unitName = "ssbd02mokPU")
   private EntityManager em;
 

@@ -6,8 +6,11 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(ArquillianExtension.class)
 public class MailServiceIT {
@@ -23,8 +26,8 @@ public class MailServiceIT {
         .addAsResource(new File("src/test/resources/"), "");
   }
 
-//    @Test
-//    void shouldSendMailToTemporaryMail() {
-//        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com", "en"));
-//    }
+    @Test
+    void shouldSendMailToTemporaryMail() {
+        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com", "en"));
+    }
 }
