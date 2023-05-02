@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AccountService} from "../../services/account.service";
-import {Account} from "../../interfaces/account";
+import {Account} from "../../interfaces/Account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
