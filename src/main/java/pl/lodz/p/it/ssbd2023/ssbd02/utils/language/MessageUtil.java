@@ -32,6 +32,8 @@ public class MessageUtil {
     public static final String ACCOUNT_ACCESS_LEVEL = "exception.mok.account.access.level";
     public static final String ACCOUNT_LOGIN_ALREADY_EXISTS =
         "exception.mok.account.login.already.exists";
+    public static final String ACCOUNT_MORE_THAN_ONE_ACCESS_LEVEL =
+            "exception.mok.account.access.level.many.assigned";
     public static final String ACCOUNT_ARCHIVE = "exception.mok.account.archive";
     public static final String ACCOUNT_BLOCKED = "exception.mok.account.blocked";
     public static final String ACCOUNT_INACTIVE = "exception.mok.account.inactive";

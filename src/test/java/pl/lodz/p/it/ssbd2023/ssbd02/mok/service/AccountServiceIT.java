@@ -213,6 +213,24 @@ public class AccountServiceIT {
   }
 
   @Test
+  public void shouldChangeAccessLevelWhenItsAlreadyOne() {
+    AccessLevel oldAccessLevel = new Client();
+    AccessLevel newAccessLevel = new Administrator();
+
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), oldAccessLevel);
+    List<AccessLevel> accessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
+    assertEquals(1, accessLevels.size());
+    assertTrue(accessLevels.get(0) instanceof Client);
+
+    assertDoesNotThrow(() -> accountService.changeAccessLevel(account.getId(), newAccessLevel));
+    List<AccessLevel> newAccessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
+    assertEquals(1, newAccessLevels.size());
+    assertTrue(newAccessLevels.get(0) instanceof Administrator);
+  }
+
+  @Test
   public void properlyRemovesAccessLevelFromAccount()
           throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException, SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     AccessLevel newAccessLevel = new Employee();
@@ -470,6 +488,7 @@ public class AccountServiceIT {
     assertThrows(AccountNotFoundException.class,
             () -> accountService.activateAccount(Long.MAX_VALUE));
   }
+
 
 //    @Test
 //    public void updateEmailWithSetNewEmail() {
