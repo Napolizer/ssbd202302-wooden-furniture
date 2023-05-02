@@ -20,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 public class AuthenticationService {
   @Inject
   private AccountService accountService;
-
   @Inject
   private MailService mailService;
   @Inject

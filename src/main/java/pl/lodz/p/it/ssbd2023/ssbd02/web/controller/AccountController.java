@@ -141,7 +141,7 @@ public class AccountController {
   @POST
   @Path("/register")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response registerAccount(@Valid AccountRegisterDto accountRegisterDto) {
+  public Response registerAccount(@NotNull @Valid AccountRegisterDto accountRegisterDto) {
     accountEndpoint.registerAccount(accountRegisterDto);
     return Response.status(Response.Status.CREATED).build();
   }
@@ -150,7 +150,7 @@ public class AccountController {
   @Path("/create")
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed("ADMINISTRATOR")
-  public Response createAccount(@Valid AccountCreateDto accountCreateDto) {
+  public Response createAccount(@NotNull @Valid AccountCreateDto accountCreateDto) {
     accountEndpoint.createAccount(accountCreateDto);
     return Response.status(Response.Status.CREATED).build();
   }
@@ -159,7 +159,7 @@ public class AccountController {
   @Path("/login/{login}/changePassword")
   @Produces(MediaType.APPLICATION_JSON)
   public Response changePassword(@PathParam("login") String login,
-                                 @Valid ChangePasswordDto changePasswordDto)
+                                 @NotNull @Valid ChangePasswordDto changePasswordDto)
       throws AccountNotFoundException {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
@@ -168,7 +168,7 @@ public class AccountController {
     if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
-    accountEndpoint.changePassword(login, changePasswordDto.getPassword()); //FIXME handle exception
+    accountEndpoint.changePassword(login, changePasswordDto.getPassword());
     AccountWithoutSensitiveDataDto changedAccount =
         new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
     return Response.ok(changedAccount).build();
@@ -178,7 +178,7 @@ public class AccountController {
   @Path("/login/{login}/changePasswordAsAdmin")
   @Produces(MediaType.APPLICATION_JSON)
   public Response changePasswordAsAdmin(@PathParam("login") String login,
-                                        @Valid ChangePasswordDto changePasswordDto) {
+                                        @NotNull @Valid ChangePasswordDto changePasswordDto) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
@@ -187,7 +187,7 @@ public class AccountController {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
     accountEndpoint.changePasswordAsAdmin(login,
-        changePasswordDto.getPassword()); //FIXME handle exception
+        changePasswordDto.getPassword());
     AccountWithoutSensitiveDataDto changedAccount =
         new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
     return Response.ok(changedAccount).build();
@@ -215,12 +215,12 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("ADMINISTRATOR")
   public Response editAccountAsAdmin(@PathParam("login") String login,
-                                     @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+                                     @NotNull @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     accountEndpoint.editAccountInfoAsAdmin(login,
-        editPersonInfoAsAdminDto); //FIXME handle exception
+        editPersonInfoAsAdminDto);
     return Response.ok(editPersonInfoAsAdminDto).build();
   }
 
@@ -247,11 +247,11 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response editOwnAccount(@PathParam("login") String login,
-                                 @Valid EditPersonInfoDto editPersonInfoDto) {
+                                 @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    accountEndpoint.editAccountInfo(login, editPersonInfoDto); //FIXME handle exception
+    accountEndpoint.editAccountInfo(login, editPersonInfoDto);
     return Response.ok(editPersonInfoDto).build();
   }
 }

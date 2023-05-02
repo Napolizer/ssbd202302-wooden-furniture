@@ -90,5 +90,10 @@ public class Account extends AbstractEntity {
   @Builder.Default
   private List<Order> orders = new ArrayList<>();
 
-//    private String newEmail;
+  //    private String newEmail;
+
+  public void update(Account account) {
+    this.email = account.email != null ? account.email : email;
+    this.person.update(account.getPerson());
+  }
 }
