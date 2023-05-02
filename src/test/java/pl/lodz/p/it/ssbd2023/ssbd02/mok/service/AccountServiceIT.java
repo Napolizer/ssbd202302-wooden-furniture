@@ -28,10 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 @ExtendWith(ArquillianExtension.class)
@@ -226,6 +223,23 @@ public class AccountServiceIT {
     List<AccessLevel> newAccessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
     assertEquals(1, newAccessLevels.size());
     assertTrue(newAccessLevels.get(0) instanceof Administrator);
+  }
+
+  @Test
+  public void failsToChangeAccessLevelWhenItsMoreThanOneAssigned() {
+    AccessLevel oldAccessLevel1 = new Client();
+    AccessLevel oldAccessLevel2 = new Employee();
+    AccessLevel newAccessLevel = new Administrator();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), oldAccessLevel1);
+    accountService.addAccessLevelToAccount(account.getId(), oldAccessLevel2);
+    List<AccessLevel> accessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
+    assertEquals(2, accessLevels.size());
+
+    assertThrows(MoreThanOneAccessLevelAssignedException.class, () -> {
+      accountService.changeAccessLevel(account.getId(), newAccessLevel);
+    });
   }
 
   @Test
