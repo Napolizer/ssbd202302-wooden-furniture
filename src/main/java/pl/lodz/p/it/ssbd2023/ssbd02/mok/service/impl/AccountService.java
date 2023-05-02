@@ -72,14 +72,16 @@ public class AccountService {
     throw ApplicationExceptionFactory.createAccessLevelNotAssignedException();
   }
 
-  public void changeAccessLevel(Long accountId, AccessLevel accessLevel) {
+  public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
     Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = account.getAccessLevels();
 
     if (accessLevels.size() == 1) {
-      account.setAccessLevels(new ArrayList<>(List.of(accessLevel)));
+      accessLevels.set(0, accessLevel);
+      accessLevel.setAccount(account);
+      account.setAccessLevels(accessLevels);
       accountFacade.update(account);
-      return;
+      return account;
     }
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
   }

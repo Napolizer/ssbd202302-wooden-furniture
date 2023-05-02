@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import org.checkerframework.checker.nullness.Opt;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -33,7 +32,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedExc
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 @ExtendWith(ArquillianExtension.class)
@@ -213,7 +211,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void shouldChangeAccessLevelWhenItsAlreadyOne() {
+  public void properlyChangeAccessLevelWhenItsAlreadyOne() {
     AccessLevel oldAccessLevel = new Client();
     AccessLevel newAccessLevel = new Administrator();
 
