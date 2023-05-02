@@ -27,7 +27,6 @@ public class AccountService {
   @Inject
   private AccountFacadeOperations accountFacade;
 
-
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }
