@@ -26,6 +26,10 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE =
             "mok.email.account.access.level.removed.message";
     public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
+    public static final String EMAIL_ACCOUNT_CONFIRMATION_SUBJECT = "mok.email.account.confirmation.subject";
+    public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC1 = "mok.email.account.confirmation.topic1";
+    public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC2 = "mok.email.account.confirmation.topic2";
+    public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC3 = "mok.email.account.confirmation.topic3";
     public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED =
         "exception.mok.account.access.level.already.assigned";
     public static final String ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED =
@@ -49,6 +53,7 @@ public class MessageUtil {
     public static final String ERROR_OPTIMISTIC_LOCK = "exception.optimistic.lock";
     public static final String ERROR_GENERAL_PERSISTENCE = "exception.general.persistence";
     public static final String ERROR_ACCESS_DENIED = "exception.access.denied";
+    public static final String ERROR_MAIL_SERVICE = "exception.mail.service";
 
   }
 }
