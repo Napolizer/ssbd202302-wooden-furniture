@@ -24,4 +24,12 @@ export class AccountService {
       }
     });
   }
+
+  public retrieveAllAccounts(): Observable<Account[]> {
+    return this.httpClient.get<Account[]>(`${environment.apiBaseUrl}/account`, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
 }
