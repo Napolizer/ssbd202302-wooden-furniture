@@ -81,7 +81,7 @@ public class AccountEndpoint {
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
     accountService.removeAccessLevelFromAccount(accountId, accessLevel);
     Account foundAccount = getAccountByAccountId(accountId).get();
-//    mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
+    //mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
   public void changePassword(String login, String newPassword) {
