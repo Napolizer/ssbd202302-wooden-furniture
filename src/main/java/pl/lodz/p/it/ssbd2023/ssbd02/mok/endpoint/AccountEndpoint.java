@@ -4,11 +4,13 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
@@ -36,7 +38,13 @@ public class AccountEndpoint {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
     account.setPassword(CryptHashUtils.hashPassword(accountRegisterDto.getPassword()));
     accountService.registerAccount(account);
-    //TODO confirmation email
+
+    try {
+      mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
+              account.getLocale(), "test", account.getLogin());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void createAccount(AccountCreateDto accountCreateDto) {

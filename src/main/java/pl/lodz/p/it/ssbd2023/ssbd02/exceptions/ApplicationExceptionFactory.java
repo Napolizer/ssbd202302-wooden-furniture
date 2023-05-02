@@ -74,6 +74,11 @@ public final class ApplicationExceptionFactory {
         cause, Response.Status.INTERNAL_SERVER_ERROR);
   }
 
+  public static BaseWebApplicationException createMailServiceException(Throwable cause) {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_MAIL_SERVICE,
+            cause, Response.Status.INTERNAL_SERVER_ERROR);
+  }
+
   public static AccessDeniedException createAccessDeniedException(Throwable cause) {
     return new AccessDeniedException(cause);
   }

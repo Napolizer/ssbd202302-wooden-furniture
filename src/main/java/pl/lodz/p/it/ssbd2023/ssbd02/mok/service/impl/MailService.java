@@ -1,6 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -10,10 +13,14 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+@Interceptors({GenericServiceExceptionsInterceptor.class})
 public class MailService {
+  private final String appUrl = "http://localhost:4200";
 
   public void sendMailWithInfoAboutBlockingAccount(String to, String locale)
       throws MessagingException {
@@ -21,6 +28,17 @@ public class MailService {
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT),
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_MESSAGE)
     );
+  }
+
+  public void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC1)
+                    + (" " + login + ",\n")
+                    + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC2)
+                    + ("\n" + appUrl + "/confirm?token=" + token)
+                    + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
   }
 
   public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId)
