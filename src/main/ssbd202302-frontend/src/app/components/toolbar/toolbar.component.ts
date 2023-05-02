@@ -15,6 +15,10 @@ export class ToolbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  redirectToAdminPage(): void {
+    void this.router.navigate(['/admin']);
+  }
+
   redirectToAccountPage(): void {
     void this.router.navigate(['/account']);
   }

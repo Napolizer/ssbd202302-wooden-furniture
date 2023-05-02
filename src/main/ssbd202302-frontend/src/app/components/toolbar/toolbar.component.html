@@ -1,7 +1,12 @@
 <mat-toolbar color="secondary">
-  <button mat-icon-button>
+  <button mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>
+  <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
+    <button mat-menu-item routerLink="#" (click)="redirectToAdminPage()">
+      <mat-icon>admin_panel_settings</mat-icon><span>Admin Panel</span>
+    </button>
+  </mat-menu>
   <span class="toolbar-right title">SSBD</span>
   <span class="toolbar-item-spacer"></span>
   <button class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
