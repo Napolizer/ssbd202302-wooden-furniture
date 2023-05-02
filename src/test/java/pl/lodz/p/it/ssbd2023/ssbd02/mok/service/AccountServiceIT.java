@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import org.checkerframework.checker.nullness.Opt;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -29,11 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 
 @ExtendWith(ArquillianExtension.class)
@@ -210,6 +205,41 @@ public class AccountServiceIT {
     assertThrows(AccessLevelAlreadyAssignedException.class,
             () -> accountService.addAccessLevelToAccount(account.getId(), newAccessLevel));
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+  }
+
+  @Test
+  public void properlyChangeAccessLevelWhenItsAlreadyOne() {
+    AccessLevel oldAccessLevel = new Client();
+    AccessLevel newAccessLevel = new Administrator();
+
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), oldAccessLevel);
+    List<AccessLevel> accessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
+    assertEquals(1, accessLevels.size());
+    assertTrue(accessLevels.get(0) instanceof Client);
+
+    assertDoesNotThrow(() -> accountService.changeAccessLevel(account.getId(), newAccessLevel));
+    List<AccessLevel> newAccessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
+    assertEquals(1, newAccessLevels.size());
+    assertTrue(newAccessLevels.get(0) instanceof Administrator);
+  }
+
+  @Test
+  public void failsToChangeAccessLevelWhenItsMoreThanOneAssigned() {
+    AccessLevel oldAccessLevel1 = new Client();
+    AccessLevel oldAccessLevel2 = new Employee();
+    AccessLevel newAccessLevel = new Administrator();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), oldAccessLevel1);
+    accountService.addAccessLevelToAccount(account.getId(), oldAccessLevel2);
+    List<AccessLevel> accessLevels = accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels();
+    assertEquals(2, accessLevels.size());
+
+    assertThrows(MoreThanOneAccessLevelAssignedException.class, () -> {
+      accountService.changeAccessLevel(account.getId(), newAccessLevel);
+    });
   }
 
   @Test
@@ -470,6 +500,7 @@ public class AccountServiceIT {
     assertThrows(AccountNotFoundException.class,
             () -> accountService.activateAccount(Long.MAX_VALUE));
   }
+
 
 //    @Test
 //    public void updateEmailWithSetNewEmail() {

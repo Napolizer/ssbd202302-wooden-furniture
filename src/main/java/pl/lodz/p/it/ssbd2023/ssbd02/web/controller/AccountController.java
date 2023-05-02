@@ -105,6 +105,20 @@ public class AccountController {
     return Response.ok(account).build();
   }
 
+  @PUT
+  @Path("/id/{accountId}/accessLevel/change")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("ADMINISTRATOR")
+  public Response changeAccessLevel(@PathParam("accountId") Long accountId,
+                                    @NotNull @Valid AccessLevelDto accessLevel) {
+    AccessLevel newAccessLevel =
+            DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(accessLevel);
+    Account upadatedAccount = accountEndpoint.changeAccessLevel(accountId, newAccessLevel);
+    AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(upadatedAccount);
+
+    return Response.ok(account).build();
+  }
+
   @DELETE
   @Path("/id/{accountId}/accessLevel/{accessLevel}")
   @Produces(MediaType.APPLICATION_JSON)

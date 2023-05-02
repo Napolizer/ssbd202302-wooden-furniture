@@ -10,9 +10,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatSelectModule} from '@angular/material/select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {AlertModule} from '@full-fledged/alerts';
+import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatExpansionModule} from "@angular/material/expansion";
@@ -33,6 +36,8 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
     AppComponent,
     LoginPageComponent,
     HomePageComponent,
+    RegisterPageComponent,
+    HomePageComponent,
     ToolbarComponent,
     AccountPageComponent,
     SpinnerComponent,
@@ -47,8 +52,10 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
         MatInputModule,
         MatSlideToggleModule,
         MatFormFieldModule,
+        MatStepperModule,
         MatIconModule,
         MatButtonModule,
+        MatSelectModule,
         FormsModule,
         AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
         ReactiveFormsModule,
