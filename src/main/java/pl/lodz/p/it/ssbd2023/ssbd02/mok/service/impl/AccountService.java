@@ -26,10 +26,6 @@ public class AccountService {
   @Inject
   private AccountFacadeOperations accountFacade;
 
-  @Inject
-  private MailService mailService;
-
-
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }
@@ -56,7 +52,6 @@ public class AccountService {
     accessLevels.add(accessLevel);
     foundAccount.setAccessLevels(accessLevels);
     accountFacade.update(foundAccount);
-    //mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {

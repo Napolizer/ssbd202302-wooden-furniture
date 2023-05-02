@@ -21,7 +21,10 @@ public class MessageUtil {
             "mok.email.account.access.level.added.subject";
     public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE =
             "mok.email.account.access.level.added.message";
-
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT =
+            "mok.email.account.access.level.removed.subject";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE =
+            "mok.email.account.access.level.removed.message";
     public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
     public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED =
         "exception.mok.account.access.level.already.assigned";
