@@ -32,6 +32,13 @@ public class MailService {
     );
   }
 
+  public void sendEmailAboutAddingAccessLevel(String to, String locale) throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE)
+    );
+  }
+
   public void sendMail(String to, String subject, String message) throws MessagingException {
     Session session = getSession();
 
