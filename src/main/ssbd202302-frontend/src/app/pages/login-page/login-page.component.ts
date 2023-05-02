@@ -4,7 +4,7 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '@full-fledged/alerts';
 import {Router} from '@angular/router';
 import {TokenService} from '../../services/token.service';
-import {combineLatest, map, Subject, takeUntil} from 'rxjs';
+import {combineLatest, first, map, Subject, takeUntil} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from "@ngx-translate/core";
 
@@ -66,7 +66,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   onLoginClicked(): void {
     this.authenticationService.login(this.loginForm.value['login'] ?? '', this.loginForm.value['password'] ?? '')
-      .pipe(takeUntil(this.destroy))
+      .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: token => {
           this.tokenService.saveToken(token);
@@ -82,7 +82,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           combineLatest([
             this.translate.get('exception.occurred'),
             this.translate.get(e.error.message || 'exception.unknown')
-          ]).pipe(takeUntil(this.destroy), map(data => ({
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
             title: data[0],
             message: data[1]
           })))
