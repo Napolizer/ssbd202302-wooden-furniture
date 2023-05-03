@@ -30,4 +30,9 @@ public class Person extends AbstractEntity {
   @JoinColumn(name = "address_id", nullable = false, unique = true, updatable = false)
   private Address address;
 
+  public void update(Person person) {
+    this.firstName = person.firstName != null ? person.firstName : firstName;
+    this.lastName = person.lastName != null ? person.lastName : lastName;
+    this.address.update(person.getAddress());
+  }
 }

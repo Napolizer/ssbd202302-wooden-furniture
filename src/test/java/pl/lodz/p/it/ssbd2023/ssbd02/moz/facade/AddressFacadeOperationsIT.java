@@ -1,4 +1,4 @@
-//package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade;
+//package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade;
 //
 //import static org.hamcrest.CoreMatchers.equalTo;
 //import static org.hamcrest.CoreMatchers.is;
@@ -24,7 +24,7 @@
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.extension.ExtendWith;
 //import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
-//import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AddressFacadeOperations;
+//import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.AddressFacadeOperations;
 //
 //@ExtendWith(ArquillianExtension.class)
 //public class AddressFacadeOperationsIT {

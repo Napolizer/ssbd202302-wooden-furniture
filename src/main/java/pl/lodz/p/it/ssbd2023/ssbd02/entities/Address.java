@@ -53,4 +53,12 @@ public class Address extends AbstractEntity {
 
   @Column(name = "street_number", nullable = false)
   private Integer streetNumber;
+
+  public void update(Address address) {
+    this.country = address.country != null ? address.country : country;
+    this.city = address.city != null ? address.city : city;
+    this.street = address.street != null ? address.street : street;
+    this.postalCode = address.postalCode != null ? address.postalCode : postalCode;
+    this.streetNumber = address.streetNumber != null ? address.streetNumber : streetNumber;
+  }
 }

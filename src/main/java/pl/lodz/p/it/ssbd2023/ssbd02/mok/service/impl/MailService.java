@@ -84,7 +84,7 @@ public class MailService {
   }
 
   private Session getSession() {
-    return Session.getDefaultInstance(getMailProperties(), new Authenticator() {
+    return Session.getInstance(getMailProperties(), new Authenticator() {
       @Override
       protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(

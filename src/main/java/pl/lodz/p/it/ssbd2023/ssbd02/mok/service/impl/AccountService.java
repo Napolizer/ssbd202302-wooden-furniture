@@ -12,9 +12,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
@@ -93,39 +91,13 @@ public class AccountService {
 
   public void editAccountInfo(String login, Account accountWithChanges) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-    Person personWithChanges = accountWithChanges.getPerson();
-    Address addressWithChanges = personWithChanges.getAddress();
-
-    account.getPerson().setFirstName(personWithChanges.getFirstName());
-    account.getPerson().setLastName(personWithChanges.getLastName());
-
-    Address address = account.getPerson().getAddress();
-    address.setCountry(addressWithChanges.getCountry());
-    address.setCity(addressWithChanges.getCity());
-    address.setStreet(addressWithChanges.getStreet());
-    address.setPostalCode(addressWithChanges.getPostalCode());
-    address.setStreetNumber(addressWithChanges.getStreetNumber());
-
+    account.update(accountWithChanges);
     accountFacade.update(account);
   }
 
   public void editAccountInfoAsAdmin(String login, Account accountWithChanges) {
-
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-    Person personWithChanges = accountWithChanges.getPerson();
-
-    account.setEmail(accountWithChanges.getEmail());
-    account.getPerson().setFirstName(personWithChanges.getFirstName());
-    account.getPerson().setLastName(personWithChanges.getLastName());
-
-    Address address = account.getPerson().getAddress();
-    Address addressWithChanges = personWithChanges.getAddress();
-    address.setCountry(addressWithChanges.getCountry());
-    address.setCity(addressWithChanges.getCity());
-    address.setStreet(addressWithChanges.getStreet());
-    address.setPostalCode(addressWithChanges.getPostalCode());
-    address.setStreetNumber(addressWithChanges.getStreetNumber());
-
+    account.update(accountWithChanges);
     accountFacade.update(account);
   }
 
