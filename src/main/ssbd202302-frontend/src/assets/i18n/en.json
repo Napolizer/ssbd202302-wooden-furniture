@@ -48,7 +48,7 @@
   "register.confirm.third": "If you have already verified your account, ",
   "register.confirm.fourth": "you can now log in.",
 
-  "account.confirmation.success": "Your account has been verified. You can now log in",
+  "account.confirmation.success": "Your account has been verified and you can now log in",
   "exception.expired.link": "Confirmation link has expired and your account has been deleted",
   "exception.invalid.link": "Confirmation link is invalid",
   "exception.mok.account.already.verified": "Your account has already been verified",

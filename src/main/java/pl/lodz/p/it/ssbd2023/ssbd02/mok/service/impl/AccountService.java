@@ -131,9 +131,6 @@ public class AccountService {
 
   public void registerAccount(Account account) {
     account.setAccountState(AccountState.NOT_VERIFIED);
-    Client client = new Client();
-    client.setAccount(account);
-    account.getAccessLevels().add(client);
     account.setFailedLoginCounter(0);
     accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateAccountVerificationToken(account);
@@ -207,5 +204,8 @@ public class AccountService {
       throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
     }
     account.setAccountState(AccountState.ACTIVE);
+    Client client = new Client();
+    client.setAccount(account);
+    account.getAccessLevels().add(client);
   }
 }

@@ -48,7 +48,7 @@
   "register.confirm.third": "Jeśli twoje konto zostało już zweryfikowane, ",
   "register.confirm.fourth": "możesz się teraz zalogować.",
 
-  "account.confirmation.success": "Twoje konto zostało zweryfikowane. Możesz się zalogować",
+  "account.confirmation.success": "Twoje konto zostało zweryfikowane i możesz się zalogować",
   "exception.expired.link": "Link weryfikacyjny wygasł i twoje konto zostało usunięte",
   "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
   "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
