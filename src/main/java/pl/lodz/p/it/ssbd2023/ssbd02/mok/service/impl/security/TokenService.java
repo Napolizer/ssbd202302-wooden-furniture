@@ -17,36 +17,37 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
-
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class TokenService {
   // TODO retrieve this values from environment variable
-  private final String secretKey = "123456789";
-  private final String accountConfirmationTokenSecretKey = "123123123";
-  private final Long expirationTime = 900000L; // 15 minutes expiration time
-  private final Long accountConfirmationTokenExpirationTime = 86400000L; //24 hours
+  private static final String SECRET_KEY = "$3bus>[i-y6e^A<{.:D$WON_*BDz@ooPQ]I~+[Q;UK'+,.-{_o!#~uD$$<i-oR?3e";
+  private static final Long EXPIRATION_AUTHORIZATION = 900000L; // 15 minutes
+  private static final Long EXPIRATION_ACCOUNT_CONFIRMATION = 86400000L; // 24 hours
+  private static final Long EXPIRATION_PASSWORD_RESET = 1200000L; // 20 minutes
 
   public String generateToken(Account account) {
     long now = System.currentTimeMillis();
     var builder = Jwts.builder()
         .setSubject(account.getLogin())
         .setIssuedAt(new Date(now))
-        .setExpiration(new Date(now + expirationTime))
+        .setExpiration(new Date(now + EXPIRATION_AUTHORIZATION))
         .claim("groups", account.getAccessLevels()
             .stream()
             .map(AccessLevel::getGroupName)
             .collect(Collectors.toList()))
-        .signWith(SignatureAlgorithm.HS512, secretKey);
+            .signWith(SignatureAlgorithm.HS512, SECRET_KEY);
     return builder.compact();
   }
 
   public TokenClaims getTokenClaims(String token) throws ValidationException {
     try {
-      Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+      Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 
       String username = claims.getSubject();
       List<String> groups = claims.get("groups", List.class);
@@ -66,28 +67,36 @@ public class TokenService {
     }
   }
 
-  public String generateAccountVerificationToken(Account account) {
+  public String generateTokenForEmailLink(Account account, TokenType tokenType) {
     long now = System.currentTimeMillis();
+    String secret = switch (tokenType) {
+      case ACCOUNT_CONFIRMATION -> SECRET_KEY;
+      case PASSWORD_RESET -> CryptHashUtils.getSecretKeyForPasswordResetToken(account.getPassword());
+    };
+    Long expiration = switch (tokenType) {
+      case ACCOUNT_CONFIRMATION -> EXPIRATION_ACCOUNT_CONFIRMATION;
+      case PASSWORD_RESET -> EXPIRATION_PASSWORD_RESET;
+    };
     var builder = Jwts.builder()
             .setSubject(account.getLogin())
             .setIssuedAt(new Date(now))
-            .setExpiration(new Date(now + accountConfirmationTokenExpirationTime))
-            .claim("type", "ACCOUNT_CONFIRMATION")
-            .signWith(SignatureAlgorithm.HS512, accountConfirmationTokenSecretKey);
+            .setExpiration(new Date(now + expiration))
+            .claim("type", tokenType)
+            .signWith(SignatureAlgorithm.HS512, secret);
     return builder.compact();
   }
 
   public String validateAccountVerificationToken(String token) {
     Claims claims;
     try {
-      claims = Jwts.parser().setSigningKey(accountConfirmationTokenSecretKey).parseClaimsJws(token).getBody();
+      claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     } catch (ExpiredJwtException eje) {
       throw ApplicationExceptionFactory.createExpiredLinkException(eje);
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
     }
     String type = claims.get("type", String.class);
-    if (!type.equals("ACCOUNT_CONFIRMATION")) {
+    if (!type.equals(TokenType.ACCOUNT_CONFIRMATION.name())) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
     }
 

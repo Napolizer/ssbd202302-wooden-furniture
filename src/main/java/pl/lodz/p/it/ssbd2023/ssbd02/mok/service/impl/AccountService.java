@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
@@ -105,7 +106,7 @@ public class AccountService {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
     accountFacade.create(account);
-    String accountConfirmationToken = tokenService.generateAccountVerificationToken(account);
+    String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());
@@ -172,7 +173,7 @@ public class AccountService {
   public void confirmAccount(String token) {
     String login = tokenService.validateAccountVerificationToken(token);
     Account account = accountFacade.findByLogin(login).orElseThrow(InvalidLinkException::new);
-    if (account.getAccountState().equals(AccountState.ACTIVE)) {
+    if (!account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
       throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
     }
     account.setAccountState(AccountState.ACTIVE);

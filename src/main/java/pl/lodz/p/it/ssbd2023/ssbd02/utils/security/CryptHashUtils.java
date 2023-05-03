@@ -2,19 +2,18 @@ package pl.lodz.p.it.ssbd2023.ssbd02.utils.security;
 
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
+import io.jsonwebtoken.impl.Base64Codec;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public final class CryptHashUtils {
 
-  //TODO read secret key from file
-  private static final String secretKey = "randomSecretKey";
+  //TODO read from file
+  private static final String SALT = "+a+fz)tT3m&}X@Wh";
   private static final int BCRYPT_COST_FACTOR = 12;
-  private static final SecureRandom secureRandom =
-      new SecureRandom(secretKey.getBytes(StandardCharsets.UTF_8));
 
   public static String hashPassword(String password) {
-    return BCrypt.with(secureRandom).hashToString(BCRYPT_COST_FACTOR, password.toCharArray());
+    return BCrypt.withDefaults().hashToString(BCRYPT_COST_FACTOR, password.toCharArray());
   }
 
   public static boolean verifyPassword(String password, String hash) {
@@ -22,8 +21,7 @@ public final class CryptHashUtils {
   }
 
   public static String hashVersion(Long version) {
-    return BCrypt.with(secureRandom)
-        .hashToString(BCRYPT_COST_FACTOR, Long.toString(version).toCharArray());
+    return BCrypt.withDefaults().hashToString(BCRYPT_COST_FACTOR, Long.toString(version).toCharArray());
   }
 
   public static boolean verifyVersion(Long version, String hash) {
@@ -31,4 +29,14 @@ public final class CryptHashUtils {
         .verify(Long.toString(version).toCharArray(), hash.toCharArray()).verified;
   }
 
+  public static String getSecretKeyForPasswordResetToken(String input) {
+    MessageDigest md;
+    try {
+      md = MessageDigest.getInstance("SHA-256");
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+    md.update(SALT.getBytes());
+    return new Base64Codec().encode(md.digest(input.getBytes()));
+  }
 }
