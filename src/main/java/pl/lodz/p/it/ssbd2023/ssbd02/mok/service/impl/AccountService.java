@@ -185,4 +185,15 @@ public class AccountService {
     client.setAccount(account);
     account.getAccessLevels().add(client);
   }
+
+  public void sendResetPasswordEmail(String email) {
+    Account account = getAccountByEmail(email).get();
+    String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    try {
+      mailService.sendResetPasswordEmail(account.getEmail(),
+              account.getLocale(), resetPasswordToken);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
 }

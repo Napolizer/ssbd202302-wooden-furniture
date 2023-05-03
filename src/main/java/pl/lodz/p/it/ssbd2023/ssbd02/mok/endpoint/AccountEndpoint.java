@@ -4,14 +4,11 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
@@ -19,9 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
@@ -33,10 +28,6 @@ public class AccountEndpoint {
   private AccountService accountService;
   @Inject
   private AuthenticationService authenticationService;
-  @Inject
-  private MailService mailService;
-  @Inject
-  private TokenService tokenService;
 
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
@@ -121,13 +112,6 @@ public class AccountEndpoint {
   }
 
   public void sendResetPasswordEmail(SetEmailToSendPasswordDto emailDto) {
-    Account account = accountService.getAccountByEmail(emailDto.getEmail()).get();
-    String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
-    try {
-      mailService.sendResetPasswordEmail(account.getEmail(),
-              account.getLocale(), resetPasswordToken);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    accountService.sendResetPasswordEmail(emailDto.getEmail());
   }
 }
