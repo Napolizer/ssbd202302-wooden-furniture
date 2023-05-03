@@ -17,8 +17,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -28,6 +30,8 @@ public class AccountService {
   private AccountFacadeOperations accountFacade;
   @Inject
   private MailService mailService;
+  @Inject
+  private TokenService tokenService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -132,9 +136,10 @@ public class AccountService {
     account.getAccessLevels().add(client);
     account.setFailedLoginCounter(0);
     accountFacade.create(account);
+    String accountConfirmationToken = tokenService.generateAccountVerificationToken(account);
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
-              account.getLocale(), "test", account.getLogin());
+              account.getLocale(), accountConfirmationToken, account.getLogin());
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
@@ -193,5 +198,14 @@ public class AccountService {
     found.setAccountState(account.getAccountState());
 
     accountFacade.update(found);
+  }
+
+  public void confirmAccount(String token) {
+    String login = tokenService.validateAccountVerificationToken(token);
+    Account account = accountFacade.findByLogin(login).orElseThrow(InvalidLinkException::new);
+    if (account.getAccountState().equals(AccountState.ACTIVE)) {
+      throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
+    }
+    account.setAccountState(AccountState.ACTIVE);
   }
 }

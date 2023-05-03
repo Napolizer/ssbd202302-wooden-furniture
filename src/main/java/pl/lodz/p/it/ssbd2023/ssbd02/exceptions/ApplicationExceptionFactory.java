@@ -4,12 +4,15 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessDeniedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountAlreadyVerifiedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotActiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ExpiredLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
@@ -98,5 +101,19 @@ public final class ApplicationExceptionFactory {
   public static InvalidCredentialsException createInvalidCredentialsException() {
     return new InvalidCredentialsException();
   }
+
+  public static ExpiredLinkException createExpiredLinkException(Throwable cause) {
+    return new ExpiredLinkException(cause);
+  }
+
+  public static InvalidLinkException createInvalidLinkException() {
+    return new InvalidLinkException();
+  }
+
+  public static AccountAlreadyVerifiedException createAccountAlreadyVerifiedException() {
+    return new AccountAlreadyVerifiedException();
+  }
+
+
 
 }

@@ -101,4 +101,8 @@ public class AccountEndpoint {
   public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
     return accountService.changeAccessLevel(accountId, accessLevel);
   }
+
+  public void confirmAccount(String token) {
+    accountService.confirmAccount(token);
+  }
 }
