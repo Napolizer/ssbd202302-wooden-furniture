@@ -30,6 +30,8 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
     ToolbarComponent,
     AccountPageComponent,
     SpinnerComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    ErrorDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -73,7 +76,8 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
                 deps: [HttpClient]
             }
         }),
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatDialogModule
     ],
   providers: [],
   bootstrap: [AppComponent]

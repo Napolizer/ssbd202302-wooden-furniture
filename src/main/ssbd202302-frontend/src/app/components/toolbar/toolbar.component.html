@@ -9,7 +9,8 @@
   </mat-menu>
   <span class="toolbar-right title">SSBD</span>
   <span class="toolbar-item-spacer"></span>
-  <button class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+  <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
+  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
     <mat-icon>account_circle</mat-icon>
   </button>
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
@@ -20,7 +21,7 @@
       <mat-icon>settings</mat-icon><span>Settings</span>
     </button>
     <mat-divider></mat-divider>
-    <button mat-menu-item routerLink="#">
+    <button mat-menu-item routerLink="#" (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>Logout
     </button>
   </mat-menu>
