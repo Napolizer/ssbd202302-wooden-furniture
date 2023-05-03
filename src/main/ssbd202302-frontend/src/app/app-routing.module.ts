@@ -5,6 +5,8 @@ import {HomePageComponent} from "./pages/home-page/home-page.component";
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import {AccountPageComponent} from "./pages/account-page/account-page.component";
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
+import {Group} from "./enums/group";
+import {AuthGuard} from "./guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -22,15 +24,27 @@ const routes: Routes = [
   },
   {
     path: 'account',
-    component: AccountPageComponent
+    component: AccountPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.USERS, Group.ADMINISTRATORS, Group.EMPLOYEES, Group.SALES_REPS]
+    }
   },
   {
     path: 'admin',
-    component: AdminPageComponent
+    component: AdminPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATORS]
+    }
   },
   {
     path: 'register',
-    component: RegisterPageComponent
+    component: RegisterPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUESTS]
+    }
   }
 ];
 

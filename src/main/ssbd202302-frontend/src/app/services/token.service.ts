@@ -26,12 +26,7 @@ export class TokenService {
   }
 
   public getExpirationTime(): number | null {
-    const token = this.getToken();
-    if (token === null) {
-      return null;
-    }
-    const decodedToken: any = jwtDecode(token);
-    return decodedToken?.exp;
+    return this.getTokenData()?.exp ?? null;
   }
 
   public isTokenExpired(): boolean {
@@ -48,14 +43,16 @@ export class TokenService {
       return token;
     }
 
-    const decodedToken: any = jwtDecode(token);
-    if (!decodedToken.sub || !decodedToken.group) {
-      return null;
-    }
     try {
+      const decodedToken: any = jwtDecode(token);
+      if (!decodedToken.sub || !decodedToken.groups) {
+        return null;
+      }
+
       return {
         sub: decodedToken.sub,
-        groups: decodedToken.groups
+        groups: decodedToken.groups,
+        exp: decodedToken.exp
       }
     } catch (e) {
       return null;

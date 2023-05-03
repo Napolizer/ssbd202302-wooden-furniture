@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {first, map, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {TokenService} from "./token.service";
+import {Group} from "../enums/group";
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,19 @@ export class AuthenticationService {
     return tokenData?.sub ?? null;
   }
 
-  public getGroups(): string[] {
+  public getGroups(): Group[] {
     const tokenData = this.tokenService.getTokenData();
-    return tokenData?.groups ?? [];
+    let groups = [];
+    for (let group of tokenData?.groups || []) {
+      groups.push(group as Group);
+    }
+    if (groups.length === 0) {
+      groups.push(Group.GUESTS);
+    }
+    return groups;
+  }
+
+  public isUserInGroup(group: Group): boolean {
+    return this.getGroups()?.includes(group);
   }
 }
