@@ -40,6 +40,10 @@ public class AccountService {
     return accountFacade.findById(id);
   }
 
+  public Optional<Account> getAccountByEmail(String email) {
+    return accountFacade.findByEmail(email);
+  }
+
   public List<Account> getAccountList() {
     return accountFacade.findAll();
   }
