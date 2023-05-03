@@ -5,6 +5,7 @@ import {HomePageComponent} from "./pages/home-page/home-page.component";
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import {AccountPageComponent} from "./pages/account-page/account-page.component";
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
+import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterPageComponent
+  },
+  {
+    path: 'confirm',
+    component: ConfirmPageComponent
   }
 ];
 

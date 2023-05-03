@@ -161,6 +161,7 @@
       </mat-step>
 
       <mat-step [stepControl]="personForm">
+        <app-spinner [loading]="loading"></app-spinner>
         <form [formGroup]="personForm">
           <ng-template matStepLabel>{{'register.stepper.second' | translate}}</ng-template>
           <p class="form-title">{{'register.title' | translate}}</p>

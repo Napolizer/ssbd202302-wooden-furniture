@@ -15,6 +15,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -253,5 +254,12 @@ public class AccountController {
     }
     accountEndpoint.editAccountInfo(login, editPersonInfoDto);
     return Response.ok(editPersonInfoDto).build();
+  }
+
+  @PATCH
+  @Path("/confirm")
+  public Response confirmAccount(@QueryParam("token") String token) {
+    accountEndpoint.confirmAccount(token);
+    return Response.ok().build();
   }
 }

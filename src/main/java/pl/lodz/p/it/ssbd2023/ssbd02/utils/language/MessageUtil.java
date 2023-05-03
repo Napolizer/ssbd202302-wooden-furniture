@@ -49,6 +49,7 @@ public class MessageUtil {
     public static final String ACCOUNT_ARCHIVE = "exception.mok.account.archive";
     public static final String ACCOUNT_BLOCKED = "exception.mok.account.blocked";
     public static final String ACCOUNT_INACTIVE = "exception.mok.account.inactive";
+    public static final String ACCOUNT_ALREADY_VERIFIED = "exception.mok.account.already.verified";
     public static final String ACCOUNT_CREDENTIALS = "exception.mok.account.credentials";
     public static final String ACCOUNT_OLD_PASSWORD = "exception.mok.account.old.password";
     public static final String ERROR_UNKNOWN_EXCEPTION = "exception.unknown.error";
@@ -56,6 +57,8 @@ public class MessageUtil {
     public static final String ERROR_GENERAL_PERSISTENCE = "exception.general.persistence";
     public static final String ERROR_ACCESS_DENIED = "exception.access.denied";
     public static final String ERROR_MAIL_SERVICE = "exception.mail.service";
+    public static final String ERROR_EXPIRED_LINK = "exception.expired.link";
+    public static final String ERROR_INVALID_LINK = "exception.invalid.link";
 
   }
 }
