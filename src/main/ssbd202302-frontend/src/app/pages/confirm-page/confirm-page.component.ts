@@ -14,8 +14,7 @@ import { ActivatedRoute, Router } from "@angular/router";
         if(token) {
           this.router.navigate(['/login'], { state: {token: token} });
         } else {
-          this.router.navigate(['/'])
-          // change to 404 page
+          this.router.navigate(['/not-found'])
         }
       });
     }

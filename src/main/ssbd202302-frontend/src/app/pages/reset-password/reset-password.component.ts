@@ -88,8 +88,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
           }
         })
       } else {
-        this.router.navigate(['/'])
-        // change to 404 page
+        this.router.navigate(['/not-found'])
       }
     });
   }
