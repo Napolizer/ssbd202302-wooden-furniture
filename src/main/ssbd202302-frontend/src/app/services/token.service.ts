@@ -13,6 +13,7 @@ export class TokenService {
       private localStorageService: LocalStorageService
   ) { }
 
+
   public logout(): void {
     this.localStorageService.remove(environment.tokenKey);
   }
