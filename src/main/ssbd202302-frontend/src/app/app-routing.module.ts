@@ -8,6 +8,7 @@ import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
 import {Group} from "./enums/group";
 import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
+import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 
 const routes: Routes = [
   {
@@ -46,6 +47,10 @@ const routes: Routes = [
     data: {
       groups: [Group.GUESTS]
     }
+  },
+  {
+    path: 'confirm',
+    component: ConfirmPageComponent
   },
   {
     path: 'not-found',

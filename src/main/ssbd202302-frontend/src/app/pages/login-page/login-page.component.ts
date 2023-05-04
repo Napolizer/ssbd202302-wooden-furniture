@@ -7,6 +7,9 @@ import {TokenService} from '../../services/token.service';
 import {combineLatest, first, map, Subject, takeUntil} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from "@ngx-translate/core";
+import { Location } from '@angular/common';
+import { AccountService } from 'src/app/services/account.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page',
@@ -44,15 +47,39 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
+    private accountService: AccountService,
     private router: Router,
     private tokenService: TokenService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
       this.loaded = true;
     }, 100);
+
+    const state = this.location.getState() as {token: string}
+    if(state.token) {
+      this.accountService.confirm(state.token)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.translate.get('account.confirmation.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+            });
+        },
+        error: (e: HttpErrorResponse) => {
+          this.translate.get(e.error.message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.danger(msg);
+            });
+        }
+      })
+    }
   }
 
   ngOnDestroy(): void {

@@ -57,6 +57,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   personForm : FormGroup;
   hide = true;
   loaded = false;
+  loading = false;
   destroy = new Subject<boolean>();
   languages: Language[] = [];
 
@@ -200,6 +201,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
 
   onCreateAccount(): void {
     if (this.personForm.valid) {
+      this.loading = true;
       const accountRegister: AccountRegister = {
         login: this.accountForm.value['login']!,
         password: this.accountForm.value['password']!,
@@ -217,9 +219,11 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy))
         .subscribe({
           next: () => {
+            this.loading = false;
             this.myStepper.next()
           },
           error: (e: HttpErrorResponse) => {
+            this.loading = false;
             const message = e.error.message as string;
             this.translate.get(e.error.message || 'exception.unknown')
             .pipe(takeUntil(this.destroy))

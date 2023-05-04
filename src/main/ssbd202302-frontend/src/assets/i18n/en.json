@@ -48,6 +48,11 @@
   "register.confirm.third": "If you have already verified your account, ",
   "register.confirm.fourth": "you can now log in.",
 
+  "account.confirmation.success": "Your account has been verified and you can now log in",
+  "exception.expired.link": "Confirmation link has expired and your account has been deleted",
+  "exception.invalid.link": "Confirmation link is invalid",
+  "exception.mok.account.already.verified": "Your account has already been verified",
+
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
   "exception.mok.account.credentials": "Invalid login or password",
@@ -56,5 +61,6 @@
   "exception.mok.account.inactive": "Account is inactive",
   "exception.mok.account.login.already.exists": "Account with given login already exists",
   "exception.mok.account.email.already.exists": "Account with given email already exists",
-  "exception.general.database": "Database error occurred"
+  "exception.general.database": "Database error occurred",
+  "exception.mail.service": "Mail service error occurred"
 }
