@@ -15,6 +15,6 @@ public class Administrator extends AccessLevel {
 
   @Override
   public String getGroupName() {
-    return "ADMINISTRATORS";
+    return "ADMINISTRATOR";
   }
 }

@@ -8,6 +8,7 @@ import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
 import {Group} from "./enums/group";
 import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
+import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 
 const routes: Routes = [
@@ -29,7 +30,7 @@ const routes: Routes = [
     component: AccountPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.USERS, Group.ADMINISTRATORS, Group.EMPLOYEES, Group.SALES_REPS]
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
     }
   },
   {
@@ -37,7 +38,7 @@ const routes: Routes = [
     component: AdminPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATORS]
+      groups: [Group.ADMINISTRATOR]
     }
   },
   {
@@ -45,8 +46,12 @@ const routes: Routes = [
     component: RegisterPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUESTS]
+      groups: [Group.GUEST]
     }
+  },
+  {
+    path: 'forbidden',
+    component: ForbiddenPageComponent
   },
   {
     path: 'confirm',

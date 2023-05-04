@@ -62,5 +62,8 @@
   "exception.mok.account.login.already.exists": "Account with given login already exists",
   "exception.mok.account.email.already.exists": "Account with given email already exists",
   "exception.general.database": "Database error occurred",
-  "exception.mail.service": "Mail service error occurred"
+  "exception.mail.service": "Mail service error occurred",
+  "forbidden.title": "Forbidden",
+  "forbidden.description": "You don't have permission to access this resource",,
+  "forbidden.button": "Home"
 }

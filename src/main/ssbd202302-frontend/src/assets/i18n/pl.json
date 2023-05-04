@@ -62,5 +62,9 @@
   "exception.mok.account.login.already.exists": "Konto z podaną nazwą użytkownika już istnieje",
   "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje",
   "exception.general.database": "Wystąpił problem z bazą danych",
-  "exception.mail.service": "Wystąpił problem podczas wysyłania wiadomości email"
+  "exception.mail.service": "Wystąpił problem podczas wysyłania wiadomości email",
+
+  "forbidden.title": "Forbidden",
+  "forbidden.description": "Nie posiadasz wymaganych uprawnień, aby korzystać z tego zasobu",
+  "forbidden.button": "Powrót"
 }

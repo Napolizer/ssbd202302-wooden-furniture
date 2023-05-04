@@ -42,7 +42,7 @@ export class AuthenticationService {
       groups.push(group as Group);
     }
     if (groups.length === 0) {
-      groups.push(Group.GUESTS);
+      groups.push(Group.GUEST);
     }
     return groups;
   }

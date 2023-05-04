@@ -15,6 +15,6 @@ public class Employee extends AccessLevel {
 
   @Override
   public String getGroupName() {
-    return "EMPLOYEES";
+    return "EMPLOYEE";
   }
 }
