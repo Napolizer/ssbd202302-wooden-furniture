@@ -40,6 +40,10 @@ public class AccountService {
     return accountFacade.findById(id);
   }
 
+  public Optional<Account> getAccountByEmail(String email) {
+    return accountFacade.findByEmail(email);
+  }
+
   public List<Account> getAccountList() {
     return accountFacade.findAll();
   }
@@ -202,5 +206,16 @@ public class AccountService {
     }
     account.setPassword(hash);
     accountFacade.update(account);
+  }
+
+  public void sendResetPasswordEmail(String email) {
+    Account account = getAccountByEmail(email).get();
+    String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    try {
+      mailService.sendResetPasswordEmail(account.getEmail(),
+              account.getLocale(), resetPasswordToken);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 }

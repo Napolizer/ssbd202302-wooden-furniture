@@ -60,6 +60,9 @@ public class MessageUtil {
     public static final String ERROR_EXPIRED_ACCOUNT_CONFIRMATION_LINK = "exception.expired.account.confirmation.link";
     public static final String ERROR_EXPIRED_PASSWORD_RESET_LINK = "exception.expired.password.reset.link";
     public static final String ERROR_INVALID_LINK = "exception.invalid.link";
-
+    public static final String ACCOUNT_EMAIL_DOES_NOT_EXIST = "exception.mok.account.email.does.not.exist";
+    public static final String EMAIL_RESET_PASSWORD_SUBJECT = "mok.email.account.reset.password.subject";
+    public static final String EMAIL_RESET_PASSWORD_MESSAGE1 = "mok.email.account.reset.password.message1";
+    public static final String EMAIL_RESET_PASSWORD_MESSAGE2 = "mok.email.account.reset.password.message2";
   }
 }

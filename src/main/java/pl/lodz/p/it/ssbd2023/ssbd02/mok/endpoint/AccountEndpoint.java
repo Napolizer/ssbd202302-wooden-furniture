@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
@@ -54,6 +55,10 @@ public class AccountEndpoint {
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountService.getAccountByLogin(login);
+  }
+
+  public Optional<Account> getAccountByEmail(SetEmailToSendPasswordDto emailDto) {
+    return accountService.getAccountByEmail(emailDto.getEmail());
   }
 
   public List<Account> getAccountList() {
@@ -110,5 +115,9 @@ public class AccountEndpoint {
 
   public void resetPassword(String login, ChangePasswordDto changePasswordDto) {
     accountService.resetPassword(login, changePasswordDto.getPassword());
+  }
+
+  public void sendResetPasswordEmail(SetEmailToSendPasswordDto emailDto) {
+    accountService.sendResetPasswordEmail(emailDto.getEmail());
   }
 }

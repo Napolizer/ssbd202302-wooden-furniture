@@ -114,20 +114,20 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenLoginIsNull() {
-    Optional<Account> accountOptional = accountService.getAccountByLogin(null);
+  public void failsToGetAccountByEmailWhenEmailIsNull() {
+    Optional<Account> accountOptional = accountService.getAccountByEmail(null);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenLoginIsEmpty() {
-    Optional<Account> accountOptional = accountService.getAccountByLogin("");
+  public void failsToGetAccountByEmailWhenEmailIsEmpty() {
+    Optional<Account> accountOptional = accountService.getAccountByEmail("");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenLoginDoesNotExist() {
-    Optional<Account> accountOptional = accountService.getAccountByLogin("nonexistent");
+  public void failsToGetAccountByEmailWhenEmailDoesNotExist() {
+    Optional<Account> accountOptional = accountService.getAccountByLogin("nonexistent@gmail.com");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
@@ -164,6 +164,31 @@ public class AccountServiceIT {
   @Test
   public void failsToGetAccountByIdWhenIdIsMinLong() {
     Optional<Account> accountOptional = accountService.getAccountById(Long.MIN_VALUE);
+    assertThat(accountOptional.isPresent(), is(equalTo(false)));
+  }
+
+  @Test
+  public void properlyGetsAccountByEmail() {
+    Optional<Account> accountOptional = accountService.getAccountByEmail(account.getEmail());
+    assertThat(accountOptional.isPresent(), is(equalTo(true)));
+    assertThat(accountOptional.get(), is(equalTo(account)));
+  }
+
+  @Test
+  public void failsToGetAccountByLoginWhenLoginIsNull() {
+    Optional<Account> accountOptional = accountService.getAccountByLogin(null);
+    assertThat(accountOptional.isPresent(), is(equalTo(false)));
+  }
+
+  @Test
+  public void failsToGetAccountByLoginWhenLoginIsEmpty() {
+    Optional<Account> accountOptional = accountService.getAccountByLogin("");
+    assertThat(accountOptional.isPresent(), is(equalTo(false)));
+  }
+
+  @Test
+  public void failsToGetAccountByLoginWhenLoginDoesNotExist() {
+    Optional<Account> accountOptional = accountService.getAccountByLogin("nonexistent");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
