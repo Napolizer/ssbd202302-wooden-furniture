@@ -269,8 +269,12 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {
-    if (accountEndpoint.getAccountByEmail(emailDto).isEmpty()) {
+    Optional<Account> foundAccount = accountEndpoint.getAccountByEmail(emailDto);
+    if (foundAccount.isEmpty()) {
       throw ApplicationExceptionFactory.createEmailNotFoundException();
+    }
+    if (foundAccount.get().getAccountState() != AccountState.ACTIVE) {
+      throw ApplicationExceptionFactory.createAccountNotActiveException();
     }
     accountEndpoint.sendResetPasswordEmail(emailDto);
     return Response.ok().build();
