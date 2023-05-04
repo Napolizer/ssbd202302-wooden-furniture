@@ -32,6 +32,10 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
+import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +48,10 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
     AccountPageComponent,
     SpinnerComponent,
     AdminPageComponent,
+    ConfirmPageComponent,
+    ErrorDialogComponent,
+    NotFoundPageComponent,
+    ForbiddenPageComponent,
     ConfirmPageComponent,
     ResetPasswordComponent
   ],
@@ -77,7 +85,8 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
                 deps: [HttpClient]
             }
         }),
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatDialogModule
     ],
   providers: [],
   bootstrap: [AppComponent]

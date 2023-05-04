@@ -1,0 +1,7 @@
+export enum Group {
+  ADMINISTRATOR = 'ADMINISTRATOR',
+  EMPLOYEE = 'EMPLOYEE',
+  SALES_REP = 'SALES_REP',
+  CLIENT = 'CLIENT',
+  GUEST = 'GUEST'
+}

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Account } from '../interfaces/Account';
+import { Account } from '../interfaces/account';
 import { environment } from '../../environments/environment';
 import { TokenService } from './token.service';
-import { AccountRegister } from '../interfaces/AccountRegister';
+import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
 
 @Injectable({

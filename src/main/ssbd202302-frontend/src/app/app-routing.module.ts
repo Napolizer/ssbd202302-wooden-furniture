@@ -5,6 +5,10 @@ import {HomePageComponent} from "./pages/home-page/home-page.component";
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import {AccountPageComponent} from "./pages/account-page/account-page.component";
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
+import {Group} from "./enums/group";
+import {AuthGuard} from "./guards/auth.guard";
+import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
+import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
@@ -24,15 +28,31 @@ const routes: Routes = [
   },
   {
     path: 'account',
-    component: AccountPageComponent
+    component: AccountPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
   },
   {
     path: 'admin',
-    component: AdminPageComponent
+    component: AdminPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
+    }
   },
   {
     path: 'register',
-    component: RegisterPageComponent
+    component: RegisterPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
+  },
+  {
+    path: 'forbidden',
+    component: ForbiddenPageComponent
   },
   {
     path: 'confirm',
@@ -41,7 +61,16 @@ const routes: Routes = [
   {
     path: 'reset-password',
     component: ResetPasswordComponent
-  }
+  },
+  {
+    path: 'not-found',
+    component: NotFoundPageComponent
+  },
+  // IMPORTANT: this route must be the last one
+  {
+    path: '**',
+    redirectTo: '/not-found'
+  },
 ];
 
 @NgModule({

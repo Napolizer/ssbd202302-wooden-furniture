@@ -3,19 +3,19 @@
 <payara-web-app>
     <context-root>/</context-root>
     <security-role-mapping>
-        <role-name>ADMINISTRATOR</role-name>
-        <group-name>ADMINISTRATORS</group-name>
+        <role-name>administrator</role-name>
+        <group-name>ADMINISTRATOR</group-name>
     </security-role-mapping>
     <security-role-mapping>
-        <role-name>EMPLOYEE</role-name>
-        <group-name>EMPLOYEES</group-name>
+        <role-name>employee</role-name>
+        <group-name>EMPLOYEE</group-name>
     </security-role-mapping>
     <security-role-mapping>
-        <role-name>SALES_REP</role-name>
-        <group-name>SALES_REPS</group-name>
+        <role-name>sales_rep</role-name>
+        <group-name>SALES_REP</group-name>
     </security-role-mapping>
     <security-role-mapping>
-        <role-name>USER</role-name>
-        <group-name>USERS</group-name>
+        <role-name>client</role-name>
+        <group-name>CLIENT</group-name>
     </security-role-mapping>
 </payara-web-app>

@@ -1,9 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from "../../services/account.service";
-import {first, Subject, takeUntil} from "rxjs";
+import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
 import {FormControl, FormGroup} from "@angular/forms";
-import {Account} from "../../interfaces/Account";
+import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {AlertService} from "@full-fledged/alerts";
+import {TranslateService} from "@ngx-translate/core";
+import {DialogService} from "../../services/dialog.service";
+import {NavigationService} from "../../services/navigation.service";
+import {AuthenticationService} from "../../services/authentication.service";
 
 @Component({
   selector: 'app-account-page',
@@ -44,15 +49,39 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   loading = true;
 
   constructor(
-    private accountService: AccountService
+    private accountService: AccountService,
+    private alertService: AlertService,
+    private authenticationService: AuthenticationService,
+    private translate: TranslateService,
+    private dialogService: DialogService,
+    private navigationService: NavigationService
   ) {}
 
   ngOnInit(): void {
-    this.accountService.retrieveOwnAccount('Administrator')
+    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe(account => {
-        this.account = account;
-        this.loading = false;
+      .subscribe({
+        next: account => {
+          this.account = account;
+          this.loading = false;
+        },
+        error: e => {
+          combineLatest([
+            this.translate.get('exception.occurred'),
+            this.translate.get(e.error.message || 'exception.unknown')
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
+            title: data[0],
+            message: data[1]
+          })))
+            .subscribe(data => {
+              const ref = this.dialogService.openErrorDialog(data.title, data.message);
+              ref.afterClosed()
+                .pipe(first(), takeUntil(this.destroy))
+                .subscribe(() => {
+                  void this.navigationService.redirectToMainPage();
+                });
+            });
+        }
       });
   }
 

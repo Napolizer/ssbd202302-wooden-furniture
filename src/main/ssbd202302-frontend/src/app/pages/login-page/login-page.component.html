@@ -3,7 +3,7 @@
     <div class="image-container">
       <img class="background-image" src="assets/images/login-page-furnitures.jpg" alt="">
     </div>
-    <form class="form-container" [formGroup]="loginForm" (submit)="loginForm.valid && onLoginClicked()">
+    <form class="form-container" [formGroup]="loginForm" (submit)="loginForm.valid">
       <p class="form-title">{{'login.title' | translate}}</p>
       <p class="form-description">{{'login.subtitle' | translate}}</p>
       <div class="form">
@@ -29,7 +29,7 @@
           </mat-form-field>
         </div>
         <div class="button-container">
-            <button mat-button color="primary" type="submit" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>
+            <button mat-button color="primary" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>
         </div>
       </div>
     </form>
