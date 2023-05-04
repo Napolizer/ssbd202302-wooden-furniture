@@ -3,11 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
@@ -30,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountServiceIT {
@@ -399,9 +396,15 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesPassword() {
     String newPassword = "newPassword";
-    assertEquals("test", accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+
+    assertTrue(CryptHashUtils.verifyPassword("test",
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
     assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword));
-    assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+    assertFalse(CryptHashUtils.verifyPassword("test",
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
+    assertTrue(CryptHashUtils.verifyPassword(newPassword,
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
+    //FIXME Sth wrong ?
   }
 
   @Test
@@ -415,9 +418,15 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesPasswordAsAdmin() {
     String newPassword = "newPassword";
-    assertEquals("test", accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+
+    assertTrue(CryptHashUtils.verifyPassword("test",
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
     assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin(), newPassword));
-    assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+    assertFalse(CryptHashUtils.verifyPassword("test",
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
+    assertTrue(CryptHashUtils.verifyPassword(newPassword,
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
+    //FIXME Sth wrong ?
   }
 
   @Test

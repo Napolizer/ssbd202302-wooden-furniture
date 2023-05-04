@@ -33,7 +33,7 @@ public class AccountControllerIT {
         .contentType("application/json")
         .body("""
                    {
-                       "login": "Administrator",
+                       "login": "administrator",
                        "password": "Kochamssbd!"
                    }
             """)
@@ -67,7 +67,7 @@ public class AccountControllerIT {
           .contentType("application/json")
           .body("""
                      {
-                         "login": "Administrator",
+                         "login": "administrator",
                          "password": "Kochamssbd!"
                      }
               """)
@@ -214,18 +214,18 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/login/Administrator")
+          .get("/account/login/administrator")
           .then()
           .statusCode(200)
           .contentType("application/json")
           .body("accountState", equalTo("ACTIVE"))
           .body("groups", hasSize(1))
-          .body("groups[0]", equalTo("ADMINISTRATORS"))
+          .body("groups[0]", equalTo("ADMINISTRATOR"))
           .body("archive", equalTo(false))
           .body("email", equalTo("admin@gmail.com"))
           .body("id", is(notNullValue()))
           .body("locale", equalTo("pl"))
-          .body("login", equalTo("Administrator"));
+          .body("login", equalTo("administrator"));
     }
 
     @Test
@@ -422,7 +422,7 @@ public class AccountControllerIT {
     @Test
     @Order(1)
     public void shouldFailToActivateAlreadyActiveAccount() {
-      int id = retrieveAccountId("Administrator");
+      int id = retrieveAccountId("administrator");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/activate/" + id)
@@ -485,18 +485,18 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("Administrator"))
+          .get("/account/id/" + retrieveAccountId("administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
           .body("accountState", equalTo("ACTIVE"))
           .body("groups", hasSize(1))
-          .body("groups[0]", equalTo("ADMINISTRATORS"))
+          .body("groups[0]", equalTo("ADMINISTRATOR"))
           .body("archive", equalTo(false))
           .body("email", equalTo("admin@gmail.com"))
           .body("id", is(notNullValue()))
           .body("locale", equalTo("pl"))
-          .body("login", equalTo("Administrator"));
+          .body("login", equalTo("administrator"));
     }
 
     @Test
@@ -568,31 +568,31 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("Administrator"))
+          .get("/account/id/" + retrieveAccountId("administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATORS"));
+          .body("groups[0]", equalTo("ADMINISTRATOR"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/SalesRep")
+          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATORS"))
-          .body("groups[1]", equalTo("SALES_REPS"));
+          .body("groups[0]", equalTo("ADMINISTRATOR"))
+          .body("groups[1]", equalTo("SALES_REP"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("Administrator"))
+          .get("/account/id/" + retrieveAccountId("administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATORS"))
-          .body("groups[1]", equalTo("SALES_REPS"));
+          .body("groups[0]", equalTo("ADMINISTRATOR"))
+          .body("groups[1]", equalTo("SALES_REP"));
     }
 
     @Test
@@ -600,7 +600,7 @@ public class AccountControllerIT {
     public void failsToAddAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
-          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/SalesRep")
+          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
           .then()
           .statusCode(401);
     }
@@ -623,7 +623,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/NotValidAccessLevel")
+          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/NotValidAccessLevel")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
@@ -635,7 +635,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/Administrator")
+          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Administrator")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED));
@@ -650,7 +650,7 @@ public class AccountControllerIT {
     public void failsToRemoveAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
-          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/Administrator")
+          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Administrator")
           .then()
           .statusCode(401);
     }
@@ -661,7 +661,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("account/id/0/accessLevel/Administrator")
+          .put("account/id/0/accessLevel/Aaministrator")
           .then()
           .statusCode(404)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
@@ -673,7 +673,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/NotValidAccessLevel")
+          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/NotValidAccessLevel")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
@@ -685,7 +685,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/Client")
+          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Client")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED));
@@ -697,30 +697,30 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("Administrator"))
+          .get("/account/id/" + retrieveAccountId("administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATORS"))
-          .body("groups[1]", equalTo("SALES_REPS"));
+          .body("groups[0]", equalTo("ADMINISTRATOR"))
+          .body("groups[1]", equalTo("SALES_REP"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("Administrator") + "/accessLevel/SalesRep")
+          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATORS"));
+          .body("groups[0]", equalTo("ADMINISTRATOR"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("Administrator"))
+          .get("/account/id/" + retrieveAccountId("administrator"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATORS"));
+          .body("groups[0]", equalTo("ADMINISTRATOR"));
     }
   }
 

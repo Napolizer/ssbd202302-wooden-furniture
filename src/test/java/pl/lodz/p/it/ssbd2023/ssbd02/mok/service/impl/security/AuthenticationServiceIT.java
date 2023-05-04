@@ -113,10 +113,12 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldProperlyLoginTest() throws AuthenticationException {
+  public void shouldProperlyLoginTest() throws Exception {
       String token = authenticationService.login(account.getLogin(), password);
       assertNotNull(token);
+      utx.begin();
       List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
+      utx.commit();
       assertThat(accessLevels, is(not(empty())));
       assertThat(accessLevels.size(), is(equalTo(1)));
       assertThat(accessLevels.get(0), is(instanceOf(Client.class)));
