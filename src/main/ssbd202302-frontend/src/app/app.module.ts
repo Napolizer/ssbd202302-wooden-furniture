@@ -31,6 +31,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.componen
     AccountPageComponent,
     SpinnerComponent,
     AdminPageComponent,
-    ConfirmPageComponent
+    ConfirmPageComponent,
+    ErrorDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -75,7 +78,8 @@ import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.componen
                 deps: [HttpClient]
             }
         }),
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatDialogModule
     ],
   providers: [],
   bootstrap: [AppComponent]
