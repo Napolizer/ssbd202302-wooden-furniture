@@ -31,6 +31,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.componen
     AccountPageComponent,
     SpinnerComponent,
     AdminPageComponent,
-    ConfirmPageComponent
+    ConfirmPageComponent,
+    ResetPasswordComponent
   ],
     imports: [
         BrowserModule,

@@ -91,7 +91,7 @@ public class TokenService {
     try {
       claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     } catch (ExpiredJwtException eje) {
-      throw ApplicationExceptionFactory.createExpiredLinkException(eje);
+      throw ApplicationExceptionFactory.createAccountConfirmationExpiredLinkException();
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
     }
@@ -101,5 +101,32 @@ public class TokenService {
     }
 
     return claims.getSubject();
+  }
+
+  public void validatePasswordResetToken(String token, String hash) {
+    Claims claims;
+    try {
+      claims = Jwts.parser().setSigningKey(CryptHashUtils.getSecretKeyForPasswordResetToken(hash))
+              .parseClaimsJws(token).getBody();
+    } catch (ExpiredJwtException eje) {
+      throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createInvalidLinkException();
+    }
+    String type = claims.get("type", String.class);
+    if (!type.equals(TokenType.PASSWORD_RESET.name())) {
+      throw ApplicationExceptionFactory.createInvalidLinkException();
+    }
+  }
+
+  public String getLoginFromTokenWithoutValidating(String token) {
+    String claims = token.substring(0, token.lastIndexOf('.') + 1);
+    try {
+      return Jwts.parser().parseClaimsJwt(claims).getBody().getSubject();
+    } catch (ExpiredJwtException eje) {
+      throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createInvalidLinkException();
+    }
   }
 }

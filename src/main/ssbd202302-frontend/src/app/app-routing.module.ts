@@ -6,6 +6,7 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
 import {AccountPageComponent} from "./pages/account-page/account-page.component";
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'confirm',
     component: ConfirmPageComponent
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
   }
 ];
 

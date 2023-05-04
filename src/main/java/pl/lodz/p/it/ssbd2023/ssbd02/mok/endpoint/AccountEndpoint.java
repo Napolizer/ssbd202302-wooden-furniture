@@ -11,12 +11,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Stateful
@@ -30,13 +30,11 @@ public class AccountEndpoint {
 
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
-    account.setPassword(CryptHashUtils.hashPassword(accountRegisterDto.getPassword()));
     accountService.registerAccount(account);
   }
 
   public void createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
-    account.setPassword(CryptHashUtils.hashPassword(accountCreateDto.getPassword()));
     accountService.createAccount(account);
   }
 
@@ -104,5 +102,13 @@ public class AccountEndpoint {
 
   public void confirmAccount(String token) {
     accountService.confirmAccount(token);
+  }
+
+  public String validatePasswordResetToken(String token) {
+    return accountService.validatePasswordResetToken(token);
+  }
+
+  public void resetPassword(String login, ChangePasswordDto changePasswordDto) {
+    accountService.resetPassword(login, changePasswordDto.getPassword());
   }
 }

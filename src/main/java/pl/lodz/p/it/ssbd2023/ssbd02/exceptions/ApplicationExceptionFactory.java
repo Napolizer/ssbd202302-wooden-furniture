@@ -102,8 +102,12 @@ public final class ApplicationExceptionFactory {
     return new InvalidCredentialsException();
   }
 
-  public static ExpiredLinkException createExpiredLinkException(Throwable cause) {
-    return new ExpiredLinkException(cause);
+  public static ExpiredLinkException createAccountConfirmationExpiredLinkException() {
+    return new ExpiredLinkException(MessageUtil.MessageKey.ERROR_EXPIRED_ACCOUNT_CONFIRMATION_LINK);
+  }
+
+  public static ExpiredLinkException createPasswordResetExpiredLinkException() {
+    return new ExpiredLinkException(MessageUtil.MessageKey.ERROR_EXPIRED_PASSWORD_RESET_LINK);
   }
 
   public static InvalidLinkException createInvalidLinkException() {
@@ -113,7 +117,5 @@ public final class ApplicationExceptionFactory {
   public static AccountAlreadyVerifiedException createAccountAlreadyVerifiedException() {
     return new AccountAlreadyVerifiedException();
   }
-
-
 
 }

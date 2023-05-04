@@ -262,4 +262,19 @@ public class AccountController {
     accountEndpoint.confirmAccount(token);
     return Response.ok().build();
   }
+
+  @GET
+  @Path("/reset-password")
+  public Response validatePasswordResetToken(@QueryParam("token") String token) {
+    accountEndpoint.validatePasswordResetToken(token);
+    return Response.ok().build();
+  }
+
+  @PUT
+  @Path("/reset-password")
+  public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
+    String login = accountEndpoint.validatePasswordResetToken(token);
+    accountEndpoint.resetPassword(login, changePasswordDto);
+    return Response.ok().build();
+  }
 }

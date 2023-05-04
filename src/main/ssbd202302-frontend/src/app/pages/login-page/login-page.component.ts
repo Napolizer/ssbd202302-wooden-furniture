@@ -59,7 +59,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       this.loaded = true;
     }, 100);
 
-    const state = this.location.getState() as {token: string}
+    const state = this.location.getState() as {token: string, resetPasswordSuccess:string, resetPasswordError: string}
     if(state.token) {
       this.accountService.confirm(state.token)
       .pipe(takeUntil(this.destroy))
@@ -79,6 +79,18 @@ export class LoginPageComponent implements OnInit, OnDestroy {
             });
         }
       })
+    } else if (state.resetPasswordSuccess) {
+      this.translate.get(state.resetPasswordSuccess)
+        .pipe(takeUntil(this.destroy))
+        .subscribe(msg => {
+          this.alertService.success(msg);
+        });
+    } else if (state.resetPasswordError) {
+      this.translate.get(state.resetPasswordError)
+        .pipe(takeUntil(this.destroy))
+        .subscribe(msg => {
+          this.alertService.danger(msg);
+        });
     }
   }
 

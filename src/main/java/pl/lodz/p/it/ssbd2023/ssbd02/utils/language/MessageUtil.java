@@ -57,7 +57,8 @@ public class MessageUtil {
     public static final String ERROR_GENERAL_PERSISTENCE = "exception.general.persistence";
     public static final String ERROR_ACCESS_DENIED = "exception.access.denied";
     public static final String ERROR_MAIL_SERVICE = "exception.mail.service";
-    public static final String ERROR_EXPIRED_LINK = "exception.expired.link";
+    public static final String ERROR_EXPIRED_ACCOUNT_CONFIRMATION_LINK = "exception.expired.account.confirmation.link";
+    public static final String ERROR_EXPIRED_PASSWORD_RESET_LINK = "exception.expired.password.reset.link";
     public static final String ERROR_INVALID_LINK = "exception.invalid.link";
 
   }

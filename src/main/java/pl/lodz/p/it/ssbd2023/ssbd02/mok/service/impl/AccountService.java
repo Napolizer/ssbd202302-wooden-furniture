@@ -16,10 +16,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -105,6 +105,7 @@ public class AccountService {
   public void registerAccount(Account account) {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     try {
@@ -117,6 +118,7 @@ public class AccountService {
 
   public void createAccount(Account account) {
     account.setFailedLoginCounter(0);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     accountFacade.create(account);
   }
 
@@ -172,7 +174,8 @@ public class AccountService {
 
   public void confirmAccount(String token) {
     String login = tokenService.validateAccountVerificationToken(token);
-    Account account = accountFacade.findByLogin(login).orElseThrow(InvalidLinkException::new);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountConfirmationExpiredLinkException);
     if (!account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
       throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
     }
@@ -180,5 +183,24 @@ public class AccountService {
     Client client = new Client();
     client.setAccount(account);
     account.getAccessLevels().add(client);
+  }
+
+  public String validatePasswordResetToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    tokenService.validatePasswordResetToken(token, account.getPassword());
+    return login;
+  }
+
+  public void resetPassword(String login, String password) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    String hash = CryptHashUtils.hashPassword(password);
+    if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
+    }
+    account.setPassword(hash);
+    accountFacade.update(account);
   }
 }
