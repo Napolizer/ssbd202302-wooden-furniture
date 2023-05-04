@@ -1,4 +1,4 @@
-//package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade;
+//package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade;
 //
 //import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +21,7 @@
 //import org.junit.jupiter.api.extension.ExtendWith;
 //import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 //import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
-//import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.CompanyFacadeOperations;
+//import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.CompanyFacadeOperations;
 //
 //@ExtendWith(ArquillianExtension.class)
 //@TestMethodOrder(MethodOrderer.OrderAnnotation.class)

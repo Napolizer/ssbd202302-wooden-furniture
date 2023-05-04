@@ -30,6 +30,7 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
     ToolbarComponent,
     AccountPageComponent,
     SpinnerComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    ConfirmPageComponent
   ],
     imports: [
         BrowserModule,

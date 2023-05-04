@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -14,7 +13,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.AccountFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AddressFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
 @Stateless
@@ -24,9 +22,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
     AccountFacadeExceptionsInterceptor.class
 })
 public class AccountFacade extends AbstractFacade<Account> implements AccountFacadeOperations {
-  @Inject
-  AddressFacadeOperations addressFacadeOperations;
-
   @PersistenceContext(unitName = "ssbd02mokPU")
   private EntityManager em;
 

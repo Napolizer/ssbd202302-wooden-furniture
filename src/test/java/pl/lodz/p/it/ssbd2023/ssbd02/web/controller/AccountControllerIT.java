@@ -760,6 +760,8 @@ public class AccountControllerIT {
     public void failsIfGivenInvalidLogin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
+          .contentType("application/json")
+          .body(InitData.editedAccountAsAdminExampleJson)
           .when()
           .put("/account/login/invalidLogin/editOwnAccount")
           .then()
@@ -807,6 +809,8 @@ public class AccountControllerIT {
     public void failsIfGivenInvalidLogin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
+          .contentType("application/json")
+          .body(InitData.editedAccountAsAdminExampleJson)
           .when()
           .put("/account/login/invalidLogin/editAccountAsAdmin")
           .then()

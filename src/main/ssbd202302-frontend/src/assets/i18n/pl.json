@@ -48,6 +48,11 @@
   "register.confirm.third": "Jeśli twoje konto zostało już zweryfikowane, ",
   "register.confirm.fourth": "możesz się teraz zalogować.",
 
+  "account.confirmation.success": "Twoje konto zostało zweryfikowane i możesz się zalogować",
+  "exception.expired.link": "Link weryfikacyjny wygasł i twoje konto zostało usunięte",
+  "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
+  "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
+
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
   "exception.mok.account.credentials": "Nieprawidłowy login lub hasło",
@@ -56,5 +61,6 @@
   "exception.mok.account.inactive": "Konto jest nieaktywne",
   "exception.mok.account.login.already.exists": "Konto z podaną nazwą użytkownika już istnieje",
   "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje",
-  "exception.general.database": "Wystąpił problem z bazą danych"
+  "exception.general.database": "Wystąpił problem z bazą danych",
+  "exception.mail.service": "Wystąpił problem podczas wysyłania wiadomości email"
 }

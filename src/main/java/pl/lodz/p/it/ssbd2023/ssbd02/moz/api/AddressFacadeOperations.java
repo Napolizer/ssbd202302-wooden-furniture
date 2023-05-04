@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.api;
 
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
