@@ -50,6 +50,7 @@ public class AccountServiceIT {
             .addPackages(true, "org.postgresql")
             .addPackages(true, "org.hamcrest")
             .addPackages(true, "at.favre.lib")
+            .addPackages(true, "io.jsonwebtoken")
             .addAsResource(new File("src/test/resources/"), "");
   }
 
