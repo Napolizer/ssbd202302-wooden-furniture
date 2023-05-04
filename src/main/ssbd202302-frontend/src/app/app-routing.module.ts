@@ -45,10 +45,6 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterPageComponent,
-    canActivate: [AuthGuard],
-    data: {
-      groups: [Group.GUEST]
-    }
   },
   {
     path: 'forbidden',
