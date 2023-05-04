@@ -15,7 +15,7 @@ import {
 } from '@angular/forms';
 import { AccountService } from 'src/app/services/account.service';
 import { CustomValidators } from 'src/app/utils/custom.validators';
-import { AccountRegister } from 'src/app/interfaces/AccountRegister';
+import { AccountRegister } from 'src/app/interfaces/account.register';
 import { MatStepper } from '@angular/material/stepper';
 import { HttpErrorResponse} from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
