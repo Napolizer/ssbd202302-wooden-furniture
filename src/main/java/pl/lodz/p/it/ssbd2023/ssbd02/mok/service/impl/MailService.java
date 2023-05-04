@@ -42,7 +42,7 @@ public class MailService {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
-            + " " + appUrl + "/resetPassword?token=" + resetPasswordToken + " "
+            + " " + appUrl + "/reset-password?token=" + resetPasswordToken + " "
             + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
   }
 
