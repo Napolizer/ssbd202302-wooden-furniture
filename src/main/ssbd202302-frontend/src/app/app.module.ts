@@ -30,6 +30,7 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
@@ -46,6 +47,7 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
     AccountPageComponent,
     SpinnerComponent,
     AdminPageComponent,
+    ConfirmPageComponent,
     ErrorDialogComponent,
     NotFoundPageComponent,
     ForbiddenPageComponent

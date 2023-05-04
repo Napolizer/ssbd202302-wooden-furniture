@@ -9,6 +9,7 @@ import {Group} from "./enums/group";
 import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
+import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,10 @@ const routes: Routes = [
   {
     path: 'forbidden',
     component: ForbiddenPageComponent
+  },
+  {
+    path: 'confirm',
+    component: ConfirmPageComponent
   },
   {
     path: 'not-found',

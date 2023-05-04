@@ -41,4 +41,12 @@ export class AccountService {
       }
     })
   }
+
+  public confirm(token: string): Observable<HttpResponse<any>> {
+    return this.httpClient.patch(
+      `${environment.apiBaseUrl}/account/confirm?token=${token}`,
+      null,
+      { observe: 'response' }
+    );
+  }
 }

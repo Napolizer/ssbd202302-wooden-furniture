@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.interceptor.Interceptors;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -13,12 +12,10 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-@Interceptors({GenericServiceExceptionsInterceptor.class})
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class MailService {
   private final String appUrl = "http://localhost:4200";
 
@@ -87,7 +84,7 @@ public class MailService {
   }
 
   private Session getSession() {
-    return Session.getDefaultInstance(getMailProperties(), new Authenticator() {
+    return Session.getInstance(getMailProperties(), new Authenticator() {
       @Override
       protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(

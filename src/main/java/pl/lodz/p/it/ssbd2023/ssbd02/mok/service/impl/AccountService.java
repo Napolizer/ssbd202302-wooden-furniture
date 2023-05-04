@@ -5,20 +5,20 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import java.util.ArrayList;
+import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -26,6 +26,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 public class AccountService {
   @Inject
   private AccountFacadeOperations accountFacade;
+  @Inject
+  private MailService mailService;
+  @Inject
+  private TokenService tokenService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -87,49 +91,27 @@ public class AccountService {
 
   public void editAccountInfo(String login, Account accountWithChanges) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-    Person personWithChanges = accountWithChanges.getPerson();
-    Address addressWithChanges = personWithChanges.getAddress();
-
-    account.getPerson().setFirstName(personWithChanges.getFirstName());
-    account.getPerson().setLastName(personWithChanges.getLastName());
-
-    Address address = account.getPerson().getAddress();
-    address.setCountry(addressWithChanges.getCountry());
-    address.setCity(addressWithChanges.getCity());
-    address.setStreet(addressWithChanges.getStreet());
-    address.setPostalCode(addressWithChanges.getPostalCode());
-    address.setStreetNumber(addressWithChanges.getStreetNumber());
-
+    account.update(accountWithChanges);
     accountFacade.update(account);
   }
 
   public void editAccountInfoAsAdmin(String login, Account accountWithChanges) {
-
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-    Person personWithChanges = accountWithChanges.getPerson();
-
-    account.setEmail(accountWithChanges.getEmail());
-    account.getPerson().setFirstName(personWithChanges.getFirstName());
-    account.getPerson().setLastName(personWithChanges.getLastName());
-
-    Address address = account.getPerson().getAddress();
-    Address addressWithChanges = personWithChanges.getAddress();
-    address.setCountry(addressWithChanges.getCountry());
-    address.setCity(addressWithChanges.getCity());
-    address.setStreet(addressWithChanges.getStreet());
-    address.setPostalCode(addressWithChanges.getPostalCode());
-    address.setStreetNumber(addressWithChanges.getStreetNumber());
-
+    account.update(accountWithChanges);
     accountFacade.update(account);
   }
 
   public void registerAccount(Account account) {
     account.setAccountState(AccountState.NOT_VERIFIED);
-    Client client = new Client();
-    client.setAccount(account);
-    account.getAccessLevels().add(client);
     account.setFailedLoginCounter(0);
     accountFacade.create(account);
+    String accountConfirmationToken = tokenService.generateAccountVerificationToken(account);
+    try {
+      mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
+              account.getLocale(), accountConfirmationToken, account.getLogin());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void createAccount(Account account) {
@@ -185,5 +167,17 @@ public class AccountService {
     found.setAccountState(account.getAccountState());
 
     accountFacade.update(found);
+  }
+
+  public void confirmAccount(String token) {
+    String login = tokenService.validateAccountVerificationToken(token);
+    Account account = accountFacade.findByLogin(login).orElseThrow(InvalidLinkException::new);
+    if (account.getAccountState().equals(AccountState.ACTIVE)) {
+      throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
+    }
+    account.setAccountState(AccountState.ACTIVE);
+    Client client = new Client();
+    client.setAccount(account);
+    account.getAccessLevels().add(client);
   }
 }
