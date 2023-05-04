@@ -44,7 +44,7 @@ public class AccountController {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response getAllAccounts() {
     List<Account> accounts = accountEndpoint.getAccountList();
     List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
@@ -57,7 +57,7 @@ public class AccountController {
   @GET
   @Path("/id/{accountId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response getAccountByAccountId(@PathParam("accountId") Long accountId) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
     if (accountOptional.isEmpty()) {
@@ -71,7 +71,7 @@ public class AccountController {
   @GET
   @Path("/login/{login}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({"ADMINISTRATOR", "EMPLOYEE", "SALES_REP", "USER"})
+  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
   public Response getAccountByLogin(@PathParam("login") String login) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
     if (accountOptional.isEmpty()) {
@@ -85,7 +85,7 @@ public class AccountController {
   @PUT
   @Path("/id/{accountId}/accessLevel/{accessLevel}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response addAccessLevelToAccount(@PathParam("accountId") Long accountId,
                                           @PathParam("accessLevel") String accessLevel) {
     if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
@@ -108,7 +108,7 @@ public class AccountController {
   @PUT
   @Path("/id/{accountId}/accessLevel/change")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response changeAccessLevel(@PathParam("accountId") Long accountId,
                                     @NotNull @Valid AccessLevelDto accessLevel) {
     AccessLevel newAccessLevel =
@@ -122,7 +122,7 @@ public class AccountController {
   @DELETE
   @Path("/id/{accountId}/accessLevel/{accessLevel}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response removeAccessLevelFromAccount(@PathParam("accountId") Long accountId,
                                                @PathParam("accessLevel") String accessLevel) {
     if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
@@ -149,7 +149,7 @@ public class AccountController {
   @POST
   @Path("/create")
   @Consumes(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response createAccount(@Valid AccountCreateDto accountCreateDto) {
     accountEndpoint.createAccount(accountCreateDto);
     return Response.status(Response.Status.CREATED).build();
@@ -213,7 +213,7 @@ public class AccountController {
   @Path("/login/{login}/editAccountAsAdmin")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response editAccountAsAdmin(@PathParam("login") String login,
                                      @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
@@ -227,7 +227,7 @@ public class AccountController {
   @PATCH
   @Path("/block/{accountId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response blockAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.blockAccount(accountId);
     return Response.status(Response.Status.OK).build();
@@ -236,7 +236,7 @@ public class AccountController {
   @PATCH
   @Path("/activate/{accountId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("ADMINISTRATOR")
+  @RolesAllowed("administrator")
   public Response activateAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.activateAccount(accountId);
     return Response.status(Response.Status.OK).build();

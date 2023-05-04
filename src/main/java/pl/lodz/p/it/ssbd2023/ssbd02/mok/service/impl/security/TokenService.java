@@ -45,10 +45,10 @@ public class TokenService {
       List<AccessLevel> accessLevels = groups
           .stream()
           .map(groupName -> switch (groupName) {
-            case "ADMINISTRATORS" -> new Administrator();
-            case "EMPLOYEES" -> new Employee();
-            case "SALES_REPS" -> new SalesRep();
-            case "CLIENTS" -> new Client();
+            case "ADMINISTRATOR" -> new Administrator();
+            case "EMPLOYEE" -> new Employee();
+            case "SALES_REP" -> new SalesRep();
+            case "CLIENT" -> new Client();
             default -> throw new IllegalStateException("Unexpected value: " + groupName);
           })
           .collect(Collectors.toList());

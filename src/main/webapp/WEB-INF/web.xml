@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <security-role>
-        <role-name>ADMINISTRATOR</role-name>
+        <role-name>administrator</role-name>
     </security-role>
     <security-role>
-        <role-name>EMPLOYEE</role-name>
+        <role-name>employee</role-name>
     </security-role>
     <security-role>
-        <role-name>SALES_REP</role-name>
+        <role-name>sales_rep</role-name>
     </security-role>
     <security-role>
-        <role-name>USER</role-name>
+        <role-name>client</role-name>
     </security-role>
 </web-app>

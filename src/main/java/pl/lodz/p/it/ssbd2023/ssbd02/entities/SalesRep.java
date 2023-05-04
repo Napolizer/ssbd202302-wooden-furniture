@@ -15,6 +15,6 @@ public class SalesRep extends AccessLevel {
 
   @Override
   public String getGroupName() {
-    return "SALES_REPS";
+    return "SALES_REP";
   }
 }

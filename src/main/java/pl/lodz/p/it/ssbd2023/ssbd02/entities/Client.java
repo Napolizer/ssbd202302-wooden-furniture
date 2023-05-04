@@ -21,6 +21,6 @@ public class Client extends AccessLevel {
 
   @Override
   public String getGroupName() {
-    return "CLIENTS";
+    return "CLIENT";
   }
 }

@@ -8,6 +8,7 @@ import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
+import {AuthenticationService} from "../../services/authentication.service";
 
 @Component({
   selector: 'app-account-page',
@@ -50,13 +51,14 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   constructor(
     private accountService: AccountService,
     private alertService: AlertService,
+    private authenticationService: AuthenticationService,
     private translate: TranslateService,
     private dialogService: DialogService,
     private navigationService: NavigationService
   ) {}
 
   ngOnInit(): void {
-    this.accountService.retrieveOwnAccount('Administrator')
+    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: account => {

@@ -26,16 +26,34 @@ GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02mok;
 GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02moz;
 
 INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Aleje Testowe', '55');
-INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Admin', 'Root', (SELECT id FROM address WHERE street = 'Aleje Testowe'));
+INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Jan', 'Kowalski', (SELECT id FROM address WHERE street = 'Aleje Testowe'));
 INSERT INTO category (id, version, archive, category_name, parent_category_id) VALUES (1, 1, false, 'Bed', null),(2, 1, false, 'Case Furniture', null),(3, 1, false, 'Seat', null),(4, 1, false, 'Table', null),(5, 1, false, 'Single Bed', 1),(6, 1, false, 'Double Bed', 1),(7, 1, false, 'Kids', 1),(8, 1, false, 'Wardrobe', 2),(9, 1, false, 'Dresser', 2),(10, 1, false, 'Locker', 2),(11, 1, false, 'Desk', 2),(12, 1, false, 'Chair', 3),(13, 1, false, 'Stool', 3),(14, 1, false, 'Armchair', 3),(15, 1, false, 'Round Table', 4),(16, 1, false, 'Rectangular Table', 4);
-INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'Administrator', '$2a$12$25FtP.RT6GzbYGrZ9UHRVOEoZSI2P8R9hj6yOrKjaxipI05IXUXJC', (SELECT id FROM person WHERE first_name = 'Admin'));
-INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'administrator', (SELECT id FROM account WHERE login = 'Administrator'));
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'administrator', '$2a$12$25FtP.RT6GzbYGrZ9UHRVOEoZSI2P8R9hj6yOrKjaxipI05IXUXJC', (SELECT id FROM person WHERE first_name = 'Jan'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'administrator', (SELECT id FROM account WHERE login = 'administrator'));
 INSERT INTO administrator (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'administrator'));
 
 INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Politechniki', '50');
-INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'User1', 'User123', (SELECT id FROM address WHERE street = 'Politechniki'));
-INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'user1@gmail.com', 0, 'pl', 'user1', '$2a$12$dandYnHSVGt/REAEm5Io3Ohrmhx6KLWiIiHGQ1ZPzAMB.fRyy69hK', (SELECT id FROM person WHERE first_name = 'User1'));
-INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'employee', (SELECT id FROM account WHERE login = 'user1'));
-INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'user1'));
+INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Steve', 'Jobs', (SELECT id FROM address WHERE street = 'Politechniki'));
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'steve.jobs@gmail.com', 0, 'pl', 'clientemployee', '$2a$12$pcaYxmHossXSpP0ElZFyseS5KOxJyDKlaJj8v3lZ7YEj4W3sgySbi', (SELECT id FROM person WHERE first_name = 'Steve'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'employee', (SELECT id FROM account WHERE login = 'clientemployee'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'clientemployee'));
 INSERT INTO employee (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'employee'));
 INSERT INTO client (id, company_id) VALUES ((SELECT id FROM access_level WHERE dtype = 'client'), NULL);
+
+INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-116', 'Przybyszewskiego', '13');
+INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Adam', 'Mickiewicz', (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'adam.mickiewicz@gmail.com', 0, 'pl', 'client', '$2a$12$eZe8v65ksH7chB8oqKidEeyMBJ2yCjmZbdf6f16Lro3832Z95T/MO', (SELECT id FROM person WHERE first_name = 'Adam'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'client'));
+INSERT INTO client (id, company_id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'client')), NULL);
+
+INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Warszawa', 'Poland', '22-192', 'Piłsudskiego', '21');
+INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Juliusz', 'Słowacki', (SELECT id FROM address WHERE street = 'Piłsudskiego'));
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'juliusz.slowacki@gmail.com', 0, 'pl', 'employee', '$2a$12$QzgoWH4Ba9.rWeL.hZlJ5OVhVxIcWVK9.5LcM5RpgU/LkLjmqRSEG', (SELECT id FROM person WHERE first_name = 'Juliusz'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'employee', (SELECT id FROM account WHERE login = 'employee'));
+INSERT INTO employee (id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'employee')));
+
+INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number) VALUES (nextval('seq_gen_sequence'), 1, false, 'Szczecin', 'Poland', '12-121', 'Paprykarza', '12');
+INSERT INTO person (id, version, archive, first_name, last_name, address_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'Cyprian', 'Norwid', (SELECT id FROM address WHERE street = 'Paprykarza'));
+INSERT INTO account (id, version, archive, account_state, email, failed_login_counter, locale, login, password, person_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'ACTIVE', 'cyprian.norwid@gmail.com', 0, 'pl', 'salesrep', '$2a$12$FfYZmhF.joAS/o2EUWtYoeOaY0emq2HxQhVxcjIWnNpfhD.OptMqe', (SELECT id FROM person WHERE first_name = 'Cyprian'));
+INSERT INTO access_level (id, version, archive, dtype, account_id) VALUES (nextval('seq_gen_sequence'), 1, false, 'sales_rep', (SELECT id FROM account WHERE login = 'salesrep'));
+INSERT INTO sales_rep (id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'salesrep')));

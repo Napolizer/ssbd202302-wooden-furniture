@@ -28,7 +28,7 @@ const routes: Routes = [
     component: AccountPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.USERS, Group.ADMINISTRATORS, Group.EMPLOYEES, Group.SALES_REPS]
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
     }
   },
   {
@@ -36,7 +36,7 @@ const routes: Routes = [
     component: AdminPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATORS]
+      groups: [Group.ADMINISTRATOR]
     }
   },
   {
@@ -44,7 +44,7 @@ const routes: Routes = [
     component: RegisterPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUESTS]
+      groups: [Group.GUEST]
     }
   },
   {

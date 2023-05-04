@@ -34,6 +34,12 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     if (route.data['groups']) {
+      console.log('login')
+      console.log(this.authenticationService.getLogin())
+      console.log('groups')
+      console.log(this.authenticationService.getGroups())
+      console.log('token')
+      console.log(this.tokenService.getTokenData())
       if (this.authenticationService.getLogin() === null) {
         this.displayAuthenticationWarning();
         void this.navigationService.redirectToLoginPage();
