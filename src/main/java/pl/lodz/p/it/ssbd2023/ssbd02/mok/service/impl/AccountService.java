@@ -13,12 +13,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -37,6 +38,10 @@ public class AccountService {
 
   public Optional<Account> getAccountById(Long id) {
     return accountFacade.findById(id);
+  }
+
+  public Optional<Account> getAccountByEmail(String email) {
+    return accountFacade.findByEmail(email);
   }
 
   public List<Account> getAccountList() {
@@ -104,8 +109,9 @@ public class AccountService {
   public void registerAccount(Account account) {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     accountFacade.create(account);
-    String accountConfirmationToken = tokenService.generateAccountVerificationToken(account);
+    String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());
@@ -116,6 +122,7 @@ public class AccountService {
 
   public void createAccount(Account account) {
     account.setFailedLoginCounter(0);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     accountFacade.create(account);
   }
 
@@ -171,13 +178,44 @@ public class AccountService {
 
   public void confirmAccount(String token) {
     String login = tokenService.validateAccountVerificationToken(token);
-    Account account = accountFacade.findByLogin(login).orElseThrow(InvalidLinkException::new);
-    if (account.getAccountState().equals(AccountState.ACTIVE)) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountConfirmationExpiredLinkException);
+    if (!account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
       throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
     }
     account.setAccountState(AccountState.ACTIVE);
     Client client = new Client();
     client.setAccount(account);
     account.getAccessLevels().add(client);
+  }
+
+  public String validatePasswordResetToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    tokenService.validatePasswordResetToken(token, account.getPassword());
+    return login;
+  }
+
+  public void resetPassword(String login, String password) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    String hash = CryptHashUtils.hashPassword(password);
+    if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
+    }
+    account.setPassword(hash);
+    accountFacade.update(account);
+  }
+
+  public void sendResetPasswordEmail(String email) {
+    Account account = getAccountByEmail(email).get();
+    String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    try {
+      mailService.sendResetPasswordEmail(account.getEmail(),
+              account.getLocale(), resetPasswordToken);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 }

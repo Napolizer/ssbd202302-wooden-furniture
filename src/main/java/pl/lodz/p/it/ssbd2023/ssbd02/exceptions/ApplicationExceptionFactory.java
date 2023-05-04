@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotActiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ExpiredLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
@@ -102,8 +103,12 @@ public final class ApplicationExceptionFactory {
     return new InvalidCredentialsException();
   }
 
-  public static ExpiredLinkException createExpiredLinkException(Throwable cause) {
-    return new ExpiredLinkException(cause);
+  public static ExpiredLinkException createAccountConfirmationExpiredLinkException() {
+    return new ExpiredLinkException(MessageUtil.MessageKey.ERROR_EXPIRED_ACCOUNT_CONFIRMATION_LINK);
+  }
+
+  public static ExpiredLinkException createPasswordResetExpiredLinkException() {
+    return new ExpiredLinkException(MessageUtil.MessageKey.ERROR_EXPIRED_PASSWORD_RESET_LINK);
   }
 
   public static InvalidLinkException createInvalidLinkException() {
@@ -114,6 +119,7 @@ public final class ApplicationExceptionFactory {
     return new AccountAlreadyVerifiedException();
   }
 
-
-
+  public static EmailNotFoundException createEmailNotFoundException() {
+    return new EmailNotFoundException();
+  }
 }

@@ -38,6 +38,14 @@ public class MailService {
                     + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
   }
 
+  public void sendResetPasswordEmail(String to, String locale, String resetPasswordToken) throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
+            + " " + appUrl + "/reset-password?token=" + resetPasswordToken + " "
+            + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
+  }
+
   public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId)
       throws MessagingException {
     sendMail(to,

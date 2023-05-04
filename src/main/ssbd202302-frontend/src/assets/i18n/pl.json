@@ -48,10 +48,13 @@
   "register.confirm.third": "Jeśli twoje konto zostało już zweryfikowane, ",
   "register.confirm.fourth": "możesz się teraz zalogować.",
 
+  "reset.password.title": "Resetowanie hasła",
+  "reset.password.newPassword": "Nowe hasło",
+  "reset.password.confirmNewPassword": "Powtórz nowe hasło",
+  "reset.password.button": "Resetuj",
+  "reset.password.success": "Hasło zostało zresetowane, możesz się zalogować",
+
   "account.confirmation.success": "Twoje konto zostało zweryfikowane i możesz się zalogować",
-  "exception.expired.link": "Link weryfikacyjny wygasł i twoje konto zostało usunięte",
-  "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
-  "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -63,8 +66,12 @@
   "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje",
   "exception.general.database": "Wystąpił problem z bazą danych",
   "exception.mail.service": "Wystąpił problem podczas wysyłania wiadomości email",
-
   "forbidden.title": "Forbidden",
   "forbidden.description": "Nie posiadasz wymaganych uprawnień, aby korzystać z tego zasobu",
-  "forbidden.button": "Powrót"
+  "forbidden.button": "Powrót",
+  "exception.mok.account.old.password": "Nowe hasło nie może być takie samo jak obecne",
+  "exception.expired.account.confirmation.link": "Link weryfikacyjny wygasł i twoje konto zostało usunięte",
+  "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
+  "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
+  "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie"
 }

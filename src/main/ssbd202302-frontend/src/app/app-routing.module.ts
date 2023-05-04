@@ -10,6 +10,7 @@ import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -44,10 +45,6 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterPageComponent,
-    canActivate: [AuthGuard],
-    data: {
-      groups: [Group.GUEST]
-    }
   },
   {
     path: 'forbidden',
@@ -58,6 +55,10 @@ const routes: Routes = [
     component: ConfirmPageComponent
   },
   {
+    path: 'reset-password',
+    component: ResetPasswordComponent
+  },
+  {
     path: 'not-found',
     component: NotFoundPageComponent
   },
@@ -65,7 +66,7 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: '/not-found'
-  }
+  },
 ];
 
 @NgModule({

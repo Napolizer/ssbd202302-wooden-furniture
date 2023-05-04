@@ -34,6 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
@@ -260,6 +261,37 @@ public class AccountController {
   @Path("/confirm")
   public Response confirmAccount(@QueryParam("token") String token) {
     accountEndpoint.confirmAccount(token);
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/login/forgotPassword")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {
+    Optional<Account> foundAccount = accountEndpoint.getAccountByEmail(emailDto);
+    if (foundAccount.isEmpty()) {
+      throw ApplicationExceptionFactory.createEmailNotFoundException();
+    }
+    if (foundAccount.get().getAccountState() != AccountState.ACTIVE) {
+      throw ApplicationExceptionFactory.createAccountNotActiveException();
+    }
+    accountEndpoint.sendResetPasswordEmail(emailDto);
+    return Response.ok().build();
+  }
+
+  @GET
+  @Path("/reset-password")
+  public Response validatePasswordResetToken(@QueryParam("token") String token) {
+    accountEndpoint.validatePasswordResetToken(token);
+    return Response.ok().build();
+  }
+
+  @PUT
+  @Path("/reset-password")
+  public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
+    String login = accountEndpoint.validatePasswordResetToken(token);
+    accountEndpoint.resetPassword(login, changePasswordDto);
     return Response.ok().build();
   }
 }

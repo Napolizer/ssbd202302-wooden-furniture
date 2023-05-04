@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from "@angular/router";
         if(token) {
           this.router.navigate(['/login'], { state: {token: token} });
         } else {
-          this.router.navigate(['/'])
+          this.router.navigate(['/not-found'])
         }
       });
     }

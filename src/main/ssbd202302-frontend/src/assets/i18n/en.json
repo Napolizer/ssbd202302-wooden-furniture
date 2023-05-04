@@ -48,10 +48,13 @@
   "register.confirm.third": "If you have already verified your account, ",
   "register.confirm.fourth": "you can now log in.",
 
+  "reset.password.title": "Reset your password",
+  "reset.password.newPassword": "New password",
+  "reset.password.confirmNewPassword": "Confirm new password",
+  "reset.password.button": "Reset",
+  "reset.password.success": "Your password has been reset, you can log in",
+
   "account.confirmation.success": "Your account has been verified and you can now log in",
-  "exception.expired.link": "Confirmation link has expired and your account has been deleted",
-  "exception.invalid.link": "Confirmation link is invalid",
-  "exception.mok.account.already.verified": "Your account has already been verified",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -64,6 +67,11 @@
   "exception.general.database": "Database error occurred",
   "exception.mail.service": "Mail service error occurred",
   "forbidden.title": "Forbidden",
-  "forbidden.description": "You don't have permission to access this resource",,
-  "forbidden.button": "Home"
+  "forbidden.description": "You don't have permission to access this resource",
+  "forbidden.button": "Home",
+  "exception.mok.account.old.password": "New password cannot be the same as the old one",
+  "exception.expired.password.reset.link": "Your password reset link has expired, try again",
+  "exception.invalid.link": "Confirmation link is invalid",
+  "exception.mok.account.already.verified": "Your account has already been verified",
+  "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted"
 }
