@@ -7,6 +7,7 @@ import {AccountPageComponent} from "./pages/account-page/account-page.component"
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
 import {Group} from "./enums/group";
 import {AuthGuard} from "./guards/auth.guard";
+import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 
 const routes: Routes = [
@@ -50,6 +51,15 @@ const routes: Routes = [
   {
     path: 'confirm',
     component: ConfirmPageComponent
+  },
+  {
+    path: 'not-found',
+    component: NotFoundPageComponent
+  },
+  // IMPORTANT: this route must be the last one
+  {
+    path: '**',
+    redirectTo: '/not-found'
   }
 ];
 
