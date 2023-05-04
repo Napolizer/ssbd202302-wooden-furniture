@@ -4,7 +4,6 @@ import {AlertService} from "@full-fledged/alerts";
 import {AuthenticationService} from "../services/authentication.service";
 import {TokenService} from "../services/token.service";
 import {NavigationService} from "../services/navigation.service";
-import {Group} from "../enums/group";
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +15,6 @@ export class AuthGuard implements CanActivate {
     private navigationService: NavigationService,
     private tokenService: TokenService
   ) {}
-
-  private displayAuthorizationWarning(): void {
-    this.alertService.warning('You are not authorized to access this page');
-  }
 
   private displayAuthenticationWarning(): void {
     this.alertService.warning('You are not authenticated');
@@ -34,12 +29,6 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     if (route.data['groups']) {
-      console.log('login')
-      console.log(this.authenticationService.getLogin())
-      console.log('groups')
-      console.log(this.authenticationService.getGroups())
-      console.log('token')
-      console.log(this.tokenService.getTokenData())
       if (this.authenticationService.getLogin() === null) {
         this.displayAuthenticationWarning();
         void this.navigationService.redirectToLoginPage();
@@ -55,8 +44,7 @@ export class AuthGuard implements CanActivate {
           return true;
         }
       }
-      this.displayAuthorizationWarning();
-      void this.navigationService.redirectToMainPage();
+      void this.navigationService.redirectToForbiddenPage();
       return false;
     }
     return true;

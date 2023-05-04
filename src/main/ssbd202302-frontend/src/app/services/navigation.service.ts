@@ -26,6 +26,10 @@ export class NavigationService {
     return this.router.navigate(['/login']);
   }
 
+  public redirectToForbiddenPage(): Promise<boolean> {
+    return this.router.navigate(['/forbidden']);
+  }
+
   public isCurrentlyOnLoginPage(): boolean {
     return this.router.url === '/login';
   }

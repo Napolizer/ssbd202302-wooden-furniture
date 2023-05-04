@@ -33,6 +33,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
+import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.com
     SpinnerComponent,
     AdminPageComponent,
     ErrorDialogComponent,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    ForbiddenPageComponent
   ],
     imports: [
         BrowserModule,
