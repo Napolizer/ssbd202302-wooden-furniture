@@ -15,7 +15,6 @@ import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +45,7 @@ public class AccountFacadeOperationsIT {
         .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
         .addPackages(true, "org.postgresql")
         .addPackages(true, "org.hamcrest")
+        .addPackages(true, "io.jsonwebtoken")
         .addAsResource(new File("src/test/resources/"), "");
   }
 
