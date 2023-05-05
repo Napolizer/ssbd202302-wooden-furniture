@@ -11,16 +11,18 @@
     <mat-stepper class="form-container" linear #stepper>
       <mat-step [stepControl]="accountForm">
         <form [formGroup]="accountForm">
-          <ng-template matStepLabel>{{'register.stepper.first' | translate}}</ng-template>
-          <p class="form-title">{{'register.title' | translate}}</p>
+          <ng-template matStepLabel>{{
+            "register.stepper.first" | translate
+          }}</ng-template>
+          <p class="form-title">{{ "register.title" | translate }}</p>
           <div class="form">
             <div class="form-account">
               <mat-form-field
-                hintLabel="{{'register.hint.max.32' | translate}}"
+                hintLabel="{{ 'register.hint.max.32' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.email' | translate}}</mat-label>
+                <mat-label>{{ "register.label.email" | translate }}</mat-label>
                 <input
                   matInput
                   #email
@@ -32,21 +34,22 @@
                 />
                 <mat-error
                   *ngIf="accountForm.get('email')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
-                <mat-error *ngIf="accountForm.get('email')?.hasError('email')"
-                  >{{'register.validity.format' | translate}}</mat-error
+                <mat-error
+                  *ngIf="accountForm.get('email')?.hasError('email')"
+                  >{{ "register.validity.format" | translate }}</mat-error
                 >
                 <mat-hint align="end">{{ email.value.length }}/32</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-account">
               <mat-form-field
-                hintLabel="{{'register.hint.max.20' | translate}}"
+                hintLabel="{{ 'register.hint.max.20' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.login' | translate}}</mat-label>
+                <mat-label>{{ "register.label.login" | translate }}</mat-label>
                 <input
                   matInput
                   #login
@@ -57,25 +60,28 @@
                 />
                 <mat-error
                   *ngIf="accountForm.get('login')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
-                <mat-error *ngIf="accountForm.get('login')?.hasError('pattern')"
-                  >{{'login.validity.patternMismatch' | translate}}</mat-error
+                <mat-error
+                  *ngIf="accountForm.get('login')?.hasError('pattern')"
+                  >{{ "login.validity.patternMismatch" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="accountForm.get('login')?.hasError('minlength')"
-                  >{{'login.validity.tooShort' | translate}}</mat-error
+                  >{{ "login.validity.tooShort" | translate }}</mat-error
                 >
                 <mat-hint align="end">{{ login.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-account">
               <mat-form-field
-                hintLabel="{{'register.hint.max.32' | translate}}"
+                hintLabel="{{ 'register.hint.max.32' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.password' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.password" | translate
+                }}</mat-label>
                 <input
                   #password
                   matInput
@@ -86,15 +92,19 @@
                 />
                 <mat-error
                   *ngIf="accountForm.get('password')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="accountForm.get('password')?.hasError('pattern')"
-                  >{{'login.password.validity.patternMismatch' | translate}}</mat-error
+                  >{{
+                    "login.password.validity.patternMismatch" | translate
+                  }}</mat-error
                 >
                 <mat-error
                   *ngIf="accountForm.get('password')?.hasError('minlength')"
-                  >{{'login.password.validity.tooShort' | translate}}</mat-error
+                  >{{
+                    "login.password.validity.tooShort" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end">{{ password.value.length }}/32</mat-hint>
                 <button
@@ -113,11 +123,13 @@
             </div>
             <div class="form-account">
               <mat-form-field
-                hintLabel="{{'register.hint.max.32' | translate}}"
+                hintLabel="{{ 'register.hint.max.32' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.confirmPassword' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.confirmPassword" | translate
+                }}</mat-label>
                 <input
                   #confirmPassword
                   matInput
@@ -130,13 +142,15 @@
                   *ngIf="
                     accountForm.get('confirmPassword')?.hasError('required')
                   "
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="
                     accountForm.get('confirmPassword')?.hasError('notmatching')
                   "
-                  >{{'register.validity.password.notmatching' | translate}}</mat-error
+                  >{{
+                    "register.validity.password.notmatching" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end"
                   >{{ confirmPassword.value.length }}/32</mat-hint
@@ -157,7 +171,9 @@
             </div>
           </div>
           <div class="button-container">
-            <button mat-button matStepperNext mats>{{'register.button.next' | translate}}</button>
+            <button mat-button matStepperNext>
+              {{ "register.button.next" | translate }}
+            </button>
           </div>
         </form>
       </mat-step>
@@ -165,16 +181,20 @@
       <mat-step [stepControl]="personForm">
         <app-spinner [loading]="loading"></app-spinner>
         <form [formGroup]="personForm">
-          <ng-template matStepLabel>{{'register.stepper.second' | translate}}</ng-template>
-          <p class="form-title">{{'register.title' | translate}}</p>
+          <ng-template matStepLabel>{{
+            "register.stepper.second" | translate
+          }}</ng-template>
+          <p class="form-title">{{ "register.title" | translate }}</p>
           <div class="form">
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.20' | translate}}"
+                hintLabel="{{ 'register.hint.max.20' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.firstName' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.firstName" | translate
+                }}</mat-label>
                 <input
                   matInput
                   #firstName
@@ -185,22 +205,26 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('firstName')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('firstName')?.hasError('pattern')"
-                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
+                  >{{
+                    "register.validity.person.patternMismatch" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end">{{ firstName.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.20' | translate}}"
+                hintLabel="{{ 'register.hint.max.20' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.lastName' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.lastName" | translate
+                }}</mat-label>
                 <input
                   matInput
                   #lastName
@@ -211,22 +235,24 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('lastName')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('lastName')?.hasError('pattern')"
-                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
+                  >{{
+                    "register.validity.person.patternMismatch" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end">{{ lastName.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.20' | translate}}"
+                hintLabel="{{ 'register.hint.max.20' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.street' | translate}}</mat-label>
+                <mat-label>{{ "register.label.street" | translate }}</mat-label>
                 <input
                   matInput
                   #street
@@ -237,21 +263,26 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('street')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
-                <mat-error *ngIf="personForm.get('street')?.hasError('pattern')"
-                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
+                <mat-error
+                  *ngIf="personForm.get('street')?.hasError('pattern')"
+                  >{{
+                    "register.validity.person.patternMismatch" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end">{{ street.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.4' | translate}}"
+                hintLabel="{{ 'register.hint.max.4' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.streetNumber' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.streetNumber" | translate
+                }}</mat-label>
                 <input
                   matInput
                   #streetNumber
@@ -263,11 +294,11 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('streetNumber')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('streetNumber')?.hasError('min')"
-                  >{{'register.validity.number.min' | translate}}</mat-error
+                  >{{ "register.validity.number.min" | translate }}</mat-error
                 >
                 <mat-hint align="end"
                   >{{ streetNumber.value.length }}/4</mat-hint
@@ -276,11 +307,11 @@
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.20' | translate}}"
+                hintLabel="{{ 'register.hint.max.20' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.city' | translate}}</mat-label>
+                <mat-label>{{ "register.label.city" | translate }}</mat-label>
                 <input
                   matInput
                   #city
@@ -289,22 +320,28 @@
                   maxlength="20"
                   required
                 />
-                <mat-error *ngIf="personForm.get('city')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                <mat-error
+                  *ngIf="personForm.get('city')?.hasError('required')"
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
-                <mat-error *ngIf="personForm.get('city')?.hasError('pattern')"
-                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
+                <mat-error
+                  *ngIf="personForm.get('city')?.hasError('pattern')"
+                  >{{
+                    "register.validity.person.patternMismatch" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end">{{ city.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.6' | translate}}"
+                hintLabel="{{ 'register.hint.max.6' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.postalCode' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.postalCode" | translate
+                }}</mat-label>
                 <input
                   matInput
                   #postalCode
@@ -316,22 +353,24 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('postalCode')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('postalCode')?.hasError('pattern')"
-                  >{{'register.validity.format' | translate}}</mat-error
+                  >{{ "register.validity.format" | translate }}</mat-error
                 >
                 <mat-hint align="end">{{ postalCode.value.length }}/6</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field
-                hintLabel="{{'register.hint.max.20' | translate}}"
+                hintLabel="{{ 'register.hint.max.20' | translate }}"
                 appearance="fill"
                 class="input"
               >
-                <mat-label>{{'register.label.country' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.country" | translate
+                }}</mat-label>
                 <input
                   matInput
                   #country
@@ -342,18 +381,22 @@
                 />
                 <mat-error
                   *ngIf="personForm.get('country')?.hasError('required')"
-                  >{{'register.validity.required' | translate}}</mat-error
+                  >{{ "register.validity.required" | translate }}</mat-error
                 >
                 <mat-error
                   *ngIf="personForm.get('country')?.hasError('pattern')"
-                  >{{'register.validity.person.patternMismatch' | translate}}</mat-error
+                  >{{
+                    "register.validity.person.patternMismatch" | translate
+                  }}</mat-error
                 >
                 <mat-hint align="end">{{ country.value.length }}/20</mat-hint>
               </mat-form-field>
             </div>
             <div class="form-person">
               <mat-form-field appearance="fill" class="input">
-                <mat-label>{{'register.label.language' | translate}}</mat-label>
+                <mat-label>{{
+                  "register.label.language" | translate
+                }}</mat-label>
                 <mat-select required formControlName="locale">
                   <mat-option
                     *ngFor="let language of languages"
@@ -366,13 +409,15 @@
             </div>
             <div class="form-person">
               <div class="button-container">
-                <button mat-button matStepperPrevious mats>{{'register.button.back' | translate}}</button>
+                <button mat-button matStepperPrevious>
+                  {{ "register.button.back" | translate }}
+                </button>
               </div>
             </div>
             <div class="form-person">
               <div class="button-container">
-                <button mat-button (click)="onCreateAccount()" mats>
-                  {{'register.button.sign' | translate}}
+                <button mat-button (click)="onConfirm()">
+                  {{ "register.button.sign" | translate }}
                 </button>
               </div>
             </div>
@@ -380,14 +425,19 @@
         </form>
       </mat-step>
       <mat-step>
-        <ng-template matStepLabel>{{'register.stepper.third' | translate}}</ng-template>
-        <p class="form-title">{{'register.confirm.title' | translate}}</p>
+        <ng-template matStepLabel>{{
+          "register.stepper.third" | translate
+        }}</ng-template>
+        <p class="form-title">{{ "register.confirm.title" | translate }}</p>
         <p>
-          {{'register.confirm.first' | translate}}
-          <br><br>{{'register.confirm.second' | translate}}
+          {{ "register.confirm.first" | translate }}
+          <br /><br />{{ "register.confirm.second" | translate }}
         </p>
         <p>
-          {{'register.confirm.third' | translate}}<a routerLink="/login">{{'register.confirm.fourth' | translate}}</a>
+          {{ "register.confirm.third" | translate
+          }}<a routerLink="/login">{{
+            "register.confirm.fourth" | translate
+          }}</a>
         </p>
       </mat-step>
     </mat-stepper>

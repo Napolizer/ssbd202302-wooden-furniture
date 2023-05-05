@@ -36,6 +36,7 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
 import {MatDialogModule} from "@angular/material/dialog";
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
     AdminPageComponent,
     ConfirmPageComponent,
     ErrorDialogComponent,
+    ConfirmationDialogComponent,
     NotFoundPageComponent,
     ForbiddenPageComponent,
     ConfirmPageComponent,
