@@ -39,10 +39,51 @@ public class MailServiceIT {
   }
 
   @Test
-  void shouldSendMailToTemporaryMail() throws SystemException, NotSupportedException,
+  void shouldSendMailWithInfoAboutBlockingAccount() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
       assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount(
+              "jegek60138@fectode.com", "en"));
+      utx.commit();
+  }
+
+  @Test
+  void shouldSendMailWithAccountConfirmationLink() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendMailWithAccountConfirmationLink(
+              "jegek60138@fectode.com", "en", "1", "login"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendResetPasswordMail() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendResetPasswordMail(
+              "jegek60138@fectode.com", "en", "1"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendMailWithEmailChangeConfirmLink() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendMailWithEmailChangeConfirmLink(
+              "jegek60138@fectode.com", "en", Long.getLong("1")));
+      utx.commit();
+  }
+  @Test
+  void shouldSendMailAboutAddingAccessLevel() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendEmailAboutAddingAccessLevel(
+              "jegek60138@fectode.com", "en"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendMailAboutRemovingAccessLevel() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendEmailAboutRemovingAccessLevel(
               "jegek60138@fectode.com", "en"));
       utx.commit();
   }
