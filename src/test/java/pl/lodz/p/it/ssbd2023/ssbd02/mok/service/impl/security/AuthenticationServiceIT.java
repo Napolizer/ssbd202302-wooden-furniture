@@ -66,7 +66,7 @@ public class AuthenticationServiceIT {
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
         .addPackages(true, "javax.xml.bind")
-            .addPackages(true, "at.favre")
+        .addPackages(true, "at.favre")
         .addAsResource(new File("src/test/resources/"), "");
   }
 
@@ -113,10 +113,13 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldProperlyLoginTest() throws AuthenticationException {
+  public void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
       String token = authenticationService.login(account.getLogin(), password);
       assertNotNull(token);
+      utx.begin();
       List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
+      utx.commit();
       assertThat(accessLevels, is(not(empty())));
       assertThat(accessLevels.size(), is(equalTo(1)));
       assertThat(accessLevels.get(0), is(instanceOf(Client.class)));

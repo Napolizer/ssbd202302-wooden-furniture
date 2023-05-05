@@ -51,6 +51,7 @@ public class AccountServiceIT {
             .addPackages(true, "org.hamcrest")
             .addPackages(true, "at.favre.lib")
             .addPackages(true, "io.jsonwebtoken")
+            .addPackages(true, "javax.xml.bind")
             .addAsResource(new File("src/test/resources/"), "");
   }
 
@@ -399,7 +400,8 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesPassword() {
     String newPassword = "newPassword";
-    assertEquals("test", accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+    assertEquals(account.getPassword(),
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword));
     assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
   }
@@ -415,7 +417,8 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesPasswordAsAdmin() {
     String newPassword = "newPassword";
-    assertEquals("test", accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+    assertEquals(account.getPassword(),
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin(), newPassword));
     assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
   }

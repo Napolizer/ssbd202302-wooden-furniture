@@ -19,7 +19,7 @@ public class RequestAuthenticationMechanismIT {
         .contentType("application/json")
         .body("""
                    {
-                       "login": "Administrator",
+                       "login": "administrator",
                        "password": "Kochamssbd!"
                    }
             """)
@@ -39,7 +39,7 @@ public class RequestAuthenticationMechanismIT {
         .contentType("application/json")
         .body("""
                    {
-                       "login": "Administrator",
+                       "login": "administrator",
                        "password": "Kochamssbd!"
                    }
             """)
