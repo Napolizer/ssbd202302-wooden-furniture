@@ -24,7 +24,11 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginPageComponent
+    component: LoginPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
   },
   {
     path: 'account',
@@ -45,6 +49,10 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
   },
   {
     path: 'forbidden',
@@ -52,11 +60,19 @@ const routes: Routes = [
   },
   {
     path: 'confirm',
-    component: ConfirmPageComponent
+    component: ConfirmPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
   },
   {
     path: 'reset-password',
-    component: ResetPasswordComponent
+    component: ResetPasswordComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
   },
   {
     path: 'not-found',
