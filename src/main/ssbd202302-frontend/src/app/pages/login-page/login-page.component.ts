@@ -2,12 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {AlertService} from '@full-fledged/alerts';
-import {Router} from '@angular/router';
 import {TokenService} from '../../services/token.service';
 import {combineLatest, first, map, Subject, takeUntil} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from "@ngx-translate/core";
 import { Location } from '@angular/common';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
   selector: 'app-login-page',
@@ -45,7 +45,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private router: Router,
+    private navigationService: NavigationService,
     private tokenService: TokenService,
     private translate: TranslateService,
     private location: Location
@@ -113,7 +113,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
               this.alertService.success(msg);
-              void this.router.navigate(['/home']);
+              this.navigationService.redirectToMainPage();
             });
         },
         error: e => {

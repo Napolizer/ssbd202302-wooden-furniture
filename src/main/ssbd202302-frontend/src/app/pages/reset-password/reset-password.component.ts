@@ -7,7 +7,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { AlertService } from '@full-fledged/alerts';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, first, takeUntil } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -16,6 +16,7 @@ import { ResetPassword } from 'src/app/interfaces/reset.password';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'src/app/services/dialog.service';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -72,7 +73,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService,
     private accountService: AccountService,
-    private router: Router,
+    private navigationService: NavigationService,
     private route: ActivatedRoute,
     private translate: TranslateService,
     private dialogService: DialogService
@@ -96,16 +97,16 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             error: (e: HttpErrorResponse) => {
               if (e.status == 410) {
                 const message = e.error.message as string;
-                this.router.navigate(['/login'], {
-                  state: { resetPasswordError: message },
+                this.navigationService.redirectToLoginPageWithState({
+                  resetPasswordError: message,
                 });
               } else {
-                this.router.navigate(['/not-found']);
+                this.navigationService.redirectToNotFoundPage();
               }
             },
           });
       } else {
-        this.router.navigate(['/not-found']);
+        this.navigationService.redirectToNotFoundPage();
       }
     });
 
@@ -134,8 +135,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.loading = false;
-          this.router.navigate(['/login'], {
-            state: { resetPasswordSuccess: 'reset.password.success' },
+          this.navigationService.redirectToLoginPageWithState({
+            resetPasswordSuccess: 'reset.password.success',
           });
         },
         error: (e: HttpErrorResponse) => {
@@ -149,11 +150,11 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
               });
           } else if (e.status == 410) {
             const message = e.error.message as string;
-            this.router.navigate(['/login'], {
-              state: { resetPasswordError: message },
+            this.navigationService.redirectToLoginPageWithState({
+              resetPasswordError: message,
             });
           } else {
-            this.router.navigate(['/not-found']);
+            this.navigationService.redirectToNotFoundPage();
           }
         },
       });

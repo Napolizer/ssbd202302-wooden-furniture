@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
   selector: 'app-confirm-page',
@@ -13,7 +14,7 @@ export class ConfirmPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    private navigationService: NavigationService,
     private accountService: AccountService
   ) {}
 
@@ -26,25 +27,23 @@ export class ConfirmPageComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy))
           .subscribe({
             next: () => {
-              this.router.navigate(['/login'], {
-                state: {
-                  confirmAccountSuccess: 'account.confirmation.success',
-                },
+              this.navigationService.redirectToLoginPageWithState({
+                confirmAccountSuccess: 'account.confirmation.success',
               });
             },
             error: (e: HttpErrorResponse) => {
               if (e.status == 410) {
                 const message = e.error.message as string;
-                this.router.navigate(['/login'], {
+                this.navigationService.redirectToLoginPageWithState({
                   state: { confirmAccountError: message },
                 });
               } else {
-                this.router.navigate(['/not-found']);
+                this.navigationService.redirectToNotFoundPage();
               }
             },
           });
       } else {
-        this.router.navigate(['/not-found']);
+        this.navigationService.redirectToNotFoundPage();
       }
     });
   }

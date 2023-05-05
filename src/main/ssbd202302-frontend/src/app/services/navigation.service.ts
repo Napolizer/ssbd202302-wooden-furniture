@@ -26,6 +26,14 @@ export class NavigationService {
     return this.router.navigate(['/login']);
   }
 
+  public redirectToLoginPageWithState(state: any): Promise<boolean> {
+    return this.router.navigate(['/login'], {state: state});
+  }
+
+  public redirectToNotFoundPage(): Promise<boolean> {
+    return this.router.navigate(['/not-found']);
+  }
+
   public redirectToForbiddenPage(): Promise<boolean> {
     return this.router.navigate(['/forbidden']);
   }
