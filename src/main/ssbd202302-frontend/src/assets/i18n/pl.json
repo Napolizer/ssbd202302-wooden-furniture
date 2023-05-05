@@ -56,6 +56,12 @@
 
   "account.confirmation.success": "Twoje konto zostało zweryfikowane i możesz się zalogować",
 
+  "dialog.confirmation.title": "Potwierdzenie akcji",
+  "dialog.confirmation.action": "Potwierdź",
+  "dialog.confirmation.close": "Zamknij",
+  "dialog.confirmation.register.message": "Czy na pewno chcesz się zarejestrować?",
+  "dialog.confirmation.password.message": "Czy na pewno chcesz zresetować swoje hasło?",
+
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
   "exception.mok.account.credentials": "Nieprawidłowy login lub hasło",

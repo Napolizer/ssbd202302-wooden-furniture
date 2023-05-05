@@ -1,21 +1,55 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { AccountService } from 'src/app/services/account.service';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
-    selector: 'app-confirm-page',
-    template: ''
-  })
-  export class ConfirmPageComponent implements OnInit {
-    constructor(private route: ActivatedRoute, private router: Router) {}
-  
-    ngOnInit(): void {
-      this.route.queryParams.subscribe((params) => {
-        const token = params["token"];
-        if(token) {
-          this.router.navigate(['/login'], { state: {token: token} });
-        } else {
-          this.router.navigate(['/not-found'])
-        }
-      });
-    }
+  selector: 'app-confirm-page',
+  template: '',
+})
+export class ConfirmPageComponent implements OnInit, OnDestroy {
+  destroy = new Subject<boolean>();
+
+  constructor(
+    private route: ActivatedRoute,
+    private navigationService: NavigationService,
+    private accountService: AccountService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      const token = params['token'];
+      if (token) {
+        this.accountService
+          .confirm(token)
+          .pipe(takeUntil(this.destroy))
+          .subscribe({
+            next: () => {
+              this.navigationService.redirectToLoginPageWithState({
+                confirmAccountSuccess: 'account.confirmation.success',
+              });
+            },
+            error: (e: HttpErrorResponse) => {
+              if (e.status == 410) {
+                const message = e.error.message as string;
+                this.navigationService.redirectToLoginPageWithState({
+                  state: { confirmAccountError: message },
+                });
+              } else {
+                this.navigationService.redirectToNotFoundPage();
+              }
+            },
+          });
+      } else {
+        this.navigationService.redirectToNotFoundPage();
+      }
+    });
   }
+
+  ngOnDestroy(): void {
+    this.destroy.next(true);
+    this.destroy.unsubscribe();
+  }
+}

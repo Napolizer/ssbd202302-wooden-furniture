@@ -4,6 +4,7 @@ import {AlertService} from "@full-fledged/alerts";
 import {AuthenticationService} from "../services/authentication.service";
 import {TokenService} from "../services/token.service";
 import {NavigationService} from "../services/navigation.service";
+import { Group } from '../enums/group';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,9 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     if (route.data['groups']) {
+      if (route.data['groups'].includes(Group.GUEST) && this.authenticationService.isUserInGroup(Group.GUEST)) {
+        return true;
+      }
       if (this.authenticationService.getLogin() === null) {
         this.displayAuthenticationWarning();
         void this.navigationService.redirectToLoginPage();
@@ -36,6 +40,7 @@ export class AuthGuard implements CanActivate {
       }
       if (this.tokenService.isTokenExpired()) {
         this.displayTokenExpiredWarning();
+        this.authenticationService.logout()
         void this.navigationService.redirectToLoginPage();
         return false;
       }
