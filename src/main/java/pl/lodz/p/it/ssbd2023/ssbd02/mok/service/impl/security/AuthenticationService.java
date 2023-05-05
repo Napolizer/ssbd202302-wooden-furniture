@@ -44,6 +44,10 @@ public class AuthenticationService {
       throw ApplicationExceptionFactory.createAccountArchiveException();
     }
 
+    if (account.getAccountState() == AccountState.NOT_VERIFIED) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
+    }
+
     if (account.getAccountState() == AccountState.BLOCKED) {
       throw ApplicationExceptionFactory.createAccountBlockedException();
     }

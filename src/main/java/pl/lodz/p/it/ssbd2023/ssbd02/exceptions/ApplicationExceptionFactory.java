@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedExcepti
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountAlreadyVerifiedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotActiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotVerifiedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailNotFoundException;
@@ -31,6 +32,10 @@ public final class ApplicationExceptionFactory {
 
   public static AccessLevelNotAssignedException createAccessLevelNotAssignedException() {
     return new AccessLevelNotAssignedException();
+  }
+
+  public static AccountNotVerifiedException createAccountNotVerifiedException() {
+    return new AccountNotVerifiedException();
   }
 
   public static AccountNotFoundException createAccountNotFoundException() {
