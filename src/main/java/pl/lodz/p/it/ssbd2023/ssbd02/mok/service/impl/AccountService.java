@@ -212,7 +212,7 @@ public class AccountService {
     Account account = getAccountByEmail(email).get();
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
     try {
-      mailService.sendResetPasswordEmail(account.getEmail(),
+      mailService.sendResetPasswordMail(account.getEmail(),
               account.getLocale(), resetPasswordToken);
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);

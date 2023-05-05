@@ -38,7 +38,7 @@ public class MailService {
                     + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
   }
 
-  public void sendResetPasswordEmail(String to, String locale, String resetPasswordToken) throws MessagingException {
+  public void sendResetPasswordMail(String to, String locale, String resetPasswordToken) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
