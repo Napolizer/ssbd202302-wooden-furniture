@@ -37,6 +37,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
@@ -44,6 +45,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 public class AccountController {
   @Inject
   private AccountEndpoint accountEndpoint;
+  @Inject
+  private AccountMapper accountMapper;
   @Inject
   private Principal principal;
 
@@ -54,7 +57,7 @@ public class AccountController {
     List<Account> accounts = accountEndpoint.getAccountList();
     List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
     for (Account account : accounts) {
-      accountsDto.add(new AccountWithoutSensitiveDataDto(account));
+      accountsDto.add(accountMapper.mapToAccountWithoutSensitiveDataDto(account));
     }
     return Response.ok(accountsDto).build();
   }
@@ -68,8 +71,7 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account =
-        new AccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -82,8 +84,7 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account =
-        new AccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -122,8 +123,8 @@ public class AccountController {
     AccessLevel newAccessLevel =
         DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
     accountEndpoint.addAccessLevelToAccount(accountId, newAccessLevel);
-    AccountWithoutSensitiveDataDto account =
-        new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
+    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(
+        accountEndpoint.getAccountByAccountId(accountId).get());
     return Response.ok(account).build();
   }
 
@@ -136,7 +137,7 @@ public class AccountController {
     AccessLevel newAccessLevel =
             DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(accessLevel);
     Account upadatedAccount = accountEndpoint.changeAccessLevel(accountId, newAccessLevel);
-    AccountWithoutSensitiveDataDto account = new AccountWithoutSensitiveDataDto(upadatedAccount);
+    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(upadatedAccount);
 
     return Response.ok(account).build();
   }
@@ -154,8 +155,8 @@ public class AccountController {
     AccessLevel newAccessLevel =
         DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
     accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
-    AccountWithoutSensitiveDataDto account =
-        new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByAccountId(accountId).get());
+    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(
+        accountEndpoint.getAccountByAccountId(accountId).get());
     return Response.ok(account).build();
   }
 
@@ -191,8 +192,8 @@ public class AccountController {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
     accountEndpoint.changePassword(login, changePasswordDto.getPassword());
-    AccountWithoutSensitiveDataDto changedAccount =
-        new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
+        accountEndpoint.getAccountByLogin(login).get());
     return Response.ok(changedAccount).build();
   }
 
@@ -210,8 +211,8 @@ public class AccountController {
     }
     accountEndpoint.changePasswordAsAdmin(login,
         changePasswordDto.getPassword());
-    AccountWithoutSensitiveDataDto changedAccount =
-        new AccountWithoutSensitiveDataDto(accountEndpoint.getAccountByLogin(login).get());
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
+        accountEndpoint.getAccountByLogin(login).get());
     return Response.ok(changedAccount).build();
   }
 
