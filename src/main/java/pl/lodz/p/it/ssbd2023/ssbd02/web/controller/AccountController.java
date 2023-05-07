@@ -46,6 +46,8 @@ public class AccountController {
   @Inject
   private AccountEndpoint accountEndpoint;
   @Inject
+  private AccountMapper accountMapper;
+  @Inject
   private Principal principal;
   @Inject
   private AccountMapper accountMapper;
