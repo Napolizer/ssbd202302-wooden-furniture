@@ -37,6 +37,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -90,7 +91,9 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
         MatProgressSpinnerModule,
         MatDialogModule
     ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

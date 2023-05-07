@@ -72,6 +72,7 @@
   "account.lastFailedLogin": "Last failed login",
   "account.failedLogins": "Failed logins",
   "account.lastLoginIp": "Last login IP",
+  "account.lastFailedLoginIp": "Last failed login IP",
   "account.edit": "Edit",
 
   "dialog.confirmation.title": "Confirm action",

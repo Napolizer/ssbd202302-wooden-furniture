@@ -22,6 +22,7 @@ public class AccountMapper {
         .lastLogin(account.getLastLogin())
         .lastFailedLogin(account.getLastFailedLogin())
         .lastLoginIpAddress(account.getLastLoginIpAddress())
+        .lastFailedLoginIpAddress(account.getLastFailedLoginIpAddress())
         .locale(account.getLocale())
         .failedLoginCounter(account.getFailedLoginCounter())
         .blockadeEnd(account.getBlockadeEnd())

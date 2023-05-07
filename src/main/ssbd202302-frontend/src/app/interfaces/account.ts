@@ -14,6 +14,7 @@ export interface Account {
   lastLogin: Date,
   lastFailedLogin: Date,
   lastLoginIpAddress: string,
+  lastFailedLoginIpAddress: string,
   locale: string,
   login: string
 }

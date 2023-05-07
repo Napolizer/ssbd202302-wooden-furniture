@@ -72,6 +72,7 @@
   "account.lastFailedLogin": "Ostatnie nieudane logowanie",
   "account.failedLogins": "Nieudane logowania",
   "account.lastLoginIp": "IP ostatniego logowania",
+  "account.lastFailedLoginIp": "IP ostatniego nieudanego logowania",
   "account.edit": "Edytuj",
 
   "dialog.confirmation.title": "Potwierdzenie akcji",

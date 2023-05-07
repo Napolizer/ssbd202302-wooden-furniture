@@ -4,6 +4,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
@@ -49,6 +50,8 @@ public class AccountController {
   private AccountMapper accountMapper;
   @Inject
   private Principal principal;
+  @Inject
+  private HttpServletRequest servletRequest;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -223,7 +226,7 @@ public class AccountController {
   public Response login(@NotNull @Valid UserCredentialsDto userCredentialsDto) {
     var json = Json.createObjectBuilder();
     try {
-      String token = accountEndpoint.login(userCredentialsDto);
+      String token = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr());
       json.add("token", token);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
