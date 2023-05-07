@@ -18,7 +18,7 @@ export class AccountService {
 
   public retrieveOwnAccount(login: string): Observable<Account> {
     return this.httpClient.get<Account>(
-      `${environment.apiBaseUrl}/account/login/${login}`,
+      `${environment.apiBaseUrl}/account/self`,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,

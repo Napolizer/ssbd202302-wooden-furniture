@@ -18,6 +18,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +44,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 public class AccountController {
   @Inject
   private AccountEndpoint accountEndpoint;
+  @Inject
+  private Principal principal;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -73,9 +76,26 @@ public class AccountController {
   @GET
   @Path("/login/{login}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  @RolesAllowed("administrator")
   public Response getAccountByLogin(@PathParam("login") String login) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
+    if (accountOptional.isEmpty()) {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
+    }
+    AccountWithoutSensitiveDataDto account =
+        new AccountWithoutSensitiveDataDto(accountOptional.get());
+    return Response.ok(account).build();
+  }
+
+  @GET
+  @Path("/self")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  public Response getOwnAccountInformation() {
+    if (principal.getName() == null) {
+      return Response.status(403).build();
+    }
+    Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(principal.getName());
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
