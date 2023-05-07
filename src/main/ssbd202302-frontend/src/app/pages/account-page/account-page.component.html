@@ -4,20 +4,20 @@
     <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
       <mat-card class="profile-card">
         <mat-card-header>
-          <div mat-card-avatar class="profile-image"></div>
           <mat-card-title>{{account.login}}</mat-card-title>
+          <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="profile-container">
             <div class="row">
               <div class="entry">
-                <p class="title">ID</p>
-                <p class="content">{{account.id}}</p>
+                <p class="title">First Name</p>
+                <p class="content">{{account.firstName}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">Email</p>
-                <p class="content">{{account.email}}</p>
+                <p class="title">Last Name</p>
+                <p class="content">{{account.lastName}}</p>
                 <div class="border"></div>
               </div>
             </div>
@@ -32,6 +32,11 @@
                 <p class="content">{{account.accountState}}</p>
                 <div class="border"></div>
               </div>
+              <div class="entry" *ngIf="account.blockadeEnd">
+                <p class="title">Blockade End</p>
+                <p class="content">{{account.blockadeEnd}}</p>
+                <div class="border"></div>
+            </div>
             </div>
             <div class="row">
               <div class="entry">
@@ -42,6 +47,66 @@
               <div class="entry">
                 <p class="title">Groups</p>
                 <p class="content">{{account.groups?.join(',')}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">City</p>
+                <p class="content">{{account.address?.city ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Country</p>
+                <p class="content">{{account.address?.country ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Postal Code</p>
+                <p class="content">{{account.address?.postalCode ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Street Number</p>
+                <p class="content">{{account.address?.streetNumber ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Email</p>
+                <p class="content">{{account.email}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Street</p>
+                <p class="content">{{account.address?.street ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Last Login</p>
+                <p class="content">{{account.lastLogin ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Last Failed Login</p>
+                <p class="content">{{account.lastFailedLogin ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">Failed Logins</p>
+                <p class="content">{{account.failedLoginCounter ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">Last Login Ip</p>
+                <p class="content">{{account.lastLoginIpAddress ?? '-'}}</p>
                 <div class="border"></div>
               </div>
             </div>
