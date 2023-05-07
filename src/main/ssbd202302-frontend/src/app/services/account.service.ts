@@ -6,7 +6,6 @@ import { environment } from '../../environments/environment';
 import { TokenService } from './token.service';
 import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
-import {UserAccount} from "../interfaces/user.account";
 
 @Injectable({
   providedIn: 'root',
@@ -44,8 +43,8 @@ export class AccountService {
     })
   }
 
-  public retrieveAccount(id: string): Observable<UserAccount> {
-    return this.httpClient.get<UserAccount>(
+  public retrieveAccount(id: string): Observable<Account> {
+    return this.httpClient.get<Account>(
       `${environment.apiBaseUrl}/account/id/` + id,
       {
         headers: {

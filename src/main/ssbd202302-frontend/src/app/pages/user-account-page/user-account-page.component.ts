@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup} from "@angular/forms";
 import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
-import {UserAccount} from "../../interfaces/user.account";
 import {AccountService} from "../../services/account.service";
 import {AlertService} from "@full-fledged/alerts";
 import {AuthenticationService} from "../../services/authentication.service";
@@ -10,6 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {ActivatedRoute} from "@angular/router";
+import {Account} from "../../interfaces/account";
 
 @Component({
   selector: 'app-user-account-page',
@@ -40,7 +40,7 @@ export class UserAccountPageComponent implements OnInit {
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
-  account: Partial<UserAccount> = {};
+  account: Partial<Account> = {};
   loading = true;
 
   constructor(

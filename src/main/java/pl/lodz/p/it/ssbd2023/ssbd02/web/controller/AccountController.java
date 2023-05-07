@@ -49,8 +49,6 @@ public class AccountController {
   private AccountMapper accountMapper;
   @Inject
   private Principal principal;
-  @Inject
-  private AccountMapper accountMapper;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
