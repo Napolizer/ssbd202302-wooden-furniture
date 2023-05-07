@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { TokenService } from './token.service';
 import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
+import {UserAccount} from "../interfaces/user.account";
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,18 @@ export class AccountService {
       }
     })
   }
+
+  public retrieveAccount(id: string): Observable<UserAccount> {
+    return this.httpClient.get<UserAccount>(
+      `${environment.apiBaseUrl}/account/id` + id,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    )
+  }
+
 
   public confirm(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(

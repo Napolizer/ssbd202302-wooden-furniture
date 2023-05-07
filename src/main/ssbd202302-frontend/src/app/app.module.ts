@@ -37,6 +37,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     NotFoundPageComponent,
     ForbiddenPageComponent,
     ConfirmPageComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserAccountPageComponent
   ],
     imports: [
         BrowserModule,

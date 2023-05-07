@@ -28,7 +28,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   redirectToAccountPage(): void {
-    void this.navigationService.redirectToAccountPage();
+    void this.navigationService.redirectToOwnAccountPage();
   }
 
   redirectToLoginPage(): void {
