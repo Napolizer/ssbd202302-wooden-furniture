@@ -101,7 +101,7 @@ public class AccountController {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     AccountWithoutSensitiveDataDto account =
-        new AccountWithoutSensitiveDataDto(accountOptional.get());
+        accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
     return Response.ok(account).build();
   }
 

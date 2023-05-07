@@ -46,7 +46,7 @@ export class AccountService {
 
   public retrieveAccount(id: string): Observable<UserAccount> {
     return this.httpClient.get<UserAccount>(
-      `${environment.apiBaseUrl}/account/id` + id,
+      `${environment.apiBaseUrl}/account/id/` + id,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,
