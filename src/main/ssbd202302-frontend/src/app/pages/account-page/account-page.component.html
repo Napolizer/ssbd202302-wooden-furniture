@@ -4,51 +4,118 @@
     <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
       <mat-card class="profile-card">
         <mat-card-header>
-          <div mat-card-avatar class="profile-image"></div>
           <mat-card-title>{{account.login}}</mat-card-title>
+          <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="profile-container">
             <div class="row">
               <div class="entry">
-                <p class="title">ID</p>
-                <p class="content">{{account.id}}</p>
+                <p class="title">{{'account.firstName' | translate}}</p>
+                <p class="content">{{account.firstName}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">Email</p>
-                <p class="content">{{account.email}}</p>
+                <p class="title">{{'account.lastName' | translate}}</p>
+                <p class="content">{{account.lastName}}</p>
                 <div class="border"></div>
               </div>
             </div>
             <div class="row">
               <div class="entry">
-                <p class="title">Archive</p>
+                <p class="title">{{'account.archive' | translate}}</p>
                 <p class="content">{{account.archive}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">Account State</p>
+                <p class="title">{{'account.accountState' | translate}}</p>
                 <p class="content">{{account.accountState}}</p>
                 <div class="border"></div>
               </div>
             </div>
             <div class="row">
               <div class="entry">
-                <p class="title">Locale</p>
+                <p class="title">{{'account.locale' | translate}}</p>
                 <p class="content">{{account.locale}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">Groups</p>
+                <p class="title">{{'account.groups' | translate}}</p>
                 <p class="content">{{account.groups?.join(',')}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.city' | translate}}</p>
+                <p class="content">{{account.address?.city ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.city' | translate}}</p>
+                <p class="content">{{account.address?.country ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.postalCode' | translate}}</p>
+                <p class="content">{{account.address?.postalCode ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.streetNumber' | translate}}</p>
+                <p class="content">{{account.address?.streetNumber ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.email' | translate}}</p>
+                <p class="content">{{account.email}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.street' | translate}}</p>
+                <p class="content">{{account.address?.street ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.lastLogin' | translate}}</p>
+                <p class="content">{{account.lastLogin ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.lastFailedLogin' | translate}}</p>
+                <p class="content">{{account.lastFailedLogin ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.failedLogins' | translate}}</p>
+                <p class="content">{{account.failedLoginCounter ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.lastLoginIp' | translate}}</p>
+                <p class="content">{{account.lastLoginIpAddress ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row" *ngIf="account.blockadeEnd">
+              <div class="entry">
+                <p class="title">{{'account.blockadeEnd' | translate}}</p>
+                <p class="content">{{account.blockadeEnd}}</p>
                 <div class="border"></div>
               </div>
             </div>
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button color="primary">EDIT</button>
+          <button mat-raised-button color="primary">{{'account.edit' | translate}}</button>
         </mat-card-actions>
       </mat-card>
     </form>
