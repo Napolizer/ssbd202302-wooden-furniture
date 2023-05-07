@@ -38,6 +38,7 @@ public class MessageUtil {
             "exception.mok.account.address.already.assigned";
     public static final String ACCOUNT_NOT_FOUND = "exception.mok.account.not.found";
     public static final String ACCOUNT_NOT_ACTIVE = "exception.mok.account.not.active";
+    public static final String ACCOUNT_NOT_VERIFIED = "exception.mok.account.not.verified";
     public static final String ACCOUNT_EMAIL_ALREADY_EXISTS =
         "exception.mok.account.email.already.exists";
     public static final String ACCOUNT_CHANGE_STATE = "exception.mok.account.change.state";

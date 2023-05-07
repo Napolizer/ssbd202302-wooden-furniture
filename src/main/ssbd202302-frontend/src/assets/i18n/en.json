@@ -68,6 +68,7 @@
   "exception.mok.account.archive": "Account is archive",
   "exception.mok.account.blocked": "Account is blocked",
   "exception.mok.account.inactive": "Account is inactive",
+  "exception.mok.account.not.verified": "Account is not verified",
   "exception.mok.account.login.already.exists": "Account with given login already exists",
   "exception.mok.account.email.already.exists": "Account with given email already exists",
   "exception.general.database": "Database error occurred",

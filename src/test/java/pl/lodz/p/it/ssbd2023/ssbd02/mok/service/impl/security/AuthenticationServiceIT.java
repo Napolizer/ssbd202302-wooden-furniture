@@ -34,6 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotVerifiedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
@@ -112,7 +113,7 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
+  void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       String token = authenticationService.login(account.getLogin(), password);
       assertNotNull(token);
@@ -125,14 +126,14 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginDoesNotExist() {
+  void shouldFailToLoginIfAccountWithGivenLoginDoesNotExist() {
     assertThrows(InvalidCredentialsException.class, () -> {
       authenticationService.login("nonexistent", "nonexistent");
     });
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginIsInactive() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
+  void shouldFailToLoginIfAccountWithGivenLoginIsInactive() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     account.setAccountState(AccountState.INACTIVE);
     utx.begin();
     accountFacade.update(account);
@@ -141,7 +142,16 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginIsBlocked() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
+  void shouldFailToLoginIfAccountWithGivenLoginIsNotVerified() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
+    account.setAccountState(AccountState.NOT_VERIFIED);
+    utx.begin();
+    accountFacade.update(account);
+    utx.commit();
+    assertThrows(AccountNotVerifiedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
+  }
+
+  @Test
+  void shouldFailToLoginIfAccountWithGivenLoginIsBlocked() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     account.setAccountState(AccountState.BLOCKED);
     utx.begin();
     accountFacade.update(account);
@@ -150,7 +160,7 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldFailToLoginIfAccountWithGivenLoginIsArchived() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
+  void shouldFailToLoginIfAccountWithGivenLoginIsArchived() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     account.setArchive(true);
     utx.begin();
     accountFacade.update(account);
@@ -159,28 +169,28 @@ public class AuthenticationServiceIT {
   }
 
   @Test
-  public void shouldFailToLoginIfPasswordIsInvalid() {
+  void shouldFailToLoginIfPasswordIsInvalid() {
     assertThrows(InvalidCredentialsException.class, () -> {
       authenticationService.login(account.getLogin(), "invalid");
     });
   }
 
   @Test
-  public void shouldFailToLoginIfLoginIsNull() {
+  void shouldFailToLoginIfLoginIsNull() {
     assertThrows(InvalidCredentialsException.class, () -> {
       authenticationService.login(null, "invalid");
     });
   }
 
   @Test
-  public void shouldFailToLoginIfPasswordIsNull() {
+  void shouldFailToLoginIfPasswordIsNull() {
     assertThrows(InvalidCredentialsException.class, () -> {
       authenticationService.login(account.getLogin(), null);
     });
   }
 
   @Test
-  public void shouldCorrectlyIncrementCounter() throws Exception {
+  void shouldCorrectlyIncrementCounter() throws Exception {
     assertEquals(0, account.getFailedLoginCounter());
     assertThrows(InvalidCredentialsException.class, () -> {
       authenticationService.login(account.getLogin(), "wrongOne");
