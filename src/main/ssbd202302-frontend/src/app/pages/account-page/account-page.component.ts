@@ -40,13 +40,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
-  account: Partial<Account> = {
-    accountState: '',
-    email: '',
-    groups: [],
-    locale: '',
-    login: ''
-  };
+  account: Account;
   loading = true;
 
   constructor(
@@ -98,5 +92,18 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date | undefined): string {
     return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
+  }
+
+  getAccountState(): string {
+    switch(this.account.accountState.toUpperCase()) {
+      case 'BLOCKED': return 'account.state.blocked';
+      case 'INACTIVE': return 'account.state.inactive';
+      case 'NOT_VERIFIED': return 'account.state.notVerified';
+      default: return 'account.state.active';
+    }
+  }
+
+  getGroups(): string {
+    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
   }
 }
