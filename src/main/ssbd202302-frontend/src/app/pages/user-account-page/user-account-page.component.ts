@@ -10,6 +10,7 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {ActivatedRoute} from "@angular/router";
 import {Account} from "../../interfaces/account";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-user-account-page',
@@ -50,7 +51,8 @@ export class UserAccountPageComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private translate: TranslateService,
     private dialogService: DialogService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -81,11 +83,16 @@ export class UserAccountPageComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy.next(true);
+    this.destroy.unsubscribe();
+  }
+
   getFormAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  isBlocked(): boolean {
-    return true
+  formatDate(date: Date | undefined): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
   }
 }
