@@ -12,6 +12,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.AccountFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericFacadeExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
@@ -19,7 +20,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({
     GenericFacadeExceptionsInterceptor.class,
-    AccountFacadeExceptionsInterceptor.class
+    AccountFacadeExceptionsInterceptor.class,
+    LoggerInterceptor.class
 })
 public class AccountFacade extends AbstractFacade<Account> implements AccountFacadeOperations {
   @PersistenceContext(unitName = "ssbd02mokPU")
