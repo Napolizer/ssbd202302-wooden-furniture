@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -35,6 +36,24 @@ public class AccountControllerIT {
                    {
                        "login": "administrator",
                        "password": "Kochamssbd!"
+                   }
+            """)
+        .when()
+        .post("/account/login")
+        .then()
+        .statusCode(200)
+        .contentType("application/json")
+        .extract()
+        .path("token");
+  }
+
+  private String retrieveClientToken() {
+    return given()
+        .contentType("application/json")
+        .body("""
+                   {
+                       "login": "client",
+                       "password": "Kochamssbd!Client"
                    }
             """)
         .when()
@@ -817,6 +836,78 @@ public class AccountControllerIT {
           .statusCode(404)
           .contentType("application/json")
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+    }
+  }
+  @Nested
+  @Order(12)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+  class getOwnAccountInformation {
+    @Test
+    @Order(1)
+    void administratorShouldProperlyGetInformationAboutOwnAccount() {
+      given()
+          .header("Authorization", "Bearer " + retrieveAdminToken())
+          .when()
+          .get("/account/self")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("id", is(equalTo(retrieveAccountId("administrator"))))
+          .body("login", is(equalTo("administrator")))
+          .body("email", is(equalTo("admin@gmail.com")))
+          .body("firstName", is(equalTo("Jan")))
+          .body("lastName", is(equalTo("Kowalski")))
+          .body("archive", is(equalTo(false)))
+          .body("lastLogin", is(notNullValue()))
+          .body("lastFailedLogin", is(nullValue()))
+          .body("lastLoginIpAddress", is(notNullValue()))
+          .body("lastFailedLoginIpAddress", is(nullValue()))
+          .body("locale", is(equalTo("pl")))
+          .body("failedLoginCounter", is(equalTo(0)))
+          .body("blockadeEnd", is(nullValue()))
+          .body("accountState", is(equalTo("ACTIVE")))
+          .body("groups.size()", is(equalTo(1)))
+          .body("groups[0]", is(equalTo("ADMINISTRATOR")))
+          .body("address", is(notNullValue()))
+          .body("address.country", is(equalTo("Poland")))
+          .body("address.city", is(equalTo("Lodz")))
+          .body("address.street", is(equalTo("Aleje Testowe")))
+          .body("address.postalCode", is(equalTo("93-590")))
+          .body("address.streetNumber", is(equalTo(55)));
+    }
+
+    @Test
+    @Order(2)
+    void clientShouldProperlyGetInformationAboutOwnAccount() {
+      given()
+          .header("Authorization", "Bearer " + retrieveClientToken())
+          .when()
+          .get("/account/self")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("id", is(equalTo(retrieveAccountId("client"))))
+          .body("login", is(equalTo("client")))
+          .body("email", is(equalTo("adam.mickiewicz@gmail.com")))
+          .body("firstName", is(equalTo("Adam")))
+          .body("lastName", is(equalTo("Mickiewicz")))
+          .body("archive", is(equalTo(false)))
+          .body("lastLogin", is(notNullValue()))
+          .body("lastFailedLogin", is(nullValue()))
+          .body("lastLoginIpAddress", is(notNullValue()))
+          .body("lastFailedLoginIpAddress", is(nullValue()))
+          .body("locale", is(equalTo("pl")))
+          .body("failedLoginCounter", is(equalTo(0)))
+          .body("blockadeEnd", is(nullValue()))
+          .body("accountState", is(equalTo("ACTIVE")))
+          .body("groups.size()", is(equalTo(1)))
+          .body("groups[0]", is(equalTo("CLIENT")))
+          .body("address", is(notNullValue()))
+          .body("address.country", is(equalTo("Poland")))
+          .body("address.city", is(equalTo("Lodz")))
+          .body("address.street", is(equalTo("Przybyszewskiego")))
+          .body("address.postalCode", is(equalTo("93-116")))
+          .body("address.streetNumber", is(equalTo(13)));
     }
   }
 }

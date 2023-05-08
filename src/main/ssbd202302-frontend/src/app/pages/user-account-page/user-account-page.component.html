@@ -24,12 +24,12 @@
             <div class="row">
               <div class="entry">
                 <p class="title">{{'account.archive' | translate}}</p>
-                <p class="content">{{account.archive.toString() | translate}}</p>
+                <p class="content">{{account.archive}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
                 <p class="title">{{'account.accountState' | translate}}</p>
-                <p class="content">{{getAccountState() | translate}}</p>
+                <p class="content">{{account.accountState}}</p>
                 <div class="border"></div>
               </div>
             </div>
@@ -41,7 +41,7 @@
               </div>
               <div class="entry">
                 <p class="title">{{'account.groups' | translate}}</p>
-                <p class="content">{{getGroups() | translate}}</p>
+                <p class="content">{{account.groups?.join(',')}}</p>
                 <div class="border"></div>
               </div>
             </div>
@@ -52,7 +52,7 @@
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">{{'account.country' | translate}}</p>
+                <p class="title">{{'account.city' | translate}}</p>
                 <p class="content">{{account.address?.country ?? '-'}}</p>
                 <div class="border"></div>
               </div>
@@ -120,9 +120,10 @@
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
+          <button mat-raised-button color="primary">{{'account.edit' | translate}}</button>
         </mat-card-actions>
       </mat-card>
     </form>
   </div>
 </div>
+

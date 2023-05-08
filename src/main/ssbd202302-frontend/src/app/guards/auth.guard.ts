@@ -1,28 +1,31 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
 import {AlertService} from "@full-fledged/alerts";
 import {AuthenticationService} from "../services/authentication.service";
 import {TokenService} from "../services/token.service";
 import {NavigationService} from "../services/navigation.service";
 import { Group } from '../enums/group';
+import {TranslateService} from "@ngx-translate/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+
   constructor(
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private navigationService: NavigationService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private translate: TranslateService
   ) {}
 
   private displayAuthenticationWarning(): void {
-    this.alertService.warning('You are not authenticated');
+    this.alertService.warning(this.translate.instant('auth.not.authenticated'));
   }
 
   private displayTokenExpiredWarning(): void {
-    this.alertService.warning('Your token has expired');
+    this.alertService.warning(this.translate.instant('auth.token.expired'));
   }
 
   canActivate(

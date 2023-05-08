@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { TokenService } from './token.service';
 import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
+import {EditOwnAccount} from "../interfaces/edit.own.account";
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +44,18 @@ export class AccountService {
     })
   }
 
+  public retrieveAccount(id: string): Observable<Account> {
+    return this.httpClient.get<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    )
+  }
+
+
   public confirm(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(
       `${environment.apiBaseUrl}/account/confirm?token=${token}`,
@@ -63,6 +76,14 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/reset-password?token=${token}`,
       password,
       { observe: 'response' }
+    );
+  }
+
+  public editOwnAccount(login: string, account: EditOwnAccount): Observable<EditOwnAccount> {
+    console.log("elo")
+    return this.httpClient.put<EditOwnAccount>(
+      `${environment.apiBaseUrl}/account/login/` + login + `/editOwnAccount`,
+      account
     );
   }
 }
