@@ -8,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -446,5 +447,16 @@ public class AccountFacadeOperationsIT {
   @Test
   public void failsToGetAccountByEmailWhenAccountDoesNotExist() {
     assertThrows(EJBException.class, () -> accountFacadeOperations.findByEmail("email"));
+  }
+
+  @Test
+  public void properlyDeletesAccount() throws Exception {
+    utx.begin();
+    assertEquals(0, accountFacadeOperations.findAll().size());
+    accountFacadeOperations.create(account);
+    assertEquals(1, accountFacadeOperations.findAll().size());
+    accountFacadeOperations.delete(account);
+    assertEquals(0, accountFacadeOperations.findAll().size());
+    utx.commit();
   }
 }

@@ -1,16 +1,17 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginPageComponent} from "./pages/login-page/login-page.component";
 import {HomePageComponent} from "./pages/home-page/home-page.component";
-import { RegisterPageComponent } from './pages/register-page/register-page.component';
+import {RegisterPageComponent} from './pages/register-page/register-page.component';
 import {AccountPageComponent} from "./pages/account-page/account-page.component";
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
 import {Group} from "./enums/group";
 import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
-import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
-import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component';
+import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
+import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
 
 const routes: Routes = [
@@ -32,7 +33,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'account',
+    path: 'self',
     component: AccountPageComponent,
     canActivate: [AuthGuard],
     data: {
@@ -81,6 +82,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       groups: [Group.GUEST]
+    }
+  },
+  {
+    path: 'account/:id',
+    component: UserAccountPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
     }
   },
   {

@@ -1,20 +1,21 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AccountService} from "../../services/account.service";
-import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
-import {FormControl, FormGroup} from "@angular/forms";
-import {Account} from "../../interfaces/account";
+import { Component, OnInit } from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {FormControl, FormGroup} from "@angular/forms";
+import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
+import {AccountService} from "../../services/account.service";
 import {AlertService} from "@full-fledged/alerts";
+import {AuthenticationService} from "../../services/authentication.service";
 import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
-import {AuthenticationService} from "../../services/authentication.service";
+import {ActivatedRoute} from "@angular/router";
+import {Account} from "../../interfaces/account";
 import {DatePipe} from "@angular/common";
 
 @Component({
-  selector: 'app-account-page',
-  templateUrl: './account-page.component.html',
-  styleUrls: ['./account-page.component.sass'],
+  selector: 'app-user-account-page',
+  templateUrl: './user-account-page.component.html',
+  styleUrls: ['./user-account-page.component.sass'],
   animations: [
     trigger('loadedUnloadedForm', [
       state('loaded', style({
@@ -35,26 +36,27 @@ import {DatePipe} from "@angular/common";
     ]),
   ]
 })
-export class AccountPageComponent implements OnInit, OnDestroy {
+export class UserAccountPageComponent implements OnInit {
   accountForm = new FormGroup({
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
-  account: Account;
+  account: Partial<Account> = {};
   loading = true;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private accountService: AccountService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private datePipe: DatePipe,
     private translate: TranslateService,
     private dialogService: DialogService,
-    private navigationService: NavigationService
-  ) {}
+    private navigationService: NavigationService,
+    private datePipe: DatePipe
+  ) { }
 
   ngOnInit(): void {
-    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
+    this.accountService.retrieveAccount(this.activatedRoute.snapshot.paramMap.get('id') || '')
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: account => {
@@ -92,22 +94,5 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date | undefined): string {
     return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
-  }
-
-  getAccountState(): string {
-    switch(this.account.accountState.toUpperCase()) {
-      case 'BLOCKED': return 'account.state.blocked';
-      case 'INACTIVE': return 'account.state.inactive';
-      case 'NOT_VERIFIED': return 'account.state.notVerified';
-      default: return 'account.state.active';
-    }
-  }
-
-  getGroups(): string {
-    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
-  }
-
-  onEditClicked(): void {
-    this.navigationService.redirectToEditOwnAccountPage();
   }
 }
