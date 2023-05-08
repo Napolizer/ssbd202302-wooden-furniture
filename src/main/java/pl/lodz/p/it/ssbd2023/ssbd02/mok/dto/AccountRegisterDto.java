@@ -50,4 +50,13 @@ public class AccountRegisterDto {
 
   @Locale
   private String locale;
+
+  @Override
+  public String toString() {
+    return "AccountRegisterDto{" +
+            "login='" + login + '\'' +
+            ", email='" + email + '\'' +
+            ", locale='" + locale + '\'' +
+            '}';
+  }
 }

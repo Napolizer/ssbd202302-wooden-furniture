@@ -30,7 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -45,7 +45,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Path("/account")
-//@Interceptors({LoggerInterceptor.class})
+@Interceptors({SimpleLoggerInterceptor.class})
 public class AccountController {
   @Inject
   private AccountEndpoint accountEndpoint;

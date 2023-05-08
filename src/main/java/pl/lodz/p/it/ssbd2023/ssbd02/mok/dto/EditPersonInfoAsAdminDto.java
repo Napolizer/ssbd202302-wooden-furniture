@@ -27,4 +27,11 @@ public class EditPersonInfoAsAdminDto {
   private Integer streetNumber;
   @Email
   private String email;
+
+  @Override
+  public String toString() {
+    return "EditPersonInfoAsAdminDto{" +
+            "email='" + email + '\'' +
+            '}';
+  }
 }

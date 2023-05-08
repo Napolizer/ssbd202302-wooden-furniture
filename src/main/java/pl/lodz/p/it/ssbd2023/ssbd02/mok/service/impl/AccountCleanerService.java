@@ -10,6 +10,7 @@ import jakarta.ejb.TimerService;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,11 +18,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors(SimpleLoggerInterceptor.class)
 public class AccountCleanerService {
   private long timeout;
   @Resource
