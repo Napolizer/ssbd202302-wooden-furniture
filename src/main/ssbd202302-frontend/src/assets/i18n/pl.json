@@ -68,10 +68,11 @@
   "account.streetNumber": "Numer Ulicy",
   "account.email": "Email",
   "account.street": "Ulica",
-  "account.lastLogin": "Ostatnie nieudane logowanie",
+  "account.lastLogin": "Ostatnie logowanie",
   "account.lastFailedLogin": "Ostatnie nieudane logowanie",
   "account.failedLogins": "Nieudane logowania",
   "account.lastLoginIp": "IP ostatniego logowania",
+  "account.lastFailedLoginIp": "IP ostatniego nieudanego logowania",
   "account.edit": "Edytuj",
 
   "dialog.confirmation.title": "Potwierdzenie akcji",

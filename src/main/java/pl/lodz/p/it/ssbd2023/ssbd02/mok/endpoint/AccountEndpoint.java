@@ -65,9 +65,9 @@ public class AccountEndpoint {
     return accountService.getAccountList();
   }
 
-  public String login(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
+  public String login(UserCredentialsDto userCredentialsDto, String ip) throws AuthenticationException {
     return authenticationService.login(userCredentialsDto.getLogin(),
-        userCredentialsDto.getPassword());
+        userCredentialsDto.getPassword(), ip);
   }
 
   public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {

@@ -115,7 +115,7 @@ public class AuthenticationServiceIT {
   @Test
   void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
-      String token = authenticationService.login(account.getLogin(), password);
+      String token = authenticationService.login(account.getLogin(), password, "127.0.0.1");
       assertNotNull(token);
       utx.begin();
       List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
@@ -128,7 +128,7 @@ public class AuthenticationServiceIT {
   @Test
   void shouldFailToLoginIfAccountWithGivenLoginDoesNotExist() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login("nonexistent", "nonexistent");
+      authenticationService.login("nonexistent", "nonexistent", "127.0.0.1");
     });
   }
 
@@ -138,7 +138,7 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountIsInactiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
+    assertThrows(AccountIsInactiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1"));
   }
 
   @Test
@@ -147,7 +147,7 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountNotVerifiedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
+    assertThrows(AccountNotVerifiedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1"));
   }
 
   @Test
@@ -156,7 +156,7 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountBlockedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
+    assertThrows(AccountBlockedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1"));
   }
 
   @Test
@@ -165,27 +165,27 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountArchiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword()));
+    assertThrows(AccountArchiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1"));
   }
 
   @Test
   void shouldFailToLoginIfPasswordIsInvalid() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(account.getLogin(), "invalid");
+      authenticationService.login(account.getLogin(), "invalid", "127.0.0.1");
     });
   }
 
   @Test
   void shouldFailToLoginIfLoginIsNull() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(null, "invalid");
+      authenticationService.login(null, "invalid", "127.0.0.1");
     });
   }
 
   @Test
   void shouldFailToLoginIfPasswordIsNull() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(account.getLogin(), null);
+      authenticationService.login(account.getLogin(), null, "127.0.0.1");
     });
   }
 
@@ -193,7 +193,7 @@ public class AuthenticationServiceIT {
   void shouldCorrectlyIncrementCounter() throws Exception {
     assertEquals(0, account.getFailedLoginCounter());
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(account.getLogin(), "wrongOne");
+      authenticationService.login(account.getLogin(), "wrongOne", "127.0.0.1");
     });
     utx.begin();
     Account refreshedAccount = accountFacade.findById(account.getId())

@@ -9,6 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-account-page',
@@ -52,6 +53,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
+    private datePipe: DatePipe,
     private translate: TranslateService,
     private dialogService: DialogService,
     private navigationService: NavigationService
@@ -92,5 +94,9 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   getFormAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
+  }
+
+  formatDate(date: Date | undefined): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
   }
 }

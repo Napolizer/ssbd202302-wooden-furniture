@@ -29,6 +29,7 @@ public class AccountWithoutSensitiveDataDto {
   private LocalDateTime lastLogin;
   private LocalDateTime lastFailedLogin;
   private String lastLoginIpAddress;
+  private String lastFailedLoginIpAddress;
   @NotNull
   private String locale;
   @NotNull
