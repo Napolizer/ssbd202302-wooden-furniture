@@ -106,4 +106,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   getGroups(): string {
     return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
   }
+
+  onEditClicked(): void {
+    this.navigationService.redirectToEditOwnAccountPage();
+  }
 }

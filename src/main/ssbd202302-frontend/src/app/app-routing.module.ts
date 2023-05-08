@@ -12,6 +12,7 @@ import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.comp
 import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component';
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
+import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
 
 const routes: Routes = [
   {
@@ -34,6 +35,14 @@ const routes: Routes = [
   {
     path: 'self',
     component: AccountPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
+    path: 'edit-own-account',
+    component: EditOwnAccountComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
