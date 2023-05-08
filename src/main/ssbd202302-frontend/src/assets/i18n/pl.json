@@ -57,7 +57,7 @@
   "account.confirmation.success": "Twoje konto zostało zweryfikowane i możesz się zalogować",
   "account.firstName": "Imię",
   "account.lastName": "Nazwisko",
-  "account.archive": "Archiwalny",
+  "account.archive": "Archiwalne",
   "account.accountState": "Stan konta",
   "account.blockadeEnd": "Koniec blokady",
   "account.locale": "Język",
@@ -74,6 +74,10 @@
   "account.lastLoginIp": "IP ostatniego logowania",
   "account.lastFailedLoginIp": "IP ostatniego nieudanego logowania",
   "account.edit": "Edytuj",
+  "account.state.active": "Aktywne",
+  "account.state.blocked": "Zablokowane",
+  "account.state.notVerified": "Nie zweryfikowane",
+  "account.state.inactive": "Nieaktywne",
 
   "dialog.confirmation.title": "Potwierdzenie akcji",
   "dialog.confirmation.action": "Potwierdź",
@@ -99,5 +103,27 @@
   "exception.expired.account.confirmation.link": "Link weryfikacyjny wygasł i twoje konto zostało usunięte",
   "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
   "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
-  "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie"
+  "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie",
+
+  "group.administrator": "Administrator",
+  "group.employee": "Pracownik",
+  "group.sales_rep": "Reprezentant Handlowy",
+  "group.client": "Klient",
+  "group.guest": "Gość",
+
+  "toolbar.adminPanel": "Panel Administracyjny",
+  "toolbar.myAccount": "Moje konto",
+  "toolbar.logout": "Wyloguj",
+  "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
+
+  "auth.token.expired": "Twój token wygasł",
+  "auth.not.authenticated": "Nie jesteś zalogowany",
+
+  "notfound.title": "Nie znaleziono strony",
+  "notfound.description": "Strona którą próbujesz odwiedzić nie istnieje...",
+  "notfound.button": "Wróć",
+  "notfound.oops": "Ups!",
+
+  "false": "nie",
+  "true": "tak"
 }

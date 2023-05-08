@@ -4,7 +4,7 @@
   </button>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAdminPage()">
-      <mat-icon>admin_panel_settings</mat-icon><span>Admin Panel</span>
+      <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>
     </button>
   </mat-menu>
   <span class="toolbar-right title">SSBD</span>
@@ -15,14 +15,11 @@
   </button>
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAccountPage()">
-      <mat-icon>person</mat-icon><span>My Account</span>
-    </button>
-    <button mat-menu-item routerLink="#">
-      <mat-icon>settings</mat-icon><span>Settings</span>
+      <mat-icon>person</mat-icon><span>{{'toolbar.myAccount' | translate}}</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="#" (click)="logout()">
-      <mat-icon>exit_to_app</mat-icon>Logout
+      <mat-icon>exit_to_app</mat-icon>{{'toolbar.logout' | translate}}
     </button>
   </mat-menu>
 </mat-toolbar>
