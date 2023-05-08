@@ -38,6 +38,7 @@ import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.com
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {DatePipe} from "@angular/common";
+import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import {DatePipe} from "@angular/common";
     NotFoundPageComponent,
     ForbiddenPageComponent,
     ConfirmPageComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    EditOwnAccountComponent
   ],
     imports: [
         BrowserModule,

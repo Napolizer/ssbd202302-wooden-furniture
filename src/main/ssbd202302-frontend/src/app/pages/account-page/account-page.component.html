@@ -120,7 +120,7 @@
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button color="primary">{{'account.edit' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
         </mat-card-actions>
       </mat-card>
     </form>

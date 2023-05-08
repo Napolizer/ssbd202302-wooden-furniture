@@ -38,6 +38,10 @@ export class NavigationService {
     return this.router.navigate(['/forbidden']);
   }
 
+  public redirectToEditOwnAccountPage(): Promise<boolean> {
+    return this.router.navigate(['/edit-own-account']);
+  }
+
   public isCurrentlyOnLoginPage(): boolean {
     return this.router.url === '/login';
   }

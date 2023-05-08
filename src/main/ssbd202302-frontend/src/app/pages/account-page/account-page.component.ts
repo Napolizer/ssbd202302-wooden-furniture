@@ -99,4 +99,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   formatDate(date: Date | undefined): string {
     return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
   }
+
+  onEditClicked(): void {
+    this.navigationService.redirectToEditOwnAccountPage();
+  }
 }
