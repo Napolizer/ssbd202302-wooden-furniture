@@ -31,6 +31,8 @@ public class AccountService {
   private MailService mailService;
   @Inject
   private TokenService tokenService;
+  @Inject
+  private CleanerService cleanerService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -110,8 +112,9 @@ public class AccountService {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
-    accountFacade.create(account);
+    Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
+    cleanerService.deleteAccountAfterTimeout(persistedAccount);
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());
