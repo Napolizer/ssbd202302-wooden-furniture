@@ -18,8 +18,12 @@ export class NavigationService {
     return this.router.navigate(['/admin']);
   }
 
-  public redirectToAccountPage(): Promise<boolean> {
-    return this.router.navigate(['/account']);
+  public redirectToOwnAccountPage(): Promise<boolean> {
+    return this.router.navigate(['/self']);
+  }
+
+  public redirectToAccountPage(id: string): Promise<boolean> {
+    return this.router.navigate(['account/' + id])
   }
 
   public redirectToLoginPage(): Promise<boolean> {

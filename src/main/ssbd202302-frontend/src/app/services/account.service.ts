@@ -43,6 +43,18 @@ export class AccountService {
     })
   }
 
+  public retrieveAccount(id: string): Observable<Account> {
+    return this.httpClient.get<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    )
+  }
+
+
   public confirm(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(
       `${environment.apiBaseUrl}/account/confirm?token=${token}`,
