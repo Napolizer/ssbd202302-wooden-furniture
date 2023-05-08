@@ -32,7 +32,7 @@ public class AccountService {
   @Inject
   private TokenService tokenService;
   @Inject
-  private CleanerService cleanerService;
+  private AccountCleanerService accountCleanerService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -114,7 +114,7 @@ public class AccountService {
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
-    cleanerService.deleteAccountAfterTimeout(persistedAccount);
+    accountCleanerService.deleteAccountAfterTimeout(account.getLogin());
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());

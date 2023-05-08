@@ -8,8 +8,6 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @EqualsAndHashCode
 @SuperBuilder
-public abstract class AbstractEntity implements Serializable {
+public abstract class AbstractEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;

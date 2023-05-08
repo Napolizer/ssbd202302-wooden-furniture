@@ -32,6 +32,8 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC3 = "mok.email.account.confirmation.topic3";
     public static final String EMAIL_ACCOUNT_REMOVED_SUBJECT = "mok.email.account.removed.subject";
     public static final String EMAIL_ACCOUNT_REMOVED_MESSAGE = "mok.email.account.removed.message";
+    public static final String EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT = "mok.email.account.removed.reminder.subject";
+    public static final String EMAIL_ACCOUNT_REMOVED_REMINDER_MESSAGE = "mok.email.account.removed.reminder.message";
     public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED =
         "exception.mok.account.access.level.already.assigned";
     public static final String ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED =

@@ -76,6 +76,13 @@ public class MailService {
     );
   }
 
+  public void sendEmailRemindingToConfirmAccount(String to, String locale) throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_MESSAGE)
+    );
+  }
+
   public void sendMail(String to, String subject, String message) throws MessagingException {
     Session session = getSession();
 
