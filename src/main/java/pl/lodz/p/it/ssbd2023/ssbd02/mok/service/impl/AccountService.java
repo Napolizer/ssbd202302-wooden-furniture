@@ -25,8 +25,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({
-        GenericServiceExceptionsInterceptor.class,
-        LoggerInterceptor.class
+    GenericServiceExceptionsInterceptor.class,
+    LoggerInterceptor.class
 })
 public class AccountService {
   @Inject

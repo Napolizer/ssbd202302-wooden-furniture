@@ -53,10 +53,10 @@ public class AccountRegisterDto {
 
   @Override
   public String toString() {
-    return "AccountRegisterDto{" +
-            "login='" + login + '\'' +
-            ", email='" + email + '\'' +
-            ", locale='" + locale + '\'' +
-            '}';
+    return "AccountRegisterDto{"
+            + "login='" + login + '\''
+            + ", email='" + email + '\''
+            + ", locale='" + locale + '\''
+            + '}';
   }
 }

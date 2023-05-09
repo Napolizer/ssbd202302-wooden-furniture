@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.interceptors;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
