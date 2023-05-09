@@ -99,4 +99,16 @@ export class AccountService {
       }
     );
   }
+
+  public removeAccountGroup(id: string, accountGroup: string): Observable<Account> {
+    console.log("usuwam")
+    return this.httpClient.delete<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
+  }
 }

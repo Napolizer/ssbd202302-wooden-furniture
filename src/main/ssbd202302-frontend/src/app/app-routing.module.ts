@@ -13,7 +13,8 @@ import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component'
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
-import {AccountGroupComponent} from "./pages/account-group/account-group.component";
+import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
+import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
 
 const routes: Routes = [
   {
@@ -99,7 +100,15 @@ const routes: Routes = [
   },
   {
     path:'account-group-add/:id',
-    component: AccountGroupComponent,
+    component: AddAccountGroupComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
+    }
+  },
+  {
+    path:'account-group-remove/:id',
+    component:RemoveAccountGroupPageComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.ADMINISTRATOR]

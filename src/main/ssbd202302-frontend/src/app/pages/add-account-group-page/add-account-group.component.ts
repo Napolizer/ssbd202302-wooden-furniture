@@ -16,8 +16,8 @@ import {Group} from "../../enums/group";
 
 @Component({
   selector: 'account-group-add',
-  templateUrl: './account-group.component.html',
-  styleUrls: ['./account-group.component.sass'],
+  templateUrl: './add-account-group.component.html',
+  styleUrls: ['./add-account-group.component.sass'],
   animations: [
     trigger('loadedUnloadedList', [
       state('loaded', style({
@@ -38,7 +38,7 @@ import {Group} from "../../enums/group";
     ]),
   ]
 })
-export class AccountGroupComponent implements OnInit {
+export class AddAccountGroupComponent implements OnInit {
 
   accountForm = new FormGroup({
     login: new FormControl({value: '', disabled: true})
@@ -49,8 +49,7 @@ export class AccountGroupComponent implements OnInit {
   groups: string[] = [Group.ADMINISTRATOR,
     Group.EMPLOYEE,
     Group.SALES_REP,
-    Group.CLIENT,
-    Group.GUEST]
+    Group.CLIENT]
   id = '';
   loading = true;
 

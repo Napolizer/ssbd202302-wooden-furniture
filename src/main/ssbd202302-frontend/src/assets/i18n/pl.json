@@ -79,7 +79,9 @@
   "account.state.notVerified": "Nie zweryfikowane",
   "account.state.inactive": "Nieaktywne",
   "account.addgroup": "Dodaj grupę",
+  "account.removegroup": "Usuń grupę",
   "account.addgroup.success": "Grupa została pomyślnie dodana",
+  "account.removegroup.success": "Grupa została pomyślnie usunięta",
 
   "edit.account": "Edytuj konto",
   "edit.account.field.required": "To pole jest wymagane",
@@ -129,6 +131,7 @@
   "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie",
   "exception.mok.account.access.level": "Wyjatek accesslevel",
   "exception.mok.account.access.level.already.assigned": "Wybrana grupa jest juz przypisana do użytkownika",
+  "exception.mok.account.access.level.not.assigned": "Nie można usunąć grupy, która nie jest przypisana do użytkownika",
 
   "group.administrator": "Administrator",
   "group.employee": "Pracownik",

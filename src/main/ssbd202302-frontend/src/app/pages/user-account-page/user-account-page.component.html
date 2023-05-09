@@ -6,7 +6,8 @@
         <mat-card-header>
           <mat-card-title>{{account.login}}</mat-card-title>
           <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
-          <button mat-raised-button color="primary" (click)="redirectToAccountGroupsPage()">{{'account.addgroup' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToAddAccountGroupsPage()">{{'account.addgroup' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToRemoveAccountGroupsPage()">{{'account.removegroup' | translate}}</button>
         </mat-card-header>
         <mat-card-content>
           <div class="profile-container">
