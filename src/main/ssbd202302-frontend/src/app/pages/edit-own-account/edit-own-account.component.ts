@@ -7,7 +7,7 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup} from "@angular/forms";
-import {EditOwnAccount} from "../../interfaces/edit.own.account";
+import {EditAccount} from "../../interfaces/edit.account";
 import {AlertService} from "@full-fledged/alerts";
 
 @Component({
@@ -46,7 +46,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
   });
   destroy = new Subject<boolean>();
   loading = true;
-  editableAccount : EditOwnAccount = {
+  editableAccount : EditAccount = {
     firstName: '',
     lastName: '',
     country: '',

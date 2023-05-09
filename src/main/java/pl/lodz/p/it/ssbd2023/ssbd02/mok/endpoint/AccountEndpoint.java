@@ -14,7 +14,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -99,9 +98,9 @@ public class AccountEndpoint {
   }
 
   public void editAccountInfoAsAdmin(String login,
-                                     EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+                                     EditPersonInfoDto editPersonInfoDto) {
     accountService.editAccountInfoAsAdmin(login,
-        DtoToEntityMapper.mapEditPersonInfoAsAdminDtoToAccount(editPersonInfoAsAdminDto));
+        DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto));
   }
 
   public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {

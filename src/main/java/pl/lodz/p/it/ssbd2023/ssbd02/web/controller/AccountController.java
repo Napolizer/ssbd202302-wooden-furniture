@@ -36,7 +36,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -244,13 +243,13 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("administrator")
   public Response editAccountAsAdmin(@PathParam("login") String login,
-                                     @NotNull @Valid EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
+                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     accountEndpoint.editAccountInfoAsAdmin(login,
-        editPersonInfoAsAdminDto);
-    return Response.ok(editPersonInfoAsAdminDto).build();
+        editPersonInfoDto);
+    return Response.ok(editPersonInfoDto).build();
   }
 
   @PATCH

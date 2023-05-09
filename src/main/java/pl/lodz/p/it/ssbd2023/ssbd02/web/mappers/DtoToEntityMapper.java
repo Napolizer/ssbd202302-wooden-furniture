@@ -14,7 +14,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoAsAdminDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 
 public final class DtoToEntityMapper {
@@ -54,27 +53,6 @@ public final class DtoToEntityMapper {
 
     return account;
   }
-
-  public static Account mapEditPersonInfoAsAdminDtoToAccount(
-      EditPersonInfoAsAdminDto editPersonInfoAsAdminDto) {
-    Address address = Address.builder()
-        .country(editPersonInfoAsAdminDto.getCountry())
-        .city(editPersonInfoAsAdminDto.getCity())
-        .street(editPersonInfoAsAdminDto.getStreet())
-        .postalCode(editPersonInfoAsAdminDto.getPostalCode())
-        .streetNumber(editPersonInfoAsAdminDto.getStreetNumber()).build();
-
-    Person person = Person.builder()
-        .firstName(editPersonInfoAsAdminDto.getFirstName())
-        .lastName(editPersonInfoAsAdminDto.getLastName())
-        .address(address).build();
-
-    return Account.builder()
-        .email(editPersonInfoAsAdminDto.getEmail())
-        .person(person)
-        .build();
-  }
-
 
   public static Account mapEditPersonInfoDtoToAccount(EditPersonInfoDto editPersonInfoDto) {
     Address address = Address.builder()
