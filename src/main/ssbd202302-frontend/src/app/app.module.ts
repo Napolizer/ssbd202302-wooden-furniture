@@ -40,6 +40,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 import {DatePipe} from "@angular/common";
 import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
+import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edit-user-account-page.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-accou
     ConfirmPageComponent,
     ResetPasswordComponent,
     UserAccountPageComponent,
-    EditOwnAccountComponent
+    EditOwnAccountComponent,
+    EditUserAccountPageComponent
   ],
     imports: [
         BrowserModule,
