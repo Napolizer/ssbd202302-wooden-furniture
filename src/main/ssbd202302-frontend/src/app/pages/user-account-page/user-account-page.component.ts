@@ -43,6 +43,7 @@ export class UserAccountPageComponent implements OnInit {
   destroy = new Subject<boolean>();
   account: Account;
   loading = true;
+  id = ''
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,7 +57,8 @@ export class UserAccountPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.accountService.retrieveAccount(this.activatedRoute.snapshot.paramMap.get('id') || '')
+    this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
+    this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: account => {
@@ -110,6 +112,6 @@ export class UserAccountPageComponent implements OnInit {
   }
 
   onEditClicked(): void {
-
+    this.navigationService.redirectToEditUserAccountPage(this.id);
   }
 }
