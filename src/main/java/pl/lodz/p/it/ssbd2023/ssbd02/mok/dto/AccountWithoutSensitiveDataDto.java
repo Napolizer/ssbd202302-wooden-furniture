@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Login;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
@@ -21,8 +22,10 @@ public class AccountWithoutSensitiveDataDto {
   @Email
   private String email;
   @Capitalized
+  @ToString.Exclude
   private String firstName;
   @Capitalized
+  @ToString.Exclude
   private String lastName;
   @NotNull
   private Boolean archive;
@@ -42,5 +45,8 @@ public class AccountWithoutSensitiveDataDto {
   private List<String> groups;
   @NotNull
   @Valid
+  @ToString.Exclude
   private AddressDto address;
+
+
 }

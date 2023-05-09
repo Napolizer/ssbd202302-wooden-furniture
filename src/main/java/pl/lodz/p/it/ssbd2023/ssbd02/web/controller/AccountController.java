@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -43,6 +45,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Path("/account")
+@Interceptors({SimpleLoggerInterceptor.class})
 public class AccountController {
   @Inject
   private AccountEndpoint accountEndpoint;

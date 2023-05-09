@@ -14,10 +14,8 @@ import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -50,13 +48,16 @@ public class Account extends AbstractEntity {
   private String login;
 
   @Column(nullable = false)
+  @ToString.Exclude
   private String password;
 
   @Column(unique = true, nullable = false)
+  @ToString.Exclude
   private String email;
 
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "person_id", unique = true, nullable = false)
+  @ToString.Exclude
   private Person person;
 
   @Column(name = "last_login")
@@ -91,6 +92,7 @@ public class Account extends AbstractEntity {
 
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
   @Builder.Default
+  @ToString.Exclude
   private List<Order> orders = new ArrayList<>();
 
   //    private String newEmail;
