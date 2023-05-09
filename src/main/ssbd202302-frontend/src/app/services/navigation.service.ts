@@ -46,6 +46,10 @@ export class NavigationService {
     return this.router.navigate(['/edit-own-account']);
   }
 
+  public redirectToAccountGroupsPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-group-add/' + id]);
+  }
+
   public isCurrentlyOnLoginPage(): boolean {
     return this.router.url === '/login';
   }

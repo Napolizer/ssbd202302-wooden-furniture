@@ -134,7 +134,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy))
           .subscribe(msg => {
             this.alertService.success(msg)
-            this.navigationService.redirectToAccountPage()
+            this.navigationService.redirectToOwnAccountPage()
           });
       });
     this.loading = false

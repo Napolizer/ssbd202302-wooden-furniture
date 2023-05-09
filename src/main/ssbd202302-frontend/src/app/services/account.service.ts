@@ -86,4 +86,17 @@ export class AccountService {
       account
     );
   }
+
+  public addAccountGroup(id: string,accountGroup: string): Observable<Account> {
+    console.log("eloelo")
+    return this.httpClient.put<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
+  }
 }

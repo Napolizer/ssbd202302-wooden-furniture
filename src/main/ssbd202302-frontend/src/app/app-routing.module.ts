@@ -13,6 +13,7 @@ import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component'
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
+import {AccountGroupComponent} from "./pages/account-group/account-group.component";
 
 const routes: Routes = [
   {
@@ -95,6 +96,14 @@ const routes: Routes = [
   {
     path: 'not-found',
     component: NotFoundPageComponent
+  },
+  {
+    path:'account-group-add/:id',
+    component: AccountGroupComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
+    }
   },
   // IMPORTANT: this route must be the last one
   {
