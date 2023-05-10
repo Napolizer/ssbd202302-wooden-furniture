@@ -29,7 +29,7 @@ public final class CryptHashUtils {
         .verify(Long.toString(version).toCharArray(), hash.toCharArray()).verified;
   }
 
-  public static String getSecretKeyForPasswordResetToken(String input) {
+  public static String getSecretKeyForEmailToken(String input) {
     MessageDigest md;
     try {
       md = MessageDigest.getInstance("SHA-256");

@@ -30,6 +30,7 @@ public class TokenService {
   private static final Long EXPIRATION_AUTHORIZATION = 900000L; // 15 minutes
   private static final Long EXPIRATION_ACCOUNT_CONFIRMATION = 86400000L; // 24 hours
   private static final Long EXPIRATION_PASSWORD_RESET = 1200000L; // 20 minutes
+  private static final Long EXPIRATION_CHANGE_EMAIL = 1200000L; // 20 minutes
 
   public String generateToken(Account account) {
     long now = System.currentTimeMillis();
@@ -71,11 +72,13 @@ public class TokenService {
     long now = System.currentTimeMillis();
     String secret = switch (tokenType) {
       case ACCOUNT_CONFIRMATION -> SECRET_KEY;
-      case PASSWORD_RESET -> CryptHashUtils.getSecretKeyForPasswordResetToken(account.getPassword());
+      case PASSWORD_RESET -> CryptHashUtils.getSecretKeyForEmailToken(account.getPassword());
+      case CHANGE_EMAIL -> CryptHashUtils.getSecretKeyForEmailToken(account.getEmail());
     };
     Long expiration = switch (tokenType) {
       case ACCOUNT_CONFIRMATION -> EXPIRATION_ACCOUNT_CONFIRMATION;
       case PASSWORD_RESET -> EXPIRATION_PASSWORD_RESET;
+      case CHANGE_EMAIL -> EXPIRATION_CHANGE_EMAIL;
     };
     var builder = Jwts.builder()
             .setSubject(account.getLogin())
@@ -86,37 +89,36 @@ public class TokenService {
     return builder.compact();
   }
 
-  public String validateAccountVerificationToken(String token) {
+  public String validateEmailToken(String token, TokenType tokenType, String key) {
     Claims claims;
     try {
-      claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+      switch (tokenType) {
+        case ACCOUNT_CONFIRMATION ->
+                claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        case PASSWORD_RESET, CHANGE_EMAIL ->
+                claims = Jwts.parser().setSigningKey(CryptHashUtils.getSecretKeyForEmailToken(key))
+                  .parseClaimsJws(token).getBody();
+        default -> throw ApplicationExceptionFactory.createInvalidLinkException();
+      }
     } catch (ExpiredJwtException eje) {
-      throw ApplicationExceptionFactory.createAccountConfirmationExpiredLinkException();
+      switch (tokenType) {
+        case ACCOUNT_CONFIRMATION ->
+                throw ApplicationExceptionFactory.createAccountConfirmationExpiredLinkException();
+        case PASSWORD_RESET ->
+                throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+        case CHANGE_EMAIL ->
+                throw ApplicationExceptionFactory.createChangeEmailExpiredLinkException();
+        default -> throw ApplicationExceptionFactory.createInvalidLinkException();
+      }
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
     }
     String type = claims.get("type", String.class);
-    if (!type.equals(TokenType.ACCOUNT_CONFIRMATION.name())) {
+    if (!type.equals(tokenType.name())) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
     }
 
     return claims.getSubject();
-  }
-
-  public void validatePasswordResetToken(String token, String hash) {
-    Claims claims;
-    try {
-      claims = Jwts.parser().setSigningKey(CryptHashUtils.getSecretKeyForPasswordResetToken(hash))
-              .parseClaimsJws(token).getBody();
-    } catch (ExpiredJwtException eje) {
-      throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
-    } catch (Exception e) {
-      throw ApplicationExceptionFactory.createInvalidLinkException();
-    }
-    String type = claims.get("type", String.class);
-    if (!type.equals(TokenType.PASSWORD_RESET.name())) {
-      throw ApplicationExceptionFactory.createInvalidLinkException();
-    }
   }
 
   public String getLoginFromTokenWithoutValidating(String token) {
