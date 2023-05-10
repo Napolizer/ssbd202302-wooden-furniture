@@ -20,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -138,5 +139,9 @@ public final class ApplicationExceptionFactory {
   public static ClientAndSalesRepAccessLevelsConflictException
       createClientAndSalesRepAccessLevelsConflictException() {
     return new ClientAndSalesRepAccessLevelsConflictException();
+  }
+
+  public static RemoveAccessLevelException createRemoveAccessLevelException() {
+    return new RemoveAccessLevelException();
   }
 }

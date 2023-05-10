@@ -89,6 +89,10 @@ public class AccountService {
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
+    if (accessLevels.size() <= 1) {
+      throw ApplicationExceptionFactory.createRemoveAccessLevelException();
+    }
+
     for (AccessLevel item : accessLevels) {
       if (item.getClass() == accessLevel.getClass()) {
         accessLevels.remove(item);
