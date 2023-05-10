@@ -8,8 +8,10 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.validation.ValidationException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
@@ -25,12 +27,26 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class TokenService {
-  // TODO retrieve this values from environment variable
-  private static final String SECRET_KEY = "$3bus>[i-y6e^A<{.:D$WON_*BDz@ooPQ]I~+[Q;UK'+,.-{_o!#~uD$$<i-oR?3e";
-  private static final Long EXPIRATION_AUTHORIZATION = 900000L; // 15 minutes
-  private static final Long EXPIRATION_ACCOUNT_CONFIRMATION = 86400000L; // 24 hours
-  private static final Long EXPIRATION_PASSWORD_RESET = 1200000L; // 20 minutes
-  private static final Long EXPIRATION_CHANGE_EMAIL = 1200000L; // 20 minutes
+  private static final String SECRET_KEY;
+  private static final Long EXPIRATION_AUTHORIZATION;
+  private static final Long EXPIRATION_ACCOUNT_CONFIRMATION;
+  private static final Long EXPIRATION_PASSWORD_RESET;
+  private static final Long EXPIRATION_CHANGE_EMAIL;
+
+  static {
+    Properties prop = new Properties();
+    try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
+      prop.load(input);
+      SECRET_KEY = prop.getProperty("secret.key");
+      EXPIRATION_AUTHORIZATION = Long.parseLong(prop.getProperty("expiration.authorization.milliseconds"));
+      EXPIRATION_ACCOUNT_CONFIRMATION = Long.parseLong(prop
+              .getProperty("expiration.account.confirmation.milliseconds"));
+      EXPIRATION_PASSWORD_RESET = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
+      EXPIRATION_CHANGE_EMAIL = Long.parseLong(prop.getProperty("expiration.change.email.milliseconds"));
+    } catch (Exception e) {
+      throw new RuntimeException("Error loading configuration file: " + e.getMessage());
+    }
+  }
 
   public String generateToken(Account account) {
     long now = System.currentTimeMillis();
