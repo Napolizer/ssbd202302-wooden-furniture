@@ -30,26 +30,32 @@ public abstract class AbstractService implements SessionSynchronization {
             + ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
 
     LOGGER.log(Level.INFO, "Transaction TXid={0} started in {1}, identity: {2}",
-            new Object[]{transactionId, this.getClass().getName(),
-                    sctx.getCallerPrincipal().getName()
-    });
+            new Object[] {
+              transactionId, this.getClass().getName(),
+              sctx.getCallerPrincipal().getName()
+            }
+    );
   }
 
   @Override
   public void beforeCompletion() throws EJBException, RemoteException {
     LOGGER.log(Level.INFO, "Transaction TXid={0} before commit in {1}, identity: {2}",
-            new Object[] {transactionId, this.getClass().getName(),
-                    sctx.getCallerPrincipal().getName()
-    });
+            new Object[] {
+              transactionId, this.getClass().getName(),
+              sctx.getCallerPrincipal().getName()
+            }
+    );
   }
 
   @Override
   public void afterCompletion(boolean committed) throws EJBException, RemoteException {
     lastTransactionRollback = !committed;
     LOGGER.log(Level.INFO, "Transaction TXid={0} ends in {1}" + " with {3}, identity {2}",
-            new Object[] {transactionId, this.getClass().getName(),
-                    sctx.getCallerPrincipal().getName(),
-                    committed ? "COMMIT" : "ROLLBACK"
-    });
+            new Object[] {
+              transactionId, this.getClass().getName(),
+              sctx.getCallerPrincipal().getName(),
+              committed ? "COMMIT" : "ROLLBACK"
+            }
+    );
   }
 }
