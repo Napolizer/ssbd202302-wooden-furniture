@@ -235,6 +235,53 @@ public class AccountServiceIT {
   }
 
   @Test
+  public void failsToAddAnyAccessLevelLevelWhenAdministratorAccessLevelIsAlreadyAssigned() {
+    AccessLevel administratorAccessLevel = new Administrator();
+    AccessLevel clientAccessLevel = new Client();
+    AccessLevel employeeAccessLevel = new Employee();
+    AccessLevel salesRepAccessLevel = new SalesRep();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), administratorAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), administratorAccessLevel));
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel));
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), employeeAccessLevel));
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), salesRepAccessLevel));
+  }
+
+  @Test
+  public void failsToAddSalesRepAccessLevelWhenClientAccessLevelIsAlreadyAssigned() {
+    AccessLevel clientAccessLevel = new Client();
+    AccessLevel salesRepAccessLevel = new SalesRep();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+
+    assertThrows(ClientAndSalesRepAccessLevelsConflictException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), salesRepAccessLevel));
+  }
+
+  @Test
+  public void failsToAddClientAccessLevelWhenSalesRepAccessLevelIsAlreadyAssigned() {
+    AccessLevel clientAccessLevel = new Client();
+    AccessLevel salesRepAccessLevel = new SalesRep();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), salesRepAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+
+    assertThrows(ClientAndSalesRepAccessLevelsConflictException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel));
+  }
+
+  @Test
   public void properlyChangeAccessLevelWhenItsAlreadyOne() {
     AccessLevel oldAccessLevel = new Client();
     AccessLevel newAccessLevel = new Administrator();
@@ -271,7 +318,7 @@ public class AccountServiceIT {
 
   @Test
   public void properlyRemovesAccessLevelFromAccount()
-          throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException, SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+          throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException {
     AccessLevel newAccessLevel = new Employee();
 
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));

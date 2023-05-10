@@ -8,7 +8,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountAlreadyVerifiedExcepti
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotActiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotVerifiedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AdministratorAccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ClientAndSalesRepAccessLevelsConflictException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ExpiredLinkException;
@@ -126,5 +128,15 @@ public final class ApplicationExceptionFactory {
 
   public static EmailNotFoundException createEmailNotFoundException() {
     return new EmailNotFoundException();
+  }
+
+  public static AdministratorAccessLevelAlreadyAssignedException
+      createAdministratorAccessLevelAlreadyAssignedException() {
+    return new AdministratorAccessLevelAlreadyAssignedException();
+  }
+
+  public static ClientAndSalesRepAccessLevelsConflictException
+      createClientAndSalesRepAccessLevelsConflictException() {
+    return new ClientAndSalesRepAccessLevelsConflictException();
   }
 }
