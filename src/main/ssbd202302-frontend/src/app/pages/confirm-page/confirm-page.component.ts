@@ -35,7 +35,7 @@ export class ConfirmPageComponent implements OnInit, OnDestroy {
               if (e.status == 410) {
                 const message = e.error.message as string;
                 this.navigationService.redirectToLoginPageWithState({
-                  state: { confirmAccountError: message },
+                  confirmAccountError: message,
                 });
               } else {
                 this.navigationService.redirectToNotFoundPage();

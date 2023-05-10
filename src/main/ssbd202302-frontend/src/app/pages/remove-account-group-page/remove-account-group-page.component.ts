@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {FormControl, FormGroup} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
 import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
+import {Account} from "../../interfaces/account";
+import {ActivatedRoute} from "@angular/router";
 import {AccountService} from "../../services/account.service";
 import {AlertService} from "@full-fledged/alerts";
 import {AuthenticationService} from "../../services/authentication.service";
 import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
-import {ActivatedRoute} from "@angular/router";
-import {Account} from "../../interfaces/account";
-import {DatePipe} from "@angular/common";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {Group} from "../../enums/group";
 
 @Component({
-  selector: 'app-user-account-page',
-  templateUrl: './user-account-page.component.html',
-  styleUrls: ['./user-account-page.component.sass'],
+  selector: 'account-group-remove',
+  templateUrl: './remove-account-group-page.component.html',
+  styleUrls: ['./remove-account-group-page.component.sass'],
   animations: [
-    trigger('loadedUnloadedForm', [
+    trigger('loadedUnloadedList', [
       state('loaded', style({
         opacity: 1,
         backgroundColor: "rgba(221, 221, 221, 1)"
@@ -36,14 +36,20 @@ import {DatePipe} from "@angular/common";
     ]),
   ]
 })
-export class UserAccountPageComponent implements OnInit {
+export class RemoveAccountGroupPageComponent implements OnInit {
+
   accountForm = new FormGroup({
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
   account: Account;
+
+  groups: string[] = [Group.ADMINISTRATOR,
+    Group.EMPLOYEE,
+    Group.SALES_REP,
+    Group.CLIENT]
+  id = '';
   loading = true;
-  id = ''
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -52,12 +58,12 @@ export class UserAccountPageComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private translate: TranslateService,
     private dialogService: DialogService,
-    private navigationService: NavigationService,
-    private datePipe: DatePipe
-  ) { }
+    private navigationService: NavigationService
+  ) {
+  }
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
+    this.id = this.activatedRoute.snapshot.paramMap.get('id') || '';
     this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
@@ -94,31 +100,42 @@ export class UserAccountPageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  formatDate(date: Date | undefined): string {
-    return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
-  }
-  redirectToAddAccountGroupsPage(): void{
-    void this.navigationService.redirectToAddAccountGroupsPage(this.id);
+  getListAnimationState(): string {
+    return this.loading ? 'unloaded' : 'loaded';
   }
 
-  redirectToRemoveAccountGroupsPage(): void{
-    void this.navigationService.redirectToRemoveAccountGroupsPage(this.id);
-  }
-
-  getAccountState(): string {
-    switch(this.account.accountState.toUpperCase()) {
-      case 'BLOCKED': return 'account.state.blocked';
-      case 'INACTIVE': return 'account.state.inactive';
-      case 'NOT_VERIFIED': return 'account.state.notVerified';
-      default: return 'account.state.active';
+  changeGroupName(group: string): string {
+    if (group == 'SALES_REP') {
+      return 'SalesRep'
     }
+    return group.charAt(0).toUpperCase() + group.slice(1).toLowerCase();
   }
 
-  getGroups(): string {
-    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
-  }
-
-  onEditClicked(): void {
-    this.navigationService.redirectToEditUserAccountPage(this.id);
+  removeAccountGroupFromAccount(accountGroup: string): void {
+    accountGroup = this.changeGroupName(accountGroup);
+    this.accountService.removeAccountGroup(this.id, accountGroup)
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.translate.get('account.removegroup.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              this.navigationService.redirectToAccountPage(this.id);
+            });
+        },
+        error: e => {
+          combineLatest([
+            this.translate.get('exception.occurred'),
+            this.translate.get(e.error.message || 'exception.unknown')
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
+            title: data[0],
+            message: data[1]
+          })))
+            .subscribe(data => {
+              this.alertService.danger(`${data.title}: ${data.message}`);
+            });
+        }
+      });
   }
 }

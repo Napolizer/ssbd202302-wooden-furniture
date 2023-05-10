@@ -41,6 +41,10 @@ import { UserAccountPageComponent } from './pages/user-account-page/user-account
 import {DatePipe} from "@angular/common";
 import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
 import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edit-user-account-page.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { AddAccountGroupComponent } from './pages/add-account-group-page/add-account-group.component';
+import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-page/remove-account-group-page.component';
+import { ConfirmEmailPageComponent } from './pages/confirm-email-page/confirm-email-page.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +66,12 @@ import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edi
     ResetPasswordComponent,
     UserAccountPageComponent,
     EditOwnAccountComponent,
-    EditUserAccountPageComponent
+    EditUserAccountPageComponent,
+    EditOwnAccountComponent,
+    ForgotPasswordComponent,
+    AddAccountGroupComponent,
+    RemoveAccountGroupPageComponent,
+    ConfirmEmailPageComponent
   ],
     imports: [
         BrowserModule,

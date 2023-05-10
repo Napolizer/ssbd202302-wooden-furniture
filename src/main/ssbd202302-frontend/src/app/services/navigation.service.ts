@@ -30,6 +30,10 @@ export class NavigationService {
     return this.router.navigate(['/login']);
   }
 
+  public redirectToRegisterPage() {
+    return this.router.navigate(['/register']);
+  }
+
   public redirectToLoginPageWithState(state: any): Promise<boolean> {
     return this.router.navigate(['/login'], {state: state});
   }
@@ -50,7 +54,15 @@ export class NavigationService {
     return this.router.navigate(['account/' + id + '/edit'])
   }
 
+  public redirectToAddAccountGroupsPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-group-add/' + id]);
+  }
+
   public isCurrentlyOnLoginPage(): boolean {
     return this.router.url === '/login';
+  }
+
+  redirectToRemoveAccountGroupsPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-group-remove/' + id])
   }
 }

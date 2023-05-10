@@ -8,7 +8,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountAlreadyVerifiedExcepti
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotActiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotVerifiedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AdministratorAccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ClientAndSalesRepAccessLevelsConflictException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ExpiredLinkException;
@@ -18,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -126,5 +129,19 @@ public final class ApplicationExceptionFactory {
 
   public static EmailNotFoundException createEmailNotFoundException() {
     return new EmailNotFoundException();
+  }
+
+  public static AdministratorAccessLevelAlreadyAssignedException
+      createAdministratorAccessLevelAlreadyAssignedException() {
+    return new AdministratorAccessLevelAlreadyAssignedException();
+  }
+
+  public static ClientAndSalesRepAccessLevelsConflictException
+      createClientAndSalesRepAccessLevelsConflictException() {
+    return new ClientAndSalesRepAccessLevelsConflictException();
+  }
+
+  public static RemoveAccessLevelException createRemoveAccessLevelException() {
+    return new RemoveAccessLevelException();
   }
 }

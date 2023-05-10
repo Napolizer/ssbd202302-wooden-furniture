@@ -11,6 +11,11 @@
   "login.password.validity.patternMismatch": "Password must contain at least one capital letter and one special character",
   "login.password.validity.tooShort": "Password must contain at least 8 characters",
   "login.success": "You have successfully logged in!",
+  "login.forgot.password": "Forgot password?",
+
+  "forgot.password.title": "Enter your email address",
+  "forgot.password.button": "Send",
+  "forgot.password.success": "The link to reset your password has been sent to your email address",
 
   "register.title": "Create your account",
   "register.stepper.first": "Fill out account details",
@@ -78,6 +83,11 @@
   "account.state.blocked": "Blocked",
   "account.state.notVerified": "Not Verified",
   "account.state.inactive": "Inactive",
+  "account.addgroup": "Add group",
+  "account.removegroup": "Remove group",
+  "account.addgroup.success": "Group added successfully",
+  "account.removegroup.success": "Group removed successfully",
+
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
@@ -125,6 +135,11 @@
   "exception.invalid.link": "Confirmation link is invalid",
   "exception.mok.account.already.verified": "Your account has already been verified",
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",
+  "exception.mok.account.email.does.not.exist" : "Account with given email address does not exist",
+  "exception.mok.account.not.active": "Account is not active",
+  "exception.mok.account.access.level": "AccessLevel exception",
+  "exception.mok.account.access.level.already.assigned": "Chosen group is already assigned to user",
+  "exception.mok.account.access.level.not.assigned": "Chosen group is not assigned to user",
 
   "group.administrator": "Administrator",
   "group.employee": "Employee",

@@ -14,6 +14,10 @@ import {ResetPasswordComponent} from './pages/reset-password/reset-password.comp
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
 import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-user-account-page.component";
+import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
+import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import {ConfirmEmailPageComponent} from "./pages/confirm-email-page/confirm-email-page.component";
 
 const routes: Routes = [
   {
@@ -86,6 +90,22 @@ const routes: Routes = [
     }
   },
   {
+    path: 'confirm-email',
+    component: ConfirmEmailPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
+  },
+  {
     path: 'reset-password',
     component: ResetPasswordComponent,
     canActivate: [AuthGuard],
@@ -104,6 +124,22 @@ const routes: Routes = [
   {
     path: 'not-found',
     component: NotFoundPageComponent
+  },
+  {
+    path:'account-group-add/:id',
+    component: AddAccountGroupComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
+    }
+  },
+  {
+    path:'account-group-remove/:id',
+    component:RemoveAccountGroupPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
+    }
   },
   // IMPORTANT: this route must be the last one
   {

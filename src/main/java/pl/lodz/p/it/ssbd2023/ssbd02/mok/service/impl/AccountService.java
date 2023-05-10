@@ -59,9 +59,23 @@ public class AccountService {
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
+    if ((accessLevels.size() > 0 && Objects.equals(accessLevel.getGroupName(), "ADMINISTRATOR"))) {
+      throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
+    }
+
     for (AccessLevel item : accessLevels) {
-      if (item.getClass() == accessLevel.getClass()) {
+      if (Objects.equals(item.getGroupName(), "ADMINISTRATOR")) {
+        throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
+      }
+
+      if (Objects.equals(item.getGroupName(), accessLevel.getGroupName())) {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
+      }
+
+      if ((Objects.equals(item.getGroupName(), "CLIENT") && Objects.equals(accessLevel.getGroupName(), "SALES_REP"))
+          || (Objects.equals(item.getGroupName(), "SALES_REP")
+            && Objects.equals(accessLevel.getGroupName(), "CLIENT"))) {
+        throw ApplicationExceptionFactory.createClientAndSalesRepAccessLevelsConflictException();
       }
     }
     accessLevel.setAccount(foundAccount);
@@ -74,6 +88,10 @@ public class AccountService {
     Account foundAccount =
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+
+    if (accessLevels.size() <= 1) {
+      throw ApplicationExceptionFactory.createRemoveAccessLevelException();
+    }
 
     for (AccessLevel item : accessLevels) {
       if (item.getClass() == accessLevel.getClass()) {
@@ -224,5 +242,12 @@ public class AccountService {
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
+  }
+
+  public Account updateEmailAfterConfirmation(Long accountId) {
+    Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+    account.setEmail(account.getNewEmail());
+    account.setNewEmail(null);
+    return accountFacade.update(account);
   }
 }

@@ -7,6 +7,7 @@ import { TokenService } from './token.service';
 import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
 import {EditAccount} from "../interfaces/edit.account";
+import { Email } from '../interfaces/email';
 
 @Injectable({
   providedIn: 'root',
@@ -55,11 +56,26 @@ export class AccountService {
     )
   }
 
-
   public confirm(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(
       `${environment.apiBaseUrl}/account/confirm?token=${token}`,
       null,
+      { observe: 'response' }
+    );
+  }
+
+  public confirmEmail(id: string): Observable<HttpResponse<any>> {
+    return this.httpClient.patch(
+      `${environment.apiBaseUrl}/v1/account/email?id=${id}`,
+      null,
+      {observe: 'response'}
+    )
+  }
+
+  public forgotPassword(email: Email): Observable<HttpResponse<any>> {
+    return this.httpClient.post(
+      `${environment.apiBaseUrl}/account/forgot-password`,
+      email,
       { observe: 'response' }
     );
   }
@@ -80,7 +96,6 @@ export class AccountService {
   }
 
   public editOwnAccount(login: string, account: EditAccount): Observable<EditAccount> {
-    console.log("elo")
     return this.httpClient.put<EditAccount>(
       `${environment.apiBaseUrl}/account/login/` + login + `/editOwnAccount`,
       account
@@ -94,6 +109,31 @@ export class AccountService {
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public addAccountGroup(id: string,accountGroup: string): Observable<Account> {
+    console.log("eloelo")
+    return this.httpClient.put<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
+  }
+
+  public removeAccountGroup(id: string, accountGroup: string): Observable<Account> {
+    console.log("usuwam")
+    return this.httpClient.delete<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
         }
       }
     );

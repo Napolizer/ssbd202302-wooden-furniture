@@ -98,7 +98,7 @@ public class Account extends AbstractEntity {
   @ToString.Exclude
   private List<Order> orders = new ArrayList<>();
 
-  //    private String newEmail;
+  private String newEmail;
 
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;

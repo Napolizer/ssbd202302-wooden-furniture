@@ -291,7 +291,7 @@ public class AccountController {
   }
 
   @POST
-  @Path("/login/forgotPassword")
+  @Path("/forgot-password")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {
@@ -318,6 +318,13 @@ public class AccountController {
   public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
     String login = accountEndpoint.validatePasswordResetToken(token);
     accountEndpoint.resetPassword(login, changePasswordDto);
+    return Response.ok().build();
+  }
+
+  @PATCH
+  @Path("/email/submit")
+  public Response submitEmail(@QueryParam("id") Long accountId) {
+    accountEndpoint.updateEmailAfterConfirmation(accountId);
     return Response.ok().build();
   }
 }

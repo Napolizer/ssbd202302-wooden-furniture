@@ -56,7 +56,6 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     streetNumber: 0,
   }
 
-
   constructor(
     private accountService: AccountService,
     private translate: TranslateService,
