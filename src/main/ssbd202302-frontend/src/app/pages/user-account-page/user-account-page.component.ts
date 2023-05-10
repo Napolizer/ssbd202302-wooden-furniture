@@ -156,4 +156,31 @@ export class UserAccountPageComponent implements OnInit {
         }
       });
   }
+
+  onActivateClicked(): void {
+    this.accountService.activateAccount(this.id)
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe( {
+        next: () => {
+          this.account.accountState = "ACTIVE";
+          this.translate.get('activate.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg)
+            });
+        },
+        error: e => {
+          combineLatest([
+            this.translate.get('exception.occurred'),
+            this.translate.get(e.error.message || 'exception.unknown')
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
+            title: data[0],
+            message: data[1]
+          })))
+            .subscribe(data => {
+              this.alertService.danger(`${data.title}: ${data.message}`);
+            });
+        }
+      });
+  }
 }

@@ -186,7 +186,7 @@ public class AccountService extends AbstractService {
     Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
     AccountState state = account.getAccountState();
 
-    if (state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE)) {
+    if (!state.equals(AccountState.BLOCKED)) {
       throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
     }
 

@@ -164,4 +164,16 @@ public changeAccountGroup(id: string,accessLevel: Accesslevel): Observable<Accou
       }
     )
   }
+
+  public activateAccount(id: string): Observable<Account> {
+    return this.httpClient.patch<Account>(
+      `${environment.apiBaseUrl}/account/activate/` + id,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
 }
