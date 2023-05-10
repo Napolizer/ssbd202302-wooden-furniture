@@ -30,8 +30,8 @@ public class EditPersonInfoAsAdminDto {
 
   @Override
   public String toString() {
-    return "EditPersonInfoAsAdminDto{" +
-            "email='" + email + '\'' +
-            '}';
+    return "EditPersonInfoAsAdminDto{"
+            + "email='" + email + '\''
+            + '}';
   }
 }

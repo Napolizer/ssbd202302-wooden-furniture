@@ -13,7 +13,6 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
-
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 

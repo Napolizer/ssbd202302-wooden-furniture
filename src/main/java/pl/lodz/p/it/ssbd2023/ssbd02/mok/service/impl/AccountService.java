@@ -59,11 +59,15 @@ public class AccountService {
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
-    if (accessLevels.size() > 0 && Objects.equals(accessLevel.getGroupName(), "ADMINISTRATOR")) {
+    if ((accessLevels.size() > 0 && Objects.equals(accessLevel.getGroupName(), "ADMINISTRATOR"))) {
       throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
     }
 
     for (AccessLevel item : accessLevels) {
+      if (Objects.equals(item.getGroupName(), "ADMINISTRATOR")) {
+        throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
+      }
+
       if (Objects.equals(item.getGroupName(), accessLevel.getGroupName())) {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
       }
