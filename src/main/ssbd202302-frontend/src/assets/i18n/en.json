@@ -89,6 +89,7 @@
   "account.addgroup.success": "Group added successfully",
   "account.removegroup.success": "Group removed successfully",
   "account.changegroup.success": "Group changed successfully",
+  "account.block": "Block",
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
@@ -166,5 +167,7 @@
   "notfound.oops": "Oops!",
 
   "false": "no",
-  "true": "yes"
+  "true": "yes",
+
+  "block.success": "Account blocked successfully"
 }
