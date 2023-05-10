@@ -50,7 +50,15 @@ export class NavigationService {
     return this.router.navigate(['/edit-own-account']);
   }
 
+  public redirectToAddAccountGroupsPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-group-add/' + id]);
+  }
+
   public isCurrentlyOnLoginPage(): boolean {
     return this.router.url === '/login';
+  }
+
+  redirectToRemoveAccountGroupsPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-group-remove/' + id])
   }
 }

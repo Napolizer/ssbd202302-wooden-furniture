@@ -46,7 +46,6 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
   });
   destroy = new Subject<boolean>();
   loading = true;
-  id: string = "";
   editableAccount : EditOwnAccount = {
     firstName: '',
     lastName: '',
@@ -56,7 +55,6 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     postalCode: '',
     streetNumber: 0,
   }
-
 
   constructor(
     private accountService: AccountService,
@@ -72,7 +70,6 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: account => {
-          this.id = account.id.toString();
           this.editableAccount.firstName = account.firstName;
           this.editableAccount.lastName = account.lastName;
           this.editableAccount.country = account.address.country;
@@ -137,7 +134,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy))
           .subscribe(msg => {
             this.alertService.success(msg)
-            this.navigationService.redirectToAccountPage(this.id)
+            this.navigationService.redirectToOwnAccountPage()
           });
       });
     this.loading = false

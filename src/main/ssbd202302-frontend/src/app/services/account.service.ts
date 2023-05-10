@@ -94,4 +94,29 @@ export class AccountService {
       account
     );
   }
+
+  public addAccountGroup(id: string,accountGroup: string): Observable<Account> {
+    console.log("eloelo")
+    return this.httpClient.put<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
+  }
+
+  public removeAccountGroup(id: string, accountGroup: string): Observable<Account> {
+    console.log("usuwam")
+    return this.httpClient.delete<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
+  }
 }

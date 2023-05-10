@@ -83,6 +83,11 @@
   "account.state.blocked": "Blocked",
   "account.state.notVerified": "Not Verified",
   "account.state.inactive": "Inactive",
+  "account.addgroup": "Add group",
+  "account.removegroup": "Remove group",
+  "account.addgroup.success": "Group added successfully",
+  "account.removegroup.success": "Group removed successfully",
+
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
@@ -132,6 +137,9 @@
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",
   "exception.mok.account.email.does.not.exist" : "Account with given email address does not exist",
   "exception.mok.account.not.active": "Account is not active",
+  "exception.mok.account.access.level": "AccessLevel exception",
+  "exception.mok.account.access.level.already.assigned": "Chosen group is already assigned to user",
+  "exception.mok.account.access.level.not.assigned": "Chosen group is not assigned to user",
 
   "group.administrator": "Administrator",
   "group.employee": "Employee",
