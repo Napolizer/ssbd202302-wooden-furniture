@@ -14,8 +14,11 @@ import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -95,7 +98,7 @@ public class Account extends AbstractEntity {
   @ToString.Exclude
   private List<Order> orders = new ArrayList<>();
 
-  //    private String newEmail;
+  private String newEmail;
 
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;

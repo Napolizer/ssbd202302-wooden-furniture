@@ -321,4 +321,11 @@ public class AccountController {
     accountEndpoint.resetPassword(login, changePasswordDto);
     return Response.ok().build();
   }
+
+  @PATCH
+  @Path("/email/submit")
+  public Response submitEmail(@QueryParam("id") Long accountId) {
+    accountEndpoint.updateEmailAfterConfirmation(accountId);
+    return Response.ok().build();
+  }
 }

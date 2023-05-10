@@ -25,8 +25,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({
-        GenericServiceExceptionsInterceptor.class,
-        LoggerInterceptor.class
+  GenericServiceExceptionsInterceptor.class,
+  LoggerInterceptor.class
 })
 public class AccountService {
   @Inject
@@ -224,5 +224,12 @@ public class AccountService {
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
+  }
+
+  public Account updateEmailAfterConfirmation(Long accountId) {
+    Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+    account.setEmail(account.getNewEmail());
+    account.setNewEmail(null);
+    return accountFacade.update(account);
   }
 }
