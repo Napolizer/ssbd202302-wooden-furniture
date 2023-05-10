@@ -56,39 +56,21 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       this.loaded = true;
     }, 100);
 
-    const state = this.location.getState() as {
-      confirmAccountSuccess: string;
-      confirmAccountError: string;
-      resetPasswordSuccess: string;
-      resetPasswordError: string;
-    };
-    if (state.confirmAccountSuccess) {
+    const state = this.location.getState() as any;
+    const keys = Object.keys(state);
+
+    if (keys.length == 2) {
+      const code = state[keys[0]];
+      const isError = code.startsWith('exception');
       this.translate
-        .get(state.confirmAccountSuccess)
+        .get(code)
         .pipe(takeUntil(this.destroy))
         .subscribe((msg) => {
-          this.alertService.success(msg);
-        });
-    } else if (state.resetPasswordSuccess) {
-      this.translate
-        .get(state.resetPasswordSuccess)
-        .pipe(takeUntil(this.destroy))
-        .subscribe((msg) => {
-          this.alertService.success(msg);
-        });
-    } else if (state.confirmAccountError) {
-      this.translate
-        .get(state.confirmAccountError)
-        .pipe(takeUntil(this.destroy))
-        .subscribe((msg) => {
-          this.alertService.danger(msg);
-        });
-    } else if (state.resetPasswordError) {
-      this.translate
-        .get(state.resetPasswordError)
-        .pipe(takeUntil(this.destroy))
-        .subscribe((msg) => {
-          this.alertService.danger(msg);
+          if (isError) {
+            this.alertService.danger(msg);
+          } else {
+            this.alertService.success(msg);
+          }
         });
     }
   }

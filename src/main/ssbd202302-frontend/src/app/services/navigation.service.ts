@@ -30,6 +30,10 @@ export class NavigationService {
     return this.router.navigate(['/login']);
   }
 
+  public redirectToRegisterPage() {
+    return this.router.navigate(['/register']);
+  }
+
   public redirectToLoginPageWithState(state: any): Promise<boolean> {
     return this.router.navigate(['/login'], {state: state});
   }

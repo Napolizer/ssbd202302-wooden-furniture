@@ -40,6 +40,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 import {DatePipe} from "@angular/common";
 import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountGroupComponent } from './pages/add-account-group-page/add-account-group.component';
 import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-page/remove-account-group-page.component';
 
@@ -63,6 +64,7 @@ import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-pa
     ResetPasswordComponent,
     UserAccountPageComponent,
     EditOwnAccountComponent,
+    ForgotPasswordComponent,
     AddAccountGroupComponent,
     RemoveAccountGroupPageComponent
   ],

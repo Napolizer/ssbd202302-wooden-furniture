@@ -15,6 +15,7 @@ import {UserAccountPageComponent} from "./pages/user-account-page/user-account-p
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
 import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
 import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   {
@@ -73,6 +74,14 @@ const routes: Routes = [
   {
     path: 'confirm',
     component: ConfirmPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.GUEST]
