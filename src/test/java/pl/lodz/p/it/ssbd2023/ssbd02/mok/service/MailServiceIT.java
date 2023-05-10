@@ -68,7 +68,7 @@ public class MailServiceIT {
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
       assertDoesNotThrow(() -> mailService.sendMailWithEmailChangeConfirmLink(
-              "jegek60138@fectode.com", "en", Long.getLong("1")));
+              "jegek60138@fectode.com", "en", "token"));
       utx.commit();
   }
   @Test

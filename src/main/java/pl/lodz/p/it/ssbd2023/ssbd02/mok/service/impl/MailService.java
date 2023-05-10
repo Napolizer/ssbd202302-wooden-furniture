@@ -49,12 +49,12 @@ public class MailService {
             + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
   }
 
-  public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId)
+  public void sendMailWithEmailChangeConfirmLink(String to, String locale, String token)
       throws MessagingException {
     sendMail(to,
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
-        + " " + appUrl + "/confirm-email?id=" + accountId
+        + ("\n" + appUrl + "/change-email?token=" + token)
     );
   }
 

@@ -202,7 +202,7 @@ public class AccountService {
   }
 
   public void confirmAccount(String token) {
-    String login = tokenService.validateAccountVerificationToken(token);
+    String login = tokenService.validateEmailToken(token, TokenType.ACCOUNT_CONFIRMATION, null);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createAccountConfirmationExpiredLinkException);
     if (!account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
@@ -218,7 +218,15 @@ public class AccountService {
     String login = tokenService.getLoginFromTokenWithoutValidating(token);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
-    tokenService.validatePasswordResetToken(token, account.getPassword());
+    tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET, account.getPassword());
+    return login;
+  }
+
+  public String validateChangeEmailToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createChangeEmailExpiredLinkException);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL, account.getEmail());
     return login;
   }
 
@@ -244,10 +252,39 @@ public class AccountService {
     }
   }
 
-  public Account updateEmailAfterConfirmation(Long accountId) {
-    Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+  public Account updateEmailAfterConfirmation(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
     account.setEmail(account.getNewEmail());
     account.setNewEmail(null);
     return accountFacade.update(account);
+  }
+
+  public void changeEmail(String newEmail, Long accountId, String principal) {
+    Account subject = accountFacade.findByLogin(principal)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    if (accountFacade.findByEmail(newEmail).isPresent()) {
+      throw ApplicationExceptionFactory.createEmailAlreadyExistsException();
+    }
+
+    boolean isAdmin = subject.getAccessLevels()
+            .stream().anyMatch(al -> al.getGroupName().equals("ADMINISTRATOR"));
+
+    if (isAdmin || subject.getId().equals(accountId)) {
+      Account account = accountFacade.findById(accountId)
+              .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+      account.setNewEmail(newEmail);
+      accountFacade.update(account);
+      String accountChangeEmailToken = tokenService
+              .generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+      try {
+        mailService.sendMailWithEmailChangeConfirmLink(account.getNewEmail(),
+                account.getLocale(), accountChangeEmailToken);
+      } catch (MessagingException e) {
+        throw ApplicationExceptionFactory.createMailServiceException(e);
+      }
+    } else {
+      throw ApplicationExceptionFactory.createForbiddenException();
+    }
   }
 }

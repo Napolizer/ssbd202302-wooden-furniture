@@ -49,6 +49,10 @@ public final class ApplicationExceptionFactory {
     return new EmailAlreadyExistsException(cause);
   }
 
+  public static EmailAlreadyExistsException createEmailAlreadyExistsException() {
+    return new EmailAlreadyExistsException();
+  }
+
   public static IllegalAccountStateChangeException createIllegalAccountStateChangeException() {
     return new IllegalAccountStateChangeException();
   }
@@ -117,6 +121,15 @@ public final class ApplicationExceptionFactory {
 
   public static ExpiredLinkException createPasswordResetExpiredLinkException() {
     return new ExpiredLinkException(MessageUtil.MessageKey.ERROR_EXPIRED_PASSWORD_RESET_LINK);
+  }
+
+  public static ExpiredLinkException createChangeEmailExpiredLinkException() {
+    return new ExpiredLinkException(MessageUtil.MessageKey.ERROR_EXPIRED_CHANGE_EMAIL_LINK);
+  }
+
+  public static BaseWebApplicationException createForbiddenException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_FORBIDDEN,
+            Response.Status.FORBIDDEN);
   }
 
   public static InvalidLinkException createInvalidLinkException() {

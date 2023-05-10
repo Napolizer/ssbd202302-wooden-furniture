@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -111,8 +113,16 @@ public class AccountEndpoint {
     accountService.confirmAccount(token);
   }
 
-  public String validatePasswordResetToken(String token) {
-    return accountService.validatePasswordResetToken(token);
+  public String validateEmailToken(String token, TokenType tokenType) {
+    switch (tokenType) {
+      case PASSWORD_RESET -> {
+        return accountService.validatePasswordResetToken(token);
+      }
+      case CHANGE_EMAIL -> {
+        return accountService.validateChangeEmailToken(token);
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidLinkException();
+    }
   }
 
   public void resetPassword(String login, ChangePasswordDto changePasswordDto) {
@@ -123,7 +133,11 @@ public class AccountEndpoint {
     accountService.sendResetPasswordEmail(emailDto.getEmail());
   }
 
-  public void updateEmailAfterConfirmation(Long accountId) {
-    accountService.updateEmailAfterConfirmation(accountId);
+  public void updateEmailAfterConfirmation(String login) {
+    accountService.updateEmailAfterConfirmation(login);
+  }
+
+  public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
+    accountService.changeEmail(emailDto.getEmail(), accountId, login);
   }
 }

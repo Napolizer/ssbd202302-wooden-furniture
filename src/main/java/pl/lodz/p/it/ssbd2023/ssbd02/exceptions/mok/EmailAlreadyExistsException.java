@@ -9,4 +9,8 @@ public class EmailAlreadyExistsException extends BaseWebApplicationException {
     super(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS, cause, Response.Status.CONFLICT);
   }
 
+  public EmailAlreadyExistsException() {
+    super(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS, Response.Status.CONFLICT);
+  }
+
 }
