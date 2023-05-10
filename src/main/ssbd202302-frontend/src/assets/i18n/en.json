@@ -17,6 +17,8 @@
   "forgot.password.button": "Send",
   "forgot.password.success": "The link to reset your password has been sent to your email address",
 
+  "change.email.success": "Your email has been successfully changed",
+
   "register.title": "Create your account",
   "register.stepper.first": "Fill out account details",
   "register.stepper.second": "Fill out personal details",
@@ -140,6 +142,7 @@
   "exception.mok.account.access.level": "AccessLevel exception",
   "exception.mok.account.access.level.already.assigned": "Chosen group is already assigned to user",
   "exception.mok.account.access.level.not.assigned": "Chosen group is not assigned to user",
+  "exception.expired.change.email.link": "Your email change link has expired, try again",
 
   "group.administrator": "Administrator",
   "group.employee": "Employee",

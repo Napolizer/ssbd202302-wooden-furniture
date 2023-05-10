@@ -64,11 +64,13 @@ export class AccountService {
     );
   }
 
-  public confirmEmail(id: string): Observable<HttpResponse<any>> {
+  public confirmEmailChange(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(
-      `${environment.apiBaseUrl}/v1/account/email?id=${id}`,
+      `${environment.apiBaseUrl}/account/change-email?token=${token}`,
       null,
-      {observe: 'response'}
+      { observe: 'response',
+        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`} 
+      }
     )
   }
 

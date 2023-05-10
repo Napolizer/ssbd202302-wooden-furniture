@@ -22,6 +22,10 @@ export class NavigationService {
     return this.router.navigate(['/self']);
   }
 
+  public redirectToOwnAccountPageWithState(state: any): Promise<boolean> {
+    return this.router.navigate(['/self'], {state: state});
+  }
+
   public redirectToAccountPage(id: string): Promise<boolean> {
     return this.router.navigate(['account/' + id])
   }

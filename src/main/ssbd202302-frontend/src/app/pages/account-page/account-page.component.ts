@@ -10,6 +10,7 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
 import {DatePipe} from "@angular/common";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-account-page',
@@ -50,7 +51,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private translate: TranslateService,
     private dialogService: DialogService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +81,24 @@ export class AccountPageComponent implements OnInit, OnDestroy {
             });
         }
       });
+
+      const state = this.location.getState() as any;
+      const keys = Object.keys(state);
+  
+      if (keys.length == 2) {
+        const code = state[keys[0]];
+        const isError = code.startsWith('exception');
+        this.translate
+          .get(code)
+          .pipe(takeUntil(this.destroy))
+          .subscribe((msg) => {
+            if (isError) {
+              this.alertService.danger(msg);
+            } else {
+              this.alertService.success(msg);
+            }
+          });
+      }
   }
 
   ngOnDestroy(): void {

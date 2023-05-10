@@ -9,7 +9,6 @@ import {Group} from "./enums/group";
 import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
-import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component';
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
@@ -17,7 +16,8 @@ import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-
 import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
 import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import {ConfirmEmailPageComponent} from "./pages/confirm-email-page/confirm-email-page.component";
+import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
+import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 
 const routes: Routes = [
   {
@@ -83,15 +83,15 @@ const routes: Routes = [
   },
   {
     path: 'confirm',
-    component: ConfirmPageComponent,
+    component: ConfirmAccountComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.GUEST]
     }
   },
   {
-    path: 'confirm-email',
-    component: ConfirmEmailPageComponent,
+    path: 'change-email/confirm',
+    component: ConfirmEmailChangeComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]

@@ -333,6 +333,7 @@ public class AccountController {
 
   @PATCH
   @Path("/change-email")
+  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
   public Response submitEmail(@QueryParam("token") String token) {
     String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
     accountEndpoint.updateEmailAfterConfirmation(login);

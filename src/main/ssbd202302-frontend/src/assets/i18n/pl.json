@@ -17,6 +17,8 @@
   "forgot.password.button": "Wyślij",
   "forgot.password.success": "Link do formularza resetowania hasła został wysłany na Twój adres email",
 
+  "change.email.success": "Twój adres email został pomyślnie zmieniony",
+
   "register.title": "Utwórz konto",
   "register.stepper.first": "Uzupełnij dane konta",
   "register.stepper.second": "Uzupełnij dane personalne",
@@ -139,6 +141,7 @@
   "exception.mok.account.access.level": "Wyjatek accesslevel",
   "exception.mok.account.access.level.already.assigned": "Wybrana grupa jest juz przypisana do użytkownika",
   "exception.mok.account.access.level.not.assigned": "Nie można usunąć grupy, która nie jest przypisana do użytkownika",
+  "exception.expired.change.email.link": "Twój link do zmiany adresu email wygasł, spróbój ponownie",
 
   "group.administrator": "Administrator",
   "group.employee": "Pracownik",

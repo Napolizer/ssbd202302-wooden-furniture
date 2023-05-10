@@ -54,7 +54,7 @@ public class MailService {
     sendMail(to,
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
-        + ("\n" + appUrl + "/change-email?token=" + token)
+        + ("\n" + appUrl + "/change-email/confirm?token=" + token)
     );
   }
 
