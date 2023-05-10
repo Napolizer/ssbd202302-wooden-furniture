@@ -1,6 +1,6 @@
 import {Address} from "./address";
 
-export interface EditOwnAccount {
+export interface EditAccount {
   firstName: string,
   lastName: string,
   country: string,

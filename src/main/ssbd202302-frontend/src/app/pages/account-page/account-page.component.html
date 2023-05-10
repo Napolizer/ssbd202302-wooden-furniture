@@ -23,13 +23,37 @@
             </div>
             <div class="row">
               <div class="entry">
-                <p class="title">{{'account.archive' | translate}}</p>
-                <p class="content">{{account.archive.toString() | translate}}</p>
+                <p class="title">{{'account.email' | translate}}</p>
+                <p class="content">{{account.email}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">{{'account.accountState' | translate}}</p>
-                <p class="content">{{getAccountState() | translate}}</p>
+                <p class="title">{{'account.country' | translate}}</p>
+                <p class="content">{{account.address?.country ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.city' | translate}}</p>
+                <p class="content">{{account.address?.city ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.postalCode' | translate}}</p>
+                <p class="content">{{account.address?.postalCode ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="entry">
+                <p class="title">{{'account.street' | translate}}</p>
+                <p class="content">{{account.address?.street ?? '-'}}</p>
+                <div class="border"></div>
+              </div>
+              <div class="entry">
+                <p class="title">{{'account.streetNumber' | translate}}</p>
+                <p class="content">{{account.address?.streetNumber ?? '-'}}</p>
                 <div class="border"></div>
               </div>
             </div>
@@ -47,37 +71,13 @@
             </div>
             <div class="row">
               <div class="entry">
-                <p class="title">{{'account.city' | translate}}</p>
-                <p class="content">{{account.address?.city ?? '-'}}</p>
+                <p class="title">{{'account.accountState' | translate}}</p>
+                <p class="content">{{getAccountState() | translate}}</p>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">{{'account.country' | translate}}</p>
-                <p class="content">{{account.address?.country ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.postalCode' | translate}}</p>
-                <p class="content">{{account.address?.postalCode ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.streetNumber' | translate}}</p>
-                <p class="content">{{account.address?.streetNumber ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.email' | translate}}</p>
-                <p class="content">{{account.email}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.street' | translate}}</p>
-                <p class="content">{{account.address?.street ?? '-'}}</p>
+                <p class="title">{{'account.archive' | translate}}</p>
+                <p class="content">{{account.archive.toString() | translate}}</p>
                 <div class="border"></div>
               </div>
             </div>
