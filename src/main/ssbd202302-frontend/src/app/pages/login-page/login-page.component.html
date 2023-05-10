@@ -27,6 +27,9 @@
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
           </mat-form-field>
+          <div class="forgot-password">
+            <a routerLink="/forgot-password" class="forgot-password-link" >{{'login.forgot.password' | translate}}</a>
+          </div>
         </div>
         <div class="button-container">
             <button mat-button color="primary" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>

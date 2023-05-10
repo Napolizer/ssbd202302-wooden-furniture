@@ -11,6 +11,11 @@
   "login.password.validity.patternMismatch": "Hasło musi zawierać conajmniej jedną dużą literę, oraz jeden znak specjalny",
   "login.password.validity.tooShort": "Hasło musi zawierać przynajmniej 8 znaków",
   "login.success": "Zalogowano pomyślnie!",
+  "login.forgot.password": "Nie pamiętasz hasła?",
+
+  "forgot.password.title": "Podaj swój adres email",
+  "forgot.password.button": "Wyślij",
+  "forgot.password.success": "Link do formularza resetowania hasła został wysłany na Twój adres email",
 
   "register.title": "Utwórz konto",
   "register.stepper.first": "Uzupełnij dane konta",
@@ -125,6 +130,8 @@
   "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
   "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
   "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie",
+  "exception.mok.account.email.does.not.exist" : "Konto z podanym adresem email nie istnieje",
+  "exception.mok.account.not.active": "Konto jest nieaktywne",
 
   "group.administrator": "Administrator",
   "group.employee": "Pracownik",

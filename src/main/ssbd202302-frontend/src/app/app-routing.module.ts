@@ -13,6 +13,7 @@ import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component'
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   {
@@ -71,6 +72,14 @@ const routes: Routes = [
   {
     path: 'confirm',
     component: ConfirmPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.GUEST]
+    }
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.GUEST]

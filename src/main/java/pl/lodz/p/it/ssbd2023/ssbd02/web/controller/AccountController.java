@@ -292,7 +292,7 @@ public class AccountController {
   }
 
   @POST
-  @Path("/login/forgotPassword")
+  @Path("/forgot-password")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {

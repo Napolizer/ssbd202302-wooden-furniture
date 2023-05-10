@@ -7,6 +7,7 @@ import { TokenService } from './token.service';
 import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
 import {EditOwnAccount} from "../interfaces/edit.own.account";
+import { Email } from '../interfaces/email';
 
 @Injectable({
   providedIn: 'root',
@@ -55,11 +56,18 @@ export class AccountService {
     )
   }
 
-
   public confirm(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(
       `${environment.apiBaseUrl}/account/confirm?token=${token}`,
       null,
+      { observe: 'response' }
+    );
+  }
+
+  public forgotPassword(email: Email): Observable<HttpResponse<any>> {
+    return this.httpClient.post(
+      `${environment.apiBaseUrl}/account/forgot-password`,
+      email,
       { observe: 'response' }
     );
   }
