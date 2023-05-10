@@ -26,6 +26,7 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE =
             "mok.email.account.access.level.removed.message";
     public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
+    public static final String EMAIL_EMAIL_CHANGE_TOPIC = "mok.email.change.topic";
     public static final String EMAIL_ACCOUNT_CONFIRMATION_SUBJECT = "mok.email.account.confirmation.subject";
     public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC1 = "mok.email.account.confirmation.topic1";
     public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC2 = "mok.email.account.confirmation.topic2";

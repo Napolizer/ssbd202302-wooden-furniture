@@ -239,4 +239,11 @@ public class AccountService {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
+
+  public Account updateEmailAfterConfirmation(Long accountId) {
+    Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+    account.setEmail(account.getNewEmail());
+    account.setNewEmail(null);
+    return accountFacade.update(account);
+  }
 }

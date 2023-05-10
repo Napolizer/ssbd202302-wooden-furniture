@@ -43,6 +43,7 @@ import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-accou
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountGroupComponent } from './pages/add-account-group-page/add-account-group.component';
 import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-page/remove-account-group-page.component';
+import { ConfirmEmailPageComponent } from './pages/confirm-email-page/confirm-email-page.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-pa
     EditOwnAccountComponent,
     ForgotPasswordComponent,
     AddAccountGroupComponent,
-    RemoveAccountGroupPageComponent
+    RemoveAccountGroupPageComponent,
+    ConfirmEmailPageComponent
   ],
     imports: [
         BrowserModule,

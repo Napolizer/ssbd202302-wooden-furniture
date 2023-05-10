@@ -64,6 +64,14 @@ export class AccountService {
     );
   }
 
+  public confirmEmail(id: string): Observable<HttpResponse<any>> {
+    return this.httpClient.patch(
+      `${environment.apiBaseUrl}/v1/account/email?id=${id}`,
+      null,
+      {observe: 'response'}
+    )
+  }
+
   public forgotPassword(email: Email): Observable<HttpResponse<any>> {
     return this.httpClient.post(
       `${environment.apiBaseUrl}/account/forgot-password`,
