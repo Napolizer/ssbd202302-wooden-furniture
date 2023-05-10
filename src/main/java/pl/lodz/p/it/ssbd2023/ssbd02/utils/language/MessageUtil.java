@@ -38,6 +38,10 @@ public class MessageUtil {
         "exception.mok.account.access.level.already.assigned";
     public static final String ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED =
         "exception.mok.account.access.level.not.assigned";
+    public static final String ACCOUNT_ADMINISTRATOR_ACCESS_LEVEL_ALREADY_ASSIGNED =
+            "exception.mok.account.administrator.access.level.already.assigned";
+    public static final String ACCOUNT_CLIENT_AND_SALES_REP_ACCESS_LEVEL_CONFLICT =
+            "exception.mok.account.client.and.sales.rep.access.levels.conflict";
     public static final String ADDRESS_ALREADY_ASSIGNED =
             "exception.mok.account.address.already.assigned";
     public static final String ACCOUNT_NOT_FOUND = "exception.mok.account.not.found";

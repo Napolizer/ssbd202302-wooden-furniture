@@ -25,8 +25,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({
-        GenericServiceExceptionsInterceptor.class,
-        LoggerInterceptor.class
+    GenericServiceExceptionsInterceptor.class,
+    LoggerInterceptor.class
 })
 public class AccountService {
   @Inject
@@ -59,9 +59,19 @@ public class AccountService {
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
+    if (accessLevels.size() > 0 && Objects.equals(accessLevel.getGroupName(), "ADMINISTRATOR")) {
+      throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
+    }
+
     for (AccessLevel item : accessLevels) {
-      if (item.getClass() == accessLevel.getClass()) {
+      if (Objects.equals(item.getGroupName(), accessLevel.getGroupName())) {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
+      }
+
+      if ((Objects.equals(item.getGroupName(), "CLIENT") && Objects.equals(accessLevel.getGroupName(), "SALES_REP"))
+          || (Objects.equals(item.getGroupName(), "SALES_REP")
+            && Objects.equals(accessLevel.getGroupName(), "CLIENT"))) {
+        throw ApplicationExceptionFactory.createClientAndSalesRepAccessLevelsConflictException();
       }
     }
     accessLevel.setAccount(foundAccount);
