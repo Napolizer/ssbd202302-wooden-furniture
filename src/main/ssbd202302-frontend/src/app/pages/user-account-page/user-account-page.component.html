@@ -123,6 +123,7 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
+          <button mat-raised-button color="warn" (click)="onBlockClicked()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>
         </mat-card-actions>
       </mat-card>
     </form>

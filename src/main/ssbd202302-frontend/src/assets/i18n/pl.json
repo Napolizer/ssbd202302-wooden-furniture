@@ -87,6 +87,7 @@
   "account.removegroup": "Usuń grupę",
   "account.addgroup.success": "Grupa została pomyślnie dodana",
   "account.removegroup.success": "Grupa została pomyślnie usunięta",
+  "account.block": "Zablokuj",
 
   "edit.account": "Edytuj konto",
   "edit.account.field.required": "To pole jest wymagane",
@@ -160,5 +161,7 @@
   "notfound.oops": "Ups!",
 
   "false": "nie",
-  "true": "tak"
+  "true": "tak",
+
+  "block.success": "Pomyślnie zablokowano konto"
 }

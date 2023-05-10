@@ -138,4 +138,16 @@ export class AccountService {
       }
     );
   }
+
+  public blockAccount(id: string): Observable<Account> {
+    return this.httpClient.patch<Account>(
+      `${environment.apiBaseUrl}/account/block/` + id,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
 }
