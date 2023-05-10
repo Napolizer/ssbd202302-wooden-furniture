@@ -319,27 +319,48 @@ public class AccountServiceIT {
   @Test
   public void properlyRemovesAccessLevelFromAccount()
           throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException {
-    AccessLevel newAccessLevel = new Employee();
+    AccessLevel employeeAccessLevel = new Employee();
+    AccessLevel clientAccessLevel = new Client();
+
 
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
-    accountService.addAccessLevelToAccount(account.getId(), newAccessLevel);
+    accountService.addAccessLevelToAccount(account.getId(), employeeAccessLevel);
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
-    accountService.removeAccessLevelFromAccount(account.getId(), newAccessLevel);
-    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
+    accountService.removeAccessLevelFromAccount(account.getId(), employeeAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+  }
+
+  @Test
+  public void failsToRemoveAccessLevelWhenAccountHasZeroAccessLevelsAssigned() {
+    AccessLevel accessLevelClient = new Client();
+    assertThrows(RemoveAccessLevelException.class,
+            () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelClient));
+  }
+
+  @Test
+  public void failsToRemoveAccessLevelWhenAccountHasOnlyOneAccessLevelAssigned() {
+    AccessLevel accessLevelClient = new Client();
+    accountService.addAccessLevelToAccount(account.getId(), accessLevelClient);
+    assertThrows(RemoveAccessLevelException.class,
+            () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelClient));
   }
 
   @Test
   public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded()
           throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
     AccessLevel accessLevelClient = new Client();
+    AccessLevel accessLevelEmployee = new Employee();
     AccessLevel accessLevelAdmin = new Administrator();
 
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
     accountService.addAccessLevelToAccount(account.getId(), accessLevelClient);
-    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+    accountService.addAccessLevelToAccount(account.getId(), accessLevelEmployee);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
     assertThrows(AccessLevelNotAssignedException.class,
             () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelAdmin));
-    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
   }
 
   @Test
