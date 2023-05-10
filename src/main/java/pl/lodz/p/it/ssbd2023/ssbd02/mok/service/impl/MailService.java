@@ -13,7 +13,6 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
-
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
@@ -54,8 +53,8 @@ public class MailService {
       throws MessagingException {
     sendMail(to,
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
-        "http://localhost:8080/api/v1/accout/email/submit/" + accountId
-    //link do podmiany na strone jak bedzie
+        MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
+        + " " + appUrl + "/confirm-email?id=" + accountId
     );
   }
 

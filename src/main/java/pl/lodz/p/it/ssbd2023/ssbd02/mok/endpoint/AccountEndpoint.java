@@ -123,4 +123,8 @@ public class AccountEndpoint {
   public void sendResetPasswordEmail(SetEmailToSendPasswordDto emailDto) {
     accountService.sendResetPasswordEmail(emailDto.getEmail());
   }
+
+  public void updateEmailAfterConfirmation(Long accountId) {
+    accountService.updateEmailAfterConfirmation(accountId);
+  }
 }

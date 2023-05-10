@@ -530,18 +530,20 @@ public class AccountServiceIT {
             () -> accountService.activateAccount(Long.MAX_VALUE));
   }
 
+  @Test
+  public void properlyUpdateEmailWhenNewEmailIsSet() throws Exception {
+    utx.begin();
+    accountToRegister.setAccountState(AccountState.ACTIVE);
+    accountToRegister.setNewEmail("newssbd02Email@gmail.com");
 
-//    @Test
-//    public void updateEmailWithSetNewEmail() {
-//        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
-//        personToRegister.getAccount().setNewEmail("newEmail@gmail.com");
-//
-//        Account account = personFacadeOperations.create(personToRegister).getAccount();
-//        assertEquals("test123@gmail.com", account.getEmail());
-//        assertEquals("newEmail@gmail.com", account.getNewEmail());
-//
-//        Account accountAfterUpdate = accountService.updateEmail(account.getId()).getAccount();
-//        assertEquals("newEmail@gmail.com", accountAfterUpdate.getEmail());
-//        assertNull(null, accountAfterUpdate.getNewEmail());
-//    }
+    accountService.createAccount(accountToRegister);
+    assertEquals("test123@gmail.com", accountToRegister.getEmail());
+    assertEquals("newssbd02Email@gmail.com", accountToRegister.getNewEmail());
+
+    Account accountAfterUpdate = accountService.updateEmailAfterConfirmation(accountToRegister.getId());
+    assertEquals("newssbd02Email@gmail.com", accountAfterUpdate.getEmail());
+    assertNull(accountAfterUpdate.getNewEmail());
+    utx.commit();
+  }
+
 }

@@ -16,6 +16,7 @@ import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account
 import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
 import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import {ConfirmEmailPageComponent} from "./pages/confirm-email-page/confirm-email-page.component";
 
 const routes: Routes = [
   {
@@ -77,6 +78,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       groups: [Group.GUEST]
+    }
+  },
+  {
+    path: 'confirm-email',
+    component: ConfirmEmailPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
     }
   },
   {
