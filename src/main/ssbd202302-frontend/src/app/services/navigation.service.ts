@@ -26,8 +26,20 @@ export class NavigationService {
     return this.router.navigate(['/self'], {state: state});
   }
 
+  public redirectToChangeOwnEmailPage(): Promise<boolean> {
+    return this.router.navigate(['/change-email']);
+  }
+
+  public redirectToChangeUserEmailPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/change-email/' + id]);
+  }
+
   public redirectToAccountPage(id: string): Promise<boolean> {
     return this.router.navigate(['account/' + id])
+  }
+
+  public redirectToAccountPageWithState(id: string, state: any): Promise<boolean> {
+    return this.router.navigate(['account/' + id], {state: state});
   }
 
   public redirectToLoginPage(): Promise<boolean> {

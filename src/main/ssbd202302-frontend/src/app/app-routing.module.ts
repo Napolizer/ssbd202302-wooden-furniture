@@ -18,6 +18,7 @@ import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
+import { ChangeEmailComponent } from './pages/change-email/change-email.component';
 
 const routes: Routes = [
   {
@@ -90,11 +91,27 @@ const routes: Routes = [
     }
   },
   {
+    path: 'change-email',
+    component: ChangeEmailComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
     path: 'change-email/confirm',
     component: ConfirmEmailChangeComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
+    path: 'change-email/:id',
+    component: ChangeEmailComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
     }
   },
   {

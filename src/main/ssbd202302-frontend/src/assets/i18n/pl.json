@@ -17,7 +17,13 @@
   "forgot.password.button": "Wyślij",
   "forgot.password.success": "Link do formularza resetowania hasła został wysłany na Twój adres email",
 
+  "change.email.button": "Zmień adres email",
   "change.email.success": "Twój adres email został pomyślnie zmieniony",
+  "change.email.current": "Aktualny adres email",
+  "change.email.new": "Nowy adres email",
+  "change.email.back": "Powrót",
+  "change.email.confirm": "Potwierdź",
+  "change.email.link.sent": "Link aktywacyjny został wysłany na nowy adres email",
 
   "register.title": "Utwórz konto",
   "register.stepper.first": "Uzupełnij dane konta",
@@ -116,6 +122,7 @@
   "dialog.confirmation.close": "Zamknij",
   "dialog.confirmation.register.message": "Czy na pewno chcesz się zarejestrować?",
   "dialog.confirmation.password.message": "Czy na pewno chcesz zresetować swoje hasło?",
+  "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",

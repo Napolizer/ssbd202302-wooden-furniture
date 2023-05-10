@@ -64,6 +64,16 @@ export class AccountService {
     );
   }
 
+  public changeEmail(id : string, email: Email): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/change-email/${id}`,
+      email,
+      { observe: 'response',
+        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`} 
+      }
+    )
+  }
+
   public confirmEmailChange(token: string): Observable<HttpResponse<any>> {
     return this.httpClient.patch(
       `${environment.apiBaseUrl}/account/change-email?token=${token}`,

@@ -17,7 +17,13 @@
   "forgot.password.button": "Send",
   "forgot.password.success": "The link to reset your password has been sent to your email address",
 
+  "change.email.button": "Change email address",
   "change.email.success": "Your email has been successfully changed",
+  "change.email.current": "Current email address",
+  "change.email.new": "New email address",
+  "change.email.back": "Back",
+  "change.email.confirm": "Confirm",
+  "change.email.link.sent": "Activation link has been sent to the new email address",
 
   "register.title": "Create your account",
   "register.stepper.first": "Fill out account details",
@@ -117,6 +123,7 @@
   "dialog.confirmation.close": "Close",
   "dialog.confirmation.register.message": "Are you sure you want to sign up?",
   "dialog.confirmation.password.message": "Are you sure you want to reset your password?",
+  "dialog.change.email.message": "Are you sure you want to change email address?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
