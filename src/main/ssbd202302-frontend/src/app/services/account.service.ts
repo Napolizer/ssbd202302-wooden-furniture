@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 import { TokenService } from './token.service';
 import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
-import {EditOwnAccount} from "../interfaces/edit.own.account";
+import {EditAccount} from "../interfaces/edit.account";
 import { Email } from '../interfaces/email';
 
 @Injectable({
@@ -95,11 +95,22 @@ export class AccountService {
     );
   }
 
-  public editOwnAccount(login: string, account: EditOwnAccount): Observable<EditOwnAccount> {
-    console.log("elo")
-    return this.httpClient.put<EditOwnAccount>(
+  public editOwnAccount(login: string, account: EditAccount): Observable<EditAccount> {
+    return this.httpClient.put<EditAccount>(
       `${environment.apiBaseUrl}/account/login/` + login + `/editOwnAccount`,
       account
+    );
+  }
+
+  public editUserAccount(login: string, account: EditAccount): Observable<EditAccount> {
+    return this.httpClient.put<EditAccount>(
+      `${environment.apiBaseUrl}/account/login/` + login + `/editAccountAsAdmin`,
+      account,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
     );
   }
 

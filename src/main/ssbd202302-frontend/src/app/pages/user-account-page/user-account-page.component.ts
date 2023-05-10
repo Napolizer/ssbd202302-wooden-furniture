@@ -41,9 +41,9 @@ export class UserAccountPageComponent implements OnInit {
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
-  account: Partial<Account> = {};
+  account: Account;
   loading = true;
-  id = '';
+  id = ''
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -57,7 +57,7 @@ export class UserAccountPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
     this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
@@ -103,5 +103,22 @@ export class UserAccountPageComponent implements OnInit {
 
   redirectToRemoveAccountGroupsPage(): void{
     void this.navigationService.redirectToRemoveAccountGroupsPage(this.id);
+  }
+
+  getAccountState(): string {
+    switch(this.account.accountState.toUpperCase()) {
+      case 'BLOCKED': return 'account.state.blocked';
+      case 'INACTIVE': return 'account.state.inactive';
+      case 'NOT_VERIFIED': return 'account.state.notVerified';
+      default: return 'account.state.active';
+    }
+  }
+
+  getGroups(): string {
+    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
+  }
+
+  onEditClicked(): void {
+    this.navigationService.redirectToEditUserAccountPage(this.id);
   }
 }

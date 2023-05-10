@@ -13,6 +13,7 @@ import {ConfirmPageComponent} from './pages/confirm-page/confirm-page.component'
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
+import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-user-account-page.component";
 import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
 import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
@@ -50,6 +51,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
+    path: 'account/:id/edit',
+    component: EditUserAccountPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
     }
   },
   {

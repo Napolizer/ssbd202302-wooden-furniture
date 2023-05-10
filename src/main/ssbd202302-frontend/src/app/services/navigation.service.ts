@@ -50,6 +50,10 @@ export class NavigationService {
     return this.router.navigate(['/edit-own-account']);
   }
 
+  public redirectToEditUserAccountPage(id: string): Promise<boolean> {
+    return this.router.navigate(['account/' + id + '/edit'])
+  }
+
   public redirectToAddAccountGroupsPage(id: string): Promise<boolean> {
     return this.router.navigate(['/account-group-add/' + id]);
   }

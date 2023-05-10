@@ -1,19 +1,20 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {FormControl, FormGroup} from "@angular/forms";
+import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
+import {EditAccount} from "../../interfaces/edit.account";
 import {AccountService} from "../../services/account.service";
 import {TranslateService} from "@ngx-translate/core";
 import {AuthenticationService} from "../../services/authentication.service";
-import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {FormControl, FormGroup} from "@angular/forms";
-import {EditAccount} from "../../interfaces/edit.account";
 import {AlertService} from "@full-fledged/alerts";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'app-edit-own-account',
-  templateUrl: './edit-own-account.component.html',
-  styleUrls: ['./edit-own-account.component.sass'],
+  selector: 'app-edit-user-account-page',
+  templateUrl: './edit-user-account-page.component.html',
+  styleUrls: ['./edit-user-account-page.component.sass'],
   animations: [
     trigger('loadedUnloadedForm', [
       state('loaded', style({
@@ -34,7 +35,7 @@ import {AlertService} from "@full-fledged/alerts";
     ]),
   ]
 })
-export class EditOwnAccountComponent implements OnInit, OnDestroy {
+export class EditUserAccountPageComponent implements OnInit {
   editAccountForm = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -55,8 +56,11 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     postalCode: '',
     streetNumber: 0,
   }
+  login = ''
+  id = ''
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private accountService: AccountService,
     private translate: TranslateService,
     private authenticationService: AuthenticationService,
@@ -66,7 +70,8 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
+    this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
+    this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: account => {
@@ -86,6 +91,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
             streetNumber: account.address.streetNumber,
             postalCode: account.address.postalCode
           });
+          this.login = account.login;
           this.loading = false
         },
         error: e => {
@@ -126,7 +132,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     this.editableAccount.postalCode = this.editAccountForm.value.postalCode!;
     this.editableAccount.street = this.editAccountForm.value.street!;
     this.editableAccount.streetNumber = this.editAccountForm.value.streetNumber!
-    this.accountService.editOwnAccount(this.authenticationService.getLogin()!, this.editableAccount)
+    this.accountService.editUserAccount(this.login, this.editableAccount)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe(editedAccount => {
         this.editableAccount = editedAccount;
@@ -134,7 +140,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy))
           .subscribe(msg => {
             this.alertService.success(msg)
-            this.navigationService.redirectToOwnAccountPage()
+            this.navigationService.redirectToAccountPage(this.id)
           });
       });
     this.loading = false
