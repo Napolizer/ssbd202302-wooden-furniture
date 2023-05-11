@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
+import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -21,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -28,7 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
     GenericServiceExceptionsInterceptor.class,
     LoggerInterceptor.class
 })
-public class AccountService {
+public class AccountService extends AbstractService {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject

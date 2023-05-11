@@ -16,6 +16,7 @@ import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-
 import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
 import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import {ChangeAccountGroupPageComponent} from "./pages/change-account-group-page/change-account-group-page.component";
 import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeEmailComponent } from './pages/change-email/change-email.component';
@@ -154,6 +155,14 @@ const routes: Routes = [
     path:'account-group-remove/:id',
     component:RemoveAccountGroupPageComponent,
     canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
+    }
+  },
+  {
+    path:'account-group-change/:id',
+    component:ChangeAccountGroupPageComponent,
+    canActivate:[AuthGuard],
     data: {
       groups: [Group.ADMINISTRATOR]
     }

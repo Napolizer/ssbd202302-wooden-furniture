@@ -81,4 +81,8 @@ export class NavigationService {
   redirectToRemoveAccountGroupsPage(id: string): Promise<boolean> {
     return this.router.navigate(['/account-group-remove/' + id])
   }
+
+  redirectToChangeAccountGroupPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-group-change/' + id])
+  }
 }

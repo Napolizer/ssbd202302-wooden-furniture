@@ -23,6 +23,7 @@ import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Data
+@ToString(callSuper = true)
 @AllArgsConstructor
 @SuperBuilder
 @Entity

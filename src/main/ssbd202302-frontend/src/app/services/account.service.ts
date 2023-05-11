@@ -8,6 +8,7 @@ import { AccountRegister } from '../interfaces/account.register';
 import { ResetPassword } from '../interfaces/reset.password';
 import {EditAccount} from "../interfaces/edit.account";
 import { Email } from '../interfaces/email';
+import {Accesslevel} from "../interfaces/accesslevel";
 
 @Injectable({
   providedIn: 'root',
@@ -127,7 +128,7 @@ export class AccountService {
   }
 
   public addAccountGroup(id: string,accountGroup: string): Observable<Account> {
-    console.log("eloelo")
+    console.log("Dodaję grupę użytkownika")
     return this.httpClient.put<Account>(
       `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
       null,
@@ -140,9 +141,22 @@ export class AccountService {
   }
 
   public removeAccountGroup(id: string, accountGroup: string): Observable<Account> {
-    console.log("usuwam")
+    console.log("Usuwam grupę użytkownika")
     return this.httpClient.delete<Account>(
       `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
+  }
+
+public changeAccountGroup(id: string,accessLevel: Accesslevel): Observable<Account> {
+    console.log("Zmiana grupy użytkownika")
+    return this.httpClient.put<Account>(
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/change`,
+        accessLevel,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`
