@@ -37,8 +37,6 @@ public class AccountService extends AbstractService {
   @Inject
   private TokenService tokenService;
   @Inject
-  private AccountCleanerService accountCleanerService;
-  @Inject
   private EmailSendingRetryService emailSendingRetryService;
 
   public Optional<Account> getAccountByLogin(String login) {
@@ -139,7 +137,8 @@ public class AccountService extends AbstractService {
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
-    accountCleanerService.deleteAccountAfterTimeout(account.getLogin());
+    emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
+            TokenType.ACCOUNT_CONFIRMATION, accountConfirmationToken);
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());

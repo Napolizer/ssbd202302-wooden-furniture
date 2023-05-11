@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import java.io.InputStream;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -26,6 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SimpleLoggerInterceptor.class)
 public class EmailSendingRetryService {
+  private Long expirationAccountConfirmation;
   private Long expirationPasswordReset;
   private Long expirationChangeEmail;
   @Resource
@@ -40,6 +42,7 @@ public class EmailSendingRetryService {
     Properties prop = new Properties();
     try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
       prop.load(input);
+      expirationAccountConfirmation = Long.parseLong(prop.getProperty("expiration.account.confirmation.milliseconds"));
       expirationPasswordReset = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
       expirationChangeEmail = Long.parseLong(prop.getProperty("expiration.change.email.milliseconds"));
     } catch (Exception e) {
@@ -50,6 +53,18 @@ public class EmailSendingRetryService {
   public void sendEmailTokenAfterHalfExpirationTime(String login, String hashOrEmail,
                                                     TokenType tokenType, String token) {
     switch (tokenType) {
+      case ACCOUNT_CONFIRMATION -> {
+        timerService.createSingleActionTimer(
+                expirationAccountConfirmation / 2,
+                new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
+                  expirationAccountConfirmation / 2 }, false)
+        );
+        timerService.createSingleActionTimer(
+                expirationAccountConfirmation,
+                new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
+                  expirationAccountConfirmation }, false)
+        );
+      }
       case CHANGE_EMAIL -> timerService.createSingleActionTimer(
               expirationChangeEmail / 2,
               new TimerConfig(new Object[] { login, hashOrEmail, tokenType,  token }, false)
@@ -91,7 +106,43 @@ public class EmailSendingRetryService {
           }
         }
       }
+      case ACCOUNT_CONFIRMATION -> {
+        Long time = (Long) info[4];
+        if (account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
+          checkTimer(account, token, time);
+        }
+      }
       default -> throw new RuntimeException();
+    }
+  }
+
+  private void checkTimer(Account account, String token, long time) {
+    long timeout = this.expirationAccountConfirmation;
+    if (time < timeout) {
+      sendAccountConfirmationLink(account, token);
+      return;
+    }
+
+    if (time == timeout) {
+      accountFacade.delete(account);
+      sendAccountRemovedMail(account);
+    }
+  }
+
+  private void sendAccountConfirmationLink(Account account, String token) {
+    try {
+      mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
+              token, account.getLogin());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
+
+  private void sendAccountRemovedMail(Account account) {
+    try {
+      mailService.sendEmailAboutRemovingNotVerifiedAccount(account.getEmail(), account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
 }
