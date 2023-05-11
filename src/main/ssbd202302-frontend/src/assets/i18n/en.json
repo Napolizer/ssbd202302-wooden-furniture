@@ -98,6 +98,8 @@
   "account.addgroup.success": "Group added successfully",
   "account.removegroup.success": "Group removed successfully",
   "account.changegroup.success": "Group changed successfully",
+  "account.block": "Block",
+  "account.activate": "Activate",
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
@@ -156,6 +158,7 @@
   "exception.mok.account.client.and.sales.rep.access.levels.conflict": "The same account cannot be assigned as Client and SalesRep",
   "exception.mok.account.remove.access.level": "Chosen group is not assigned to account or it's the only group that is assigned to declared account",
   "exception.mok.account.administrator.access.level.already.assigned": "Account with Administrator group cant have any other group",
+  "exception.mok.account.change.state": "The requested account state change cannot be performed due to restrictions or the account is already active",
 
   "group.administrator": "Administrator",
   "group.employee": "Employee",
@@ -177,5 +180,8 @@
   "notfound.oops": "Oops!",
 
   "false": "no",
-  "true": "yes"
+  "true": "yes",
+
+  "block.success": "Account blocked successfully",
+  "activate.success": "Account activated successfully"
 }
