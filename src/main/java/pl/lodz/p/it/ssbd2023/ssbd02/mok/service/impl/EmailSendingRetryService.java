@@ -90,20 +90,12 @@ public class EmailSendingRetryService {
     switch (tokenType) {
       case CHANGE_EMAIL -> {
         if (!account.getEmail().equals(hashOrEmail)) {
-          try {
-            mailService.sendMailWithEmailChangeConfirmLink(hashOrEmail, account.getLocale(), token);
-          } catch (MessagingException e) {
-            throw ApplicationExceptionFactory.createMailServiceException(e);
-          }
+          sendMailWithEmailChangeConfirmLink(hashOrEmail, account.getLocale(), token);
         }
       }
       case PASSWORD_RESET -> {
         if (account.getPassword().equals(hashOrEmail)) {
-          try {
-            mailService.sendResetPasswordMail(account.getEmail(), account.getLocale(), token);
-          } catch (MessagingException e) {
-            throw ApplicationExceptionFactory.createMailServiceException(e);
-          }
+          sendResetPasswordMail(account.getEmail(), account.getLocale(), token);
         }
       }
       case ACCOUNT_CONFIRMATION -> {
@@ -126,6 +118,22 @@ public class EmailSendingRetryService {
     if (time == timeout) {
       accountFacade.delete(account);
       sendAccountRemovedMail(account);
+    }
+  }
+
+  private void sendMailWithEmailChangeConfirmLink(String email, String locale, String token) {
+    try {
+      mailService.sendMailWithEmailChangeConfirmLink(email, locale, token);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
+
+  private void sendResetPasswordMail(String email, String locale, String token) {
+    try {
+      mailService.sendResetPasswordMail(email, locale, token);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
 
