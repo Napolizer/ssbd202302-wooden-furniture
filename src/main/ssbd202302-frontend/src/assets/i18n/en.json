@@ -85,8 +85,10 @@
   "account.state.inactive": "Inactive",
   "account.addgroup": "Add group",
   "account.removegroup": "Remove group",
+  "account.changegroup": "Change group",
   "account.addgroup.success": "Group added successfully",
   "account.removegroup.success": "Group removed successfully",
+  "account.changegroup.success": "Group changed successfully",
   "account.block": "Block",
 
   "edit.account": "Edit account",
@@ -140,6 +142,10 @@
   "exception.mok.account.access.level": "AccessLevel exception",
   "exception.mok.account.access.level.already.assigned": "Chosen group is already assigned to user",
   "exception.mok.account.access.level.not.assigned": "Chosen group is not assigned to user",
+  "exception.mok.account.access.level.many.assigned": "Account has already assigned more than 1 group",
+  "exception.mok.account.client.and.sales.rep.access.levels.conflict": "The same account cannot be assigned as Client and SalesRep",
+  "exception.mok.account.remove.access.level": "Chosen group is not assigned to account or it's the only group that is assigned to declared account",
+  "exception.mok.account.administrator.access.level.already.assigned": "Account with Administrator group cant have any other group",
 
   "group.administrator": "Administrator",
   "group.employee": "Employee",
