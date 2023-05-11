@@ -3,7 +3,11 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
@@ -26,7 +30,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountServiceIT {
@@ -48,6 +51,7 @@ public class AccountServiceIT {
             .addPackages(true, "org.hamcrest")
             .addPackages(true, "at.favre.lib")
             .addPackages(true, "io.jsonwebtoken")
+            .addPackages(true, "javax.xml.bind")
             .addAsResource(new File("src/test/resources/"), "");
   }
 
@@ -231,6 +235,53 @@ public class AccountServiceIT {
   }
 
   @Test
+  public void failsToAddAnyAccessLevelLevelWhenAdministratorAccessLevelIsAlreadyAssigned() {
+    AccessLevel administratorAccessLevel = new Administrator();
+    AccessLevel clientAccessLevel = new Client();
+    AccessLevel employeeAccessLevel = new Employee();
+    AccessLevel salesRepAccessLevel = new SalesRep();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), administratorAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), administratorAccessLevel));
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel));
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), employeeAccessLevel));
+    assertThrows(AdministratorAccessLevelAlreadyAssignedException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), salesRepAccessLevel));
+  }
+
+  @Test
+  public void failsToAddSalesRepAccessLevelWhenClientAccessLevelIsAlreadyAssigned() {
+    AccessLevel clientAccessLevel = new Client();
+    AccessLevel salesRepAccessLevel = new SalesRep();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+
+    assertThrows(ClientAndSalesRepAccessLevelsConflictException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), salesRepAccessLevel));
+  }
+
+  @Test
+  public void failsToAddClientAccessLevelWhenSalesRepAccessLevelIsAlreadyAssigned() {
+    AccessLevel clientAccessLevel = new Client();
+    AccessLevel salesRepAccessLevel = new SalesRep();
+
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), salesRepAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+
+    assertThrows(ClientAndSalesRepAccessLevelsConflictException.class,
+            () -> accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel));
+  }
+
+  @Test
   public void properlyChangeAccessLevelWhenItsAlreadyOne() {
     AccessLevel oldAccessLevel = new Client();
     AccessLevel newAccessLevel = new Administrator();
@@ -267,28 +318,49 @@ public class AccountServiceIT {
 
   @Test
   public void properlyRemovesAccessLevelFromAccount()
-          throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException, SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    AccessLevel newAccessLevel = new Employee();
+          throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException {
+    AccessLevel employeeAccessLevel = new Employee();
+    AccessLevel clientAccessLevel = new Client();
+
 
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
-    accountService.addAccessLevelToAccount(account.getId(), newAccessLevel);
+    accountService.addAccessLevelToAccount(account.getId(), employeeAccessLevel);
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
-    accountService.removeAccessLevelFromAccount(account.getId(), newAccessLevel);
-    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
+    accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
+    accountService.removeAccessLevelFromAccount(account.getId(), employeeAccessLevel);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+  }
+
+  @Test
+  public void failsToRemoveAccessLevelWhenAccountHasZeroAccessLevelsAssigned() {
+    AccessLevel accessLevelClient = new Client();
+    assertThrows(RemoveAccessLevelException.class,
+            () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelClient));
+  }
+
+  @Test
+  public void failsToRemoveAccessLevelWhenAccountHasOnlyOneAccessLevelAssigned() {
+    AccessLevel accessLevelClient = new Client();
+    accountService.addAccessLevelToAccount(account.getId(), accessLevelClient);
+    assertThrows(RemoveAccessLevelException.class,
+            () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelClient));
   }
 
   @Test
   public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded()
           throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
     AccessLevel accessLevelClient = new Client();
+    AccessLevel accessLevelEmployee = new Employee();
     AccessLevel accessLevelAdmin = new Administrator();
 
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
     accountService.addAccessLevelToAccount(account.getId(), accessLevelClient);
-    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+    accountService.addAccessLevelToAccount(account.getId(), accessLevelEmployee);
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
     assertThrows(AccessLevelNotAssignedException.class,
             () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelAdmin));
-    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
+    assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
   }
 
   @Test
@@ -396,15 +468,10 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesPassword() {
     String newPassword = "newPassword";
-
-    assertTrue(CryptHashUtils.verifyPassword("test",
-            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
+    assertEquals(account.getPassword(),
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword));
-    assertFalse(CryptHashUtils.verifyPassword("test",
-            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
-    assertTrue(CryptHashUtils.verifyPassword(newPassword,
-            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
-    //FIXME Sth wrong ?
+    assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
   }
 
   @Test
@@ -418,15 +485,10 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesPasswordAsAdmin() {
     String newPassword = "newPassword";
-
-    assertTrue(CryptHashUtils.verifyPassword("test",
-            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
+    assertEquals(account.getPassword(),
+            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin(), newPassword));
-    assertFalse(CryptHashUtils.verifyPassword("test",
-            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
-    assertTrue(CryptHashUtils.verifyPassword(newPassword,
-            accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword()));
-    //FIXME Sth wrong ?
+    assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
   }
 
   @Test
@@ -536,18 +598,20 @@ public class AccountServiceIT {
             () -> accountService.activateAccount(Long.MAX_VALUE));
   }
 
+  @Test
+  public void properlyUpdateEmailWhenNewEmailIsSet() throws Exception {
+    utx.begin();
+    accountToRegister.setAccountState(AccountState.ACTIVE);
+    accountToRegister.setNewEmail("newssbd02Email@gmail.com");
 
-//    @Test
-//    public void updateEmailWithSetNewEmail() {
-//        personToRegister.getAccount().setAccountState(AccountState.ACTIVE);
-//        personToRegister.getAccount().setNewEmail("newEmail@gmail.com");
-//
-//        Account account = personFacadeOperations.create(personToRegister).getAccount();
-//        assertEquals("test123@gmail.com", account.getEmail());
-//        assertEquals("newEmail@gmail.com", account.getNewEmail());
-//
-//        Account accountAfterUpdate = accountService.updateEmail(account.getId()).getAccount();
-//        assertEquals("newEmail@gmail.com", accountAfterUpdate.getEmail());
-//        assertNull(null, accountAfterUpdate.getNewEmail());
-//    }
+    accountService.createAccount(accountToRegister);
+    assertEquals("test123@gmail.com", accountToRegister.getEmail());
+    assertEquals("newssbd02Email@gmail.com", accountToRegister.getNewEmail());
+
+    Account accountAfterUpdate = accountService.updateEmailAfterConfirmation(accountToRegister.getLogin());
+    assertEquals("newssbd02Email@gmail.com", accountAfterUpdate.getEmail());
+    assertNull(accountAfterUpdate.getNewEmail());
+    utx.commit();
+  }
+
 }

@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -12,10 +13,12 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Interceptors({LoggerInterceptor.class})
 public class MailService {
   private final String appUrl = "http://localhost:4200";
 
@@ -38,7 +41,7 @@ public class MailService {
                     + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
   }
 
-  public void sendResetPasswordEmail(String to, String locale, String resetPasswordToken) throws MessagingException {
+  public void sendResetPasswordMail(String to, String locale, String resetPasswordToken) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
@@ -46,12 +49,12 @@ public class MailService {
             + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
   }
 
-  public void sendMailWithEmailChangeConfirmLink(String to, String locale, Long accountId)
+  public void sendMailWithEmailChangeConfirmLink(String to, String locale, String token)
       throws MessagingException {
     sendMail(to,
         MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
-        "http://localhost:8080/api/v1/accout/email/submit/" + accountId
-    //link do podmiany na strone jak bedzie
+        MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
+        + ("\n" + appUrl + "/change-email/confirm?token=" + token)
     );
   }
 
@@ -66,6 +69,20 @@ public class MailService {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE)
+    );
+  }
+
+  public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_MESSAGE)
+    );
+  }
+
+  public void sendEmailRemindingToConfirmAccount(String to, String locale) throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_MESSAGE)
     );
   }
 

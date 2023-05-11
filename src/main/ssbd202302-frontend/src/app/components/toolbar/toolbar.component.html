@@ -4,25 +4,27 @@
   </button>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAdminPage()">
-      <mat-icon>admin_panel_settings</mat-icon><span>Admin Panel</span>
+      <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>
     </button>
   </mat-menu>
   <span class="toolbar-right title">SSBD</span>
   <span class="toolbar-item-spacer"></span>
+  <button *ngIf="!isUserLoggedIn()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
   <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
   <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
     <mat-icon>account_circle</mat-icon>
   </button>
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAccountPage()">
-      <mat-icon>person</mat-icon><span>My Account</span>
+      <mat-icon>person</mat-icon><span>{{'toolbar.myAccount' | translate}}</span>
     </button>
-    <button mat-menu-item routerLink="#">
-      <mat-icon>settings</mat-icon><span>Settings</span>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="#" (click)="redirectToChangeOwnPasswordPage()">
+      <mat-icon>settings</mat-icon><span>{{'toolbar.settings' | translate}}</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="#" (click)="logout()">
-      <mat-icon>exit_to_app</mat-icon>Logout
+      <mat-icon>exit_to_app</mat-icon>{{'toolbar.logout' | translate}}
     </button>
   </mat-menu>
 </mat-toolbar>

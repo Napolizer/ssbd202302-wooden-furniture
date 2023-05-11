@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AccountService} from "../../services/account.service";
 import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NavigationService} from "../../services/navigation.service";
 
 @Component({
   selector: 'app-admin-page',
@@ -32,7 +33,8 @@ export class AdminPageComponent implements OnInit {
   loading = true;
 
   constructor(
-    private accountService: AccountService
+    private accountService: AccountService,
+    private navigationService: NavigationService
   ) { }
 
   ngOnInit(): void {
@@ -47,4 +49,7 @@ export class AdminPageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
+  redirectToAccountPage(id: string): void {
+    void this.navigationService.redirectToAccountPage(id);
+  }
 }

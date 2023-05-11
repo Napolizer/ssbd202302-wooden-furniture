@@ -3,14 +3,25 @@ package pl.lodz.p.it.ssbd2023.ssbd02.utils.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import io.jsonwebtoken.impl.Base64Codec;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 
 public final class CryptHashUtils {
+  private static final String SALT;
+  private static final int BCRYPT_COST_FACTOR;
 
-  //TODO read from file
-  private static final String SALT = "+a+fz)tT3m&}X@Wh";
-  private static final int BCRYPT_COST_FACTOR = 12;
+  static {
+    Properties prop = new Properties();
+    try (InputStream input = CryptHashUtils.class.getClassLoader().getResourceAsStream("config.properties")) {
+      prop.load(input);
+      SALT = prop.getProperty("hash.salt");
+      BCRYPT_COST_FACTOR = Integer.parseInt(prop.getProperty("hash.cost.factor"));
+    } catch (Exception e) {
+      throw new RuntimeException("Error loading configuration file: " + e.getMessage());
+    }
+  }
 
   public static String hashPassword(String password) {
     return BCrypt.withDefaults().hashToString(BCRYPT_COST_FACTOR, password.toCharArray());
@@ -29,7 +40,7 @@ public final class CryptHashUtils {
         .verify(Long.toString(version).toCharArray(), hash.toCharArray()).verified;
   }
 
-  public static String getSecretKeyForPasswordResetToken(String input) {
+  public static String getSecretKeyForEmailToken(String input) {
     MessageDigest md;
     try {
       md = MessageDigest.getInstance("SHA-256");

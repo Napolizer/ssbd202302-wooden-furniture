@@ -2,7 +2,7 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
-      <mat-list-item *ngFor="let account of allAccounts">
+      <mat-list-item *ngFor="let account of allAccounts" (click)="redirectToAccountPage(account.id.toString())">
         <div mat-line>{{account.login}}</div>
         <div mat-line>{{account.email}}</div>
         <mat-divider></mat-divider>

@@ -18,10 +18,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Data
+@ToString(callSuper = true)
 @AllArgsConstructor
 @SuperBuilder
 @Entity
@@ -50,13 +52,16 @@ public class Account extends AbstractEntity {
   private String login;
 
   @Column(nullable = false)
+  @ToString.Exclude
   private String password;
 
   @Column(unique = true, nullable = false)
+  @ToString.Exclude
   private String email;
 
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "person_id", unique = true, nullable = false)
+  @ToString.Exclude
   private Person person;
 
   @Column(name = "last_login")
@@ -67,6 +72,9 @@ public class Account extends AbstractEntity {
 
   @Column(name = "last_login_ip_address")
   private String lastLoginIpAddress;
+
+  @Column(name = "last_failed_login_ip_address")
+  private String lastFailedLoginIpAddress;
 
   @Column(nullable = false)
   private String locale;
@@ -88,9 +96,11 @@ public class Account extends AbstractEntity {
 
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
   @Builder.Default
+  @ToString.Exclude
   private List<Order> orders = new ArrayList<>();
 
-  //    private String newEmail;
+  @Column(name = "new_email")
+  private String newEmail;
 
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
@@ -15,5 +16,6 @@ public class UserCredentialsDto implements Serializable {
   @NotBlank
   private String login;
   @NotBlank
+  @ToString.Exclude
   private String password;
 }

@@ -1,0 +1,135 @@
+$border-radius: 10px
+
+.mat-card-header
+  display: flex
+  justify-content: center
+  align-items: center
+  padding-top: 20px
+  margin-bottom: 30px
+
+  .profile-image
+    background-image: url('../../../assets/images/profile-picture.jpg')
+    background-size: cover
+
+  .mat-card-title
+    font-family: Lato, sans-serif
+    font-size: 28px
+
+.container
+  position: fixed
+  width: 100%
+  max-height: 100%
+  padding-top: 100px
+  padding-left: 550px
+  padding-right: 550px
+  padding-bottom: 50px
+  box-sizing: border-box
+  font-family: Lato, sans-serif
+  display: flex
+  background: inherit
+  overflow-y: scroll
+
+  .panel
+    display: flex
+    flex-direction: row
+    flex-grow: 1
+    overflow: auto
+    justify-content: space-evenly
+    border-radius: $border-radius
+    margin-bottom: 20px
+
+    .form-container
+      background-color: #f8f8f8
+      border-bottom-right-radius: $border-radius
+      border-top-right-radius: $border-radius
+      width: 100%
+      height: auto
+
+      .profile-card
+        box-sizing: border-box
+
+.profile-container
+  display: flex
+  flex-direction: column
+  margin: 50px
+  padding: 0 25px 20px
+  border: 2px ridge rgba(255, 255, 255, 0.5)
+  border-radius: 10px
+
+  .row
+    flex-grow: 1
+    display: flex
+    font-family: Lato, sans-serif
+    text-align: center
+    margin-top: 10px
+
+    .entry
+      flex: 1 1 0
+      flex-direction: column
+      display: flex
+      margin-top: 10px
+
+      .title
+        flex-grow: 1
+        font-family: Montserrat, sans-serif
+        font-size: 18px
+        margin-bottom: 0
+
+      .content
+        flex-grow: 1
+        padding-top: 5px
+        font-size: 14px
+        margin-bottom: 0
+
+      .border
+        width: 120px
+        margin: auto
+        opacity: 50%
+        border-bottom: 2px ridge rgba(255, 255, 255, 0.5)
+
+.mat-success
+  background-color: green
+  color: #fff
+
+mat-card
+  background: #fcfcfc
+  border-radius: $border-radius
+  border-color: red
+  margin: 3px
+
+mat-card-header
+  text-align: center
+  margin-bottom: 0 !important
+
+mat-card-subtitle
+  padding-top: 8px
+
+mat-card-actions
+  text-align: center
+
+@media(max-width: 1600px)
+  .container
+    padding-left: 400px
+    padding-right: 400px
+
+@media(max-width: 1300px)
+  .container
+    padding-left: 250px
+    padding-right: 250px
+
+@media(max-width: 960px)
+  .container
+    padding-left: 100px
+    padding-right: 100px
+
+@media(max-width: 640px)
+  .container
+    padding-left: 20px
+    padding-right: 20px
+
+@media(max-height: 1600px)
+  .container
+    padding-bottom: 0
+
+    .panel
+      margin-bottom: 5px

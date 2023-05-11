@@ -4,44 +4,49 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
+import java.time.LocalDateTime;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 public class AuthenticationService {
   @Inject
-  private AccountService accountService;
+  private AccountFacadeOperations accountFacade;
   @Inject
   private MailService mailService;
   @Inject
   private TokenService tokenService;
 
-  public String login(String login, String password) throws AuthenticationException {
+  public String login(String login, String password, String ip) throws AuthenticationException {
     if (password == null) {
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
 
-    Account account = accountService
-        .getAccountByLogin(login)
+    Account account = accountFacade
+        .findByLogin(login)
         .orElseThrow(ApplicationExceptionFactory::createInvalidCredentialsException);
 
-    validateAccount(account, password);
+    validateAccount(account, password, ip);
+    account.setFailedLoginCounter(0);
+    account.setLastLogin(LocalDateTime.now());
+    account.setLastLoginIpAddress(ip);
+    accountFacade.update(account);
 
     return tokenService.generateToken(account);
   }
 
-  private void validateAccount(Account account, String password) throws AuthenticationException {
+  private void validateAccount(Account account, String password, String ip) throws AuthenticationException {
     if (account.getArchive()) {
       throw ApplicationExceptionFactory.createAccountArchiveException();
+    }
+
+    if (account.getAccountState() == AccountState.NOT_VERIFIED) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
     }
 
     if (account.getAccountState() == AccountState.BLOCKED) {
@@ -53,6 +58,9 @@ public class AuthenticationService {
     }
 
     if (!CryptHashUtils.verifyPassword(password, account.getPassword())) {
+      account.setFailedLoginCounter(account.getFailedLoginCounter() + 1);
+      account.setLastFailedLogin(LocalDateTime.now());
+      account.setLastFailedLoginIpAddress(ip);
       tryBlockAccount(account);
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
@@ -60,14 +68,13 @@ public class AuthenticationService {
 
   private void tryBlockAccountOperation(Account account)
       throws MessagingException, AccountNotFoundException {
-    account.setFailedLoginCounter(account.getFailedLoginCounter() + 1);
     if (account.getFailedLoginCounter() == 3) {
       account.setAccountState(AccountState.BLOCKED);
 
       mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
       account.setFailedLoginCounter(0);
     }
-    accountService.updateFailedLoginCounter(account);
+    accountFacade.update(account);
   }
 
   private void tryBlockAccount(Account account) {

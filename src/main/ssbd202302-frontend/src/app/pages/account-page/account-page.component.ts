@@ -9,6 +9,8 @@ import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
+import {DatePipe} from "@angular/common";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-account-page',
@@ -39,22 +41,18 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
-  account: Partial<Account> = {
-    accountState: '',
-    email: '',
-    groups: [],
-    locale: '',
-    login: ''
-  };
+  account: Account;
   loading = true;
 
   constructor(
     private accountService: AccountService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
+    private datePipe: DatePipe,
     private translate: TranslateService,
     private dialogService: DialogService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +81,24 @@ export class AccountPageComponent implements OnInit, OnDestroy {
             });
         }
       });
+
+      const state = this.location.getState() as any;
+      const keys = Object.keys(state);
+  
+      if (keys.length == 2) {
+        const code = state[keys[0]];
+        const isError = code.startsWith('exception');
+        this.translate
+          .get(code)
+          .pipe(takeUntil(this.destroy))
+          .subscribe((msg) => {
+            if (isError) {
+              this.alertService.danger(msg);
+            } else {
+              this.alertService.success(msg);
+            }
+          });
+      }
   }
 
   ngOnDestroy(): void {
@@ -92,5 +108,30 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   getFormAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
+  }
+
+  formatDate(date: Date | undefined): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
+  }
+
+  getAccountState(): string {
+    switch(this.account.accountState.toUpperCase()) {
+      case 'BLOCKED': return 'account.state.blocked';
+      case 'INACTIVE': return 'account.state.inactive';
+      case 'NOT_VERIFIED': return 'account.state.notVerified';
+      default: return 'account.state.active';
+    }
+  }
+
+  getGroups(): string {
+    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
+  }
+
+  onEditClicked(): void {
+    this.navigationService.redirectToEditOwnAccountPage();
+  }
+
+  onChangeEmailClicked(): void {
+    this.navigationService.redirectToChangeOwnEmailPage();
   }
 }

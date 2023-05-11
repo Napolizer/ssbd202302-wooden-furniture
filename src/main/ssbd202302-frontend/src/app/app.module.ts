@@ -30,12 +30,24 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
-import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
+import {DatePipe} from "@angular/common";
+import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
+import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edit-user-account-page.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { AddAccountGroupComponent } from './pages/add-account-group-page/add-account-group.component';
+import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-page/remove-account-group-page.component';
+import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
+import { ChangeEmailComponent } from './pages/change-email/change-email.component';
+import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
+import { ChangeAccountGroupPageComponent } from './pages/change-account-group-page/change-account-group-page.component';
+import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 
 @NgModule({
   declarations: [
@@ -48,12 +60,23 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
     AccountPageComponent,
     SpinnerComponent,
     AdminPageComponent,
-    ConfirmPageComponent,
+    ConfirmAccountComponent,
     ErrorDialogComponent,
+    ConfirmationDialogComponent,
     NotFoundPageComponent,
     ForbiddenPageComponent,
-    ConfirmPageComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserAccountPageComponent,
+    EditOwnAccountComponent,
+    EditUserAccountPageComponent,
+    EditOwnAccountComponent,
+    ForgotPasswordComponent,
+    AddAccountGroupComponent,
+    RemoveAccountGroupPageComponent,
+    ConfirmEmailChangeComponent,
+    ChangeEmailComponent,
+    ChangeAccountGroupPageComponent,
+    ChangeOwnPasswordComponent
   ],
     imports: [
         BrowserModule,
@@ -88,7 +111,9 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
         MatProgressSpinnerModule,
         MatDialogModule
     ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

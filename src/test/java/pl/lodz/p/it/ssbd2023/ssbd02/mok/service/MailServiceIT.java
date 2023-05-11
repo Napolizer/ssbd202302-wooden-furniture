@@ -4,6 +4,11 @@ import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import java.io.File;
 
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
@@ -21,7 +26,7 @@ public class MailServiceIT {
   private MailService mailService;
 
   @Resource
-  private UserTransaction ux;
+  private UserTransaction utx;
 
   @Deployment
   public static WebArchive createDeployment() {
@@ -33,10 +38,53 @@ public class MailServiceIT {
         .addAsResource(new File("src/test/resources/"), "");
   }
 
-    @Test
-    void shouldSendMailToTemporaryMail() throws Exception {
-        ux.begin();
-        assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount("jegek60138@fectode.com", "en"));
-        ux.commit();
-    }
+  @Test
+  void shouldSendMailWithInfoAboutBlockingAccount() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount(
+              "jegek60138@fectode.com", "en"));
+      utx.commit();
+  }
+
+  @Test
+  void shouldSendMailWithAccountConfirmationLink() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendMailWithAccountConfirmationLink(
+              "jegek60138@fectode.com", "en", "1", "login"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendResetPasswordMail() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendResetPasswordMail(
+              "jegek60138@fectode.com", "en", "1"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendMailWithEmailChangeConfirmLink() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendMailWithEmailChangeConfirmLink(
+              "jegek60138@fectode.com", "en", "token"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendMailAboutAddingAccessLevel() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendEmailAboutAddingAccessLevel(
+              "jegek60138@fectode.com", "en"));
+      utx.commit();
+  }
+  @Test
+  void shouldSendMailAboutRemovingAccessLevel() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+      utx.begin();
+      assertDoesNotThrow(() -> mailService.sendEmailAboutRemovingAccessLevel(
+              "jegek60138@fectode.com", "en"));
+      utx.commit();
+  }
 }

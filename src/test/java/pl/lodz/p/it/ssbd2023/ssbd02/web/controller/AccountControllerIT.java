@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -46,6 +47,24 @@ public class AccountControllerIT {
         .path("token");
   }
 
+  private String retrieveClientToken() {
+    return given()
+        .contentType("application/json")
+        .body("""
+                   {
+                       "login": "client",
+                       "password": "Kochamssbd!Client"
+                   }
+            """)
+        .when()
+        .post("/account/login")
+        .then()
+        .statusCode(200)
+        .contentType("application/json")
+        .extract()
+        .path("token");
+  }
+
   private int retrieveAccountId(String login) {
     return given()
         .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -62,7 +81,7 @@ public class AccountControllerIT {
   class Login {
     @Test
     @Order(1)
-    public void shouldProperlyLoginTest() {
+    void shouldProperlyLoginTest() {
       given()
           .contentType("application/json")
           .body("""
@@ -82,7 +101,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void shouldFailToLoginWhenPasswordIsInvalidTest() {
+    void shouldFailToLoginWhenPasswordIsInvalidTest() {
       given()
           .contentType("application/json")
           .body("""
@@ -101,7 +120,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void shouldFailToLoginWhenLoginDoesNotMatchPasswordTest() {
+    void shouldFailToLoginWhenLoginDoesNotMatchPasswordTest() {
       given()
           .contentType("application/json")
           .body("""
@@ -120,7 +139,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    public void shouldFailToLoginWhenPasswordIsMissingTest() {
+    void shouldFailToLoginWhenPasswordIsMissingTest() {
       given()
           .contentType("application/json")
           .body("""
@@ -141,7 +160,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(5)
-    public void shouldFailToLoginWhenLoginIsMissingTest() {
+    void shouldFailToLoginWhenLoginIsMissingTest() {
       given()
           .contentType("application/json")
           .body("""
@@ -162,7 +181,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(6)
-    public void shouldFailToLoginWhenBodyIsEmptyJsonTest() {
+    void shouldFailToLoginWhenBodyIsEmptyJsonTest() {
       given()
           .contentType("application/json")
           .body("""
@@ -182,7 +201,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(7)
-    public void shouldFailToLoginWhenBodyIsEmptyTest() {
+    void shouldFailToLoginWhenBodyIsEmptyTest() {
       given()
           .contentType("application/json")
           .body("")
@@ -195,7 +214,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(8)
-    public void shouldFailToLoginWhenBodyIsMissingTest() {
+    void shouldFailToLoginWhenBodyIsMissingTest() {
       given()
           .contentType("application/json")
           .when()
@@ -210,7 +229,7 @@ public class AccountControllerIT {
   @Order(2)
   class GetAccountByLogin {
     @Test
-    public void shouldProperlyGetAccountByLoginTest() {
+    void shouldProperlyGetAccountByLoginTest() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -229,7 +248,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    public void shouldFailToGetAccountByLoginWithoutTokenTest() {
+    void shouldFailToGetAccountByLoginWithoutTokenTest() {
       given()
           .when()
           .get("/account/login/admin")
@@ -239,7 +258,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    public void shouldFailToGetAccountByLoginWhenLoginDoesNotExist() {
+    void shouldFailToGetAccountByLoginWhenLoginDoesNotExist() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -257,7 +276,7 @@ public class AccountControllerIT {
   class createAccount {
     @Test
     @Order(1)
-    public void shouldProperlyCreateActiveUser() {
+    void shouldProperlyCreateActiveUser() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -270,7 +289,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void shouldProperlyCreateInactiveUser() {
+    void shouldProperlyCreateInactiveUser() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -283,7 +302,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void shouldProperlyCreateBlockedUser() {
+    void shouldProperlyCreateBlockedUser() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -296,7 +315,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    public void shouldProperlyCreateNotVerifiedUser() {
+    void shouldProperlyCreateNotVerifiedUser() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -309,7 +328,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(5)
-    public void shouldFailToCreateAccountWithSameLogin() {
+    void shouldFailToCreateAccountWithSameLogin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -323,7 +342,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(6)
-    public void shouldFailToCreateAccountWithSameEmail() {
+    void shouldFailToCreateAccountWithSameEmail() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -337,7 +356,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(7)
-    public void shouldFailToCreateAccountWithInvalidAccessLevel() {
+    void shouldFailToCreateAccountWithInvalidAccessLevel() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -357,7 +376,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(1)
-    public void shouldFailToBlockAlreadyBlockedAccount() {
+    void shouldFailToBlockAlreadyBlockedAccount() {
       int id = retrieveAccountId("blocked123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -369,7 +388,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void shouldFailToBlockInactiveAccount() {
+    void shouldFailToBlockInactiveAccount() {
       int id = retrieveAccountId("inactive123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -381,7 +400,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void shouldFailToBlockNotVerifiedAccount() {
+    void shouldFailToBlockNotVerifiedAccount() {
       int id = retrieveAccountId("notverified123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -393,7 +412,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    public void shouldFailToBlockNotExistingAccount() {
+    void shouldFailToBlockNotExistingAccount() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/block/" + Long.MAX_VALUE)
@@ -404,7 +423,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(5)
-    public void shouldProperlyBlockActiveAccount() {
+    void shouldProperlyBlockActiveAccount() {
       int id = retrieveAccountId("active123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -421,7 +440,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(1)
-    public void shouldFailToActivateAlreadyActiveAccount() {
+    void shouldFailToActivateAlreadyActiveAccount() {
       int id = retrieveAccountId("administrator");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -433,7 +452,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void shouldFailToActivateInactiveAccount() {
+    void shouldFailToActivateInactiveAccount() {
       int id = retrieveAccountId("inactive123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -445,7 +464,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void shouldFailToActivateNotExistingAccount() {
+    void shouldFailToActivateNotExistingAccount() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/activate/" + Long.MAX_VALUE)
@@ -456,7 +475,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    public void shouldProperlyActivateNotVerifiedAccount() {
+    void shouldProperlyActivateNotVerifiedAccount() {
       int id = retrieveAccountId("notverified123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -467,7 +486,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(5)
-    public void shouldProperlyActivateBlockedAccount() {
+    void shouldProperlyActivateBlockedAccount() {
       int id = retrieveAccountId("blocked123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -481,7 +500,7 @@ public class AccountControllerIT {
   @Order(6)
   class GetAccountByAccountId {
     @Test
-    public void shouldProperlyGetAccountByAccountIdTest() {
+    void shouldProperlyGetAccountByAccountIdTest() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -500,7 +519,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    public void shouldFailToGetAccountByAccountIdWithoutTokenTest() {
+    void shouldFailToGetAccountByAccountIdWithoutTokenTest() {
       given()
           .when()
           .get("/account/id/555")
@@ -510,7 +529,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    public void shouldFailToGetAccountByAccountIdNoneIdGiven() {
+    void shouldFailToGetAccountByAccountIdNoneIdGiven() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -521,7 +540,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    public void shouldFailToGetAccountByAccountIdWhenAccountIdDoesNotExist() {
+    void shouldFailToGetAccountByAccountIdWhenAccountIdDoesNotExist() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -537,7 +556,7 @@ public class AccountControllerIT {
   @Order(7)
   class GetAllAccounts {
     @Test
-    public void shouldProperlyGetAllAccountsTest() {
+    void shouldProperlyGetAllAccountsTest() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -549,7 +568,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    public void shouldFailToGetAllAccountsWithoutTokenTest() {
+    void shouldFailToGetAllAccountsWithoutTokenTest() {
       given()
           .when()
           .get("/account")
@@ -564,7 +583,7 @@ public class AccountControllerIT {
   class AddAccessLevelToAccount {
     @Test
     @Order(1)
-    public void shouldProperlyAddAccessLevelToAccount() {
+    void shouldProperlyAddAccessLevelToAccount() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -597,7 +616,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void failsToAddAccessLevelWithoutAuthorizationToken() {
+    void failsToAddAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
           .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
@@ -607,7 +626,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void failsToAddAccessLevelWhenAccountDoesNotExist() {
+    void failsToAddAccessLevelWhenAccountDoesNotExist() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -619,7 +638,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    public void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
+    void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -631,7 +650,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(5)
-    public void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
+    void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -647,7 +666,7 @@ public class AccountControllerIT {
   class RemoveAccessLevelFromAccount {
     @Test
     @Order(1)
-    public void failsToRemoveAccessLevelWithoutAuthorizationToken() {
+    void failsToRemoveAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
           .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Administrator")
@@ -657,11 +676,11 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void failsToRemoveAccessLevelWhenAccountDoesNotExist() {
+    void failsToRemoveAccessLevelWhenAccountDoesNotExist() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("account/id/0/accessLevel/Aaministrator")
+          .put("account/id/0/accessLevel/Administrator")
           .then()
           .statusCode(404)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
@@ -669,7 +688,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void failsToRemoveAccessLevelWhenAccessLevelIsInvalid() {
+    void failsToRemoveAccessLevelWhenAccessLevelIsInvalid() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -681,7 +700,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    public void failsToAddAccessLevelWhenAccessLevelIsNotAssigned() {
+    void failsToAddAccessLevelWhenAccessLevelIsNotAssigned() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -693,7 +712,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(5)
-    public void properlyRemovesAccessLevelFromAccount() {
+    void properlyRemovesAccessLevelFromAccount() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -731,7 +750,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(1)
-    public void shouldProperlyCreateAccountToEdit() {
+    void shouldProperlyCreateAccountToEdit() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -744,7 +763,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void editOwnAccount() {
+    void editOwnAccount() {
       given()
           .contentType("application/json")
           .body(InitData.editedAccountExampleJson)
@@ -757,7 +776,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void failsIfGivenInvalidLogin() {
+    void failsIfGivenInvalidLogin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -779,7 +798,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(1)
-    public void editOtherUserAsAdmin() {
+    void editOtherUserAsAdmin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -793,7 +812,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    public void shouldUserHaveCorrectNewValues() {
+    void shouldUserHaveCorrectNewValues() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
@@ -806,7 +825,7 @@ public class AccountControllerIT {
 
     @Test
     @Order(3)
-    public void failsIfGivenInvalidLogin() {
+    void failsIfGivenInvalidLogin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -817,6 +836,78 @@ public class AccountControllerIT {
           .statusCode(404)
           .contentType("application/json")
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+    }
+  }
+  @Nested
+  @Order(12)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+  class getOwnAccountInformation {
+    @Test
+    @Order(1)
+    void administratorShouldProperlyGetInformationAboutOwnAccount() {
+      given()
+          .header("Authorization", "Bearer " + retrieveAdminToken())
+          .when()
+          .get("/account/self")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("id", is(equalTo(retrieveAccountId("administrator"))))
+          .body("login", is(equalTo("administrator")))
+          .body("email", is(equalTo("admin@gmail.com")))
+          .body("firstName", is(equalTo("Jan")))
+          .body("lastName", is(equalTo("Kowalski")))
+          .body("archive", is(equalTo(false)))
+          .body("lastLogin", is(notNullValue()))
+          .body("lastFailedLogin", is(nullValue()))
+          .body("lastLoginIpAddress", is(notNullValue()))
+          .body("lastFailedLoginIpAddress", is(nullValue()))
+          .body("locale", is(equalTo("pl")))
+          .body("failedLoginCounter", is(equalTo(0)))
+          .body("blockadeEnd", is(nullValue()))
+          .body("accountState", is(equalTo("ACTIVE")))
+          .body("groups.size()", is(equalTo(1)))
+          .body("groups[0]", is(equalTo("ADMINISTRATOR")))
+          .body("address", is(notNullValue()))
+          .body("address.country", is(equalTo("Poland")))
+          .body("address.city", is(equalTo("Lodz")))
+          .body("address.street", is(equalTo("Aleje Testowe")))
+          .body("address.postalCode", is(equalTo("93-590")))
+          .body("address.streetNumber", is(equalTo(55)));
+    }
+
+    @Test
+    @Order(2)
+    void clientShouldProperlyGetInformationAboutOwnAccount() {
+      given()
+          .header("Authorization", "Bearer " + retrieveClientToken())
+          .when()
+          .get("/account/self")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("id", is(equalTo(retrieveAccountId("client"))))
+          .body("login", is(equalTo("client")))
+          .body("email", is(equalTo("adam.mickiewicz@gmail.com")))
+          .body("firstName", is(equalTo("Adam")))
+          .body("lastName", is(equalTo("Mickiewicz")))
+          .body("archive", is(equalTo(false)))
+          .body("lastLogin", is(notNullValue()))
+          .body("lastFailedLogin", is(nullValue()))
+          .body("lastLoginIpAddress", is(notNullValue()))
+          .body("lastFailedLoginIpAddress", is(nullValue()))
+          .body("locale", is(equalTo("pl")))
+          .body("failedLoginCounter", is(equalTo(0)))
+          .body("blockadeEnd", is(nullValue()))
+          .body("accountState", is(equalTo("ACTIVE")))
+          .body("groups.size()", is(equalTo(1)))
+          .body("groups[0]", is(equalTo("CLIENT")))
+          .body("address", is(notNullValue()))
+          .body("address.country", is(equalTo("Poland")))
+          .body("address.city", is(equalTo("Lodz")))
+          .body("address.street", is(equalTo("Przybyszewskiego")))
+          .body("address.postalCode", is(equalTo("93-116")))
+          .body("address.streetNumber", is(equalTo(13)));
     }
   }
 }

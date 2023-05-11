@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
+import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -17,20 +18,27 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@Interceptors({GenericServiceExceptionsInterceptor.class})
-public class AccountService {
+@Interceptors({
+    GenericServiceExceptionsInterceptor.class,
+    LoggerInterceptor.class
+})
+public class AccountService extends AbstractService {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject
   private MailService mailService;
   @Inject
   private TokenService tokenService;
+  @Inject
+  private AccountCleanerService accountCleanerService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -53,9 +61,23 @@ public class AccountService {
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
+    if ((accessLevels.size() > 0 && Objects.equals(accessLevel.getGroupName(), "ADMINISTRATOR"))) {
+      throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
+    }
+
     for (AccessLevel item : accessLevels) {
-      if (item.getClass() == accessLevel.getClass()) {
+      if (Objects.equals(item.getGroupName(), "ADMINISTRATOR")) {
+        throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
+      }
+
+      if (Objects.equals(item.getGroupName(), accessLevel.getGroupName())) {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
+      }
+
+      if ((Objects.equals(item.getGroupName(), "CLIENT") && Objects.equals(accessLevel.getGroupName(), "SALES_REP"))
+          || (Objects.equals(item.getGroupName(), "SALES_REP")
+            && Objects.equals(accessLevel.getGroupName(), "CLIENT"))) {
+        throw ApplicationExceptionFactory.createClientAndSalesRepAccessLevelsConflictException();
       }
     }
     accessLevel.setAccount(foundAccount);
@@ -68,6 +90,10 @@ public class AccountService {
     Account foundAccount =
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
+
+    if (accessLevels.size() <= 1) {
+      throw ApplicationExceptionFactory.createRemoveAccessLevelException();
+    }
 
     for (AccessLevel item : accessLevels) {
       if (item.getClass() == accessLevel.getClass()) {
@@ -110,8 +136,9 @@ public class AccountService {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
-    accountFacade.create(account);
+    Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
+    accountCleanerService.deleteAccountAfterTimeout(account.getLogin());
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());
@@ -159,7 +186,7 @@ public class AccountService {
     Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
     AccountState state = account.getAccountState();
 
-    if (state.equals(AccountState.ACTIVE) || state.equals(AccountState.INACTIVE)) {
+    if (!state.equals(AccountState.BLOCKED)) {
       throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
     }
 
@@ -177,7 +204,7 @@ public class AccountService {
   }
 
   public void confirmAccount(String token) {
-    String login = tokenService.validateAccountVerificationToken(token);
+    String login = tokenService.validateEmailToken(token, TokenType.ACCOUNT_CONFIRMATION, null);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createAccountConfirmationExpiredLinkException);
     if (!account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
@@ -193,7 +220,15 @@ public class AccountService {
     String login = tokenService.getLoginFromTokenWithoutValidating(token);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
-    tokenService.validatePasswordResetToken(token, account.getPassword());
+    tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET, account.getPassword());
+    return login;
+  }
+
+  public String validateChangeEmailToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createChangeEmailExpiredLinkException);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL, account.getNewEmail());
     return login;
   }
 
@@ -212,10 +247,46 @@ public class AccountService {
     Account account = getAccountByEmail(email).get();
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
     try {
-      mailService.sendResetPasswordEmail(account.getEmail(),
+      mailService.sendResetPasswordMail(account.getEmail(),
               account.getLocale(), resetPasswordToken);
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
+
+  public Account updateEmailAfterConfirmation(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+    account.setEmail(account.getNewEmail());
+    account.setNewEmail(null);
+    return accountFacade.update(account);
+  }
+
+  public void changeEmail(String newEmail, Long accountId, String principal) {
+    Account subject = accountFacade.findByLogin(principal)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    if (accountFacade.findByEmail(newEmail).isPresent()) {
+      throw ApplicationExceptionFactory.createEmailAlreadyExistsException();
+    }
+
+    boolean isAdmin = subject.getAccessLevels()
+            .stream().anyMatch(al -> al.getGroupName().equals("ADMINISTRATOR"));
+
+    if (isAdmin || subject.getId().equals(accountId)) {
+      Account account = accountFacade.findById(accountId)
+              .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+      account.setNewEmail(newEmail);
+      accountFacade.update(account);
+      String accountChangeEmailToken = tokenService
+              .generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+      try {
+        mailService.sendMailWithEmailChangeConfirmLink(account.getNewEmail(),
+                account.getLocale(), accountChangeEmailToken);
+      } catch (MessagingException e) {
+        throw ApplicationExceptionFactory.createMailServiceException(e);
+      }
+    } else {
+      throw ApplicationExceptionFactory.createForbiddenException();
     }
   }
 }
