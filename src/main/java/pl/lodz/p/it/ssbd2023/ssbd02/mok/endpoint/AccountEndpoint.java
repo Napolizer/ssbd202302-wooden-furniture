@@ -139,7 +139,7 @@ public class AccountEndpoint {
   }
 
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
-    accountService.changeEmail(emailDto.getEmail(), accountId, login);
+    repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {

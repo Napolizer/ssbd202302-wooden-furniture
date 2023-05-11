@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
-import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -38,7 +37,7 @@ public class AccountService extends AbstractService {
   @Inject
   private TokenService tokenService;
   @Inject
-  private AccountCleanerService accountCleanerService;
+  private EmailSendingRetryService emailSendingRetryService;
 
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
@@ -138,7 +137,8 @@ public class AccountService extends AbstractService {
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
-    accountCleanerService.deleteAccountAfterTimeout(account.getLogin());
+    emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
+            TokenType.ACCOUNT_CONFIRMATION, accountConfirmationToken);
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
               account.getLocale(), accountConfirmationToken, account.getLogin());
@@ -217,7 +217,7 @@ public class AccountService extends AbstractService {
   }
 
   public String validatePasswordResetToken(String token) {
-    String login = tokenService.getLoginFromTokenWithoutValidating(token);
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.PASSWORD_RESET);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
     tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET, account.getPassword());
@@ -225,7 +225,7 @@ public class AccountService extends AbstractService {
   }
 
   public String validateChangeEmailToken(String token) {
-    String login = tokenService.getLoginFromTokenWithoutValidating(token);
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_EMAIL);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createChangeEmailExpiredLinkException);
     tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL, account.getNewEmail());
@@ -246,6 +246,8 @@ public class AccountService extends AbstractService {
   public void sendResetPasswordEmail(String email) {
     Account account = getAccountByEmail(email).get();
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
+            TokenType.PASSWORD_RESET, resetPasswordToken);
     try {
       mailService.sendResetPasswordMail(account.getEmail(),
               account.getLocale(), resetPasswordToken);
@@ -277,10 +279,11 @@ public class AccountService extends AbstractService {
               .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
       account.setNewEmail(newEmail);
       accountFacade.update(account);
-      String accountChangeEmailToken = tokenService
-              .generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+      String accountChangeEmailToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+      emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), newEmail,
+              TokenType.CHANGE_EMAIL, accountChangeEmailToken);
       try {
-        mailService.sendMailWithEmailChangeConfirmLink(account.getNewEmail(),
+        mailService.sendMailWithEmailChangeConfirmLink(newEmail,
                 account.getLocale(), accountChangeEmailToken);
       } catch (MessagingException e) {
         throw ApplicationExceptionFactory.createMailServiceException(e);

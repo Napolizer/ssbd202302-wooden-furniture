@@ -137,12 +137,16 @@ public class TokenService {
     return claims.getSubject();
   }
 
-  public String getLoginFromTokenWithoutValidating(String token) {
+  public String getLoginFromTokenWithoutValidating(String token, TokenType tokenType) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {
       return Jwts.parser().parseClaimsJwt(claims).getBody().getSubject();
     } catch (ExpiredJwtException eje) {
-      throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+      switch (tokenType) {
+        case PASSWORD_RESET -> throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+        case CHANGE_EMAIL -> throw ApplicationExceptionFactory.createChangeEmailExpiredLinkException();
+        default -> throw ApplicationExceptionFactory.createUnknownErrorException(eje);
+      }
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
     }
