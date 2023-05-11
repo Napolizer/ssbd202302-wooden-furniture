@@ -30,7 +30,6 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
-import { ConfirmPageComponent } from './pages/confirm-page/confirm-page.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
@@ -44,7 +43,9 @@ import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edi
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountGroupComponent } from './pages/add-account-group-page/add-account-group.component';
 import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-page/remove-account-group-page.component';
-import { ConfirmEmailPageComponent } from './pages/confirm-email-page/confirm-email-page.component';
+import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
+import { ChangeEmailComponent } from './pages/change-email/change-email.component';
+import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeAccountGroupPageComponent } from './pages/change-account-group-page/change-account-group-page.component';
 
 @NgModule({
@@ -58,12 +59,11 @@ import { ChangeAccountGroupPageComponent } from './pages/change-account-group-pa
     AccountPageComponent,
     SpinnerComponent,
     AdminPageComponent,
-    ConfirmPageComponent,
+    ConfirmAccountComponent,
     ErrorDialogComponent,
     ConfirmationDialogComponent,
     NotFoundPageComponent,
     ForbiddenPageComponent,
-    ConfirmPageComponent,
     ResetPasswordComponent,
     UserAccountPageComponent,
     EditOwnAccountComponent,
@@ -72,7 +72,8 @@ import { ChangeAccountGroupPageComponent } from './pages/change-account-group-pa
     ForgotPasswordComponent,
     AddAccountGroupComponent,
     RemoveAccountGroupPageComponent,
-    ConfirmEmailPageComponent,
+    ConfirmEmailChangeComponent,
+    ChangeEmailComponent,
     ChangeAccountGroupPageComponent
   ],
     imports: [

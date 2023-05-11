@@ -11,6 +11,7 @@ import {NavigationService} from "../../services/navigation.service";
 import {ActivatedRoute} from "@angular/router";
 import {Account} from "../../interfaces/account";
 import {DatePipe} from "@angular/common";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-user-account-page',
@@ -53,7 +54,8 @@ export class UserAccountPageComponent implements OnInit {
     private translate: TranslateService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -83,6 +85,24 @@ export class UserAccountPageComponent implements OnInit {
             });
         }
       });
+
+      const state = this.location.getState() as any;
+      const keys = Object.keys(state);
+
+      if (keys.length == 2) {
+        const code = state[keys[0]];
+        const isError = code.startsWith('exception');
+        this.translate
+          .get(code)
+          .pipe(takeUntil(this.destroy))
+          .subscribe((msg) => {
+            if (isError) {
+              this.alertService.danger(msg);
+            } else {
+              this.alertService.success(msg);
+            }
+          });
+      }
   }
 
   ngOnDestroy(): void {
@@ -120,6 +140,10 @@ export class UserAccountPageComponent implements OnInit {
 
   onEditClicked(): void {
     this.navigationService.redirectToEditUserAccountPage(this.id);
+  }
+
+  onChangeEmailClicked(): void {
+    this.navigationService.redirectToChangeUserEmailPage(this.id);
   }
 
   redirectToChangeAccountGroupPage(): void {

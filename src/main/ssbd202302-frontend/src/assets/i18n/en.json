@@ -17,6 +17,15 @@
   "forgot.password.button": "Send",
   "forgot.password.success": "The link to reset your password has been sent to your email address",
 
+  "change.email.button": "Change email address",
+  "change.email.success": "Your email has been successfully changed",
+  "change.email.current": "Current email address",
+  "change.email.new": "New email address",
+  "change.email.back": "Back",
+  "change.email.confirm": "Confirm",
+  "change.email.link.sent": "Activation link has been sent to the new email address",
+  "change.email.validity.matching": "New email address cannot be same as the current one",
+
   "register.title": "Create your account",
   "register.stepper.first": "Fill out account details",
   "register.stepper.second": "Fill out personal details",
@@ -118,6 +127,7 @@
   "dialog.confirmation.close": "Close",
   "dialog.confirmation.register.message": "Are you sure you want to sign up?",
   "dialog.confirmation.password.message": "Are you sure you want to reset your password?",
+  "dialog.change.email.message": "Are you sure you want to change email address?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -143,6 +153,7 @@
   "exception.mok.account.access.level": "AccessLevel exception",
   "exception.mok.account.access.level.already.assigned": "Chosen group is already assigned to user",
   "exception.mok.account.access.level.not.assigned": "Chosen group is not assigned to user",
+  "exception.expired.change.email.link": "Your email change link has expired, try again",
   "exception.mok.account.access.level.many.assigned": "Account has already assigned more than 1 group",
   "exception.mok.account.client.and.sales.rep.access.levels.conflict": "The same account cannot be assigned as Client and SalesRep",
   "exception.mok.account.remove.access.level": "Chosen group is not assigned to account or it's the only group that is assigned to declared account",

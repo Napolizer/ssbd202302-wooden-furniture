@@ -608,7 +608,7 @@ public class AccountServiceIT {
     assertEquals("test123@gmail.com", accountToRegister.getEmail());
     assertEquals("newssbd02Email@gmail.com", accountToRegister.getNewEmail());
 
-    Account accountAfterUpdate = accountService.updateEmailAfterConfirmation(accountToRegister.getId());
+    Account accountAfterUpdate = accountService.updateEmailAfterConfirmation(accountToRegister.getLogin());
     assertEquals("newssbd02Email@gmail.com", accountAfterUpdate.getEmail());
     assertNull(accountAfterUpdate.getNewEmail());
     utx.commit();

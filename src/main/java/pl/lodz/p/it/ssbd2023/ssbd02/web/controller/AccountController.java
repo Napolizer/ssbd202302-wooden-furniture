@@ -28,6 +28,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
@@ -309,22 +310,33 @@ public class AccountController {
   @GET
   @Path("/reset-password")
   public Response validatePasswordResetToken(@QueryParam("token") String token) {
-    accountEndpoint.validatePasswordResetToken(token);
+    accountEndpoint.validateEmailToken(token, TokenType.PASSWORD_RESET);
     return Response.ok().build();
   }
 
   @PUT
   @Path("/reset-password")
   public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
-    String login = accountEndpoint.validatePasswordResetToken(token);
+    String login = accountEndpoint.validateEmailToken(token, TokenType.PASSWORD_RESET);
     accountEndpoint.resetPassword(login, changePasswordDto);
     return Response.ok().build();
   }
 
+  @PUT
+  @Path("/change-email/{accountId}")
+  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  public Response changeEmail(@PathParam("accountId") Long accountId,
+                              @NotNull @Valid SetEmailToSendPasswordDto emailDto) {
+    accountEndpoint.changeEmail(emailDto, accountId, principal.getName());
+    return Response.ok().build();
+  }
+
   @PATCH
-  @Path("/email/submit")
-  public Response submitEmail(@QueryParam("id") Long accountId) {
-    accountEndpoint.updateEmailAfterConfirmation(accountId);
+  @Path("/change-email")
+  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  public Response submitEmail(@QueryParam("token") String token) {
+    String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
+    accountEndpoint.updateEmailAfterConfirmation(login);
     return Response.ok().build();
   }
 }

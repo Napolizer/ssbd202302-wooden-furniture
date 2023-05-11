@@ -99,6 +99,7 @@ public class Account extends AbstractEntity {
   @ToString.Exclude
   private List<Order> orders = new ArrayList<>();
 
+  @Column(name = "new_email")
   private String newEmail;
 
   public void update(Account account) {

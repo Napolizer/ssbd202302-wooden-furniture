@@ -1,15 +1,15 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AccountService } from 'src/app/services/account.service';
-import { NavigationService } from 'src/app/services/navigation.service';
+import { AccountService } from '../../services/account.service';
+import { NavigationService } from '../../services/navigation.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-confirm-page',
+  selector: 'app-confirm-email-page',
   template: '',
 })
-export class ConfirmPageComponent implements OnInit, OnDestroy {
+export class ConfirmEmailChangeComponent implements OnInit {
   destroy = new Subject<boolean>();
 
   constructor(
@@ -23,19 +23,19 @@ export class ConfirmPageComponent implements OnInit, OnDestroy {
       const token = params['token'];
       if (token) {
         this.accountService
-          .confirm(token)
+          .confirmEmailChange(token)
           .pipe(takeUntil(this.destroy))
           .subscribe({
             next: () => {
-              this.navigationService.redirectToLoginPageWithState({
-                confirmAccountSuccess: 'account.confirmation.success',
+              this.navigationService.redirectToOwnAccountPageWithState({
+                changeEmailSuccess: 'change.email.success',
               });
             },
             error: (e: HttpErrorResponse) => {
               if (e.status == 410) {
                 const message = e.error.message as string;
-                this.navigationService.redirectToLoginPageWithState({
-                  confirmAccountError: message,
+                this.navigationService.redirectToOwnAccountPageWithState({
+                  changeEmailError: message,
                 });
               } else {
                 this.navigationService.redirectToNotFoundPage();

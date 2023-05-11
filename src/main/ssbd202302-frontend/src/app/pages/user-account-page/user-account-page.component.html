@@ -6,6 +6,9 @@
         <mat-card-header>
           <mat-card-title>{{account.login}}</mat-card-title>
           <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
+          <button mat-raised-button color="primary" (click)="redirectToAddAccountGroupsPage()">{{'account.addgroup' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToRemoveAccountGroupsPage()">{{'account.removegroup' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToChangeAccountGroupPage()">{{'account.changegroup' | translate}}</button>
         </mat-card-header>
         <mat-card-content>
           <div class="profile-container">
@@ -124,6 +127,7 @@
           <button mat-raised-button color="primary" (click)="redirectToRemoveAccountGroupsPage()">{{'account.removegroup' | translate}}</button>
           <button mat-raised-button color="primary" (click)="redirectToChangeAccountGroupPage()">{{'account.changegroup' | translate}}</button>
           <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
           <button mat-raised-button color="warn" (click)="onBlockClicked()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>
           <button mat-raised-button color="success" (click)="onActivateClicked()" [disabled]="isBlocked()">{{'account.activate' | translate}}</button>
         </mat-card-actions>

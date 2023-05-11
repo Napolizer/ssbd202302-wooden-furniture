@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -112,8 +114,16 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.confirmAccount(token));
   }
 
-  public String validatePasswordResetToken(String token) {
-    return repeatTransaction(() -> accountService.validatePasswordResetToken(token));
+  public String validateEmailToken(String token, TokenType tokenType) {
+    switch (tokenType) {
+      case PASSWORD_RESET -> {
+        return repeatTransaction(() -> accountService.validatePasswordResetToken(token));
+      }
+      case CHANGE_EMAIL -> {
+        return repeatTransaction(() -> accountService.validateChangeEmailToken(token));
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidLinkException();
+    }
   }
 
   public void resetPassword(String login, ChangePasswordDto changePasswordDto) {
@@ -124,8 +134,12 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.sendResetPasswordEmail(emailDto.getEmail()));
   }
 
-  public void updateEmailAfterConfirmation(Long accountId) {
-    repeatTransaction(() -> accountService.updateEmailAfterConfirmation(accountId));
+  public void updateEmailAfterConfirmation(String login) {
+    repeatTransaction(() -> accountService.updateEmailAfterConfirmation(login));
+  }
+
+  public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
+    accountService.changeEmail(emailDto.getEmail(), accountId, login);
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {
