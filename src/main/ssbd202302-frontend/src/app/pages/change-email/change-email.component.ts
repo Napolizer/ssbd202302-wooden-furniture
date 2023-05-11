@@ -17,6 +17,7 @@ import { AccountService } from 'src/app/services/account.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
+import { CustomValidators } from 'src/app/utils/custom.validators';
 
 @Component({
   selector: 'app-change-email',
@@ -65,6 +66,12 @@ export class ChangeEmailComponent implements OnInit {
     this.changeEmailForm = new FormGroup({
       currentEmail: new FormControl(''),
       newEmail: new FormControl('', Validators.compose([Validators.email])),
+    },
+    {
+      validators: Validators.compose([
+        CustomValidators.EmailsCannotMatch,
+        Validators.required,
+      ]),
     });
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

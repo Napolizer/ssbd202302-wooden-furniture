@@ -89,7 +89,7 @@ public class TokenService {
     String secret = switch (tokenType) {
       case ACCOUNT_CONFIRMATION -> SECRET_KEY;
       case PASSWORD_RESET -> CryptHashUtils.getSecretKeyForEmailToken(account.getPassword());
-      case CHANGE_EMAIL -> CryptHashUtils.getSecretKeyForEmailToken(account.getEmail());
+      case CHANGE_EMAIL -> CryptHashUtils.getSecretKeyForEmailToken(account.getNewEmail());
     };
     Long expiration = switch (tokenType) {
       case ACCOUNT_CONFIRMATION -> EXPIRATION_ACCOUNT_CONFIRMATION;

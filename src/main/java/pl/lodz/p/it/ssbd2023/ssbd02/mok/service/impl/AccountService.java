@@ -226,7 +226,7 @@ public class AccountService {
     String login = tokenService.getLoginFromTokenWithoutValidating(token);
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createChangeEmailExpiredLinkException);
-    tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL, account.getEmail());
+    tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL, account.getNewEmail());
     return login;
   }
 

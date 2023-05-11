@@ -24,6 +24,7 @@
   "change.email.back": "Powrót",
   "change.email.confirm": "Potwierdź",
   "change.email.link.sent": "Link aktywacyjny został wysłany na nowy adres email",
+  "change.email.validity.matching": "Nowy adres email nie może być taki sam jak obecny",
 
   "register.title": "Utwórz konto",
   "register.stepper.first": "Uzupełnij dane konta",
