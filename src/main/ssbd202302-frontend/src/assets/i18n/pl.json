@@ -88,8 +88,9 @@
   "account.changegroup": "Zmien grupę",
   "account.addgroup.success": "Grupa została pomyślnie dodana",
   "account.removegroup.success": "Grupa została pomyślnie usunięta",
-  "account.block": "Zablokuj",
   "account.changegroup.success": "Grupa została pomyślnie zmieniona",
+  "account.block": "Zablokuj",
+  "account.activate": "Odblokuj",
 
   "edit.account": "Edytuj konto",
   "edit.account.field.required": "To pole jest wymagane",
@@ -146,6 +147,7 @@
   "exception.mok.account.client.and.sales.rep.access.levels.conflict": "Konto nie może mieć jednocześnie przypisanej grupy klienta oraz Przedstawiciela Sprzedaży",
   "exception.mok.account.remove.access.level": "Grupa nie jest przypisana do konta lub jest to jedyna grupa konta",
   "exception.mok.account.administrator.access.level.already.assigned": "Konto z grupą Administratora nie może mieć przypisanej innej grupy",
+  "exception.mok.account.change.state": "Nie można zmienić stanu wybranego konta, z powodu restrykcji lub z powodu zmiany na ten sam stan.",
 
   "group.administrator": "Administrator",
   "group.employee": "Pracownik",
@@ -169,5 +171,6 @@
   "false": "nie",
   "true": "tak",
 
-  "block.success": "Pomyślnie zablokowano konto"
+  "block.success": "Pomyślnie zablokowano konto",
+  "activate.success": "Pomyślnie odblokowano konto"
 }
