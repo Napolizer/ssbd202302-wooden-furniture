@@ -48,6 +48,15 @@ public class MailServiceIT {
   }
 
   @Test
+  void shouldSendMailWithInfoAboutActivatingAccount() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
+    assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutActivatingAccount(
+            "jegek60138@fectode.com", "pl"));
+    utx.commit();
+  }
+
+  @Test
   void shouldSendMailWithAccountConfirmationLink() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();

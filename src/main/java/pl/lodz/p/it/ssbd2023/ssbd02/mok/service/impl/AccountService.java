@@ -180,6 +180,13 @@ public class AccountService extends AbstractService {
 
     account.setAccountState(AccountState.BLOCKED);
     accountFacade.update(account);
+
+    try {
+      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void activateAccount(Long id) {
@@ -192,6 +199,13 @@ public class AccountService extends AbstractService {
 
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
+
+    try {
+      mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void updateFailedLoginCounter(Account account) {

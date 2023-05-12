@@ -30,6 +30,14 @@ public class MailService {
     );
   }
 
+  public void sendMailWithInfoAboutActivatingAccount(String to, String locale)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_MESSAGE)
+    );
+  }
+
   public void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login)
           throws MessagingException {
     sendMail(to,
