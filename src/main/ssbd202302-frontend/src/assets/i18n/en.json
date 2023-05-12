@@ -131,6 +131,7 @@
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
+  "exception.optimistic.lock": "The record You are working on has been modified by another user",
   "exception.mok.account.credentials": "Invalid login or password",
   "exception.mok.account.archive": "Account is archive",
   "exception.mok.account.blocked": "Account is blocked",

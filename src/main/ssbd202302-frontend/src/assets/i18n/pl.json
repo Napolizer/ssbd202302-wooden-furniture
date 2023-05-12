@@ -131,6 +131,7 @@
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
+  "exception.optimistic.lock": "Zasób na którym pracujesz został zmodyfikowany przez innego użytkownika",
   "exception.mok.account.credentials": "Nieprawidłowy login lub hasło",
   "exception.mok.account.archive": "Konto jest archiwalne",
   "exception.mok.account.blocked": "Konto jest zablokowane",

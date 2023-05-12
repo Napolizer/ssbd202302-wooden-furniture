@@ -27,6 +27,8 @@ public class EditPersonInfoDto {
   @NotNull
   @Positive(message = "Street number must be a positive integer")
   private Integer streetNumber;
+  @NotNull
+  private String hash;
 
   @Override
   public String toString() {

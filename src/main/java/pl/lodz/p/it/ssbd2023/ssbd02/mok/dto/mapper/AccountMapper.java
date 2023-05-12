@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 public class AccountMapper {
@@ -32,6 +33,7 @@ public class AccountMapper {
             .map(AccessLevel::getGroupName)
             .toList())
         .address(addressMapper.mapToAddressDto(account.getPerson().getAddress()))
+        .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
         .build();
   }
 }
