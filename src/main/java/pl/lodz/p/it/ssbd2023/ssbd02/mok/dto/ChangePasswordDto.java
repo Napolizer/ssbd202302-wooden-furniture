@@ -8,5 +8,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Password;
 public class ChangePasswordDto {
   @Password
   @ToString.Exclude
+  private String currentPassword;
+  @Password
+  @ToString.Exclude
   private String password;
 }

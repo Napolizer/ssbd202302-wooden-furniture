@@ -87,8 +87,8 @@ public class AccountEndpoint {
     //mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
-  public void changePassword(String login, String newPassword) {
-    repeatTransaction(() -> accountService.changePassword(login, newPassword));
+  public Account changePassword(String login, String newPassword, String currentPassword) {
+    return repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
   }
 
   public void changePasswordAsAdmin(String login, String newPassword) {

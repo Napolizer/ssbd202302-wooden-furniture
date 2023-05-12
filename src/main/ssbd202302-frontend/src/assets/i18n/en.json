@@ -31,6 +31,7 @@
   "change.password.new": "New password",
   "change.password.new.repeat": "Repeat new password",
   "change.password.validity.matching": "New password cannot be same as the current one",
+  "change.password.success": "Your password has been successfully changed",
 
   "register.title": "Create your account",
   "register.stepper.first": "Fill out account details",
@@ -134,10 +135,12 @@
   "dialog.confirmation.register.message": "Are you sure you want to sign up?",
   "dialog.confirmation.password.message": "Are you sure you want to reset your password?",
   "dialog.change.email.message": "Are you sure you want to change email address?",
+  "dialog.change.password.message": "Are you sure you want to change password?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
   "exception.mok.account.credentials": "Invalid login or password",
+  "exception.mok.account.credentials.password": "Invalid current password",
   "exception.mok.account.archive": "Account is archive",
   "exception.mok.account.blocked": "Account is blocked",
   "exception.mok.account.inactive": "Account is inactive",

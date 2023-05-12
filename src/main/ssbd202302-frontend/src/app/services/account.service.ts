@@ -109,11 +109,16 @@ export class AccountService {
     );
   }
 
-  public changePassword(login: string, password: ChangePassword): Observable<HttpResponse<any>> {
+  public changePassword(password: ChangePassword): Observable<HttpResponse<any>> {
     return this.httpClient.put(
-      `${environment.apiBaseUrl}/account/login/${login}/changePassword`,
+      `${environment.apiBaseUrl}/account/self/changePassword`,
       password,
-      { observe: 'response'}
+      {
+        observe: 'response',
+        headers: {
+          Authorization: `Bearer ${ this.tokenService.getToken() }`
+        },
+      }
     )
   }
 
