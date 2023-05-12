@@ -11,6 +11,7 @@ import {AlertService} from "@full-fledged/alerts";
 import {ActivatedRoute} from "@angular/router";
 import {CustomValidators} from "../../utils/custom.validators";
 import {ChangePassword} from "../../interfaces/change.password";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-change-own-password',
@@ -41,6 +42,7 @@ import {ChangePassword} from "../../interfaces/change.password";
 export class ChangeOwnPasswordComponent implements OnInit {
 
   destroy = new Subject<boolean>();
+  hide = true;
   loading = true;
   currentPassword: string;
   newPassword: string;
@@ -57,9 +59,21 @@ export class ChangeOwnPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.changePasswordForm = new FormGroup({
-      currentPassword: new FormControl(''),
-      // change validator for password
-      newPassword: new FormControl('', Validators.compose([Validators.min(8)])),
+      currentPassword: new FormControl(
+        '',
+        Validators.compose([
+          Validators.minLength(8),
+          Validators.maxLength(32),
+          Validators.pattern('^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$')
+        ])),
+      newPassword: new FormControl(
+        '',
+        Validators.compose([
+          Validators.minLength(8),
+          Validators.maxLength(32),
+          Validators.pattern('^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$')
+        ])),
+      confirmPassword: new FormControl('', Validators.compose([]))
     }, {
       validators: Validators.compose( [
         CustomValidators.MatchPasswords,
@@ -84,7 +98,7 @@ export class ChangeOwnPasswordComponent implements OnInit {
   changePassword(): void {
     this.loading = true;
     const newPassword: ChangePassword = {
-      newPassword: this.changePasswordForm.value['newPassword']!
+      password: this.changePasswordForm.value['newPassword']!
     };
     this.accountService
       .changePassword('administrator', newPassword)
