@@ -66,17 +66,21 @@ public class MailService {
     );
   }
 
-  public void sendEmailAboutAddingAccessLevel(String to, String locale) throws MessagingException {
+  public void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE)
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE1)
+            + " " + groupName
+            + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE2)
     );
   }
 
-  public void sendEmailAboutRemovingAccessLevel(String to, String locale) throws MessagingException {
+  public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE)
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE1)
+            + " " + groupName
+            + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE2)
     );
   }
 

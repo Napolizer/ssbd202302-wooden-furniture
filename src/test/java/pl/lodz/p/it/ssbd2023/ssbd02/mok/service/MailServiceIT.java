@@ -85,7 +85,7 @@ public class MailServiceIT {
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
       assertDoesNotThrow(() -> mailService.sendEmailAboutAddingAccessLevel(
-              "jegek60138@fectode.com", "en"));
+              "jegek60138@fectode.com", "en", "TestGroup"));
       utx.commit();
   }
   @Test
@@ -93,7 +93,7 @@ public class MailServiceIT {
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
       assertDoesNotThrow(() -> mailService.sendEmailAboutRemovingAccessLevel(
-              "jegek60138@fectode.com", "en"));
+              "jegek60138@fectode.com", "en", "TestGroup"));
       utx.commit();
   }
 }

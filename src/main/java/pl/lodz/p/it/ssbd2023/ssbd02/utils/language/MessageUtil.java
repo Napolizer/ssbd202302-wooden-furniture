@@ -19,12 +19,16 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_BLOCKED_MESSAGE = "mok.email.account.blocked.message";
     public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT =
             "mok.email.account.access.level.added.subject";
-    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE =
-            "mok.email.account.access.level.added.message";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE1 =
+            "mok.email.account.access.level.added.message1";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE2 =
+            "mok.email.account.access.level.added.message2";
     public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT =
             "mok.email.account.access.level.removed.subject";
-    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE =
-            "mok.email.account.access.level.removed.message";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE1 =
+            "mok.email.account.access.level.removed.message1";
+    public static final String EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE2 =
+            "mok.email.account.access.level.removed.message2";
     public static final String EMAIL_EMAIL_CHANGE_SUBJECT = "mok.email.change.subject";
     public static final String EMAIL_EMAIL_CHANGE_TOPIC = "mok.email.change.topic";
     public static final String EMAIL_ACCOUNT_CONFIRMATION_SUBJECT = "mok.email.account.confirmation.subject";

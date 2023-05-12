@@ -83,6 +83,12 @@ public class AccountService extends AbstractService {
     accessLevels.add(accessLevel);
     foundAccount.setAccessLevels(accessLevels);
     accountFacade.update(foundAccount);
+    try {
+      mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(),
+              foundAccount.getLocale(), accessLevel.getGroupName());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
@@ -99,6 +105,12 @@ public class AccountService extends AbstractService {
         accessLevels.remove(item);
         foundAccount.setAccessLevels(accessLevels);
         accountFacade.update(foundAccount);
+        try {
+          mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(),
+                  foundAccount.getLocale(), item.getGroupName());
+        } catch (MessagingException e) {
+          throw ApplicationExceptionFactory.createMailServiceException(e);
+        }
         return;
       }
     }
