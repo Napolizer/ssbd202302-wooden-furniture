@@ -190,13 +190,6 @@ public class AccountController {
   public Response changePassword(@PathParam("login") String login,
                                  @NotNull @Valid ChangePasswordDto changePasswordDto)
       throws AccountNotFoundException {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    Account account = accountEndpoint.getAccountByLogin(login).get();
-    if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-      throw ApplicationExceptionFactory.createOldPasswordGivenException();
-    }
     accountEndpoint.changePassword(login, changePasswordDto.getPassword());
     AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
         accountEndpoint.getAccountByLogin(login).get());

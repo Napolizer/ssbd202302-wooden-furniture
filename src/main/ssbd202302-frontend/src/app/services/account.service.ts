@@ -9,6 +9,7 @@ import { ResetPassword } from '../interfaces/reset.password';
 import {EditAccount} from "../interfaces/edit.account";
 import { Email } from '../interfaces/email';
 import {Accesslevel} from "../interfaces/accesslevel";
+import {ChangePassword} from "../interfaces/change.password";
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +71,7 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/change-email/${id}`,
       email,
       { observe: 'response',
-        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`} 
+        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`}
       }
     )
   }
@@ -80,7 +81,7 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/change-email?token=${token}`,
       null,
       { observe: 'response',
-        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`} 
+        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`}
       }
     )
   }
@@ -106,6 +107,14 @@ export class AccountService {
       password,
       { observe: 'response' }
     );
+  }
+
+  public changePassword(login: string, password: ChangePassword): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/login/${login}/changePassword`,
+      password,
+      { observe: 'response'}
+    )
   }
 
   public editOwnAccount(login: string, account: EditAccount): Observable<EditAccount> {

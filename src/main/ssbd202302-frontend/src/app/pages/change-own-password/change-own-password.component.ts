@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {Subject} from "rxjs";
+import {first, Subject, takeUntil} from "rxjs";
 import {AccountService} from "../../services/account.service";
 import {TranslateService} from "@ngx-translate/core";
 import {AuthenticationService} from "../../services/authentication.service";
@@ -9,6 +9,8 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AlertService} from "@full-fledged/alerts";
 import {ActivatedRoute} from "@angular/router";
+import {CustomValidators} from "../../utils/custom.validators";
+import {ChangePassword} from "../../interfaces/change.password";
 
 @Component({
   selector: 'app-change-own-password',
@@ -58,9 +60,12 @@ export class ChangeOwnPasswordComponent implements OnInit {
       currentPassword: new FormControl(''),
       // change validator for password
       newPassword: new FormControl('', Validators.compose([Validators.min(8)])),
-    },
-
-      )
+    }, {
+      validators: Validators.compose( [
+        CustomValidators.MatchPasswords,
+        Validators.required
+      ]),
+    });
   }
 
   ngOnDestroy(): void {
@@ -76,8 +81,41 @@ export class ChangeOwnPasswordComponent implements OnInit {
     this.navigationService.redirectToMainPage();
   }
 
-  onPasswordChangeClicked() {
+  changePassword(): void {
+    this.loading = true;
+    const newPassword: ChangePassword = {
+      newPassword: this.changePasswordForm.value['newPassword']!
+    };
+    this.accountService
+      .changePassword('administrator', newPassword)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.navigationService.redirectToMainPage();
+        }
+      })
+  }
 
+  onPasswordChangeClicked(): void {
+    if (this.changePasswordForm.valid) {
+      this.translate
+        .get('dialog.change.email.message')
+        .pipe(takeUntil(this.destroy))
+        .subscribe((msg) => {
+          const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+          ref
+            .afterClosed()
+            .pipe(first(), takeUntil(this.destroy))
+            .subscribe((result) => {
+              if (result === 'action') {
+                this.changePassword();
+              }
+            });
+        });
+    } else {
+      this.changePasswordForm.markAllAsTouched();
+    }
   }
 
 
