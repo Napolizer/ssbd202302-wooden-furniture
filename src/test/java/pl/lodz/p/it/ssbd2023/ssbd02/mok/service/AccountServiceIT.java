@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountServiceIT {
@@ -384,7 +385,7 @@ public class AccountServiceIT {
     assertEquals(account.getPerson().getLastName(), accountService.getAccountByLogin("test").get().getPerson().getLastName());
     assertEquals(account.getPerson().getAddress().getStreetNumber(),
             accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber());
-    accountService.editAccountInfo(account.getLogin(), editedAccount);
+    accountService.editAccountInfo(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getVersion()));
     utx.commit();
 
     utx.begin();
@@ -418,7 +419,7 @@ public class AccountServiceIT {
     assertEquals(account.getPerson().getAddress().getStreetNumber(),
             accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber());
     assertEquals(account.getEmail(), accountService.getAccountByLogin("test").get().getEmail());
-    accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount);
+    accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getVersion()));
     utx.commit();
 
     utx.begin();

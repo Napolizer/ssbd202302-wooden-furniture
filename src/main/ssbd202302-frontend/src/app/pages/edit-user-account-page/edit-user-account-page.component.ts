@@ -55,6 +55,7 @@ export class EditUserAccountPageComponent implements OnInit {
     street: '',
     postalCode: '',
     streetNumber: 0,
+    hash: ''
   }
   login = ''
   id = ''
@@ -82,6 +83,7 @@ export class EditUserAccountPageComponent implements OnInit {
           this.editableAccount.postalCode = account.address.postalCode;
           this.editableAccount.street = account.address.street;
           this.editableAccount.streetNumber = account.address.streetNumber;
+          this.editableAccount.hash = account.hash;
           this.editAccountForm.setValue({
             firstName: account.firstName,
             lastName: account.lastName,
@@ -134,14 +136,33 @@ export class EditUserAccountPageComponent implements OnInit {
     this.editableAccount.streetNumber = this.editAccountForm.value.streetNumber!
     this.accountService.editUserAccount(this.login, this.editableAccount)
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe(editedAccount => {
-        this.editableAccount = editedAccount;
-        this.translate.get('edit.success')
-          .pipe(takeUntil(this.destroy))
-          .subscribe(msg => {
-            this.alertService.success(msg)
-            this.navigationService.redirectToAccountPage(this.id)
-          });
+      .subscribe({
+        next: editedAccount => {
+          this.editableAccount = editedAccount;
+          this.translate.get('edit.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe({
+              next: msg => {
+                this.alertService.success(msg)
+                void this.navigationService.redirectToAccountPage(this.id)
+              },
+              error: e => {
+                const title = this.translate.instant(e[0]);
+                const message = this.translate.instant(e[1]);
+                this.dialogService.openErrorDialog(title, message);
+              }
+            });
+        },
+        error: e => {
+          const title = this.translate.instant('exception.occurred');
+          const message = this.translate.instant(e.error.message || 'exception.unknown');
+          const ref = this.dialogService.openErrorDialog(title, message);
+          ref.afterClosed()
+            .pipe(first(), takeUntil(this.destroy))
+            .subscribe(() => {
+              void this.navigationService.redirectToAccountPage(this.id);
+            });
+        }
       });
     this.loading = false
   }

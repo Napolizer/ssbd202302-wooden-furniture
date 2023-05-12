@@ -6,6 +6,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -119,14 +120,24 @@ public class AccountService extends AbstractService {
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
   }
 
-  public void editAccountInfo(String login, Account accountWithChanges) {
+  public void editAccountInfo(String login, Account accountWithChanges, String hash) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
     account.update(accountWithChanges);
     accountFacade.update(account);
   }
 
-  public void editAccountInfoAsAdmin(String login, Account accountWithChanges) {
+  public void editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
     account.update(accountWithChanges);
     accountFacade.update(account);
   }

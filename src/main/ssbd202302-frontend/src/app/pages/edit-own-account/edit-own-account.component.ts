@@ -54,6 +54,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     street: '',
     postalCode: '',
     streetNumber: 0,
+    hash: ''
   }
 
   constructor(
@@ -77,6 +78,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
           this.editableAccount.postalCode = account.address.postalCode;
           this.editableAccount.street = account.address.street;
           this.editableAccount.streetNumber = account.address.streetNumber;
+          this.editableAccount.hash = account.hash;
           this.editAccountForm.setValue({
             firstName: account.firstName,
             lastName: account.lastName,
@@ -128,14 +130,26 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     this.editableAccount.streetNumber = this.editAccountForm.value.streetNumber!
     this.accountService.editOwnAccount(this.authenticationService.getLogin()!, this.editableAccount)
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe(editedAccount => {
+      .subscribe({
+        next: editedAccount => {
         this.editableAccount = editedAccount;
         this.translate.get('edit.success')
           .pipe(takeUntil(this.destroy))
           .subscribe(msg => {
             this.alertService.success(msg)
-            this.navigationService.redirectToOwnAccountPage()
+            void this.navigationService.redirectToOwnAccountPage()
           });
+        },
+        error: e => {
+          const title = this.translate.instant('exception.occurred');
+          const message = this.translate.instant(e.error.message || 'exception.unknown');
+          const ref = this.dialogService.openErrorDialog(title, message);
+          ref.afterClosed()
+            .pipe(first(), takeUntil(this.destroy))
+            .subscribe(() => {
+              void this.navigationService.redirectToOwnAccountPage();
+            });
+        }
       });
     this.loading = false
   }

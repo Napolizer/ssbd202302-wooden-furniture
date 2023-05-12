@@ -97,13 +97,13 @@ public class AccountEndpoint {
 
   public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
     repeatTransaction(() -> accountService.editAccountInfo(login,
-            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto)));
+            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
   public void editAccountInfoAsAdmin(String login,
                                      EditPersonInfoDto editPersonInfoDto) {
     repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
-            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto)));
+            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
   public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {

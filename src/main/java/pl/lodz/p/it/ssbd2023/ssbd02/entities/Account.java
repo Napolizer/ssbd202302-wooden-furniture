@@ -106,4 +106,8 @@ public class Account extends AbstractEntity {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());
   }
+
+  public Long getSumOfVersions() {
+    return this.getVersion() + this.getPerson().getVersion() + this.getPerson().getAddress().getVersion();
+  }
 }
