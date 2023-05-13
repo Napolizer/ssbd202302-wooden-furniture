@@ -8,7 +8,7 @@
     </button>
   </mat-menu>
   <span class="toolbar-right title">
-    <div class="title-text">{{'shop.title' | translate}}</div>
+    <div class="title-text" (click)="redirectToMainPage()">{{'shop.title' | translate}}</div>
   </span>
   <span class="toolbar-item-spacer"></span>
   <button *ngIf="!isUserLoggedIn()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
