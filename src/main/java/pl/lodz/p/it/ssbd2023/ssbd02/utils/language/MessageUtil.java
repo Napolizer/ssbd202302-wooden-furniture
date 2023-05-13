@@ -51,6 +51,8 @@ public class MessageUtil {
     public static final String ACCOUNT_NOT_VERIFIED = "exception.mok.account.not.verified";
     public static final String ACCOUNT_EMAIL_ALREADY_EXISTS =
         "exception.mok.account.email.already.exists";
+    public static final String COMPANY_NIP_ALREADY_EXISTS =
+            "exception.mok.company.nip.already.exists";
     public static final String ACCOUNT_CHANGE_STATE = "exception.mok.account.change.state";
     public static final String ACCOUNT_ACCESS_LEVEL = "exception.mok.account.access.level";
     public static final String ACCOUNT_LOGIN_ALREADY_EXISTS =

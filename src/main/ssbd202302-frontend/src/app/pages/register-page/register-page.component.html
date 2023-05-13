@@ -184,7 +184,7 @@
           <ng-template matStepLabel>{{
             "register.stepper.second" | translate
           }}</ng-template>
-          <p class="form-title">{{ "register.title" | translate }}</p>
+          <p class="form-title-person">{{ "register.title" | translate }}</p>
           <div class="form">
             <div class="form-person">
               <mat-form-field
@@ -406,6 +406,76 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+            </div>
+            <div class="form-person" *ngIf="checked">
+              <mat-form-field
+                hintLabel="{{ 'register.hint.max.10' | translate }}"
+                appearance="fill"
+                class="input"
+              >
+                <mat-label>{{ "register.label.nip" | translate }}</mat-label>
+                <input
+                  matInput
+                  #nip
+                  type="text"
+                  formControlName="nip"
+                  digitOnly
+                  maxlength="10"
+                  required
+                  [readonly]="!checked"
+                />
+                <mat-error
+                  *ngIf="personForm.get('nip')?.hasError('required')"
+                  >{{ "register.validity.required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="personForm.get('nip')?.hasError('minlength')"
+                  >{{ "register.validity.nip.tooShort" | translate }}</mat-error
+                >
+                <mat-hint align="end">{{ nip.value.length }}/10</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="form-person" *ngIf="checked">
+              <mat-form-field
+                hintLabel="{{ 'register.hint.max.32' | translate }}"
+                appearance="fill"
+                class="input"
+              >
+                <mat-label>{{
+                  "register.label.company.name" | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  #companyName
+                  type="text"
+                  formControlName="companyName"
+                  maxlength="32"
+                  required
+                  [readonly]="!checked"
+                />
+                <mat-error
+                  *ngIf="personForm.get('companyName')?.hasError('required')"
+                  >{{ "register.validity.required" | translate }}</mat-error
+                >
+                <mat-error
+                  *ngIf="personForm.get('companyName')?.hasError('pattern')"
+                  >{{
+                    "register.validity.companyName.patternMismatch" | translate
+                  }}</mat-error
+                >
+                <mat-hint align="end"
+                  >{{ companyName.value.length }}/32</mat-hint
+                >
+              </mat-form-field>
+            </div>
+            <div class="form-checkbox">
+              <mat-checkbox
+                color="primary"
+                [(ngModel)]="checked"
+                (ngModelChange)="onCheck()"
+                [ngModelOptions]="{ standalone: true }"
+                >{{ "register.checkbox" | translate }}</mat-checkbox
+              >
             </div>
             <div class="form-person">
               <div class="button-container">

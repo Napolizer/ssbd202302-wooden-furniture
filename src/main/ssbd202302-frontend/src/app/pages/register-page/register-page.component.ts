@@ -16,6 +16,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'src/app/services/dialog.service';
+import { Constants } from 'src/app/utils/constants';
 
 interface Language {
   value: string;
@@ -57,6 +58,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   loading = false;
   destroy = new Subject<boolean>();
   languages: Language[] = [];
+  checked = false;
 
   constructor(
     private alertService: AlertService,
@@ -78,7 +80,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
           Validators.compose([
             Validators.minLength(6),
             Validators.maxLength(20),
-            Validators.pattern('^[a-zA-Z][a-zA-Z0-9]*$'),
+            Validators.pattern(Constants.LOGIN_PATTERN),
           ])
         ),
         password: new FormControl(
@@ -86,7 +88,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
           Validators.compose([
             Validators.minLength(8),
             Validators.maxLength(32),
-            Validators.pattern('^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$'),
+            Validators.pattern(Constants.PASSWORD_PATTERN),
           ])
         ),
         confirmPassword: new FormControl('', Validators.compose([])),
@@ -108,41 +110,31 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         firstName: new FormControl(
           '',
           Validators.compose([
-            Validators.pattern(
-              '^[A-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]*$'
-            ),
+            Validators.pattern(Constants.CAPITALIZED_PATTERN),
           ])
         ),
         lastName: new FormControl(
           '',
           Validators.compose([
-            Validators.pattern(
-              '^[A-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]*$'
-            ),
+            Validators.pattern(Constants.CAPITALIZED_PATTERN),
           ])
         ),
         country: new FormControl(
           '',
           Validators.compose([
-            Validators.pattern(
-              '^[A-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]*$'
-            ),
+            Validators.pattern(Constants.CAPITALIZED_PATTERN),
           ])
         ),
         city: new FormControl(
           '',
           Validators.compose([
-            Validators.pattern(
-              '^[A-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]*$'
-            ),
+            Validators.pattern(Constants.CAPITALIZED_PATTERN),
           ])
         ),
         street: new FormControl(
           '',
           Validators.compose([
-            Validators.pattern(
-              '^[A-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]*$'
-            ),
+            Validators.pattern(Constants.CAPITALIZED_PATTERN),
           ])
         ),
         streetNumber: new FormControl(
@@ -151,9 +143,13 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         ),
         postalCode: new FormControl(
           '',
-          Validators.compose([Validators.pattern('[0-9]{2}-[0-9]{3}')])
+          Validators.compose([
+            Validators.pattern(Constants.POSTAL_CODE_PATTERN),
+          ])
         ),
         locale: new FormControl(''),
+        nip: new FormControl(''),
+        companyName: new FormControl(''),
       },
       {
         validators: Validators.compose([Validators.required]),
@@ -198,6 +194,8 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
       streetNumber: parseInt(this.personForm.value['streetNumber']!),
       postalCode: this.personForm.value['postalCode']!,
       locale: this.personForm.value['locale']!,
+      nip: this.checked ? this.personForm.value['nip']! : null,
+      companyName: this.checked ? this.personForm.value['companyName']! : null,
     };
     this.accountService
       .register(accountRegister)
@@ -220,6 +218,9 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
                   this.accountForm.get('login')?.setErrors({ incorrect: true });
                 } else if (message.includes('email')) {
                   this.accountForm.get('email')?.setErrors({ incorrect: true });
+                } else if (message.includes('nip')) {
+                  this.personForm.get('nip')?.setErrors({ incorrect: true });
+                  return;
                 }
               }
               this.myStepper.previous();
@@ -246,6 +247,27 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         });
     } else {
       this.accountForm.markAllAsTouched();
+    }
+  }
+
+  onCheck(): void {
+    if (this.checked) {
+      this.personForm
+        .get('nip')
+        ?.setValidators(
+          Validators.compose([Validators.minLength(10), Validators.required])
+        );
+      this.personForm
+        .get('companyName')
+        ?.setValidators([
+          Validators.pattern(Constants.COMPANY_PATTERN),
+          Validators.required,
+        ]);
+    } else {
+      this.personForm.get('nip')?.clearValidators();
+      this.personForm.get('companyName')?.clearValidators();
+      this.personForm.get('nip')?.updateValueAndValidity();
+      this.personForm.get('companyName')?.updateValueAndValidity();
     }
   }
 }

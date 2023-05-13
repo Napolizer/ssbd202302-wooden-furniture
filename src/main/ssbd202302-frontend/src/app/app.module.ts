@@ -33,6 +33,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
@@ -47,6 +48,7 @@ import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confir
 import { ChangeEmailComponent } from './pages/change-email/change-email.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeAccountGroupPageComponent } from './pages/change-account-group-page/change-account-group-page.component';
+import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 
 @NgModule({
@@ -76,6 +78,8 @@ import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-o
     ConfirmEmailChangeComponent,
     ChangeEmailComponent,
     ChangeAccountGroupPageComponent,
+    DigitOnlyDirective,
+    ChangeAccountGroupPageComponent,
     ChangeOwnPasswordComponent
   ],
     imports: [
@@ -101,6 +105,7 @@ import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-o
         MatTooltipModule,
         MatMenuModule,
         MatCardModule,
+        MatCheckboxModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

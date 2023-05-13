@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
@@ -30,12 +31,23 @@ public final class DtoToEntityMapper {
         .lastName(accountRegisterDto.getLastName())
         .address(address).build();
 
-    return Account.builder()
+    String nip = accountRegisterDto.getNip();
+    String companyName = accountRegisterDto.getCompanyName();
+    Client client = new Client();
+    if (nip != null && companyName != null) {
+      client.setCompany(Company.builder().nip(nip).client(client).companyName(companyName).build());
+    }
+
+    Account account = Account.builder()
         .login(accountRegisterDto.getLogin())
         .email(accountRegisterDto.getEmail())
         .password(accountRegisterDto.getPassword())
         .locale(accountRegisterDto.getLocale())
         .person(person).build();
+    client.setAccount(account);
+    account.getAccessLevels().add(client);
+
+    return account;
   }
 
 
