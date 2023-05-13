@@ -1,4 +1,8 @@
 {
+  "shop.title": "Meble Drewniane",
+
+  "page.title": "SSBD02",
+
   "login.title": "Meble Drewniane",
   "login.subtitle": "Logowanie",
   "login.enterLogin": "Podaj swój login",
@@ -127,6 +131,7 @@
 
   "save": "Zapisz",
   "reset": "Resetuj",
+  "ssbd": "ssbd",
 
   "dialog.confirmation.title": "Potwierdzenie akcji",
   "dialog.confirmation.action": "Potwierdź",
@@ -147,7 +152,7 @@
   "exception.mok.account.email.already.exists": "Konto z podanym adresem email już istnieje",
   "exception.general.database": "Wystąpił problem z bazą danych",
   "exception.mail.service": "Wystąpił problem podczas wysyłania wiadomości email",
-  "forbidden.title": "Forbidden",
+  "forbidden.title": "Dostęp Zabroniony",
   "forbidden.description": "Nie posiadasz wymaganych uprawnień, aby korzystać z tego zasobu",
   "forbidden.button": "Powrót",
   "exception.mok.account.old.password": "Nowe hasło nie może być takie samo jak obecne",
