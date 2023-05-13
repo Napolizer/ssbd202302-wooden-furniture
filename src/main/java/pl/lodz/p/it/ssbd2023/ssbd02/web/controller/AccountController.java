@@ -185,21 +185,20 @@ public class AccountController {
   }
 
   @PUT
-  @Path("/login/{login}/changePassword")
+  @Path("/self/changePassword")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response changePassword(@PathParam("login") String login,
-                                 @NotNull @Valid ChangePasswordDto changePasswordDto)
+  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  public Response changePassword(@NotNull @Valid ChangePasswordDto changePasswordDto)
       throws AccountNotFoundException {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
+
+    String login = principal.getName();
+    if (login == null || login.equals("ANONYMOUS")) {
+      return Response.status(403).build();
     }
-    Account account = accountEndpoint.getAccountByLogin(login).get();
-    if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-      throw ApplicationExceptionFactory.createOldPasswordGivenException();
-    }
-    accountEndpoint.changePassword(login, changePasswordDto.getPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
-        accountEndpoint.getAccountByLogin(login).get());
+    Account account = accountEndpoint.changePassword(login, changePasswordDto.getPassword(),
+            changePasswordDto.getCurrentPassword());
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
+
     return Response.ok(changedAccount).build();
   }
 

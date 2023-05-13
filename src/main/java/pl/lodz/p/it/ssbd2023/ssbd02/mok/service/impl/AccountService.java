@@ -164,12 +164,19 @@ public class AccountService extends AbstractService {
     accountFacade.create(account);
   }
 
-  public void changePassword(String login, String newPassword) {
+  public Account changePassword(String login, String newPassword, String currentPassword) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
-    if (!Objects.equals(account.getPassword(), newPassword)) {
-      account.setPassword(newPassword);
-      accountFacade.update(account);
+    if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
+      //fixme invalidCredentialsException is checked
+    }
+
+    if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      return accountFacade.update(account);
+    } else {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
   }
 

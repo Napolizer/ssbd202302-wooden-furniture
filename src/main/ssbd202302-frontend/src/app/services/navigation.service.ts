@@ -34,6 +34,10 @@ export class NavigationService {
     return this.router.navigate(['/change-email/' + id]);
   }
 
+  public redirectToChangeOwnPasswordPage(): Promise<boolean> {
+    return this.router.navigate(['/change-password']);
+  }
+
   public redirectToAccountPage(id: string): Promise<boolean> {
     return this.router.navigate(['account/' + id])
   }

@@ -26,6 +26,13 @@
   "change.email.link.sent": "Activation link has been sent to the new email address",
   "change.email.validity.matching": "New email address cannot be same as the current one",
 
+  "change.password.button": "Change password",
+  "change.password.current": "Current password",
+  "change.password.new": "New password",
+  "change.password.new.repeat": "Repeat new password",
+  "change.password.validity.matching": "New password cannot be same as the current one",
+  "change.password.success": "Your password has been successfully changed",
+
   "register.title": "Create your account",
   "register.stepper.first": "Fill out account details",
   "register.stepper.second": "Fill out personal details",
@@ -128,11 +135,13 @@
   "dialog.confirmation.register.message": "Are you sure you want to sign up?",
   "dialog.confirmation.password.message": "Are you sure you want to reset your password?",
   "dialog.change.email.message": "Are you sure you want to change email address?",
+  "dialog.change.password.message": "Are you sure you want to change password?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
   "exception.optimistic.lock": "The record You are working on has been modified by another user",
   "exception.mok.account.credentials": "Invalid login or password",
+  "exception.mok.account.credentials.password": "Invalid current password",
   "exception.mok.account.archive": "Account is archive",
   "exception.mok.account.blocked": "Account is blocked",
   "exception.mok.account.inactive": "Account is inactive",
@@ -171,6 +180,7 @@
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
+  "toolbar.settings": "Settings",
 
   "auth.token.expired": "Your token has expired",
   "auth.not.authenticated": "You are not authenticated",

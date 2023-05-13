@@ -47,6 +47,7 @@ import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confir
 import { ChangeEmailComponent } from './pages/change-email/change-email.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeAccountGroupPageComponent } from './pages/change-account-group-page/change-account-group-page.component';
+import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { ChangeAccountGroupPageComponent } from './pages/change-account-group-pa
     RemoveAccountGroupPageComponent,
     ConfirmEmailChangeComponent,
     ChangeEmailComponent,
-    ChangeAccountGroupPageComponent
+    ChangeAccountGroupPageComponent,
+    ChangeOwnPasswordComponent
   ],
     imports: [
         BrowserModule,

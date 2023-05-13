@@ -20,6 +20,7 @@ import {ChangeAccountGroupPageComponent} from "./pages/change-account-group-page
 import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeEmailComponent } from './pages/change-email/change-email.component';
+import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
 
 const routes: Routes = [
   {
@@ -94,6 +95,14 @@ const routes: Routes = [
   {
     path: 'change-email',
     component: ChangeEmailComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
+    path: 'change-password',
+    component: ChangeOwnPasswordComponent,
     canActivate: [AuthGuard],
     data: {
       groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]

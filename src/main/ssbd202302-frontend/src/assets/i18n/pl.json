@@ -26,6 +26,12 @@
   "change.email.link.sent": "Link aktywacyjny został wysłany na nowy adres email",
   "change.email.validity.matching": "Nowy adres email nie może być taki sam jak obecny",
 
+  "change.password.button": "Zmień hasło",
+  "change.password.current": "Aktualne hasło",
+  "change.password.new": "Nowe hasło",
+  "change.password.new.repeat": "Powtórz nowe hasło",
+  "change.password.validity.matching": "Nowe hasło nie może być takie samo jak obecne",
+
   "register.title": "Utwórz konto",
   "register.stepper.first": "Uzupełnij dane konta",
   "register.stepper.second": "Uzupełnij dane personalne",
@@ -171,6 +177,7 @@
   "toolbar.myAccount": "Moje konto",
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
+  "toolbar.settings": "Ustawienia",
 
   "auth.token.expired": "Twój token wygasł",
   "auth.not.authenticated": "Nie jesteś zalogowany",
