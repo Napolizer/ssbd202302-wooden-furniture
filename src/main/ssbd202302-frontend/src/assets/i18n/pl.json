@@ -74,6 +74,11 @@
   "register.confirm.third": "Jeśli twoje konto zostało już zweryfikowane, ",
   "register.confirm.fourth": "możesz się teraz zalogować.",
 
+  "create.account.button": "Utwórz",
+  "create.account.title": "Utwórz nowe konto",
+  "create.account.label.access.level": "Poziom dostępu",
+  "create.account.success": "Konto zostało pomyślnie utworzone",
+
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
   "reset.password.confirmNewPassword": "Powtórz nowe hasło",
@@ -140,6 +145,7 @@
   "dialog.confirmation.register.message": "Czy na pewno chcesz się zarejestrować?",
   "dialog.confirmation.password.message": "Czy na pewno chcesz zresetować swoje hasło?",
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
+  "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -185,6 +191,7 @@
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
   "toolbar.settings": "Ustawienia",
+  "toolbar.createAccount": "Utwórz Konto",
 
   "auth.token.expired": "Twój token wygasł",
   "auth.not.authenticated": "Nie jesteś zalogowany",

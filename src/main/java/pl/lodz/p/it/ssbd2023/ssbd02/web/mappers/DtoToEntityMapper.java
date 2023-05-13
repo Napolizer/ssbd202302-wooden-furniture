@@ -1,7 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
-import java.util.ArrayList;
-import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
@@ -53,16 +51,13 @@ public final class DtoToEntityMapper {
 
   public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) {
     Account account = mapAccountRegisterDtoToAccount(accountCreateDto);
-    account.setAccountState(accountCreateDto.getAccountState());
-    List<AccessLevel> accessLevels = new ArrayList<>();
-
-    for (AccessLevelDto accessLevel : accountCreateDto.getAccessLevels()) {
-      AccessLevel mapped = mapAccessLevelDtoToAccessLevel(accessLevel);
-      mapped.setAccount(account);
-      accessLevels.add(mapped);
+    AccessLevel accessLevel = mapAccessLevelDtoToAccessLevel(accountCreateDto.getAccessLevel());
+    if (accessLevel.getGroupName().equals("CLIENT")) {
+      return account;
     }
-    account.setAccessLevels(accessLevels);
-
+    account.getAccessLevels().clear();
+    accessLevel.setAccount(account);
+    account.getAccessLevels().add(accessLevel);
     return account;
   }
 

@@ -50,6 +50,7 @@ import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account
 import { ChangeAccountGroupPageComponent } from './pages/change-account-group-page/change-account-group-page.component';
 import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
+import { CreateAccountComponent } from './pages/create-account/create-account.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-o
     ChangeAccountGroupPageComponent,
     DigitOnlyDirective,
     ChangeAccountGroupPageComponent,
-    ChangeOwnPasswordComponent
+    ChangeOwnPasswordComponent,
+    CreateAccountComponent
   ],
     imports: [
         BrowserModule,

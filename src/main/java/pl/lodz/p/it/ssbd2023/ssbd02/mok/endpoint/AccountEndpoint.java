@@ -40,9 +40,9 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.registerAccount(account));
   }
 
-  public void createAccount(AccountCreateDto accountCreateDto) {
+  public Account createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
-    repeatTransaction(() -> accountService.createAccount(account));
+    return repeatTransaction(() -> accountService.createAccount(account));
   }
 
   public void blockAccount(Long id) {

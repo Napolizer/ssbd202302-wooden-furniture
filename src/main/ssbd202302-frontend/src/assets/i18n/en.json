@@ -75,6 +75,11 @@
   "register.confirm.third": "If you have already verified your account, ",
   "register.confirm.fourth": "you can now log in.",
 
+  "create.account.button": "Create",
+  "create.account.title": "Create new account",
+  "create.account.label.access.level": "Access level",
+  "create.account.success": "Account has been successfully created",
+
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
   "reset.password.confirmNewPassword": "Confirm new password",
@@ -142,6 +147,7 @@
   "dialog.confirmation.password.message": "Are you sure you want to reset your password?",
   "dialog.change.email.message": "Are you sure you want to change email address?",
   "dialog.change.password.message": "Are you sure you want to change password?",
+  "dialog.create.account.message": "Are you sure you want to create an account?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -188,6 +194,7 @@
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
   "toolbar.settings": "Settings",
+  "toolbar.createAccount": "Create Account",
 
   "auth.token.expired": "Your token has expired",
   "auth.not.authenticated": "You are not authenticated",

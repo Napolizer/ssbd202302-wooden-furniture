@@ -1,4 +1,3 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   animate,
   state,
@@ -6,23 +5,25 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { AlertService } from '@full-fledged/alerts';
-import { Subject, first, takeUntil } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from 'src/app/services/account.service';
-import { CustomValidators } from 'src/app/utils/custom.validators';
-import { AccountRegister } from 'src/app/interfaces/account.register';
-import { MatStepper } from '@angular/material/stepper';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
-import { DialogService } from 'src/app/services/dialog.service';
-import { Constants } from 'src/app/utils/constants';
+import { Subject, first, takeUntil } from 'rxjs';
+import { AccountCreate } from 'src/app/interfaces/account.create';
+import { Accesslevel } from 'src/app/interfaces/accesslevel';
 import { SelectItem } from 'src/app/interfaces/select.item';
+import { AccountService } from 'src/app/services/account.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { NavigationService } from 'src/app/services/navigation.service';
+import { Constants } from 'src/app/utils/constants';
+import { CustomValidators } from 'src/app/utils/custom.validators';
 
 @Component({
-  selector: 'app-register-page',
-  templateUrl: './register-page.component.html',
-  styleUrls: ['./register-page.component.sass'],
+  selector: 'app-create-account',
+  templateUrl: './create-account.component.html',
+  styleUrls: ['./create-account.component.sass'],
   animations: [
     trigger('loadedUnloadedForm', [
       state(
@@ -45,30 +46,25 @@ import { SelectItem } from 'src/app/interfaces/select.item';
     ]),
   ],
 })
-export class RegisterPageComponent implements OnInit, OnDestroy {
-  @ViewChild('stepper') private myStepper: MatStepper;
-  accountForm: FormGroup;
-  personForm: FormGroup;
-  hide = true;
-  loaded = false;
-  loading = false;
+export class CreateAccountComponent implements OnInit {
   destroy = new Subject<boolean>();
+  loading = true;
+  createAccountForm: FormGroup;
+  hide = true;
   languages: SelectItem[] = [];
+  roles: SelectItem[] = [];
   checked = false;
 
   constructor(
-    private alertService: AlertService,
     private accountService: AccountService,
     private translate: TranslateService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private navigationService: NavigationService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.loaded = true;
-    }, 100);
-
-    this.accountForm = new FormGroup(
+    this.createAccountForm = new FormGroup(
       {
         email: new FormControl('', Validators.compose([Validators.email])),
         login: new FormControl(
@@ -88,21 +84,6 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
           ])
         ),
         confirmPassword: new FormControl('', Validators.compose([])),
-      },
-      {
-        validators: Validators.compose([
-          CustomValidators.MatchPasswords,
-          Validators.required,
-        ]),
-      }
-    );
-
-    this.accountForm.get('password')?.valueChanges.subscribe(() => {
-      this.accountForm.get('confirmPassword')?.updateValueAndValidity();
-    });
-
-    this.personForm = new FormGroup(
-      {
         firstName: new FormControl(
           '',
           Validators.compose([
@@ -144,14 +125,46 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
           ])
         ),
         locale: new FormControl(''),
+        accessLevel: new FormControl(''),
         nip: new FormControl(''),
         companyName: new FormControl(''),
       },
       {
-        validators: Validators.compose([Validators.required]),
+        validators: Validators.compose([
+          CustomValidators.MatchPasswords,
+          Validators.required,
+        ]),
       }
     );
-
+    this.createAccountForm.get('password')?.valueChanges.subscribe(() => {
+      this.createAccountForm.get('confirmPassword')?.updateValueAndValidity();
+    });
+    this.translate
+      .get([
+        'group.administrator',
+        'group.employee',
+        'group.sales_rep',
+        'group.client',
+      ])
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        this.roles.push({
+          value: 'Administrator',
+          viewValue: msg['group.administrator'] as string,
+        });
+        this.roles.push({
+          value: 'Employee',
+          viewValue: msg['group.employee'] as string,
+        });
+        this.roles.push({
+          value: 'SalesRep',
+          viewValue: msg['group.sales_rep'] as string,
+        });
+        this.roles.push({
+          value: 'Client',
+          viewValue: msg['group.client'] as string,
+        });
+      });
     this.translate
       .get(['register.label.language.pl', 'register.label.language.en'])
       .pipe(takeUntil(this.destroy))
@@ -165,6 +178,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
           viewValue: msg['register.label.language.en'] as string,
         });
       });
+    this.loading = false;
   }
 
   ngOnDestroy(): void {
@@ -173,33 +187,43 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   }
 
   getFormAnimationState(): string {
-    return this.loaded ? 'loaded' : 'unloaded';
+    return this.loading ? 'unloaded' : 'loaded';
   }
 
   createAccount(): void {
     this.loading = true;
-    const accountRegister: AccountRegister = {
-      login: this.accountForm.value['login']!,
-      password: this.accountForm.value['password']!,
-      email: this.accountForm.value['email']!,
-      firstName: this.personForm.value['firstName']!,
-      lastName: this.personForm.value['lastName']!,
-      country: this.personForm.value['country']!,
-      city: this.personForm.value['city']!,
-      street: this.personForm.value['street']!,
-      streetNumber: parseInt(this.personForm.value['streetNumber']!),
-      postalCode: this.personForm.value['postalCode']!,
-      locale: this.personForm.value['locale']!,
-      nip: this.checked ? this.personForm.value['nip']! : null,
-      companyName: this.checked ? this.personForm.value['companyName']! : null,
+    const accountCreate: AccountCreate = {
+      login: this.createAccountForm.value['login']!,
+      password: this.createAccountForm.value['password']!,
+      email: this.createAccountForm.value['email']!,
+      firstName: this.createAccountForm.value['firstName']!,
+      lastName: this.createAccountForm.value['lastName']!,
+      country: this.createAccountForm.value['country']!,
+      city: this.createAccountForm.value['city']!,
+      street: this.createAccountForm.value['street']!,
+      streetNumber: parseInt(this.createAccountForm.value['streetNumber']!),
+      postalCode: this.createAccountForm.value['postalCode']!,
+      locale: this.createAccountForm.value['locale']!,
+      nip: this.checked ? this.createAccountForm.value['nip']! : null,
+      companyName: this.checked
+        ? this.createAccountForm.value['companyName']!
+        : null,
+      accessLevel: {
+        name: this.createAccountForm.value['accessLevel']!,
+      } as Accesslevel,
     };
     this.accountService
-      .register(accountRegister)
+      .create(accountCreate)
       .pipe(takeUntil(this.destroy))
       .subscribe({
-        next: () => {
+        next: (account) => {
           this.loading = false;
-          this.myStepper.next();
+          this.navigationService.redirectToAccountPageWithState(
+            account.id.toString(),
+            {
+              createAccountSuccess: 'create.account.success',
+            }
+          );
         },
         error: (e: HttpErrorResponse) => {
           this.loading = false;
@@ -211,24 +235,28 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
               this.alertService.danger(msg);
               if (message) {
                 if (message.includes('login')) {
-                  this.accountForm.get('login')?.setErrors({ incorrect: true });
+                  this.createAccountForm
+                    .get('login')
+                    ?.setErrors({ incorrect: true });
                 } else if (message.includes('email')) {
-                  this.accountForm.get('email')?.setErrors({ incorrect: true });
+                  this.createAccountForm
+                    .get('email')
+                    ?.setErrors({ incorrect: true });
                 } else if (message.includes('nip')) {
-                  this.personForm.get('nip')?.setErrors({ incorrect: true });
-                  return;
+                  this.createAccountForm
+                    .get('nip')
+                    ?.setErrors({ incorrect: true });
                 }
               }
-              this.myStepper.previous();
             });
         },
       });
   }
 
   onConfirm(): void {
-    if (this.personForm.valid) {
+    if (this.createAccountForm.valid) {
       this.translate
-        .get('dialog.confirmation.register.message')
+        .get('dialog.create.account.message')
         .pipe(takeUntil(this.destroy))
         .subscribe((msg) => {
           const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
@@ -242,28 +270,35 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
             });
         });
     } else {
-      this.accountForm.markAllAsTouched();
+      this.createAccountForm.markAllAsTouched();
+    }
+  }
+
+  onSelect(): void {
+    if (this.createAccountForm.value['accessLevel'] !== 'Client') {
+      this.checked = false;
+      this.onCheck();
     }
   }
 
   onCheck(): void {
     if (this.checked) {
-      this.personForm
+      this.createAccountForm
         .get('nip')
         ?.setValidators(
           Validators.compose([Validators.minLength(10), Validators.required])
         );
-      this.personForm
+      this.createAccountForm
         .get('companyName')
         ?.setValidators([
           Validators.pattern(Constants.COMPANY_PATTERN),
           Validators.required,
         ]);
     } else {
-      this.personForm.get('nip')?.clearValidators();
-      this.personForm.get('companyName')?.clearValidators();
-      this.personForm.get('nip')?.updateValueAndValidity();
-      this.personForm.get('companyName')?.updateValueAndValidity();
+      this.createAccountForm.get('nip')?.clearValidators();
+      this.createAccountForm.get('companyName')?.clearValidators();
+      this.createAccountForm.get('nip')?.updateValueAndValidity();
+      this.createAccountForm.get('companyName')?.updateValueAndValidity();
     }
   }
 }

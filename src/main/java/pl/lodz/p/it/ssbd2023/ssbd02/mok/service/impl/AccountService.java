@@ -157,10 +157,11 @@ public class AccountService extends AbstractService {
     }
   }
 
-  public void createAccount(Account account) {
+  public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
+    account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
-    accountFacade.create(account);
+    return accountFacade.create(account);
   }
 
   public Account changePassword(String login, String newPassword, String currentPassword) {
