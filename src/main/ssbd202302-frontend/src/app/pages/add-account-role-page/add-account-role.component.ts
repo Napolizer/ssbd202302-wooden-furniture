@@ -12,12 +12,12 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {AccountRegister} from "../../interfaces/account.register";
-import {Group} from "../../enums/group";
+import {Role} from "../../enums/role";
 
 @Component({
   selector: 'account-group-add',
-  templateUrl: './add-account-group.component.html',
-  styleUrls: ['./add-account-group.component.sass'],
+  templateUrl: './add-account-role.component.html',
+  styleUrls: ['./add-account-role.component.sass'],
   animations: [
     trigger('loadedUnloadedList', [
       state('loaded', style({
@@ -38,7 +38,7 @@ import {Group} from "../../enums/group";
     ]),
   ]
 })
-export class AddAccountGroupComponent implements OnInit {
+export class AddAccountRoleComponent implements OnInit {
 
   accountForm = new FormGroup({
     login: new FormControl({value: '', disabled: true})
@@ -46,10 +46,10 @@ export class AddAccountGroupComponent implements OnInit {
   destroy = new Subject<boolean>();
   account: Account;
 
-  groups: string[] = [Group.ADMINISTRATOR,
-    Group.EMPLOYEE,
-    Group.SALES_REP,
-    Group.CLIENT]
+  roles: string[] = [Role.ADMINISTRATOR,
+    Role.EMPLOYEE,
+    Role.SALES_REP,
+    Role.CLIENT]
   id = '';
   loading = true;
 
@@ -115,7 +115,7 @@ export class AddAccountGroupComponent implements OnInit {
 
   addAccountGroupToAccount(accountGroup: string): void {
     accountGroup = this.changeGroupName(accountGroup);
-    this.accountService.addAccountGroup(this.id, accountGroup)
+    this.accountService.addAccountRole(this.id, accountGroup)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: () => {

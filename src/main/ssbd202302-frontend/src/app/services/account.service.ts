@@ -141,10 +141,9 @@ export class AccountService {
     );
   }
 
-  public addAccountGroup(id: string,accountGroup: string): Observable<Account> {
-    console.log("Dodaję grupę użytkownika")
+  public addAccountRole(id: string, accountRole: string): Observable<Account> {
     return this.httpClient.put<Account>(
-      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountRole,
       null,
       {
         headers: {
@@ -154,10 +153,9 @@ export class AccountService {
     );
   }
 
-  public removeAccountGroup(id: string, accountGroup: string): Observable<Account> {
-    console.log("Usuwam grupę użytkownika")
+  public removeAccountRole(id: string, accountRole: string): Observable<Account> {
     return this.httpClient.delete<Account>(
-      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountGroup,
+      `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/` + accountRole,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`
@@ -166,8 +164,7 @@ export class AccountService {
     );
   }
 
-public changeAccountGroup(id: string,accessLevel: Accesslevel): Observable<Account> {
-    console.log("Zmiana grupy użytkownika")
+public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Account> {
     return this.httpClient.put<Account>(
       `${environment.apiBaseUrl}/account/id/` + id + `/accessLevel/change`,
         accessLevel,

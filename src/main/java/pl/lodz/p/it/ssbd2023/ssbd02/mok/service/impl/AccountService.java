@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -10,6 +12,7 @@ import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
@@ -61,22 +64,22 @@ public class AccountService extends AbstractService {
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
-    if ((accessLevels.size() > 0 && Objects.equals(accessLevel.getGroupName(), "ADMINISTRATOR"))) {
+    if ((accessLevels.size() > 0 && Objects.equals(accessLevel.getRoleName(), ADMINISTRATOR))) {
       throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
     }
 
     for (AccessLevel item : accessLevels) {
-      if (Objects.equals(item.getGroupName(), "ADMINISTRATOR")) {
+      if (Objects.equals(item.getRoleName(), ADMINISTRATOR)) {
         throw ApplicationExceptionFactory.createAdministratorAccessLevelAlreadyAssignedException();
       }
 
-      if (Objects.equals(item.getGroupName(), accessLevel.getGroupName())) {
+      if (Objects.equals(item.getRoleName(), accessLevel.getRoleName())) {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
       }
 
-      if ((Objects.equals(item.getGroupName(), "CLIENT") && Objects.equals(accessLevel.getGroupName(), "SALES_REP"))
-          || (Objects.equals(item.getGroupName(), "SALES_REP")
-            && Objects.equals(accessLevel.getGroupName(), "CLIENT"))) {
+      if ((Objects.equals(item.getRoleName(), Role.CLIENT) && Objects.equals(accessLevel.getRoleName(), Role.SALES_REP))
+          || (Objects.equals(item.getRoleName(), Role.SALES_REP)
+            && Objects.equals(accessLevel.getRoleName(), Role.CLIENT))) {
         throw ApplicationExceptionFactory.createClientAndSalesRepAccessLevelsConflictException();
       }
     }
@@ -290,7 +293,7 @@ public class AccountService extends AbstractService {
     }
 
     boolean isAdmin = subject.getAccessLevels()
-            .stream().anyMatch(al -> al.getGroupName().equals("ADMINISTRATOR"));
+            .stream().anyMatch(al -> al.getRoleName().equals(ADMINISTRATOR));
 
     if (isAdmin || subject.getId().equals(accountId)) {
       Account account = accountFacade.findById(accountId)

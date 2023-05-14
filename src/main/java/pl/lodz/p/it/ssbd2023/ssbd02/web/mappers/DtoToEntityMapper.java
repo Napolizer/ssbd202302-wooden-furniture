@@ -1,5 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
 import java.util.ArrayList;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
@@ -74,16 +79,16 @@ public final class DtoToEntityMapper {
 
   public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto) {
     switch (accessLevelDto.getName()) {
-      case "Client" -> {
+      case CLIENT -> {
         return new Client();
       }
-      case "Administrator" -> {
+      case ADMINISTRATOR -> {
         return new Administrator();
       }
-      case "Employee" -> {
+      case EMPLOYEE -> {
         return new Employee();
       }
-      case "SalesRep" -> {
+      case SALES_REP -> {
         return new SalesRep();
       }
       default -> throw ApplicationExceptionFactory.createInvalidAccessLevelException();

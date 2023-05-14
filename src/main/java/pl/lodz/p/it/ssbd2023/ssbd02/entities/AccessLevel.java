@@ -28,5 +28,5 @@ public abstract class AccessLevel extends AbstractEntity {
   @JoinColumn(name = "account_id", updatable = false, nullable = false)
   private Account account;
 
-  public abstract String getGroupName();
+  public abstract String getRoleName();
 }
