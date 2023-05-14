@@ -17,6 +17,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
+import { Constants } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-reset-password',
@@ -57,7 +58,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         Validators.compose([
           Validators.minLength(8),
           Validators.maxLength(32),
-          Validators.pattern('^(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$'),
+          Validators.pattern(Constants.PASSWORD_PATTERN),
         ])
       ),
       confirmPassword: new FormControl(''),

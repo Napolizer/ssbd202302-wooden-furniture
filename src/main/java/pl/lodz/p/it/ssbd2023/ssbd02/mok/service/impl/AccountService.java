@@ -6,13 +6,13 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -138,14 +138,24 @@ public class AccountService extends AbstractService {
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
   }
 
-  public void editAccountInfo(String login, Account accountWithChanges) {
+  public void editAccountInfo(String login, Account accountWithChanges, String hash) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
     account.update(accountWithChanges);
     accountFacade.update(account);
   }
 
-  public void editAccountInfoAsAdmin(String login, Account accountWithChanges) {
+  public void editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
     account.update(accountWithChanges);
     accountFacade.update(account);
   }
@@ -166,18 +176,26 @@ public class AccountService extends AbstractService {
     }
   }
 
-  public void createAccount(Account account) {
+  public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
+    account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
-    accountFacade.create(account);
+    return accountFacade.create(account);
   }
 
-  public void changePassword(String login, String newPassword) {
+  public Account changePassword(String login, String newPassword, String currentPassword) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
-    if (!Objects.equals(account.getPassword(), newPassword)) {
-      account.setPassword(newPassword);
-      accountFacade.update(account);
+    if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
+      //fixme invalidCredentialsException is checked
+    }
+
+    if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      return accountFacade.update(account);
+    } else {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
   }
 
@@ -244,9 +262,7 @@ public class AccountService extends AbstractService {
       throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
     }
     account.setAccountState(AccountState.ACTIVE);
-    Client client = new Client();
-    client.setAccount(account);
-    account.getAccessLevels().add(client);
+    accountFacade.update(account);
   }
 
   public String validatePasswordResetToken(String token) {

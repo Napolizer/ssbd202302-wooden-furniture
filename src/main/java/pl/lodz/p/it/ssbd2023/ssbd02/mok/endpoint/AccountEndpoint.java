@@ -40,9 +40,9 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.registerAccount(account));
   }
 
-  public void createAccount(AccountCreateDto accountCreateDto) {
+  public Account createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
-    repeatTransaction(() -> accountService.createAccount(account));
+    return repeatTransaction(() -> accountService.createAccount(account));
   }
 
   public void blockAccount(Long id) {
@@ -84,8 +84,8 @@ public class AccountEndpoint {
     Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
   }
 
-  public void changePassword(String login, String newPassword) {
-    repeatTransaction(() -> accountService.changePassword(login, newPassword));
+  public Account changePassword(String login, String newPassword, String currentPassword) {
+    return repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
   }
 
   public void changePasswordAsAdmin(String login, String newPassword) {
@@ -94,13 +94,13 @@ public class AccountEndpoint {
 
   public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
     repeatTransaction(() -> accountService.editAccountInfo(login,
-            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto)));
+            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
   public void editAccountInfoAsAdmin(String login,
                                      EditPersonInfoDto editPersonInfoDto) {
     repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
-            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto)));
+            DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
   public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {

@@ -1,5 +1,3 @@
-import {Address} from "./address";
-
 export interface EditAccount {
   firstName: string,
   lastName: string,
@@ -7,5 +5,6 @@ export interface EditAccount {
   city: string,
   street: string,
   postalCode: string,
-  streetNumber: number
+  streetNumber: number,
+  hash: string
 }

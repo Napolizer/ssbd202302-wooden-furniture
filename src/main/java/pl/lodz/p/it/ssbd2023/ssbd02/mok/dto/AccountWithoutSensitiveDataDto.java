@@ -47,6 +47,6 @@ public class AccountWithoutSensitiveDataDto {
   @Valid
   @ToString.Exclude
   private AddressDto address;
-
-
+  @NotNull
+  private String hash;
 }

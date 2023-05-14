@@ -3,11 +3,16 @@
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
-    <button mat-menu-item routerLink="#" (click)="redirectToAdminPage()">
+    <button mat-menu-item routerLink="#" *ngIf="isUserAdmin()" (click)="redirectToAdminPage()">
       <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>
     </button>
+    <button mat-menu-item routerLink="#" *ngIf="isUserAdmin()" (click)="redirectToCreateAccountPage()">
+      <mat-icon>person_add</mat-icon><span>{{'toolbar.createAccount' | translate}}</span>
+    </button>
   </mat-menu>
-  <span class="toolbar-right title">SSBD</span>
+  <span class="toolbar-right title">
+    <div class="title-text" (click)="redirectToMainPage()">{{'shop.title' | translate}}</div>
+  </span>
   <span class="toolbar-item-spacer"></span>
   <button *ngIf="!isUserLoggedIn()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
   <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
@@ -17,6 +22,10 @@
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAccountPage()">
       <mat-icon>person</mat-icon><span>{{'toolbar.myAccount' | translate}}</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="#" (click)="redirectToChangeOwnPasswordPage()">
+      <mat-icon>settings</mat-icon><span>{{'toolbar.settings' | translate}}</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="#" (click)="logout()">

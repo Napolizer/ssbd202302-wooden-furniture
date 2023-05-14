@@ -3,11 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
@@ -30,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountServiceIT {
@@ -384,7 +381,7 @@ public class AccountServiceIT {
     assertEquals(account.getPerson().getLastName(), accountService.getAccountByLogin("test").get().getPerson().getLastName());
     assertEquals(account.getPerson().getAddress().getStreetNumber(),
             accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber());
-    accountService.editAccountInfo(account.getLogin(), editedAccount);
+    accountService.editAccountInfo(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getVersion()));
     utx.commit();
 
     utx.begin();
@@ -418,7 +415,7 @@ public class AccountServiceIT {
     assertEquals(account.getPerson().getAddress().getStreetNumber(),
             accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber());
     assertEquals(account.getEmail(), accountService.getAccountByLogin("test").get().getEmail());
-    accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount);
+    accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getVersion()));
     utx.commit();
 
     utx.begin();
@@ -470,16 +467,21 @@ public class AccountServiceIT {
     String newPassword = "newPassword";
     assertEquals(account.getPassword(),
             accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-    assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword));
-    assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+    assertTrue(CryptHashUtils.verifyPassword("test", account.getPassword()));
+    assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword,"test"));
+    Account updateAccount = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+
+    assertFalse(CryptHashUtils.verifyPassword("test", updateAccount.getPassword()));
+    assertTrue(CryptHashUtils.verifyPassword(newPassword, updateAccount.getPassword()));
   }
 
   @Test
   public void failsToChangePasswordWhenGivenOldPassword() throws AccountNotFoundException {
     String oldPassword = account.getPassword();
     assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-    accountService.changePassword(account.getLogin(), oldPassword);
-    assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
+    assertThrows(OldPasswordGivenException.class,
+            () -> accountService.changePassword(account.getLogin(), "test", "test"));
+
   }
 
   @Test

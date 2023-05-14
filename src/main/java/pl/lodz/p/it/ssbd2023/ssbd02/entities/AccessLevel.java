@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "account")
 @NoArgsConstructor
 @SuperBuilder
 @Entity(name = "access_level")

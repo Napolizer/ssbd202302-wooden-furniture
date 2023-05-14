@@ -34,6 +34,10 @@ export class NavigationService {
     return this.router.navigate(['/change-email/' + id]);
   }
 
+  public redirectToChangeOwnPasswordPage(): Promise<boolean> {
+    return this.router.navigate(['/change-password']);
+  }
+
   public redirectToAccountPage(id: string): Promise<boolean> {
     return this.router.navigate(['account/' + id])
   }
@@ -48,6 +52,10 @@ export class NavigationService {
 
   public redirectToRegisterPage() {
     return this.router.navigate(['/register']);
+  }
+
+  public redirectToCreateAccountPage() {
+    return this.router.navigate(['/create-account']);
   }
 
   public redirectToLoginPageWithState(state: any): Promise<boolean> {

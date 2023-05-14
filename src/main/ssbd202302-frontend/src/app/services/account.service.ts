@@ -9,6 +9,8 @@ import { ResetPassword } from '../interfaces/reset.password';
 import {EditAccount} from "../interfaces/edit.account";
 import { Email } from '../interfaces/email';
 import {Accesslevel} from "../interfaces/accesslevel";
+import {ChangePassword} from "../interfaces/change.password";
+import { AccountCreate } from '../interfaces/account.create';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +37,18 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/register`,
       account,
       { observe: 'response' }
+    );
+  }
+
+  public create(account: AccountCreate): Observable<Account> {
+    return this.httpClient.post<Account>(
+      `${environment.apiBaseUrl}/account/create`,
+      account,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
     );
   }
 
@@ -70,7 +84,7 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/change-email/${id}`,
       email,
       { observe: 'response',
-        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`} 
+        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`}
       }
     )
   }
@@ -80,7 +94,7 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/change-email?token=${token}`,
       null,
       { observe: 'response',
-        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`} 
+        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`}
       }
     )
   }
@@ -106,6 +120,19 @@ export class AccountService {
       password,
       { observe: 'response' }
     );
+  }
+
+  public changePassword(password: ChangePassword): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/self/changePassword`,
+      password,
+      {
+        observe: 'response',
+        headers: {
+          Authorization: `Bearer ${ this.tokenService.getToken() }`
+        },
+      }
+    )
   }
 
   public editOwnAccount(login: string, account: EditAccount): Observable<EditAccount> {

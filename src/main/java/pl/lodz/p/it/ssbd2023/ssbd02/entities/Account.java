@@ -59,7 +59,7 @@ public class Account extends AbstractEntity {
   @ToString.Exclude
   private String email;
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn(name = "person_id", unique = true, nullable = false)
   @ToString.Exclude
   private Person person;
@@ -105,5 +105,9 @@ public class Account extends AbstractEntity {
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());
+  }
+
+  public Long getSumOfVersions() {
+    return this.getVersion() + this.getPerson().getVersion() + this.getPerson().getAddress().getVersion();
   }
 }
