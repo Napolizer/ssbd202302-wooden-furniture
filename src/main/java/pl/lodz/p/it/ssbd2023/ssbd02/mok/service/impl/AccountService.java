@@ -122,10 +122,17 @@ public class AccountService extends AbstractService {
     List<AccessLevel> accessLevels = account.getAccessLevels();
 
     if (accessLevels.size() == 1) {
+      AccessLevel oldAccessLevel = accessLevels.get(0);
       accessLevels.set(0, accessLevel);
       accessLevel.setAccount(account);
       account.setAccessLevels(accessLevels);
       accountFacade.update(account);
+      try {
+        mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
+                account.getLocale(), oldAccessLevel.getGroupName(), accessLevel.getGroupName());
+      } catch (MessagingException e) {
+        throw ApplicationExceptionFactory.createMailServiceException(e);
+      }
       return account;
     }
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();

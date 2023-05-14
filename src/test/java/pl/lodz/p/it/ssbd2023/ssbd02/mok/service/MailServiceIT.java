@@ -96,4 +96,13 @@ public class MailServiceIT {
               "jegek60138@fectode.com", "en", "TestGroup"));
       utx.commit();
   }
+
+  @Test
+  void shouldSendMailAboutChangingAccessLevel() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
+    assertDoesNotThrow(() -> mailService.sendEmailAboutChangingAccessLevel(
+            "jegek60138@fectode.com", "en", "OldGroup", "NewGroup"));
+    utx.commit();
+  }
 }

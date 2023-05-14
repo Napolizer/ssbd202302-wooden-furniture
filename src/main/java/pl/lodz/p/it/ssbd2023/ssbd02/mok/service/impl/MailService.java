@@ -84,6 +84,17 @@ public class MailService {
     );
   }
 
+  public void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE1)
+            + " " + oldGroup
+            + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE2)
+            + " " + newGroup + "."
+    );
+  }
+
   public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_SUBJECT),
