@@ -3,8 +3,11 @@
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
-    <button mat-menu-item routerLink="#" (click)="redirectToAdminPage()">
+    <button mat-menu-item routerLink="#" *ngIf="isUserAdmin()" (click)="redirectToAdminPage()">
       <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>
+    </button>
+    <button mat-menu-item routerLink="#" *ngIf="isUserAdmin()" (click)="redirectToCreateAccountPage()">
+      <mat-icon>person_add</mat-icon><span>{{'toolbar.createAccount' | translate}}</span>
     </button>
   </mat-menu>
   <span class="toolbar-right title">

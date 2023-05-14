@@ -10,6 +10,7 @@ import {EditAccount} from "../interfaces/edit.account";
 import { Email } from '../interfaces/email';
 import {Accesslevel} from "../interfaces/accesslevel";
 import {ChangePassword} from "../interfaces/change.password";
+import { AccountCreate } from '../interfaces/account.create';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,18 @@ export class AccountService {
       `${environment.apiBaseUrl}/account/register`,
       account,
       { observe: 'response' }
+    );
+  }
+
+  public create(account: AccountCreate): Observable<Account> {
+    return this.httpClient.post<Account>(
+      `${environment.apiBaseUrl}/account/create`,
+      account,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
     );
   }
 

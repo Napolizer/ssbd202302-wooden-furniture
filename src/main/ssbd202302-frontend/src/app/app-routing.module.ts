@@ -21,6 +21,7 @@ import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confir
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeEmailComponent } from './pages/change-email/change-email.component';
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
+import { CreateAccountComponent } from './pages/create-account/create-account.component';
 
 const routes: Routes = [
   {
@@ -106,6 +107,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+    }
+  },
+  {
+    path: 'create-account',
+    component: CreateAccountComponent,
+    canActivate: [AuthGuard],
+    data: {
+      groups: [Group.ADMINISTRATOR]
     }
   },
   {

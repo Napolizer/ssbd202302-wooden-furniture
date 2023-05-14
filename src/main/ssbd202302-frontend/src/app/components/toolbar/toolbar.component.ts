@@ -4,6 +4,7 @@ import {AuthenticationService} from "../../services/authentication.service";
 import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
 import {first, Subject, takeUntil} from "rxjs";
+import { Group } from 'src/app/enums/group';
 
 @Component({
   selector: 'app-toolbar',
@@ -52,8 +53,16 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToChangeOwnPasswordPage();
   }
 
+  redirectToCreateAccountPage(): void {
+    void this.navigationService.redirectToCreateAccountPage();
+  }
+
   isUserLoggedIn(): boolean {
     return this.authenticationService.isUserLoggedIn();
+  }
+
+  isUserAdmin(): boolean {
+    return this.authenticationService.isUserInGroup(Group.ADMINISTRATOR);
   }
 
   isCurrentlyOnLoginPage(): boolean {

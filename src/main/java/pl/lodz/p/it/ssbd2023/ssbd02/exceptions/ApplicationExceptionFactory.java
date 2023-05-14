@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.NipAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
@@ -51,6 +52,10 @@ public final class ApplicationExceptionFactory {
 
   public static EmailAlreadyExistsException createEmailAlreadyExistsException() {
     return new EmailAlreadyExistsException();
+  }
+
+  public static NipAlreadyExistsException createNipAlreadyExistsException(Throwable cause) {
+    return new NipAlreadyExistsException(cause);
   }
 
   public static IllegalAccountStateChangeException createIllegalAccountStateChangeException() {
