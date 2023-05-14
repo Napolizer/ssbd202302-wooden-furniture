@@ -83,6 +83,12 @@ public class AccountService extends AbstractService {
     accessLevels.add(accessLevel);
     foundAccount.setAccessLevels(accessLevels);
     accountFacade.update(foundAccount);
+    try {
+      mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(),
+              foundAccount.getLocale(), accessLevel.getGroupName());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
@@ -99,6 +105,12 @@ public class AccountService extends AbstractService {
         accessLevels.remove(item);
         foundAccount.setAccessLevels(accessLevels);
         accountFacade.update(foundAccount);
+        try {
+          mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(),
+                  foundAccount.getLocale(), item.getGroupName());
+        } catch (MessagingException e) {
+          throw ApplicationExceptionFactory.createMailServiceException(e);
+        }
         return;
       }
     }
@@ -110,10 +122,17 @@ public class AccountService extends AbstractService {
     List<AccessLevel> accessLevels = account.getAccessLevels();
 
     if (accessLevels.size() == 1) {
+      AccessLevel oldAccessLevel = accessLevels.get(0);
       accessLevels.set(0, accessLevel);
       accessLevel.setAccount(account);
       account.setAccessLevels(accessLevels);
       accountFacade.update(account);
+      try {
+        mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
+                account.getLocale(), oldAccessLevel.getGroupName(), accessLevel.getGroupName());
+      } catch (MessagingException e) {
+        throw ApplicationExceptionFactory.createMailServiceException(e);
+      }
       return account;
     }
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
@@ -198,6 +217,13 @@ public class AccountService extends AbstractService {
 
     account.setAccountState(AccountState.BLOCKED);
     accountFacade.update(account);
+
+    try {
+      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void activateAccount(Long id) {
@@ -210,6 +236,13 @@ public class AccountService extends AbstractService {
 
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
+
+    try {
+      mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void updateFailedLoginCounter(Account account) {
