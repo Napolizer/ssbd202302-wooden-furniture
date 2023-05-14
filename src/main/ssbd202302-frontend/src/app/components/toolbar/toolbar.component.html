@@ -7,7 +7,9 @@
       <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>
     </button>
   </mat-menu>
-  <span class="toolbar-right title">SSBD</span>
+  <span class="toolbar-right title">
+    <div class="title-text" (click)="redirectToMainPage()">{{'shop.title' | translate}}</div>
+  </span>
   <span class="toolbar-item-spacer"></span>
   <button *ngIf="!isUserLoggedIn()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
   <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>

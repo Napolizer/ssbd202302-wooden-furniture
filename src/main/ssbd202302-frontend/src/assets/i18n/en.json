@@ -1,5 +1,8 @@
 {
-  "login.title": "Wooden Furniture",
+  "shop.title": "Wooden Furniture",
+
+  "page.title": "SSBD02",
+
   "login.subtitle": "Login to continue",
   "login.enterLogin": "Enter your login",
   "login.enterPassword": "Enter your password",
@@ -128,6 +131,7 @@
 
   "save": "Save",
   "reset": "Reset",
+  "ssbd": "ssbd",
 
   "dialog.confirmation.title": "Confirm action",
   "dialog.confirmation.action": "Confirm",
