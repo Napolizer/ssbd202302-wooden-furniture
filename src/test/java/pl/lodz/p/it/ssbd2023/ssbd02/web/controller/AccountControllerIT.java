@@ -11,6 +11,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
+import jakarta.json.JsonObject;
+import org.jose4j.json.internal.json_simple.JSONObject;
+import org.jose4j.json.internal.json_simple.parser.JSONParser;
+import org.jose4j.json.internal.json_simple.parser.ParseException;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
@@ -74,6 +78,17 @@ public class AccountControllerIT {
         .statusCode(200)
         .extract()
         .path("id");
+  }
+
+  private String retrieveAccountHash(String login) {
+    return given()
+            .header("Authorization", "Bearer " + retrieveAdminToken())
+            .when()
+            .get("/account/login/" + login)
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("hash");
   }
 
   @Nested
@@ -580,42 +595,56 @@ public class AccountControllerIT {
 
   @Nested
   @Order(8)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class AddAccessLevelToAccount {
     @Test
     @Order(1)
-    void shouldProperlyAddAccessLevelToAccount() {
+    void shouldProperlyCreateAccountToEditAccessLevels() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("administrator"))
-          .then()
-          .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"));
-
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
+          .body(InitData.accountToEditAccessLevelsJson)
           .when()
-          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
+          .post("/account/create")
           .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
-          .body("groups[1]", equalTo("SALES_REP"));
-
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("administrator"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
-          .body("groups[1]", equalTo("SALES_REP"));
+          .statusCode(201);
     }
 
     @Test
     @Order(2)
+    void shouldProperlyAddAccessLevelToAccount() {
+      given()
+          .header("Authorization", "Bearer " + retrieveAdminToken())
+          .when()
+          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("groups[0]", equalTo("EMPLOYEE"));
+
+      given()
+          .header("Authorization", "Bearer " + retrieveAdminToken())
+          .when()
+          .put("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Client")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("groups[0]", equalTo("CLIENT"))
+          .body("groups[1]", equalTo("EMPLOYEE"));
+
+      given()
+          .header("Authorization", "Bearer " + retrieveAdminToken())
+          .when()
+          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("groups[0]", equalTo("CLIENT"))
+          .body("groups[1]", equalTo("EMPLOYEE"));
+    }
+
+    @Test
+    @Order(3)
     void failsToAddAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
@@ -625,7 +654,7 @@ public class AccountControllerIT {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void failsToAddAccessLevelWhenAccountDoesNotExist() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -637,24 +666,24 @@ public class AccountControllerIT {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/NotValidAccessLevel")
+          .put("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/NotValidAccessLevel")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Administrator")
+          .put("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Employee")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED));
@@ -663,13 +692,14 @@ public class AccountControllerIT {
 
   @Nested
   @Order(9)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class RemoveAccessLevelFromAccount {
     @Test
     @Order(1)
     void failsToRemoveAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
-          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Administrator")
+          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
           .then()
           .statusCode(401);
     }
@@ -692,7 +722,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/NotValidAccessLevel")
+          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/NotValidAccessLevel")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
@@ -704,7 +734,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Client")
+          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED));
@@ -716,30 +746,30 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("administrator"))
+          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
-          .body("groups[1]", equalTo("SALES_REP"));
+          .body("groups[0]", equalTo("CLIENT"))
+          .body("groups[1]", equalTo("EMPLOYEE"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .delete("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
+          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Client")
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"));
+          .body("groups[0]", equalTo("EMPLOYEE"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("administrator"))
+          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"));
+          .body("groups[0]", equalTo("EMPLOYEE"));
     }
   }
 
@@ -764,6 +794,9 @@ public class AccountControllerIT {
     @Test
     @Order(2)
     void editOwnAccount() {
+      InitData.editedAccountExampleJson =
+              InitData.editedAccountAsAdminExampleJson
+                      .replace("$hash", retrieveAccountHash("accounttoedit123"));
       given()
           .contentType("application/json")
           .body(InitData.editedAccountExampleJson)
@@ -799,6 +832,9 @@ public class AccountControllerIT {
     @Test
     @Order(1)
     void editOtherUserAsAdmin() {
+      InitData.editedAccountAsAdminExampleJson =
+              InitData.editedAccountAsAdminExampleJson
+                      .replace("$hash", retrieveAccountHash("accounttoedit123"));
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
@@ -812,19 +848,6 @@ public class AccountControllerIT {
 
     @Test
     @Order(2)
-    void shouldUserHaveCorrectNewValues() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/login/accounttoedit123")
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("email", equalTo("johndoe@example.com"));
-    }
-
-    @Test
-    @Order(3)
     void failsIfGivenInvalidLogin() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())

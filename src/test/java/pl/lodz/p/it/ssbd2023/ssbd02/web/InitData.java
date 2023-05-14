@@ -2,6 +2,29 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
 public class InitData {
 
+  public static String accountToEditAccessLevelsJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Coe",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevels": [
+                  {
+                      "name": "Employee"
+                  }
+              ],
+              "login": "accounttoeditals",
+              "email": "toeditaccesslevel@example.com",
+              "accountState": "ACTIVE"
+          }
+      """;
+
+
   public static String accountToEditJson = """
           {
               "firstName": "John",
@@ -178,16 +201,17 @@ public class InitData {
           }
       """;
   public static String editedAccountExampleJson = """
-                      {
-                           "firstName": "Adam",
-      "lastName": "Doe",
-      "country": "USA",
-      "city": "Warsaw",
-      "street": "Wladyslawa",
-      "postalCode": "95-200",
-          "streetNumber": 20
-                      }
-               """;
+      {
+        "firstName": "Adam",
+        "lastName": "Doe",
+        "country": "USA",
+        "city": "Warsaw",
+        "street": "Wladyslawa",
+        "postalCode": "95-200",
+        "streetNumber": 20,
+        "hash": "$hash"
+      }
+      """;
 
   public static String editedAccountAsAdminExampleJson = """
       {
@@ -198,7 +222,7 @@ public class InitData {
         "street": "Broadway",
         "postalCode": "10-001",
         "streetNumber": 123,
-        "email": "johndoe@example.com"
+        "hash": "$hash"
       }
       """;
 
