@@ -14,12 +14,14 @@ import { Group } from 'src/app/enums/group';
 export class ToolbarComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
 
+  public currentGroup: Group;
   constructor(
     private alertService: AlertService,
     private navigationService: NavigationService,
     private authenticationService: AuthenticationService,
     private translate: TranslateService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -67,6 +69,57 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isCurrentlyOnLoginPage(): boolean {
     return this.navigationService.isCurrentlyOnLoginPage();
+  }
+
+  switchGroup(group: string): void {
+    switch(group) {
+      case 'ADMINISTRATOR':
+        this.currentGroup = Group.ADMINISTRATOR;
+        console.log(this.currentGroup);
+        break;
+      case 'EMPLOYEE':
+        this.currentGroup = Group.EMPLOYEE;
+        console.log(this.currentGroup);
+        break;
+      case 'SALES_REP':
+        this.currentGroup = Group.SALES_REP;
+        console.log(this.currentGroup);
+        break;
+      case 'CLIENT':
+        this.currentGroup = Group.CLIENT;
+        console.log(this.currentGroup);
+        break;
+      case 'GUEST':
+        this.currentGroup = Group.GUEST;
+        console.log(this.currentGroup);
+        break;
+      default:
+        console.log('default')
+        break;
+      }
+    void this.navigationService.redirectToMainPage();
+  }
+
+  isUserInGroup(group: string): boolean {
+    switch(group) {
+    case 'ADMINISTRATOR':
+      return this.authenticationService.isUserInGroup(Group.ADMINISTRATOR);
+      break;
+    case 'EMPLOYEE':
+      return this.authenticationService.isUserInGroup(Group.EMPLOYEE);
+      break;
+    case 'SALES_REP':
+      return this.authenticationService.isUserInGroup(Group.SALES_REP);
+      break;
+    case 'CLIENT':
+      return this.authenticationService.isUserInGroup(Group.CLIENT);
+      break;
+    case 'GUEST':
+      return this.authenticationService.isUserInGroup(Group.GUEST);
+      break;
+    default:
+      return false;
+    }
   }
 
   logout(): void {

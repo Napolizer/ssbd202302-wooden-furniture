@@ -1,4 +1,8 @@
-<mat-toolbar color="secondary">
+<mat-toolbar [ngStyle]="{
+  'background-color': isUserInGroup('ADMINISTRATOR') ? 'red' : 
+                      (isUserInGroup('EMPLOYEE') ? 'green' : 
+                      (isUserInGroup('SALES_REP') ? 'yellow' : 
+                      (isUserInGroup('CLIENT')  ? 'pink' : '')))}">
   <button mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>
@@ -19,6 +23,27 @@
   <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
     <mat-icon>account_circle</mat-icon>
   </button>
+  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="Switch Access Level" [matMenuTriggerFor]="switchAccessLevel">
+    <mat-icon>autorenew</mat-icon>
+  </button>
+  <mat-menu #switchAccessLevel [overlapTrigger]="false" yPosition="below">
+  <button *ngIf="isUserInGroup('ADMINISTRATOR')" class = "administrator" mat-menu-item routerLink="#" (click)="switchGroup('ADMINISTRATOR')">
+    <mat-icon>face</mat-icon><span>{{'group.administrator' | translate}}</span>
+  </button>
+  <button *ngIf="isUserInGroup('EMPLOYEE')" class = "employee" mat-menu-item routerLink="#" (click)="switchGroup('EMPLOYEE')">
+    <mat-icon>face</mat-icon><span>{{'group.employee' | translate}}</span>
+  </button>
+  <button *ngIf="isUserInGroup('SALES_REP')" class = "sales_rep" mat-menu-item routerLink="#" (click)="switchGroup('SALES_REP')">
+    <mat-icon>face</mat-icon><span>{{'group.sales_rep' | translate}}</span>
+  </button>
+  <button *ngIf="isUserInGroup('CLIENT')" class = "client" mat-menu-item routerLink="#" (click)="switchGroup('CLIENT')">
+    <mat-icon>face</mat-icon><span>{{'group.client' | translate}}</span>
+  </button>
+  <button class = "guest" mat-menu-item routerLink="#" (click)="switchGroup('GUEST')">
+    <mat-icon>face</mat-icon><span>{{'group.guest' | translate}}</span>
+  </button>
+  </mat-menu>
+
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAccountPage()">
       <mat-icon>person</mat-icon><span>{{'toolbar.myAccount' | translate}}</span>
