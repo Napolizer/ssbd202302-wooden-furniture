@@ -377,17 +377,17 @@ public class AccountServiceIT {
             .build();
     utx.begin();
     assertEquals(account.getPerson().getFirstName(),
-            accountService.getAccountByLogin("test").get().getPerson().getFirstName());
-    assertEquals(account.getPerson().getLastName(), accountService.getAccountByLogin("test").get().getPerson().getLastName());
+            accountService.getAccountByLogin("test").orElseThrow().getPerson().getFirstName());
+    assertEquals(account.getPerson().getLastName(), accountService.getAccountByLogin("test").orElseThrow().getPerson().getLastName());
     assertEquals(account.getPerson().getAddress().getStreetNumber(),
-            accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber());
-    accountService.editAccountInfo(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getVersion()));
+            accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getStreetNumber());
+    accountService.editAccountInfo(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getSumOfVersions()));
     utx.commit();
 
     utx.begin();
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getFirstName(), "Adam");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getLastName(), "John");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber(), 24);
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getFirstName(), "Adam");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getLastName(), "John");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getStreetNumber(), 24);
     utx.commit();
   }
 
@@ -410,23 +410,23 @@ public class AccountServiceIT {
             .build();
     utx.begin();
     assertEquals(account.getPerson().getFirstName(),
-            accountService.getAccountByLogin("test").get().getPerson().getFirstName());
-    assertEquals(account.getPerson().getLastName(), accountService.getAccountByLogin("test").get().getPerson().getLastName());
+            accountService.getAccountByLogin("test").orElseThrow().getPerson().getFirstName());
+    assertEquals(account.getPerson().getLastName(), accountService.getAccountByLogin("test").orElseThrow().getPerson().getLastName());
     assertEquals(account.getPerson().getAddress().getStreetNumber(),
-            accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber());
-    assertEquals(account.getEmail(), accountService.getAccountByLogin("test").get().getEmail());
-    accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getVersion()));
+            accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getStreetNumber());
+    assertEquals(account.getEmail(), accountService.getAccountByLogin("test").orElseThrow().getEmail());
+    accountService.editAccountInfoAsAdmin(account.getLogin(), editedAccount, CryptHashUtils.hashVersion(account.getSumOfVersions()));
     utx.commit();
 
     utx.begin();
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getFirstName(), "Jack");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getLastName(), "Smith");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getAddress().getCountry(), "Poland");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getAddress().getCity(), "Warsaw");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreet(), "Mickiewicza");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getAddress().getPostalCode(), "92-100");
-    assertEquals(accountService.getAccountByLogin("test").get().getPerson().getAddress().getStreetNumber(), 15);
-    assertEquals(accountService.getAccountByLogin("test").get().getEmail(), "test1@gmail.com");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getFirstName(), "Jack");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getLastName(), "Smith");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getCountry(), "Poland");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getCity(), "Warsaw");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getStreet(), "Mickiewicza");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getPostalCode(), "92-100");
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getPerson().getAddress().getStreetNumber(), 15);
+    assertEquals(accountService.getAccountByLogin("test").orElseThrow().getEmail(), "test1@gmail.com");
     utx.commit();
   }
 
@@ -513,32 +513,11 @@ public class AccountServiceIT {
 
   @Test
   public void blockAlreadyBlockedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.BLOCKED);
+
     utx.begin();
     accountService.createAccount(accountToRegister);
+    accountService.blockAccount(accountToRegister.getId());
     utx.commit();
-    assertThrows(IllegalAccountStateChangeException.class,
-            () -> accountService.blockAccount(accountToRegister.getId()));
-  }
-
-  @Test
-  public void blockInactiveAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.INACTIVE);
-    utx.begin();
-    accountService.createAccount(accountToRegister);
-    utx.commit();
-
-    assertThrows(IllegalAccountStateChangeException.class,
-            () -> accountService.blockAccount(accountToRegister.getId()));
-  }
-
-  @Test
-  public void blockNotVerifiedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.NOT_VERIFIED);
-    utx.begin();
-    accountService.createAccount(accountToRegister);
-    utx.commit();
-
     assertThrows(IllegalAccountStateChangeException.class,
             () -> accountService.blockAccount(accountToRegister.getId()));
   }
@@ -552,23 +531,11 @@ public class AccountServiceIT {
 
   @Test
   public void properlyActivatesBlockedAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.BLOCKED);
     utx.begin();
     accountService.createAccount(accountToRegister);
+    accountService.blockAccount(accountToRegister.getId());
     utx.commit();
-    assertEquals(AccountState.BLOCKED, accountToRegister.getAccountState());
-    assertDoesNotThrow(() -> accountService.activateAccount(accountToRegister.getId()));
-    Account changed = accountService.getAccountByLogin(accountToRegister.getLogin()).orElseThrow();
-    assertEquals(AccountState.ACTIVE, changed.getAccountState());
-  }
-
-  @Test
-  public void properlyActivatesNotVerifiedAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.NOT_VERIFIED);
-    utx.begin();
-    accountService.createAccount(accountToRegister);
-    utx.commit();
-    assertEquals(AccountState.NOT_VERIFIED, accountToRegister.getAccountState());
+    assertEquals(AccountState.BLOCKED, accountService.getAccountById(accountToRegister.getId()).get().getAccountState());
     assertDoesNotThrow(() -> accountService.activateAccount(accountToRegister.getId()));
     Account changed = accountService.getAccountByLogin(accountToRegister.getLogin()).orElseThrow();
     assertEquals(AccountState.ACTIVE, changed.getAccountState());

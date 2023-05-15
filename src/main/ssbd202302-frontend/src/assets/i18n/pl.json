@@ -137,7 +137,7 @@
   "edit.city.validity.patternMismatch": "Nazwa miasta musi zaczynać się tylko z dużej litery i składać się tylko z liter",
   "edit.street.validity.patternMismatch": "Nazwa ulicy musi zaczynać się tylko z dużej litery i składać się tylko z liter",
   "edit.postalCode.validity.patternMismatch": "Kod pocztowy musi mieć format xx-xxx, gdzie x jest cyfrą",
-  "edit.streetNumber.validity.patternMismatch": "Numer ulicy musi być liczbą całkowitą dodatnią",
+  "edit.streetNumber.validity.patternMismatch": "Numer ulicy musi być liczbą całkowitą dodatnią mniejszą niż 10000",
   "edit.success": "Pomyślnie zmieniono dane konta!",
 
   "save": "Zapisz",
@@ -150,6 +150,7 @@
   "dialog.confirmation.register.message": "Czy na pewno chcesz się zarejestrować?",
   "dialog.confirmation.password.message": "Czy na pewno chcesz zresetować swoje hasło?",
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
+  "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
 
   "exception.occurred": "Wystąpił błąd",
