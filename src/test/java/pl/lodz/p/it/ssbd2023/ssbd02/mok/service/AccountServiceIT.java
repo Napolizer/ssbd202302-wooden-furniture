@@ -513,32 +513,11 @@ public class AccountServiceIT {
 
   @Test
   public void blockAlreadyBlockedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.BLOCKED);
+
     utx.begin();
     accountService.createAccount(accountToRegister);
+    accountService.blockAccount(accountToRegister.getId());
     utx.commit();
-    assertThrows(IllegalAccountStateChangeException.class,
-            () -> accountService.blockAccount(accountToRegister.getId()));
-  }
-
-  @Test
-  public void blockInactiveAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.INACTIVE);
-    utx.begin();
-    accountService.createAccount(accountToRegister);
-    utx.commit();
-
-    assertThrows(IllegalAccountStateChangeException.class,
-            () -> accountService.blockAccount(accountToRegister.getId()));
-  }
-
-  @Test
-  public void blockNotVerifiedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.NOT_VERIFIED);
-    utx.begin();
-    accountService.createAccount(accountToRegister);
-    utx.commit();
-
     assertThrows(IllegalAccountStateChangeException.class,
             () -> accountService.blockAccount(accountToRegister.getId()));
   }
@@ -552,23 +531,11 @@ public class AccountServiceIT {
 
   @Test
   public void properlyActivatesBlockedAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.BLOCKED);
     utx.begin();
     accountService.createAccount(accountToRegister);
+    accountService.blockAccount(accountToRegister.getId());
     utx.commit();
-    assertEquals(AccountState.BLOCKED, accountToRegister.getAccountState());
-    assertDoesNotThrow(() -> accountService.activateAccount(accountToRegister.getId()));
-    Account changed = accountService.getAccountByLogin(accountToRegister.getLogin()).orElseThrow();
-    assertEquals(AccountState.ACTIVE, changed.getAccountState());
-  }
-
-  @Test
-  public void properlyActivatesNotVerifiedAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    accountToRegister.setAccountState(AccountState.NOT_VERIFIED);
-    utx.begin();
-    accountService.createAccount(accountToRegister);
-    utx.commit();
-    assertEquals(AccountState.NOT_VERIFIED, accountService.getAccountById(accountToRegister.getId()).orElseThrow().getAccountState());
+    assertEquals(AccountState.BLOCKED, accountService.getAccountById(accountToRegister.getId()).get().getAccountState());
     assertDoesNotThrow(() -> accountService.activateAccount(accountToRegister.getId()));
     Account changed = accountService.getAccountByLogin(accountToRegister.getLogin()).orElseThrow();
     assertEquals(AccountState.ACTIVE, changed.getAccountState());

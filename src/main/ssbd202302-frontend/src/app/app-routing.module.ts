@@ -5,7 +5,7 @@ import {HomePageComponent} from "./pages/home-page/home-page.component";
 import {RegisterPageComponent} from './pages/register-page/register-page.component';
 import {AccountPageComponent} from "./pages/account-page/account-page.component";
 import {AdminPageComponent} from "./pages/admin-page/admin-page.component";
-import {Group} from "./enums/group";
+import {Role} from "./enums/role";
 import {AuthGuard} from "./guards/auth.guard";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
@@ -13,14 +13,15 @@ import {ResetPasswordComponent} from './pages/reset-password/reset-password.comp
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
 import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
 import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-user-account-page.component";
-import {AddAccountGroupComponent} from "./pages/add-account-group-page/add-account-group.component";
-import {RemoveAccountGroupPageComponent} from "./pages/remove-account-group-page/remove-account-group-page.component";
-import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import {ChangeAccountGroupPageComponent} from "./pages/change-account-group-page/change-account-group-page.component";
-import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
-import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
-import { ChangeEmailComponent } from './pages/change-email/change-email.component';
+import {AddAccountRoleComponent} from "./pages/add-account-role-page/add-account-role.component";
+import {RemoveAccountRolePageComponent} from "./pages/remove-account-role-page/remove-account-role-page.component";
+import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
+import {ChangeAccountRolePageComponent} from "./pages/change-account-role-page/change-account-role-page.component";
+import {ConfirmEmailChangeComponent} from './pages/confirm-email-change/confirm-email-change.component';
+import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.component';
+import {ChangeEmailComponent} from './pages/change-email/change-email.component';
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
+import {CreateAccountComponent} from './pages/create-account/create-account.component';
 
 const routes: Routes = [
   {
@@ -37,7 +38,7 @@ const routes: Routes = [
     component: LoginPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUEST]
+      roles: [Role.GUEST]
     }
   },
   {
@@ -45,7 +46,7 @@ const routes: Routes = [
     component: AccountPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
     }
   },
   {
@@ -53,7 +54,7 @@ const routes: Routes = [
     component: EditOwnAccountComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
     }
   },
   {
@@ -61,7 +62,7 @@ const routes: Routes = [
     component: EditUserAccountPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
@@ -69,7 +70,7 @@ const routes: Routes = [
     component: AdminPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
@@ -77,7 +78,7 @@ const routes: Routes = [
     component: RegisterPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUEST]
+      roles: [Role.GUEST]
     }
   },
   {
@@ -89,7 +90,7 @@ const routes: Routes = [
     component: ConfirmAccountComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUEST]
+      roles: [Role.GUEST]
     }
   },
   {
@@ -97,7 +98,7 @@ const routes: Routes = [
     component: ChangeEmailComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
     }
   },
   {
@@ -105,7 +106,15 @@ const routes: Routes = [
     component: ChangeOwnPasswordComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
+    }
+  },
+  {
+    path: 'create-account',
+    component: CreateAccountComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
@@ -113,7 +122,7 @@ const routes: Routes = [
     component: ConfirmEmailChangeComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.CLIENT, Group.ADMINISTRATOR, Group.EMPLOYEE, Group.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
     }
   },
   {
@@ -121,7 +130,7 @@ const routes: Routes = [
     component: ChangeEmailComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
@@ -129,7 +138,7 @@ const routes: Routes = [
     component: ForgotPasswordComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUEST]
+      roles: [Role.GUEST]
     }
   },
   {
@@ -137,7 +146,7 @@ const routes: Routes = [
     component: ResetPasswordComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.GUEST]
+      roles: [Role.GUEST]
     }
   },
   {
@@ -145,7 +154,7 @@ const routes: Routes = [
     component: UserAccountPageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
@@ -153,27 +162,27 @@ const routes: Routes = [
     component: NotFoundPageComponent
   },
   {
-    path:'account-group-add/:id',
-    component: AddAccountGroupComponent,
+    path:'account-role-add/:id',
+    component: AddAccountRoleComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
-    path:'account-group-remove/:id',
-    component:RemoveAccountGroupPageComponent,
+    path:'account-role-remove/:id',
+    component:RemoveAccountRolePageComponent,
     canActivate: [AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {
-    path:'account-group-change/:id',
-    component:ChangeAccountGroupPageComponent,
+    path:'account-role-change/:id',
+    component:ChangeAccountRolePageComponent,
     canActivate:[AuthGuard],
     data: {
-      groups: [Group.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR]
     }
   },
   // IMPORTANT: this route must be the last one

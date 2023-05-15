@@ -107,6 +107,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   @Override
   public void delete(Account account) {
     em.remove(em.merge(account));
+    em.flush();
   }
 
 

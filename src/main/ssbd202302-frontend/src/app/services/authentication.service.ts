@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {first, map, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {TokenService} from "./token.service";
-import {Group} from "../enums/group";
+import {Role} from "../enums/role";
 
 @Injectable({
   providedIn: 'root'
@@ -35,19 +35,19 @@ export class AuthenticationService {
     return tokenData?.sub ?? null;
   }
 
-  public getGroups(): Group[] {
+  public getRoles(): Role[] {
     const tokenData = this.tokenService.getTokenData();
-    let groups = [];
-    for (let group of tokenData?.groups || []) {
-      groups.push(group as Group);
+    let roles = [];
+    for (let role of tokenData?.roles || []) {
+      roles.push(role as Role);
     }
-    if (groups.length === 0) {
-      groups.push(Group.GUEST);
+    if (roles.length === 0) {
+      roles.push(Role.GUEST);
     }
-    return groups;
+    return roles;
   }
 
-  public isUserInGroup(group: Group): boolean {
-    return this.getGroups()?.includes(group);
+  public isUserInRole(role: Role): boolean {
+    return this.getRoles()?.includes(role);
   }
 }

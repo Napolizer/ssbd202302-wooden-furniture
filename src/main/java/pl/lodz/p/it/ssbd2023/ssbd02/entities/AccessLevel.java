@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "account")
 @NoArgsConstructor
 @SuperBuilder
 @Entity(name = "access_level")
@@ -28,5 +28,5 @@ public abstract class AccessLevel extends AbstractEntity {
   @JoinColumn(name = "account_id", updatable = false, nullable = false)
   private Account account;
 
-  public abstract String getGroupName();
+  public abstract String getRoleName();
 }

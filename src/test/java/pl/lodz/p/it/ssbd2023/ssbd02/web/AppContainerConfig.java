@@ -20,6 +20,8 @@ public class AppContainerConfig implements SharedContainerConfiguration {
   public static ApplicationContainer container = new ApplicationContainer()
       .withAppContextRoot("/api/v1")
       .withEnv("DB_HOST", "testpostgres")
+      .withEnv("MAIL_MAIL", System.getenv("MAIL_MAIL"))
+      .withEnv("MAIL_PASSWORD", System.getenv("MAIL_PASSWORD"))
       .withReadinessPath("/api/v1/health")
       .dependsOn(postgres)
       .withStartupTimeout(Duration.ofMinutes(2));

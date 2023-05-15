@@ -46,13 +46,13 @@ export class TokenService {
 
     try {
       const decodedToken: any = jwtDecode(token);
-      if (!decodedToken.sub || !decodedToken.groups) {
+      if (!decodedToken.sub || !decodedToken.roles) {
         return null;
       }
 
       return {
         sub: decodedToken.sub,
-        groups: decodedToken.groups,
+        roles: decodedToken.roles,
         exp: decodedToken.exp
       }
     } catch (e) {

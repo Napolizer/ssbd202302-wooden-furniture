@@ -18,6 +18,8 @@ public class AccountFacadeExceptionsInterceptor {
         throw ApplicationExceptionFactory.createLoginAlreadyExistsException(pe);
       } else if (pe.getMessage().contains("account_email_key")) {
         throw ApplicationExceptionFactory.createEmailAlreadyExistsException(pe);
+      } else if (pe.getMessage().contains("company_nip_key")) {
+        throw ApplicationExceptionFactory.createNipAlreadyExistsException(pe);
       } else {
         throw pe;
       }

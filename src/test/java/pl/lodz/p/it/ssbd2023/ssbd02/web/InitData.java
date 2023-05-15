@@ -13,14 +13,13 @@ public class InitData {
               "postalCode": "93-540",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
+              "accessLevel": [
                   {
                       "name": "Employee"
                   }
               ],
               "login": "accounttoeditals",
-              "email": "toeditaccesslevel@example.com",
-              "accountState": "ACTIVE"
+              "email": "toeditaccesslevel@example.com"
           }
       """;
 
@@ -36,14 +35,12 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "accounttoedit123",
-              "email": "toedit@example.com",
-              "accountState": "ACTIVE"
+              "email": "toedit@example.com"
           }
       """;
 
@@ -58,14 +55,12 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "active123",
-              "email": "active123@example.com",
-              "accountState": "ACTIVE"
+              "email": "active123@example.com"
           }
       """;
 
@@ -80,11 +75,10 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "blocked123",
               "email": "blocked123@example.com",
               "accountState": "BLOCKED"
@@ -102,11 +96,10 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "notverified123",
               "email": "notverified123@example.com",
               "accountState": "NOT_VERIFIED"
@@ -124,11 +117,10 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "inactive123",
               "email": "inactive123@example.com",
               "accountState": "INACTIVE"
@@ -146,11 +138,10 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "active123",
               "email": "test123@example.com",
               "accountState": "ACTIVE"
@@ -168,11 +159,10 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Employee"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
               "login": "test123",
               "email": "active123@example.com",
               "accountState": "ACTIVE"
@@ -190,11 +180,10 @@ public class InitData {
               "postalCode": "93-539",
               "password": "Password123!",
               "locale": "pl",
-              "accessLevels": [
-                  {
-                      "name": "Invalid"
-                  }
-              ],
+              "accessLevel":
+                {
+                  "name": "Invalid"
+                },
               "login": "test123",
               "email": "active123@example.com",
               "accountState": "ACTIVE"

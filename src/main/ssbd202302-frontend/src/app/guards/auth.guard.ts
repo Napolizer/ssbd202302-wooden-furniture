@@ -4,7 +4,7 @@ import {AlertService} from "@full-fledged/alerts";
 import {AuthenticationService} from "../services/authentication.service";
 import {TokenService} from "../services/token.service";
 import {NavigationService} from "../services/navigation.service";
-import { Group } from '../enums/group';
+import { Role } from '../enums/role';
 import {TranslateService} from "@ngx-translate/core";
 
 @Injectable({
@@ -32,8 +32,8 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    if (route.data['groups']) {
-      if (route.data['groups'].includes(Group.GUEST) && this.authenticationService.isUserInGroup(Group.GUEST)) {
+    if (route.data['roles']) {
+      if (route.data['roles'].includes(Role.GUEST) && this.authenticationService.isUserInRole(Role.GUEST)) {
         return true;
       }
       if (this.authenticationService.getLogin() === null) {
@@ -47,8 +47,8 @@ export class AuthGuard implements CanActivate {
         void this.navigationService.redirectToLoginPage();
         return false;
       }
-      for (const group of route.data['groups']) {
-        if (this.authenticationService.isUserInGroup(group)) {
+      for (const role of route.data['roles']) {
+        if (this.authenticationService.isUserInRole(role)) {
           return true;
         }
       }

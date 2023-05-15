@@ -9,8 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
-import {DatePipe} from "@angular/common";
-import { Location } from '@angular/common';
+import {DatePipe, Location } from "@angular/common";
 
 @Component({
   selector: 'app-account-page',
@@ -84,7 +83,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
       const state = this.location.getState() as any;
       const keys = Object.keys(state);
-  
+
       if (keys.length == 2) {
         const code = state[keys[0]];
         const isError = code.startsWith('exception');
@@ -123,15 +122,15 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getGroups(): string {
-    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
+  getRoles(): string {
+    return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
   onEditClicked(): void {
-    this.navigationService.redirectToEditOwnAccountPage();
+    void this.navigationService.redirectToEditOwnAccountPage();
   }
 
   onChangeEmailClicked(): void {
-    this.navigationService.redirectToChangeOwnEmailPage();
+    void this.navigationService.redirectToChangeOwnEmailPage();
   }
 }

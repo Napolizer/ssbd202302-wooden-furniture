@@ -35,7 +35,8 @@ public class RequestAuthenticationMechanism implements HttpAuthenticationMechani
         TokenClaims tokenClaims = tokenService.getTokenClaims(token);
         Set<String> groups = tokenClaims.getAccessLevels()
             .stream()
-            .map(AccessLevel::getGroupName)
+            .map(AccessLevel::getRoleName)
+            .map(String::toUpperCase)
             .collect(Collectors.toSet());
         return httpMessageContext.notifyContainerAboutLogin(tokenClaims.getLogin(), groups);
       } catch (Exception e) {

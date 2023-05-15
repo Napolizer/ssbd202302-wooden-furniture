@@ -48,6 +48,15 @@ public class MailServiceIT {
   }
 
   @Test
+  void shouldSendMailWithInfoAboutActivatingAccount() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
+    assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutActivatingAccount(
+            "jegek60138@fectode.com", "pl"));
+    utx.commit();
+  }
+
+  @Test
   void shouldSendMailWithAccountConfirmationLink() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
@@ -76,7 +85,7 @@ public class MailServiceIT {
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
       assertDoesNotThrow(() -> mailService.sendEmailAboutAddingAccessLevel(
-              "jegek60138@fectode.com", "en"));
+              "jegek60138@fectode.com", "en", "TestGroup"));
       utx.commit();
   }
   @Test
@@ -84,7 +93,16 @@ public class MailServiceIT {
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
       assertDoesNotThrow(() -> mailService.sendEmailAboutRemovingAccessLevel(
-              "jegek60138@fectode.com", "en"));
+              "jegek60138@fectode.com", "en", "TestGroup"));
       utx.commit();
+  }
+
+  @Test
+  void shouldSendMailAboutChangingAccessLevel() throws SystemException, NotSupportedException,
+          HeuristicRollbackException, HeuristicMixedException, RollbackException {
+    utx.begin();
+    assertDoesNotThrow(() -> mailService.sendEmailAboutChangingAccessLevel(
+            "jegek60138@fectode.com", "en", "OldGroup", "NewGroup"));
+    utx.commit();
   }
 }

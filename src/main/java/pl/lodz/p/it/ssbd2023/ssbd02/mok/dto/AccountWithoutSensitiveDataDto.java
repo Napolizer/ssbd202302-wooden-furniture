@@ -42,7 +42,7 @@ public class AccountWithoutSensitiveDataDto {
   @NotNull
   private AccountState accountState;
   @NotNull
-  private List<String> groups;
+  private List<String> roles;
   @NotNull
   @Valid
   @ToString.Exclude

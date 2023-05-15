@@ -33,6 +33,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
@@ -41,13 +42,15 @@ import {DatePipe} from "@angular/common";
 import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
 import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edit-user-account-page.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import { AddAccountGroupComponent } from './pages/add-account-group-page/add-account-group.component';
-import { RemoveAccountGroupPageComponent } from './pages/remove-account-group-page/remove-account-group-page.component';
+import { AddAccountRoleComponent } from './pages/add-account-role-page/add-account-role.component';
+import { RemoveAccountRolePageComponent } from './pages/remove-account-role-page/remove-account-role-page.component';
 import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
 import { ChangeEmailComponent } from './pages/change-email/change-email.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
-import { ChangeAccountGroupPageComponent } from './pages/change-account-group-page/change-account-group-page.component';
+import { ChangeAccountRolePageComponent } from './pages/change-account-role-page/change-account-role-page.component';
+import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
+import { CreateAccountComponent } from './pages/create-account/create-account.component';
 
 @NgModule({
   declarations: [
@@ -71,12 +74,14 @@ import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-o
     EditUserAccountPageComponent,
     EditOwnAccountComponent,
     ForgotPasswordComponent,
-    AddAccountGroupComponent,
-    RemoveAccountGroupPageComponent,
+    AddAccountRoleComponent,
+    RemoveAccountRolePageComponent,
     ConfirmEmailChangeComponent,
     ChangeEmailComponent,
-    ChangeAccountGroupPageComponent,
-    ChangeOwnPasswordComponent
+    ChangeAccountRolePageComponent,
+    ChangeOwnPasswordComponent,
+    DigitOnlyDirective,
+    CreateAccountComponent
   ],
     imports: [
         BrowserModule,
@@ -101,6 +106,7 @@ import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-o
         MatTooltipModule,
         MatMenuModule,
         MatCardModule,
+        MatCheckboxModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

@@ -8,7 +8,7 @@ export interface Account {
   email: string,
   failedLoginCounter: number,
   firstName: string,
-  groups: string[],
+  roles: string[],
   id: number,
   lastName: string,
   lastLogin: Date,
