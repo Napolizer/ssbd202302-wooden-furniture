@@ -126,7 +126,7 @@
   "edit.city.validity.patternMismatch": "Nazwa miasta musi zaczynać się tylko z dużej litery i składać się tylko z liter",
   "edit.street.validity.patternMismatch": "Nazwa ulicy musi zaczynać się tylko z dużej litery i składać się tylko z liter",
   "edit.postalCode.validity.patternMismatch": "Kod pocztowy musi mieć format xx-xxx, gdzie x jest cyfrą",
-  "edit.streetNumber.validity.patternMismatch": "Numer ulicy musi być liczbą całkowitą dodatnią",
+  "edit.streetNumber.validity.patternMismatch": "Numer ulicy musi być liczbą całkowitą dodatnią mniejszą niż 10000",
   "edit.success": "Pomyślnie zmieniono dane konta!",
 
   "save": "Zapisz",

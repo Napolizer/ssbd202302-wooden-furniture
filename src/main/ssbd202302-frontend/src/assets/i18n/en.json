@@ -126,7 +126,7 @@
   "edit.city.validity.patternMismatch": "City must start with a capital letter and contain only letters",
   "edit.street.validity.patternMismatch": "Street must start with a capital letter and contain only letters",
   "edit.postalCode.validity.patternMismatch": "Postal code must be in format xx-xxx, where x is a digit",
-  "edit.streetNumber.validity.patternMismatch": "Street number must be positive",
+  "edit.streetNumber.validity.patternMismatch": "Street number must be positive lower than 10000",
   "edit.success": "Successfully edited account!",
 
   "save": "Save",
