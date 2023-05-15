@@ -185,8 +185,9 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response createAccount(@NotNull @Valid AccountCreateDto accountCreateDto) {
-    accountEndpoint.createAccount(accountCreateDto);
-    return Response.status(Response.Status.CREATED).build();
+    Account account = accountEndpoint.createAccount(accountCreateDto);
+    return Response.status(Response.Status.CREATED)
+            .entity(accountMapper.mapToAccountWithoutSensitiveDataDto(account)).build();
   }
 
   @PUT

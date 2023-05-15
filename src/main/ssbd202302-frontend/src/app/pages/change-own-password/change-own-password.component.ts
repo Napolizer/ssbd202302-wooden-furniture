@@ -79,6 +79,9 @@ export class ChangeOwnPasswordComponent implements OnInit {
         Validators.required
       ]),
     });
+    this.changePasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
+      this.changePasswordForm.get('confirmPassword')?.updateValueAndValidity();
+    });
     this.loading = false;
   }
 

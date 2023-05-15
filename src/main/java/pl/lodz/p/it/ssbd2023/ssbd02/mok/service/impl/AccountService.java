@@ -16,7 +16,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -87,6 +86,12 @@ public class AccountService extends AbstractService {
     accessLevels.add(accessLevel);
     foundAccount.setAccessLevels(accessLevels);
     accountFacade.update(foundAccount);
+    try {
+      mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(),
+              foundAccount.getLocale(), accessLevel.getRoleName());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
@@ -103,6 +108,12 @@ public class AccountService extends AbstractService {
         accessLevels.remove(item);
         foundAccount.setAccessLevels(accessLevels);
         accountFacade.update(foundAccount);
+        try {
+          mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(),
+                  foundAccount.getLocale(), item.getRoleName());
+        } catch (MessagingException e) {
+          throw ApplicationExceptionFactory.createMailServiceException(e);
+        }
         return;
       }
     }
@@ -114,10 +125,17 @@ public class AccountService extends AbstractService {
     List<AccessLevel> accessLevels = account.getAccessLevels();
 
     if (accessLevels.size() == 1) {
+      AccessLevel oldAccessLevel = accessLevels.get(0);
       accessLevels.set(0, accessLevel);
       accessLevel.setAccount(account);
       account.setAccessLevels(accessLevels);
       accountFacade.update(account);
+      try {
+        mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
+                account.getLocale(), oldAccessLevel.getRoleName(), accessLevel.getRoleName());
+      } catch (MessagingException e) {
+        throw ApplicationExceptionFactory.createMailServiceException(e);
+      }
       return account;
     }
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
@@ -161,10 +179,11 @@ public class AccountService extends AbstractService {
     }
   }
 
-  public void createAccount(Account account) {
+  public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
+    account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
-    accountFacade.create(account);
+    return accountFacade.create(account);
   }
 
   public Account changePassword(String login, String newPassword, String currentPassword) {
@@ -201,6 +220,13 @@ public class AccountService extends AbstractService {
 
     account.setAccountState(AccountState.BLOCKED);
     accountFacade.update(account);
+
+    try {
+      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void activateAccount(Long id) {
@@ -213,6 +239,13 @@ public class AccountService extends AbstractService {
 
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
+
+    try {
+      mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public void updateFailedLoginCounter(Account account) {
@@ -232,9 +265,7 @@ public class AccountService extends AbstractService {
       throw ApplicationExceptionFactory.createAccountAlreadyVerifiedException();
     }
     account.setAccountState(AccountState.ACTIVE);
-    Client client = new Client();
-    client.setAccount(account);
-    account.getAccessLevels().add(client);
+    accountFacade.update(account);
   }
 
   public String validatePasswordResetToken(String token) {

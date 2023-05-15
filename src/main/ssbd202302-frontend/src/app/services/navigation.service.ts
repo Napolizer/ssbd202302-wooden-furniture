@@ -54,6 +54,10 @@ export class NavigationService {
     return this.router.navigate(['/register']);
   }
 
+  public redirectToCreateAccountPage() {
+    return this.router.navigate(['/create-account']);
+  }
+
   public redirectToLoginPageWithState(state: any): Promise<boolean> {
     return this.router.navigate(['/login'], {state: state});
   }

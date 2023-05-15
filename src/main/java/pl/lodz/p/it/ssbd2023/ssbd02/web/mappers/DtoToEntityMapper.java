@@ -5,13 +5,12 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
-import java.util.ArrayList;
-import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
@@ -35,26 +34,36 @@ public final class DtoToEntityMapper {
         .lastName(accountRegisterDto.getLastName())
         .address(address).build();
 
-    return Account.builder()
+    String nip = accountRegisterDto.getNip();
+    String companyName = accountRegisterDto.getCompanyName();
+    Client client = new Client();
+    if (nip != null && companyName != null) {
+      client.setCompany(Company.builder().nip(nip).client(client).companyName(companyName).build());
+    }
+
+    Account account = Account.builder()
         .login(accountRegisterDto.getLogin())
         .email(accountRegisterDto.getEmail())
         .password(accountRegisterDto.getPassword())
         .locale(accountRegisterDto.getLocale())
         .person(person).build();
+    client.setAccount(account);
+    account.getAccessLevels().add(client);
+
+    return account;
   }
 
 
   public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) {
     Account account = mapAccountRegisterDtoToAccount(accountCreateDto);
-    account.setAccountState(accountCreateDto.getAccountState());
-    List<AccessLevel> accessLevels = new ArrayList<>();
+    AccessLevel accessLevel = mapAccessLevelDtoToAccessLevel(accountCreateDto.getAccessLevel());
 
-    for (AccessLevelDto accessLevel : accountCreateDto.getAccessLevels()) {
-      AccessLevel mapped = mapAccessLevelDtoToAccessLevel(accessLevel);
-      mapped.setAccount(account);
-      accessLevels.add(mapped);
+    if (accessLevel.getRoleName().equals(CLIENT)) {
+      return account;
     }
-    account.setAccessLevels(accessLevels);
+    account.getAccessLevels().clear();
+    accessLevel.setAccount(account);
+    account.getAccessLevels().add(accessLevel);
 
     return account;
   }
@@ -78,7 +87,7 @@ public final class DtoToEntityMapper {
   }
 
   public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto) {
-    switch (accessLevelDto.getName()) {
+    switch (accessLevelDto.getName().toLowerCase()) {
       case CLIENT -> {
         return new Client();
       }

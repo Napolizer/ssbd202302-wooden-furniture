@@ -15,12 +15,13 @@ import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account
 import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-user-account-page.component";
 import {AddAccountRoleComponent} from "./pages/add-account-role-page/add-account-role.component";
 import {RemoveAccountRolePageComponent} from "./pages/remove-account-role-page/remove-account-role-page.component";
-import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 import {ChangeAccountRolePageComponent} from "./pages/change-account-role-page/change-account-role-page.component";
-import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
-import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
-import { ChangeEmailComponent } from './pages/change-email/change-email.component';
+import {ConfirmEmailChangeComponent} from './pages/confirm-email-change/confirm-email-change.component';
+import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.component';
+import {ChangeEmailComponent} from './pages/change-email/change-email.component';
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
+import {CreateAccountComponent} from './pages/create-account/create-account.component';
 
 const routes: Routes = [
   {
@@ -106,6 +107,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
+    }
+  },
+  {
+    path: 'create-account',
+    component: CreateAccountComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.ADMINISTRATOR]
     }
   },
   {

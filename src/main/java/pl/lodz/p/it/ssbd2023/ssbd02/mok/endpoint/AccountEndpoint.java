@@ -40,19 +40,18 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.registerAccount(account));
   }
 
-  public void createAccount(AccountCreateDto accountCreateDto) {
+  public Account createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
-    repeatTransaction(() -> accountService.createAccount(account));
+    return repeatTransaction(() -> accountService.createAccount(account));
   }
 
   public void blockAccount(Long id) {
     repeatTransaction(() -> accountService.blockAccount(id));
-    //TODO email message
+
   }
 
   public void activateAccount(Long id) {
     repeatTransaction(() -> accountService.activateAccount(id));
-    //TODO email message
   }
 
   public Optional<Account> getAccountByAccountId(Long accountId) {
@@ -78,13 +77,11 @@ public class AccountEndpoint {
   public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
     repeatTransaction(() -> accountService.addAccessLevelToAccount(accountId, accessLevel));
     Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
-    //mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
     repeatTransaction(() -> accountService.removeAccessLevelFromAccount(accountId, accessLevel));
     Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
-    //mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale());
   }
 
   public Account changePassword(String login, String newPassword, String currentPassword) {
