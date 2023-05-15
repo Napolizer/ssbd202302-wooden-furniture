@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -20,7 +22,7 @@ public class Client extends AccessLevel {
   private Company company;
 
   @Override
-  public String getGroupName() {
-    return "CLIENT";
+  public String getRoleName() {
+    return CLIENT;
   }
 }

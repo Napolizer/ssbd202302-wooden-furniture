@@ -1,5 +1,5 @@
 export interface TokenData {
   sub: string;
-  groups: string[];
+  roles: string[];
   exp: number;
 }

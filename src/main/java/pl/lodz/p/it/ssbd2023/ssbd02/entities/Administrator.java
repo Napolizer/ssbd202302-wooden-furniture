@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class Administrator extends AccessLevel {
 
   @Override
-  public String getGroupName() {
-    return "ADMINISTRATOR";
+  public String getRoleName() {
+    return ADMINISTRATOR;
   }
 }

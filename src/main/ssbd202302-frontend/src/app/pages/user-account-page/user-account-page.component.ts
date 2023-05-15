@@ -117,12 +117,12 @@ export class UserAccountPageComponent implements OnInit {
   formatDate(date: Date | undefined): string {
     return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') ?? '-';
   }
-  redirectToAddAccountGroupsPage(): void{
-    void this.navigationService.redirectToAddAccountGroupsPage(this.id);
+  redirectToAddAccountRolesPage(): void{
+    void this.navigationService.redirectToAddAccountRolesPage(this.id);
   }
 
-  redirectToRemoveAccountGroupsPage(): void{
-    void this.navigationService.redirectToRemoveAccountGroupsPage(this.id);
+  redirectToRemoveAccountRolesPage(): void{
+    void this.navigationService.redirectToRemoveAccountRolesPage(this.id);
   }
 
   getAccountState(): string {
@@ -134,19 +134,19 @@ export class UserAccountPageComponent implements OnInit {
     }
   }
 
-  getGroups(): string {
-    return this.account.groups.map(group => `group.${group.toLowerCase()}`).join(', ') ?? '-';
+  getRoles(): string {
+    return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
   onEditClicked(): void {
-    this.navigationService.redirectToEditUserAccountPage(this.id);
+    void this.navigationService.redirectToEditUserAccountPage(this.id);
   }
 
   onChangeEmailClicked(): void {
-    this.navigationService.redirectToChangeUserEmailPage(this.id);
+    void this.navigationService.redirectToChangeUserEmailPage(this.id);
   }
 
-  redirectToChangeAccountGroupPage(): void {
+  redirectToChangeAccountRolesPage(): void {
     void this.navigationService.redirectToChangeAccountGroupPage(this.id);
   }
 

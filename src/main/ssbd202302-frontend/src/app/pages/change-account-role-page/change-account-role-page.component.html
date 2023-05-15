@@ -2,8 +2,8 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
-      <mat-list-item *ngFor="let group of groups" (click)="changeAccountGroup(group)">
-        <div mat-line>{{group}}</div>
+      <mat-list-item *ngFor="let role of roles" (click)="changeAccountGroup(role)">
+        <div mat-line>{{role}}</div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-action-list>

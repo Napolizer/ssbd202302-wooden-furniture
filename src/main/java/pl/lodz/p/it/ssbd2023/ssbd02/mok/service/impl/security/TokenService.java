@@ -1,5 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -54,9 +59,9 @@ public class TokenService {
         .setSubject(account.getLogin())
         .setIssuedAt(new Date(now))
         .setExpiration(new Date(now + EXPIRATION_AUTHORIZATION))
-        .claim("groups", account.getAccessLevels()
+        .claim("roles", account.getAccessLevels()
             .stream()
-            .map(AccessLevel::getGroupName)
+            .map(AccessLevel::getRoleName)
             .collect(Collectors.toList()))
             .signWith(SignatureAlgorithm.HS512, SECRET_KEY);
     return builder.compact();
@@ -67,15 +72,15 @@ public class TokenService {
       Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 
       String username = claims.getSubject();
-      List<String> groups = claims.get("groups", List.class);
-      List<AccessLevel> accessLevels = groups
+      List<String> roles = claims.get("roles", List.class);
+      List<AccessLevel> accessLevels = roles
           .stream()
-          .map(groupName -> switch (groupName) {
-            case "ADMINISTRATOR" -> new Administrator();
-            case "EMPLOYEE" -> new Employee();
-            case "SALES_REP" -> new SalesRep();
-            case "CLIENT" -> new Client();
-            default -> throw new IllegalStateException("Unexpected value: " + groupName);
+          .map(roleName -> switch (roleName) {
+            case ADMINISTRATOR -> new Administrator();
+            case EMPLOYEE -> new Employee();
+            case SALES_REP -> new SalesRep();
+            case CLIENT -> new Client();
+            default -> throw new IllegalStateException("Unexpected value: " + roleName);
           })
           .collect(Collectors.toList());
       return new TokenClaims(username, accessLevels);

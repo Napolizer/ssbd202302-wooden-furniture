@@ -6,6 +6,9 @@
         <mat-card-header>
           <mat-card-title>{{account.login}}</mat-card-title>
           <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
+          <button mat-raised-button color="primary" (click)="redirectToAddAccountRolesPage()">{{'account.addrole' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToRemoveAccountRolesPage()">{{'account.removerole' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToChangeAccountRolesPage()">{{'account.changerole' | translate}}</button>
         </mat-card-header>
         <mat-card-content>
           <div class="profile-container">
@@ -64,8 +67,8 @@
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">{{'account.groups' | translate}}</p>
-                <p class="content">{{getGroups() | translate}}</p>
+                <p class="title">{{'account.roles' | translate}}</p>
+                <p class="content">{{getRoles()}}</p>
                 <div class="border"></div>
               </div>
             </div>
@@ -120,9 +123,9 @@
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button color="primary" (click)="redirectToAddAccountGroupsPage()">{{'account.addgroup' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="redirectToRemoveAccountGroupsPage()">{{'account.removegroup' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="redirectToChangeAccountGroupPage()">{{'account.changegroup' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToAddAccountRolesPage()">{{'account.addrole' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToRemoveAccountRolesPage()">{{'account.removerole' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="redirectToChangeAccountRolesPage()">{{'account.changerole' | translate}}</button>
           <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
           <button mat-raised-button color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
           <button mat-raised-button color="warn" (click)="onBlockClicked()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>

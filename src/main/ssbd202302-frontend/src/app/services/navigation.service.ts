@@ -78,19 +78,19 @@ export class NavigationService {
     return this.router.navigate(['account/' + id + '/edit'])
   }
 
-  public redirectToAddAccountGroupsPage(id: string): Promise<boolean> {
-    return this.router.navigate(['/account-group-add/' + id]);
+  public redirectToAddAccountRolesPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-role-add/' + id]);
   }
 
   public isCurrentlyOnLoginPage(): boolean {
     return this.router.url === '/login';
   }
 
-  redirectToRemoveAccountGroupsPage(id: string): Promise<boolean> {
-    return this.router.navigate(['/account-group-remove/' + id])
+  redirectToRemoveAccountRolesPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/account-role-remove/' + id])
   }
 
   redirectToChangeAccountGroupPage(id: string): Promise<boolean> {
-    return this.router.navigate(['/account-group-change/' + id])
+    return this.router.navigate(['/account-role-change/' + id])
   }
 }

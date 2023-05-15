@@ -3,7 +3,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup} from "@angular/forms";
 import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
 import {Account} from "../../interfaces/account";
-import {Group} from "../../enums/group";
+import {Role} from "../../enums/role";
 import {ActivatedRoute} from "@angular/router";
 import {AccountService} from "../../services/account.service";
 import {AlertService} from "@full-fledged/alerts";
@@ -15,8 +15,8 @@ import {Accesslevel} from "../../interfaces/accesslevel";
 
 @Component({
   selector: 'account-group-change',
-  templateUrl: './change-account-group-page.component.html',
-  styleUrls: ['./change-account-group-page.component.sass'],
+  templateUrl: './change-account-role-page.component.html',
+  styleUrls: ['./change-account-role-page.component.sass'],
   animations: [
     trigger('loadedUnloadedList', [
       state('loaded', style({
@@ -37,17 +37,17 @@ import {Accesslevel} from "../../interfaces/accesslevel";
     ]),
   ]
 })
-export class ChangeAccountGroupPageComponent implements OnInit {
+export class ChangeAccountRolePageComponent implements OnInit {
 
   accountForm = new FormGroup({
     login: new FormControl({value: '', disabled: true})
   });
   destroy = new Subject<boolean>();
   account: Account;
-  groups: string[] = [Group.ADMINISTRATOR,
-    Group.EMPLOYEE,
-    Group.SALES_REP,
-    Group.CLIENT]
+  roles: string[] = [Role.ADMINISTRATOR,
+    Role.EMPLOYEE,
+    Role.SALES_REP,
+    Role.CLIENT]
   id = '';
   loading = true;
   constructor(
@@ -115,7 +115,7 @@ export class ChangeAccountGroupPageComponent implements OnInit {
     const accessLevel: Accesslevel = {
       name: this.changeGroupName(accountGroup)
     }
-    this.accountService.changeAccountGroup(this.id, accessLevel)
+    this.accountService.changeAccountRole(this.id, accessLevel)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: () => {

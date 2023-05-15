@@ -1,5 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -58,7 +63,7 @@ public class AccountController {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response getAllAccounts() {
     List<Account> accounts = accountEndpoint.getAccountList();
     List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
@@ -71,7 +76,7 @@ public class AccountController {
   @GET
   @Path("/id/{accountId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response getAccountByAccountId(@PathParam("accountId") Long accountId) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
     if (accountOptional.isEmpty()) {
@@ -84,7 +89,7 @@ public class AccountController {
   @GET
   @Path("/login/{login}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response getAccountByLogin(@PathParam("login") String login) {
     Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
     if (accountOptional.isEmpty()) {
@@ -97,7 +102,7 @@ public class AccountController {
   @GET
   @Path("/self")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response getOwnAccountInformation() {
     if (principal.getName() == null) {
       return Response.status(403).build();
@@ -114,7 +119,7 @@ public class AccountController {
   @PUT
   @Path("/id/{accountId}/accessLevel/{accessLevel}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response addAccessLevelToAccount(@PathParam("accountId") Long accountId,
                                           @PathParam("accessLevel") String accessLevel) {
     if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
@@ -137,7 +142,7 @@ public class AccountController {
   @PUT
   @Path("/id/{accountId}/accessLevel/change")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response changeAccessLevel(@PathParam("accountId") Long accountId,
                                     @NotNull @Valid AccessLevelDto accessLevel) {
     AccessLevel newAccessLevel =
@@ -151,7 +156,7 @@ public class AccountController {
   @DELETE
   @Path("/id/{accountId}/accessLevel/{accessLevel}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response removeAccessLevelFromAccount(@PathParam("accountId") Long accountId,
                                                @PathParam("accessLevel") String accessLevel) {
     if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
@@ -178,7 +183,7 @@ public class AccountController {
   @POST
   @Path("/create")
   @Consumes(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response createAccount(@NotNull @Valid AccountCreateDto accountCreateDto) {
     Account account = accountEndpoint.createAccount(accountCreateDto);
     return Response.status(Response.Status.CREATED)
@@ -188,7 +193,7 @@ public class AccountController {
   @PUT
   @Path("/self/changePassword")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response changePassword(@NotNull @Valid ChangePasswordDto changePasswordDto)
       throws AccountNotFoundException {
 
@@ -242,7 +247,7 @@ public class AccountController {
   @Path("/login/{login}/editAccountAsAdmin")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response editAccountAsAdmin(@PathParam("login") String login,
                                      @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
@@ -256,7 +261,7 @@ public class AccountController {
   @PATCH
   @Path("/block/{accountId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response blockAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.blockAccount(accountId);
     return Response.status(Response.Status.OK).build();
@@ -265,7 +270,7 @@ public class AccountController {
   @PATCH
   @Path("/activate/{accountId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrator")
+  @RolesAllowed(ADMINISTRATOR)
   public Response activateAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.activateAccount(accountId);
     return Response.status(Response.Status.OK).build();
@@ -324,7 +329,7 @@ public class AccountController {
 
   @PUT
   @Path("/change-email/{accountId}")
-  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response changeEmail(@PathParam("accountId") Long accountId,
                               @NotNull @Valid SetEmailToSendPasswordDto emailDto) {
     accountEndpoint.changeEmail(emailDto, accountId, principal.getName());
@@ -333,7 +338,7 @@ public class AccountController {
 
   @PATCH
   @Path("/change-email")
-  @RolesAllowed({"administrator", "employee", "sales_rep", "client"})
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response submitEmail(@QueryParam("token") String token) {
     String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
     accountEndpoint.updateEmailAfterConfirmation(login);

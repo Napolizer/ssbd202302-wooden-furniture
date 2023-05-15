@@ -4,7 +4,7 @@ import {AuthenticationService} from "../../services/authentication.service";
 import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
 import {first, Subject, takeUntil} from "rxjs";
-import { Group } from 'src/app/enums/group';
+import { Role } from 'src/app/enums/role';
 
 @Component({
   selector: 'app-toolbar',
@@ -14,7 +14,7 @@ import { Group } from 'src/app/enums/group';
 export class ToolbarComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
 
-  public currentGroup: Group;
+  public currentRole: Role;
   constructor(
     private alertService: AlertService,
     private navigationService: NavigationService,
@@ -64,34 +64,34 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   isUserAdmin(): boolean {
-    return this.authenticationService.isUserInGroup(Group.ADMINISTRATOR);
+    return this.authenticationService.isUserInRole(Role.ADMINISTRATOR);
   }
 
   isCurrentlyOnLoginPage(): boolean {
     return this.navigationService.isCurrentlyOnLoginPage();
   }
 
-  switchGroup(group: string): void {
-    switch(group) {
+  switchRole(role: string): void {
+    switch(role) {
       case 'ADMINISTRATOR':
-        this.currentGroup = Group.ADMINISTRATOR;
-        console.log(this.currentGroup);
+        this.currentRole = Role.ADMINISTRATOR;
+        console.log(this.currentRole);
         break;
       case 'EMPLOYEE':
-        this.currentGroup = Group.EMPLOYEE;
-        console.log(this.currentGroup);
+        this.currentRole = Role.EMPLOYEE;
+        console.log(this.currentRole);
         break;
       case 'SALES_REP':
-        this.currentGroup = Group.SALES_REP;
-        console.log(this.currentGroup);
+        this.currentRole = Role.SALES_REP;
+        console.log(this.currentRole);
         break;
       case 'CLIENT':
-        this.currentGroup = Group.CLIENT;
-        console.log(this.currentGroup);
+        this.currentRole = Role.CLIENT;
+        console.log(this.currentRole);
         break;
       case 'GUEST':
-        this.currentGroup = Group.GUEST;
-        console.log(this.currentGroup);
+        this.currentRole = Role.GUEST;
+        console.log(this.currentRole);
         break;
       default:
         console.log('default')
@@ -103,19 +103,19 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   isUserInGroup(group: string): boolean {
     switch(group) {
     case 'ADMINISTRATOR':
-      return this.authenticationService.isUserInGroup(Group.ADMINISTRATOR);
+      return this.authenticationService.isUserInRole(Role.ADMINISTRATOR);
       break;
     case 'EMPLOYEE':
-      return this.authenticationService.isUserInGroup(Group.EMPLOYEE);
+      return this.authenticationService.isUserInRole(Role.EMPLOYEE);
       break;
     case 'SALES_REP':
-      return this.authenticationService.isUserInGroup(Group.SALES_REP);
+      return this.authenticationService.isUserInRole(Role.SALES_REP);
       break;
     case 'CLIENT':
-      return this.authenticationService.isUserInGroup(Group.CLIENT);
+      return this.authenticationService.isUserInRole(Role.CLIENT);
       break;
     case 'GUEST':
-      return this.authenticationService.isUserInGroup(Group.GUEST);
+      return this.authenticationService.isUserInRole(Role.GUEST);
       break;
     default:
       return false;

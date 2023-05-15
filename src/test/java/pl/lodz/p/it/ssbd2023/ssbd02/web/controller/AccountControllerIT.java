@@ -238,8 +238,8 @@ public class AccountControllerIT {
           .statusCode(200)
           .contentType("application/json")
           .body("accountState", equalTo("ACTIVE"))
-          .body("groups", hasSize(1))
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
+          .body("roles", hasSize(1))
+          .body("roles[0]", equalTo("ADMINISTRATOR"))
           .body("archive", equalTo(false))
           .body("email", equalTo("admin@gmail.com"))
           .body("id", is(notNullValue()))
@@ -509,8 +509,8 @@ public class AccountControllerIT {
           .statusCode(200)
           .contentType("application/json")
           .body("accountState", equalTo("ACTIVE"))
-          .body("groups", hasSize(1))
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
+          .body("roles", hasSize(1))
+          .body("roles[0]", equalTo("ADMINISTRATOR"))
           .body("archive", equalTo(false))
           .body("email", equalTo("admin@gmail.com"))
           .body("id", is(notNullValue()))
@@ -591,7 +591,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"));
+          .body("roles[0]", equalTo("ADMINISTRATOR"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -600,8 +600,8 @@ public class AccountControllerIT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
-          .body("groups[1]", equalTo("SALES_REP"));
+          .body("roles[0]", equalTo("ADMINISTRATOR"))
+          .body("roles[1]", equalTo("SALES_REP"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -610,8 +610,8 @@ public class AccountControllerIT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
-          .body("groups[1]", equalTo("SALES_REP"));
+          .body("roles[0]", equalTo("ADMINISTRATOR"))
+          .body("roles[1]", equalTo("SALES_REP"));
     }
 
     @Test
@@ -720,8 +720,8 @@ public class AccountControllerIT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"))
-          .body("groups[1]", equalTo("SALES_REP"));
+          .body("roles[0]", equalTo("ADMINISTRATOR"))
+          .body("roles[1]", equalTo("SALES_REP"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -730,7 +730,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"));
+          .body("roles[0]", equalTo("ADMINISTRATOR"));
 
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
@@ -739,7 +739,7 @@ public class AccountControllerIT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("groups[0]", equalTo("ADMINISTRATOR"));
+          .body("roles[0]", equalTo("ADMINISTRATOR"));
     }
   }
 
@@ -866,8 +866,8 @@ public class AccountControllerIT {
           .body("failedLoginCounter", is(equalTo(0)))
           .body("blockadeEnd", is(nullValue()))
           .body("accountState", is(equalTo("ACTIVE")))
-          .body("groups.size()", is(equalTo(1)))
-          .body("groups[0]", is(equalTo("ADMINISTRATOR")))
+          .body("roles.size()", is(equalTo(1)))
+          .body("roles[0]", is(equalTo("ADMINISTRATOR")))
           .body("address", is(notNullValue()))
           .body("address.country", is(equalTo("Poland")))
           .body("address.city", is(equalTo("Lodz")))
@@ -900,8 +900,8 @@ public class AccountControllerIT {
           .body("failedLoginCounter", is(equalTo(0)))
           .body("blockadeEnd", is(nullValue()))
           .body("accountState", is(equalTo("ACTIVE")))
-          .body("groups.size()", is(equalTo(1)))
-          .body("groups[0]", is(equalTo("CLIENT")))
+          .body("roles.size()", is(equalTo(1)))
+          .body("roles[0]", is(equalTo("CLIENT")))
           .body("address", is(notNullValue()))
           .body("address.country", is(equalTo("Poland")))
           .body("address.city", is(equalTo("Lodz")))

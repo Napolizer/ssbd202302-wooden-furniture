@@ -1,5 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
@@ -52,12 +57,14 @@ public final class DtoToEntityMapper {
   public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) {
     Account account = mapAccountRegisterDtoToAccount(accountCreateDto);
     AccessLevel accessLevel = mapAccessLevelDtoToAccessLevel(accountCreateDto.getAccessLevel());
-    if (accessLevel.getGroupName().equals("CLIENT")) {
+
+    if (accessLevel.getRoleName().equals(CLIENT)) {
       return account;
     }
     account.getAccessLevels().clear();
     accessLevel.setAccount(account);
     account.getAccessLevels().add(accessLevel);
+
     return account;
   }
 
@@ -80,17 +87,17 @@ public final class DtoToEntityMapper {
   }
 
   public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto) {
-    switch (accessLevelDto.getName()) {
-      case "Client" -> {
+    switch (accessLevelDto.getName().toLowerCase()) {
+      case CLIENT -> {
         return new Client();
       }
-      case "Administrator" -> {
+      case ADMINISTRATOR -> {
         return new Administrator();
       }
-      case "Employee" -> {
+      case EMPLOYEE -> {
         return new Employee();
       }
-      case "SalesRep" -> {
+      case SALES_REP -> {
         return new SalesRep();
       }
       default -> throw ApplicationExceptionFactory.createInvalidAccessLevelException();

@@ -141,28 +141,28 @@ export class CreateAccountComponent implements OnInit {
     });
     this.translate
       .get([
-        'group.administrator',
-        'group.employee',
-        'group.sales_rep',
-        'group.client',
+        'role.administrator',
+        'role.employee',
+        'role.sales_rep',
+        'role.client',
       ])
       .pipe(takeUntil(this.destroy))
       .subscribe((msg) => {
         this.roles.push({
           value: 'Administrator',
-          viewValue: msg['group.administrator'] as string,
+          viewValue: msg['role.administrator'] as string,
         });
         this.roles.push({
           value: 'Employee',
-          viewValue: msg['group.employee'] as string,
+          viewValue: msg['role.employee'] as string,
         });
         this.roles.push({
           value: 'SalesRep',
-          viewValue: msg['group.sales_rep'] as string,
+          viewValue: msg['role.sales_rep'] as string,
         });
         this.roles.push({
           value: 'Client',
-          viewValue: msg['group.client'] as string,
+          viewValue: msg['role.client'] as string,
         });
       });
     this.translate
