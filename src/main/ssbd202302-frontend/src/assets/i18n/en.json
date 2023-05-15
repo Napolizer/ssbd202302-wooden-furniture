@@ -140,6 +140,7 @@
   "dialog.confirmation.password.message": "Are you sure you want to reset your password?",
   "dialog.change.email.message": "Are you sure you want to change email address?",
   "dialog.change.password.message": "Are you sure you want to change password?",
+  "dialog.edit.account.message": "Are you sure you want to edit your account?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",

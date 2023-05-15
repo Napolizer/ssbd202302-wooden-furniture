@@ -120,38 +120,53 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
   }
 
   onSaveClicked() {
-    this.loading = true
-    this.editableAccount.firstName = this.editAccountForm.value.firstName!;
-    this.editableAccount.lastName = this.editAccountForm.value.lastName!;
-    this.editableAccount.country = this.editAccountForm.value.country!;
-    this.editableAccount.city = this.editAccountForm.value.city!;
-    this.editableAccount.postalCode = this.editAccountForm.value.postalCode!;
-    this.editableAccount.street = this.editAccountForm.value.street!;
-    this.editableAccount.streetNumber = this.editAccountForm.value.streetNumber!
-    this.accountService.editOwnAccount(this.authenticationService.getLogin()!, this.editableAccount)
-      .pipe(first(), takeUntil(this.destroy))
-      .subscribe({
-        next: editedAccount => {
-        this.editableAccount = editedAccount;
-        this.translate.get('edit.success')
-          .pipe(takeUntil(this.destroy))
-          .subscribe(msg => {
-            this.alertService.success(msg)
-            void this.navigationService.redirectToOwnAccountPage()
-          });
-        },
-        error: e => {
-          const title = this.translate.instant('exception.occurred');
-          const message = this.translate.instant(e.error.message || 'exception.unknown');
-          const ref = this.dialogService.openErrorDialog(title, message);
-          ref.afterClosed()
+    if (this.editAccountForm.valid) {
+      this.translate
+        .get('dialog.edit.account.message')
+        .pipe(takeUntil(this.destroy))
+        .subscribe((msg) => {
+          const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+          ref
+            .afterClosed()
             .pipe(first(), takeUntil(this.destroy))
-            .subscribe(() => {
-              void this.navigationService.redirectToOwnAccountPage();
-            });
-        }
-      });
-    this.loading = false
+            .subscribe((result) => {
+              if (result === 'action') {
+                this.loading = true
+                this.editableAccount.firstName = this.editAccountForm.value.firstName!;
+                this.editableAccount.lastName = this.editAccountForm.value.lastName!;
+                this.editableAccount.country = this.editAccountForm.value.country!;
+                this.editableAccount.city = this.editAccountForm.value.city!;
+                this.editableAccount.postalCode = this.editAccountForm.value.postalCode!;
+                this.editableAccount.street = this.editAccountForm.value.street!;
+                this.editableAccount.streetNumber = this.editAccountForm.value.streetNumber!
+                this.accountService.editOwnAccount(this.authenticationService.getLogin()!, this.editableAccount)
+                  .pipe(first(), takeUntil(this.destroy))
+                  .subscribe({
+                    next: editedAccount => {
+                      this.editableAccount = editedAccount;
+                      this.translate.get('edit.success')
+                        .pipe(takeUntil(this.destroy))
+                        .subscribe(msg => {
+                          this.alertService.success(msg)
+                          void this.navigationService.redirectToOwnAccountPage()
+                        });
+                    },
+                    error: e => {
+                      const title = this.translate.instant('exception.occurred');
+                      const message = this.translate.instant(e.error.message || 'exception.unknown');
+                      const ref = this.dialogService.openErrorDialog(title, message);
+                      ref.afterClosed()
+                        .pipe(first(), takeUntil(this.destroy))
+                        .subscribe(() => {
+                          void this.navigationService.redirectToOwnAccountPage();
+                        });
+                    }
+                  });
+                this.loading = false
+              }
+            })
+        })
+    }
   }
 
   onResetClicked() {
@@ -166,5 +181,9 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
       postalCode: this.editableAccount.postalCode!
     });
     this.loading = false;
+  }
+
+  onBackClicked() {
+    void this.navigationService.redirectToOwnAccountPage();
   }
 }

@@ -139,6 +139,7 @@
   "dialog.confirmation.register.message": "Czy na pewno chcesz się zarejestrować?",
   "dialog.confirmation.password.message": "Czy na pewno chcesz zresetować swoje hasło?",
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
+  "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
