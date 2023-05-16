@@ -70,8 +70,8 @@ public class AccountEndpoint {
     return repeatTransaction(() -> accountService.getAccountList());
   }
 
-  public String login(UserCredentialsDto userCredentialsDto, String ip) throws AuthenticationException {
-    return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip);
+  public String login(UserCredentialsDto userCredentialsDto, String ip, String locale) throws AuthenticationException {
+    return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip, locale);
   }
 
   public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {

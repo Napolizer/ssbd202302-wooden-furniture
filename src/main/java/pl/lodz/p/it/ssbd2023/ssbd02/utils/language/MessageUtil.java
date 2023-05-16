@@ -5,6 +5,9 @@ import java.util.ResourceBundle;
 
 public class MessageUtil {
 
+  public static String LOCALE_PL = "pl";
+  public static String LOCALE_EN = "en";
+
   static {
     Locale.setDefault(new Locale("default"));
   }
