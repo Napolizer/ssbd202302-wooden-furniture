@@ -5,6 +5,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJBTransactionRolledbackException;
@@ -34,6 +35,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
 @Interceptors({LoggerInterceptor.class})
+@DenyAll
 public class AccountEndpoint {
 
   @Inject
