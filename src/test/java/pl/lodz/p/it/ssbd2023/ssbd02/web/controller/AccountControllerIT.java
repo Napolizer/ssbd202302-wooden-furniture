@@ -34,32 +34,22 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 public class AccountControllerIT {
 
   private String retrieveAdminToken() {
-    return given()
-        .contentType("application/json")
-        .body("""
-                   {
-                       "login": "administrator",
-                       "password": "Kochamssbd!"
-                   }
-            """)
-        .when()
-        .post("/account/login")
-        .then()
-        .statusCode(200)
-        .contentType("application/json")
-        .extract()
-        .path("token");
+    return retrieveToken("administrator", "Kochamssbd!");
   }
 
   private String retrieveClientToken() {
+    return retrieveToken("client", "Kochamssbd!Client");
+  }
+
+  private String retrieveToken(String login, String password) {
     return given()
         .contentType("application/json")
         .body("""
                    {
-                       "login": "client",
-                       "password": "Kochamssbd!Client"
+                       "login": "$login",
+                       "password": "$password"
                    }
-            """)
+            """.replace("$login", login).replace("$password", password))
         .when()
         .post("/account/login")
         .then()
@@ -810,6 +800,7 @@ public class AccountControllerIT {
               InitData.editedAccountAsAdminExampleJson
                       .replace("$hash", retrieveAccountHash("accounttoedit123"));
       given()
+          .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
           .body(InitData.editedAccountExampleJson)
           .when()

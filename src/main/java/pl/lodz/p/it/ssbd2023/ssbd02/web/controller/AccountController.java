@@ -282,6 +282,7 @@ public class AccountController {
   @Path("/login/{login}/editOwnAccount")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response editOwnAccount(@PathParam("login") String login,
                                  @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
     if (principal.getName() == null) {
