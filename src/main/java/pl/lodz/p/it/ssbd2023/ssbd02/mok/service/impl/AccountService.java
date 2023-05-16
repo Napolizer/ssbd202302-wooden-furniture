@@ -266,6 +266,12 @@ public class AccountService extends AbstractService {
     }
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
+    try {
+      mailService.sendMailWithInfoAboutConfirmingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
   public String validatePasswordResetToken(String token) {
