@@ -213,20 +213,10 @@ public class AccountController {
   @PUT
   @Path("/login/{login}/changePasswordAsAdmin")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response changePasswordAsAdmin(@PathParam("login") String login,
-                                        @NotNull @Valid ChangePasswordDto changePasswordDto) {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    Account account = accountEndpoint.getAccountByLogin(login).get();
-    if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-      throw ApplicationExceptionFactory.createOldPasswordGivenException();
-    }
-    accountEndpoint.changePasswordAsAdmin(login,
-        changePasswordDto.getPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
-        accountEndpoint.getAccountByLogin(login).get());
-    return Response.ok(changedAccount).build();
+  public Response changePasswordAsAdmin(@PathParam("login") String login) {
+
+    accountEndpoint.changePasswordAsAdmin(login);
+    return Response.ok().build();
   }
 
   @POST

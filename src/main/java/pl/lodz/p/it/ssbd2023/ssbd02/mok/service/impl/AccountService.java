@@ -202,12 +202,14 @@ public class AccountService extends AbstractService {
     }
   }
 
-  public void changePasswordAsAdmin(String login, String newPassword) {
+  public void changePasswordAsAdmin(String login) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
-    if (!Objects.equals(account.getPassword(), newPassword)) {
-      account.setPassword(newPassword);
-      accountFacade.update(account);
+    try {
+      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(),
+              account.getLocale());
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
 

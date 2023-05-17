@@ -489,7 +489,7 @@ public class AccountServiceIT {
     String newPassword = "newPassword";
     assertEquals(account.getPassword(),
             accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-    assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin(), newPassword));
+    assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin()));
     assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
   }
 
@@ -497,7 +497,7 @@ public class AccountServiceIT {
   public void failsToChangePasswordAsAdminWhenGivenOldPassword() throws AccountNotFoundException {
     String oldPassword = account.getPassword();
     assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-    accountService.changePasswordAsAdmin(account.getLogin(), oldPassword);
+    accountService.changePasswordAsAdmin(account.getLogin());
     assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
   }
 

@@ -88,8 +88,8 @@ public class AccountEndpoint {
     return repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
   }
 
-  public void changePasswordAsAdmin(String login, String newPassword) {
-    repeatTransaction(() -> accountService.changePasswordAsAdmin(login, newPassword));
+  public void changePasswordAsAdmin(String login) {
+    repeatTransaction(() -> accountService.changePasswordAsAdmin(login));
   }
 
   public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
