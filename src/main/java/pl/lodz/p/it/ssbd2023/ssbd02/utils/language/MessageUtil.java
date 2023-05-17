@@ -50,6 +50,8 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_REMOVED_REMINDER_MESSAGE = "mok.email.account.removed.reminder.message";
     public static final String EMAIL_ACCOUNT_ACTIVATED_SUBJECT = "mok.email.account.activated.subject";
     public static final String EMAIL_ACCOUNT_ACTIVATED_MESSAGE = "mok.email.account.activated.message";
+    public static final String EMAIL_ACCOUNT_VERIFIED_SUBJECT = "mok.email.account.verified.subject";
+    public static final String EMAIL_ACCOUNT_VERIFIED_MESSAGE = "mok.email.account.verified.message";
     public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED =
         "exception.mok.account.access.level.already.assigned";
     public static final String ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED =

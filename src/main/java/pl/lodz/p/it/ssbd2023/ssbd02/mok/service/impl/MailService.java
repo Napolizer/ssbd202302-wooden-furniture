@@ -38,6 +38,14 @@ public class MailService {
     );
   }
 
+  public void sendMailWithInfoAboutConfirmingAccount(String to, String locale)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_MESSAGE)
+    );
+  }
+
   public void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login)
           throws MessagingException {
     sendMail(to,
