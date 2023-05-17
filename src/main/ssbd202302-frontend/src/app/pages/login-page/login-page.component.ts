@@ -85,7 +85,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   onLoginClicked(): void {
-    this.authenticationService.login(this.loginForm.value['login'] ?? '', this.loginForm.value['password'] ?? '')
+    this.authenticationService.login(this.loginForm.value['login'] ?? '', this.loginForm.value['password'] ?? '',
+      this.translate.getBrowserLang() as string)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: token => {

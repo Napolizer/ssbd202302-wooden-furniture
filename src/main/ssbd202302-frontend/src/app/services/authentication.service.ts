@@ -15,10 +15,15 @@ export class AuthenticationService {
     private tokenService: TokenService
   ) {}
 
-  public login(login: string, password: string): Observable<string> {
+  public login(login: string, password: string, locale : string): Observable<string> {
     return this.httpClient.post(`${environment.apiBaseUrl}/account/login`, {
       login: login,
       password: password
+    },
+    {
+    headers: {
+      'Accept-Language': locale
+      }
     }).pipe(first(), map((response: any) => response.token));
   }
 
