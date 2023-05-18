@@ -78,7 +78,7 @@ public class AccountEndpoint extends AbstractEndpoint {
     return repeatTransaction(() -> accountService.getAccountByLogin(login));
   }
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public Optional<Account> getAccountByEmail(SetEmailToSendPasswordDto emailDto) {
     return repeatTransaction(() -> accountService.getAccountByEmail(emailDto.getEmail()));
   }
@@ -156,7 +156,7 @@ public class AccountEndpoint extends AbstractEndpoint {
     repeatTransaction(() -> accountService.resetPassword(login, changePasswordDto.getPassword()));
   }
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public void sendResetPasswordEmail(SetEmailToSendPasswordDto emailDto) {
     repeatTransaction(() -> accountService.sendResetPasswordEmail(emailDto.getEmail()));
   }

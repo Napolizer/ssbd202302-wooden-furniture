@@ -43,6 +43,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendMailWithInfoAboutConfirmingAccount(String to, String locale)
           throws MessagingException {
     sendMail(to,
