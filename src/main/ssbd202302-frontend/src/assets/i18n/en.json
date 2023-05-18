@@ -21,6 +21,10 @@
   "forgot.password.button": "Send",
   "forgot.password.success": "The link to reset your password has been sent to your email address",
 
+  "change.locale.english": "English",
+  "change.locale.polish": "Polish",
+  "change.locale.success": "Successfully changed language",
+
   "change.email.button": "Change email address",
   "change.email.success": "Your email has been successfully changed",
   "change.email.current": "Current email address",
@@ -36,6 +40,7 @@
   "change.password.new.repeat": "Repeat new password",
   "change.password.validity.matching": "New password cannot be same as the current one",
   "change.password.success": "Your password has been successfully changed",
+  "change.password.user.send": "Password change request sent to user's email",
 
   "register.title": "Create your account",
   "register.checkbox": "Company representative",
@@ -157,6 +162,7 @@
   "dialog.change.password.message": "Are you sure you want to change password?",
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
+  "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
 
   "exception.occurred": "Exception occurred",

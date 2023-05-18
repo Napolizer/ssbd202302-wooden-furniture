@@ -36,7 +36,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(1)
-  public void shouldProperlyLoginTest() {
+  void shouldProperlyLoginTest() {
     given()
         .contentType("application/json")
         .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
@@ -57,9 +57,10 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(2)
-  public void shouldHaveAccessToAdminEndpointTest() {
+  void shouldHaveAccessToAdminEndpointTest() {
     given()
         .header("Authorization", "Bearer " + retrieveAdminToken())
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .when()
         .get("/account")
         .then()
@@ -69,7 +70,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(3)
-  public void shouldNotHaveAccessWhenTokenIsMissing() {
+  void shouldNotHaveAccessWhenTokenIsMissing() {
     given()
         .when()
         .get("/account")
@@ -80,7 +81,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(4)
-  public void shouldNotHaveAccessWhenTokenIsEmpty() {
+  void shouldNotHaveAccessWhenTokenIsEmpty() {
     given()
         .header("Authorization", "")
         .when()
@@ -92,9 +93,10 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(5)
-  public void shouldNotHaveAccessWhenTokenIsMissingBearer() {
+  void shouldNotHaveAccessWhenTokenIsMissingBearer() {
     given()
         .header("Authorization", " " + retrieveAdminToken())
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .when()
         .get("/account")
         .then()
@@ -104,7 +106,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(6)
-  public void shouldNotHaveAccessWhenTokenDoesNotHaveRequiredRole() {
+  void shouldNotHaveAccessWhenTokenDoesNotHaveRequiredRole() {
     given()
         .header("Authorization", "Bearer " + retrieveAdminToken())
         .header("Content-Type", "application/json")

@@ -1,7 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -33,6 +39,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
     GenericServiceExceptionsInterceptor.class,
     LoggerInterceptor.class
 })
+@DenyAll
 public class AccountService extends AbstractService {
   @Inject
   private AccountFacadeOperations accountFacade;
@@ -43,22 +50,27 @@ public class AccountService extends AbstractService {
   @Inject
   private EmailSendingRetryService emailSendingRetryService;
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public Optional<Account> getAccountById(Long id) {
     return accountFacade.findById(id);
   }
 
+  @PermitAll
   public Optional<Account> getAccountByEmail(String email) {
     return accountFacade.findByEmail(email);
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public List<Account> getAccountList() {
     return accountFacade.findAll();
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
     Account foundAccount =
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
@@ -77,9 +89,9 @@ public class AccountService extends AbstractService {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
       }
 
-      if ((Objects.equals(item.getRoleName(), Role.CLIENT) && Objects.equals(accessLevel.getRoleName(), Role.SALES_REP))
-          || (Objects.equals(item.getRoleName(), Role.SALES_REP)
-            && Objects.equals(accessLevel.getRoleName(), Role.CLIENT))) {
+      if ((Objects.equals(item.getRoleName(), CLIENT) && Objects.equals(accessLevel.getRoleName(), SALES_REP))
+          || (Objects.equals(item.getRoleName(), SALES_REP)
+            && Objects.equals(accessLevel.getRoleName(), CLIENT))) {
         throw ApplicationExceptionFactory.createClientAndSalesRepAccessLevelsConflictException();
       }
     }
@@ -95,6 +107,7 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
     Account foundAccount =
         accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
@@ -121,6 +134,7 @@ public class AccountService extends AbstractService {
     throw ApplicationExceptionFactory.createAccessLevelNotAssignedException();
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
     Account account = accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
     List<AccessLevel> accessLevels = account.getAccessLevels();
@@ -142,6 +156,7 @@ public class AccountService extends AbstractService {
     throw ApplicationExceptionFactory.createMoreThanOneAccessLevelAssignedException();
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void editAccountInfo(String login, Account accountWithChanges, String hash) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
@@ -153,6 +168,7 @@ public class AccountService extends AbstractService {
     accountFacade.update(account);
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
@@ -164,6 +180,7 @@ public class AccountService extends AbstractService {
     accountFacade.update(account);
   }
 
+  @PermitAll
   public void registerAccount(Account account) {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
@@ -181,6 +198,7 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @PermitAll
   public void registerGoogleAccount(Account account) {
     account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
@@ -188,6 +206,7 @@ public class AccountService extends AbstractService {
     accountFacade.create(account);
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
@@ -196,6 +215,7 @@ public class AccountService extends AbstractService {
     return accountFacade.create(account);
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Account changePassword(String login, String newPassword, String currentPassword) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
@@ -216,15 +236,40 @@ public class AccountService extends AbstractService {
     }
   }
 
-  public void changePasswordAsAdmin(String login, String newPassword) {
+  @PermitAll
+  public Account changePasswordFromLink(String token, String newPassword, String currentPassword) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
+
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
-    if (!Objects.equals(account.getPassword(), newPassword)) {
-      account.setPassword(newPassword);
-      accountFacade.update(account);
+    if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
+      //fixme invalidCredentialsException is checked
+    }
+
+    if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      return accountFacade.update(account);
+    } else {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
   }
 
+  @RolesAllowed(ADMINISTRATOR)
+  public void changePasswordAsAdmin(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
+    emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
+            TokenType.CHANGE_PASSWORD, changePasswordToken);
+    try {
+      mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
+
+  @PermitAll
   public void blockAccount(Long id) {
     Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
 
@@ -243,6 +288,7 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void activateAccount(Long id) {
     Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
     AccountState state = account.getAccountState();
@@ -262,15 +308,7 @@ public class AccountService extends AbstractService {
     }
   }
 
-  public void updateFailedLoginCounter(Account account) {
-    Account found =
-        accountFacade.findById(account.getId()).orElseThrow(AccountNotFoundException::new);
-    found.setFailedLoginCounter(account.getFailedLoginCounter());
-    found.setAccountState(account.getAccountState());
-
-    accountFacade.update(found);
-  }
-
+  @PermitAll
   public void confirmAccount(String token) {
     String login = tokenService.validateEmailToken(token, TokenType.ACCOUNT_CONFIRMATION, null);
     Account account = accountFacade.findByLogin(login)
@@ -288,6 +326,7 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @PermitAll
   public String validatePasswordResetToken(String token) {
     String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.PASSWORD_RESET);
     Account account = accountFacade.findByLogin(login)
@@ -296,6 +335,16 @@ public class AccountService extends AbstractService {
     return login;
   }
 
+  @PermitAll
+  public String validatePasswordChangeToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_PASSWORD, account.getPassword());
+    return login;
+  }
+
+  @PermitAll
   public String validateChangeEmailToken(String token) {
     String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_EMAIL);
     Account account = accountFacade.findByLogin(login)
@@ -304,6 +353,7 @@ public class AccountService extends AbstractService {
     return login;
   }
 
+  @PermitAll
   public void resetPassword(String login, String password) {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
@@ -315,6 +365,7 @@ public class AccountService extends AbstractService {
     accountFacade.update(account);
   }
 
+  @PermitAll
   public void sendResetPasswordEmail(String email) {
     Account account = getAccountByEmail(email).get();
     if (!account.getAccountType().equals(AccountType.NORMAL)) {
@@ -331,6 +382,7 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Account updateEmailAfterConfirmation(String login) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
     account.setEmail(account.getNewEmail());
@@ -338,6 +390,7 @@ public class AccountService extends AbstractService {
     return accountFacade.update(account);
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void changeEmail(String newEmail, Long accountId, String principal) {
     Account subject = accountFacade.findByLogin(principal)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
@@ -371,5 +424,14 @@ public class AccountService extends AbstractService {
     } else {
       throw ApplicationExceptionFactory.createForbiddenException();
     }
+  }
+
+  @PermitAll
+  public void changeLocale(Long accountId, String locale) {
+    Account account = accountFacade.findById(accountId)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    account.setLocale(locale);
+    accountFacade.update(account);
   }
 }

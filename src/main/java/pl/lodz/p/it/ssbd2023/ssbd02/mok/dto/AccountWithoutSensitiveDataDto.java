@@ -5,14 +5,18 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Login;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class AccountWithoutSensitiveDataDto {
   @NotNull

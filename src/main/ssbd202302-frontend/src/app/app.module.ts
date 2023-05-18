@@ -51,6 +51,7 @@ import { ChangeAccountRolePageComponent } from './pages/change-account-role-page
 import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
+import { ChangePasswordConfirmComponent } from './pages/change-password-confirm/change-password-confirm.component';
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 
 
@@ -84,6 +85,7 @@ import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect
     ChangeOwnPasswordComponent,
     DigitOnlyDirective,
     CreateAccountComponent,
+    ChangePasswordConfirmComponent,
     GoogleRedirectComponent
   ],
     imports: [

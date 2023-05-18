@@ -2,10 +2,32 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
-      <mat-list-item *ngFor="let role of roles" (click)="changeAccountGroup(role)">
-        <div mat-line>{{role}}</div>
-        <mat-divider></mat-divider>
-      </mat-list-item>
+      <ul class="button-list">
+        <li>
+          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('administrator')">
+            <mat-icon>security</mat-icon>
+            {{'role.administrator' | translate}}
+          </button>
+        </li>
+        <li>
+          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('employee')">
+            <mat-icon>person</mat-icon>
+            {{'role.employee' | translate}}
+          </button>
+        </li>
+        <li>
+          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('sales_rep')">
+            <mat-icon>shopping_cart</mat-icon>
+            {{'role.sales_rep' | translate}}
+          </button>
+        </li>
+        <li>
+          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('client')">
+            <mat-icon>person_pin</mat-icon>
+            {{'role.client' | translate}}
+          </button>
+        </li>
+      </ul>
     </mat-action-list>
   </div>
 </div>
