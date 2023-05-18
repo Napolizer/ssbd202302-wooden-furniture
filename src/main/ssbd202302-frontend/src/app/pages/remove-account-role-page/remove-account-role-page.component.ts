@@ -109,7 +109,7 @@ export class RemoveAccountRolePageComponent implements OnInit {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: () => {
-          this.translate.get('account.removegroup.success')
+          this.translate.get('account.removerole.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
               this.alertService.success(msg);
