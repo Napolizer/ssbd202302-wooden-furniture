@@ -54,22 +54,6 @@ public class GithubService {
     }
   }
 
-  private String convertMapOfUriParamsToString(HashMap<String, String> params) {
-    StringBuilder result = new StringBuilder();
-    boolean first = true;
-    for (Map.Entry<String, String> entry : params.entrySet()) {
-      if (first) {
-        first = false;
-      } else {
-        result.append("&");
-      }
-      result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
-      result.append("=");
-      result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
-    }
-    return result.toString();
-  }
-
   private Account createAccountFromGithubData(String accessToken) {
     return Account.builder()
         .login(retrieveLogin(accessToken))
@@ -99,17 +83,8 @@ public class GithubService {
     }
   }
 
-  public String getParamsForAccessToken(String githubCode) {
-    HashMap<String, String> params = new HashMap<>();
-    params.put("client_id", CLIENT_ID);
-    params.put("client_secret", CLIENT_SECRET);
-    params.put("code", githubCode);
-    return convertMapOfUriParamsToString(params);
-  }
-
   public String retrieveGithubAccessToken(String githubCode) {
     String accessToken = "";
-    String params = getParamsForAccessToken(githubCode);
 
     try {
       URL url = getGithubTokenLink(githubCode);
@@ -139,7 +114,6 @@ public class GithubService {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    System.out.println(accessToken);
     return accessToken;
   }
 
