@@ -34,6 +34,11 @@
         <div class="button-container">
             <button mat-button color="primary" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>
         </div>
+        <div class="github-button-container">
+          <button mat-button type="button" (click)="onLoginWithGithubClicked()">
+            <img src="assets/images/github-mark.png" alt="" style="width: 30px; height: 27px"> {{'login.github.button' | translate}}
+          </button>
+        </div>
       </div>
     </form>
   </div>

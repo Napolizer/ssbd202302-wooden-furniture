@@ -44,6 +44,18 @@ public class AuthenticationService {
     return tokenService.generateToken(account);
   }
 
+  public String loginWithGithub(String email, String ip) {
+    Account account = accountFacade
+        .findByEmail(email)
+        .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
+
+    account.setLastLogin(LocalDateTime.now());
+    account.setLastLoginIpAddress(ip);
+    accountFacade.update(account);
+
+    return tokenService.generateToken(account);
+  }
+
   private void validateAccount(Account account, String password, String ip) throws AuthenticationException {
     if (account.getArchive()) {
       throw ApplicationExceptionFactory.createAccountArchiveException();

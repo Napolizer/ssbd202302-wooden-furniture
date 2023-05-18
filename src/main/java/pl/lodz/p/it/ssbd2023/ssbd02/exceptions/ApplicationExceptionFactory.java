@@ -162,4 +162,8 @@ public final class ApplicationExceptionFactory {
   public static RemoveAccessLevelException createRemoveAccessLevelException() {
     return new RemoveAccessLevelException();
   }
+
+  public static BaseWebApplicationException createGithubOauthConflictException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_GITHUB_CONFLICT, Response.Status.CONFLICT);
+  }
 }

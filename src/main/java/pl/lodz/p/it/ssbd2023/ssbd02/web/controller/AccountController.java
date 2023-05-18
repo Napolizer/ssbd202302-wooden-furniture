@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PATCH;
@@ -49,6 +50,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Path("/account")
@@ -62,6 +64,8 @@ public class AccountController {
   private Principal principal;
   @Inject
   private HttpServletRequest servletRequest;
+  @Inject
+  private GithubService githubService;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -244,6 +248,22 @@ public class AccountController {
       json.add("message", e.getMessage());
       return Response.status(401).entity(json.build()).build();
     }
+  }
+
+  @GET
+  @Path("/github/login")
+  public Response getGithubOauthLink() {
+    var json = Json.createObjectBuilder();
+    String githubUrl = githubService.getGithubOauthLink();
+    json.add("url", githubUrl);
+    return Response.ok(json.build()).build();
+  }
+
+  @POST
+  @Path("/github/redirect")
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public Response handleGithubRedirect(@FormParam("code") String githubCode) {
+    return accountEndpoint.handleGithubRedirect(githubCode, servletRequest.getRemoteAddr());
   }
 
   @PUT

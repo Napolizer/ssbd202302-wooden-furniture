@@ -48,8 +48,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private navigationService: NavigationService,
     private tokenService: TokenService,
     private translate: TranslateService,
-    private location: Location
-  ) {}
+    private location: Location,
+  ) {
+  }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -110,6 +111,19 @@ export class LoginPageComponent implements OnInit, OnDestroy {
             .subscribe(data => {
               this.alertService.danger(`${data.title}: ${data.message}`);
             });
+        }
+      })
+  }
+
+  onLoginWithGithubClicked(): void {
+    this.authenticationService.getGithubOauthLink()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe({
+        next: (url) => {
+          window.location.href = url;
+        },
+        error: () => {
+          void this.navigationService.redirectToNotFoundPage();
         }
       })
   }

@@ -102,6 +102,10 @@ public class Account extends AbstractEntity {
   @Column(name = "new_email")
   private String newEmail;
 
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "type")
+  private AccountType accountType;
+
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());

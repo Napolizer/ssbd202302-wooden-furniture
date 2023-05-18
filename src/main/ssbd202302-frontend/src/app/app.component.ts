@@ -10,7 +10,7 @@ import {Title} from "@angular/platform-browser";
 export class AppComponent {
   constructor(
     private translate: TranslateService,
-    private titleService: Title
+    private titleService: Title,
   ) {
     translate.setDefaultLang('en');
     translate.use(translate.getBrowserLang() || 'en');

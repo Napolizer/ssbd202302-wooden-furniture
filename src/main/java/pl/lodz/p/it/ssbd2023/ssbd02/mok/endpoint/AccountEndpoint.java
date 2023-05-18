@@ -6,7 +6,9 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
@@ -21,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
@@ -33,6 +36,8 @@ public class AccountEndpoint {
   private AccountService accountService;
   @Inject
   private AuthenticationService authenticationService;
+  @Inject
+  private GithubService githubService;
 
 
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
@@ -137,6 +142,21 @@ public class AccountEndpoint {
 
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
+  }
+
+  public Response handleGithubRedirect(String githubCode, String ip) {
+    Account account = githubService.getRegisteredAccountOrCreateNew(githubCode);
+
+    if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
+      String token = authenticationService.loginWithGithub(account.getEmail(), ip);
+      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+    } else {
+      return Response.accepted().entity(DtoToEntityMapper.mapAccountToGithubAccountInfoDto(account)).build();
+    }
+  }
+
+  public String getGithubOauthLink() {
+    return repeatTransaction(() -> githubService.getGithubOauthLink());
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {first, map, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {TokenService} from "./token.service";
@@ -25,6 +25,29 @@ export class AuthenticationService {
       'Accept-Language': locale
       }
     }).pipe(first(), map((response: any) => response.token));
+  }
+
+  public getGithubOauthLink(): Observable<string> {
+    return this.httpClient
+      .get(`${environment.apiBaseUrl}/account/github/login`)
+      .pipe(
+        first(),
+        map((response: any) => response.url)
+      );
+  }
+
+  public handleGithubRedirect(code: string): Observable<any> {
+    const params = new HttpParams().set('code', code);
+    return this.httpClient
+      .post(
+        `${environment.apiBaseUrl}/account/github/redirect`,
+        params.toString(),
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+          observe: 'response',
+        }
+      )
+      .pipe(first());
   }
 
   public logout(): void {
