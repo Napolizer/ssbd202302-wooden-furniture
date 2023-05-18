@@ -8,9 +8,14 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -19,8 +24,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
+import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.SalesRepAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
@@ -35,6 +43,10 @@ public class AccountFacadeOperationsIT {
   private Address address;
   private Person person;
   private Account account;
+  @Inject
+  private AdminAuth admin;
+  @Inject
+  private SalesRepAuth salesRep;
   @PersistenceContext(unitName = "ssbd02adminPU")
   private EntityManager em;
   @Resource
@@ -47,7 +59,9 @@ public class AccountFacadeOperationsIT {
         .addPackages(true, "org.postgresql")
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
-        .addAsResource(new File("src/test/resources/"), "");
+        .addPackages(true, "org.apache")
+        .addAsResource(new File("src/test/resources/"), "")
+        .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }
 
   @BeforeEach
@@ -73,6 +87,7 @@ public class AccountFacadeOperationsIT {
               .person(person)
               .locale("pl")
               .accountState(AccountState.ACTIVE)
+              .accountType(AccountType.NORMAL)
               .build();
     em.createQuery("DELETE FROM access_level").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
@@ -93,7 +108,7 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void properlyGetsAllAccounts() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
+  void properlyGetsAllAccounts() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     Address address2 = Address.builder()
         .country("Poland")
         .city("Warsaw")
@@ -115,6 +130,7 @@ public class AccountFacadeOperationsIT {
         .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertEquals(0, accountFacadeOperations.findAll().size());
@@ -131,7 +147,7 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void properlyAddsAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyAddsAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     assertEquals(0, accountFacadeOperations.findAll().size());
 
     utx.begin();
@@ -145,85 +161,91 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void failsToAddAccountWithoutLogin() {
+  void failsToAddAccountWithoutLogin() {
     Account accountWithoutLogin = Account.builder()
         .password("password")
         .email("email")
         .person(person)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
   }
 
   @Test
-  public void failsToAddAccountWithoutPassword() {
+  void failsToAddAccountWithoutPassword() {
     Account accountWithoutLogin = Account.builder()
         .login("login")
         .email("email")
         .person(person)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
   }
 
   @Test
-  public void failsToAddAccountWithoutEmail() {
+  void failsToAddAccountWithoutEmail() {
     Account accountWithoutLogin = Account.builder()
         .login("login")
         .password("password")
         .person(person)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
   }
 
   @Test
-  public void failsToAddAccountWithoutPerson() {
+  void failsToAddAccountWithoutPerson() {
     Account accountWithoutLogin = Account.builder()
         .login("login")
         .password("password")
         .email("email")
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
   }
 
   @Test
-  public void failsToAddAccountWithoutLocale() {
+  void failsToAddAccountWithoutLocale() {
     Account accountWithoutLogin = Account.builder()
         .login("login")
         .password("password")
         .email("email")
         .person(person)
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
   }
 
   @Test
-  public void failsToAddAccountWithoutAccountState() {
+  void failsToAddAccountWithoutAccountState() {
     Account accountWithoutLogin = Account.builder()
         .login("login")
         .password("password")
         .email("email")
         .person(person)
         .locale("pl")
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
   }
 
   @Test
-  public void failsToAddNewAccountWithAlreadyAssignedAddress() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void failsToAddNewAccountWithAlreadyAssignedAddress() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     Person wrongPersonWithAlreadyAssignedAddress = Person.builder()
         .firstName("John")
         .lastName("Doe")
@@ -237,6 +259,7 @@ public class AccountFacadeOperationsIT {
         .person(wrongPersonWithAlreadyAssignedAddress)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     utx.begin();
@@ -249,7 +272,7 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void properlyGetsAccountById() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyGetsAccountById() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
     utx.commit();
@@ -258,12 +281,12 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
-  public void failsToGetAccountByIdWhenAccountDoesNotExist() {
+  void failsToGetAccountByIdWhenAccountDoesNotExist() {
     assertTrue(accountFacadeOperations.find(0L).isEmpty());
   }
 
   @Test
-  public void properlyGetsAllAccountsByFirstName() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyGetsAllAccountsByFirstName() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     Address address2 = Address.builder()
         .country("Poland")
         .city("Warsaw")
@@ -285,6 +308,7 @@ public class AccountFacadeOperationsIT {
         .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     Address address3 = Address.builder()
@@ -308,6 +332,7 @@ public class AccountFacadeOperationsIT {
         .person(person3)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     utx.begin();
@@ -319,23 +344,24 @@ public class AccountFacadeOperationsIT {
     String nameJan = "Jan";
     String nameKizo = "Kizo";
 
-    List<Account> accountsWithNameJohn = accountFacadeOperations.findAllByFirstName(nameJohn);
-    assertEquals(2, accountsWithNameJohn.size());
-    assertEquals(nameJohn, accountsWithNameJohn.get(0).getPerson().getFirstName());
-    assertEquals(nameJohn, accountsWithNameJohn.get(1).getPerson().getFirstName());
+    admin.call(() -> {
+      List<Account> accountsWithNameJohn = accountFacadeOperations.findAllByFirstName(nameJohn);
+      assertEquals(2, accountsWithNameJohn.size());
+      assertEquals(nameJohn, accountsWithNameJohn.get(0).getPerson().getFirstName());
+      assertEquals(nameJohn, accountsWithNameJohn.get(1).getPerson().getFirstName());
 
-    List<Account> accountsWithNameJan = accountFacadeOperations.findAllByFirstName(nameJan);
-    assertEquals(1, accountsWithNameJan.size());
-    assertEquals(nameJan, accountsWithNameJan.get(0).getPerson().getFirstName());
+      List<Account> accountsWithNameJan = accountFacadeOperations.findAllByFirstName(nameJan);
+      assertEquals(1, accountsWithNameJan.size());
+      assertEquals(nameJan, accountsWithNameJan.get(0).getPerson().getFirstName());
 
-    List<Account> accountsWithNameKizo = accountFacadeOperations.findAllByFirstName(nameKizo);
-    assertEquals(0, accountsWithNameKizo.size());
-
+      List<Account> accountsWithNameKizo = accountFacadeOperations.findAllByFirstName(nameKizo);
+      assertEquals(0, accountsWithNameKizo.size());
+    });
     utx.commit();
   }
 
   @Test
-  public void properlyGetsAllAccountsByLastName() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyGetsAllAccountsByLastName() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     Address address2 = Address.builder()
         .country("Poland")
         .city("Warsaw")
@@ -357,6 +383,7 @@ public class AccountFacadeOperationsIT {
         .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     Address address3 = Address.builder()
@@ -380,6 +407,7 @@ public class AccountFacadeOperationsIT {
         .person(person3)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     utx.begin();
@@ -391,72 +419,85 @@ public class AccountFacadeOperationsIT {
     String lastNameDzban = "Dzban";
     String lastNameKizo = "Kizo";
 
-    List<Account> accountsWithLastNameSmith =
-        accountFacadeOperations.findAllByLastName(lastNameSmith);
-    assertEquals(2, accountsWithLastNameSmith.size());
-    assertEquals(lastNameSmith, accountsWithLastNameSmith.get(0).getPerson().getLastName());
-    assertEquals(lastNameSmith, accountsWithLastNameSmith.get(1).getPerson().getLastName());
+    admin.call(() -> {
+      List<Account> accountsWithLastNameSmith =
+          accountFacadeOperations.findAllByLastName(lastNameSmith);
+      assertEquals(2, accountsWithLastNameSmith.size());
+      assertEquals(lastNameSmith, accountsWithLastNameSmith.get(0).getPerson().getLastName());
+      assertEquals(lastNameSmith, accountsWithLastNameSmith.get(1).getPerson().getLastName());
 
-    List<Account> accountsWithLastNameDzban =
-        accountFacadeOperations.findAllByLastName(lastNameDzban);
-    assertEquals(1, accountsWithLastNameDzban.size());
-    assertEquals(lastNameDzban, accountsWithLastNameDzban.get(0).getPerson().getLastName());
+      List<Account> accountsWithLastNameDzban =
+          accountFacadeOperations.findAllByLastName(lastNameDzban);
+      assertEquals(1, accountsWithLastNameDzban.size());
+      assertEquals(lastNameDzban, accountsWithLastNameDzban.get(0).getPerson().getLastName());
 
-    List<Account> accountsWithLastNameKizo =
-        accountFacadeOperations.findAllByLastName(lastNameKizo);
-    assertEquals(0, accountsWithLastNameKizo.size());
-
+      List<Account> accountsWithLastNameKizo =
+          accountFacadeOperations.findAllByLastName(lastNameKizo);
+      assertEquals(0, accountsWithLastNameKizo.size());
+    });
     utx.commit();
   }
 
   @Test
-  public void properlyGetsAccountByLogin() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyGetsAccountByLogin() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
-    assertEquals(persistedAccount,
-        accountFacadeOperations.findByLogin(persistedAccount.getLogin()).orElse(null));
+    salesRep.call(() -> {
+      assertEquals(persistedAccount,
+          accountFacadeOperations.findByLogin(persistedAccount.getLogin()).orElse(null));
+    });
     utx.commit();
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenAccountDoesNotExist() {
+  void failsToGetAccountByLoginWhenAccountDoesNotExist() {
     assertThrows(EJBException.class, () -> accountFacadeOperations.findByLogin("login"));
   }
 
   @Test
-  public void properlyGetsAccountsByAddressId() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyGetsAccountsByAddressId() throws Exception {
     utx.begin();
     assertDoesNotThrow(() -> accountFacadeOperations.create(account));
-    List<Account> accountsWithSameAddress =
-        accountFacadeOperations.findAllByAddressId(address.getId());
+
+    admin.call(() -> {
+      List<Account> accountsWithSameAddress =
+          accountFacadeOperations.findAllByAddressId(address.getId());
+
+      assertEquals(1, accountsWithSameAddress.size());
+      assertEquals(address, accountsWithSameAddress.get(0).getPerson().getAddress());
+    });
     utx.commit();
-    assertEquals(1, accountsWithSameAddress.size());
-    assertEquals(address, accountsWithSameAddress.get(0).getPerson().getAddress());
 
   }
 
   @Test
-  public void properlyGetsAccountByEmail() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyGetsAccountByEmail() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
-    assertEquals(persistedAccount,
-        accountFacadeOperations.findByEmail(persistedAccount.getEmail()).orElse(null));
+    admin.call(() -> {
+      assertEquals(persistedAccount,
+          accountFacadeOperations.findByEmail(persistedAccount.getEmail()).orElse(null));
+    });
     utx.commit();
   }
 
   @Test
-  public void failsToGetAccountByEmailWhenAccountDoesNotExist() {
-    assertThrows(EJBException.class, () -> accountFacadeOperations.findByEmail("email"));
+  void failsToGetAccountByEmailWhenAccountDoesNotExist() {
+    admin.call(() -> {
+      assertFalse(accountFacadeOperations.findByEmail("email").isPresent());
+    });
   }
 
   @Test
-  public void properlyDeletesAccount() throws Exception {
+  void properlyDeletesAccount() throws Exception {
     utx.begin();
-    assertEquals(0, accountFacadeOperations.findAll().size());
-    accountFacadeOperations.create(account);
-    assertEquals(1, accountFacadeOperations.findAll().size());
-    accountFacadeOperations.delete(account);
-    assertEquals(0, accountFacadeOperations.findAll().size());
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(account);
+      assertEquals(1, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.delete(account);
+      assertEquals(0, accountFacadeOperations.findAll().size());
+    });
     utx.commit();
   }
 }
