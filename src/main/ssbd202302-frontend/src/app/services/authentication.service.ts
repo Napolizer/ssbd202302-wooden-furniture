@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {TokenService} from "./token.service";
 import {Role} from "../enums/role";
 import { AccountGoogleRegister } from '../interfaces/google.register';
+import {AccountRegister} from "../interfaces/account.register";
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,39 @@ export class AuthenticationService {
         `${environment.apiBaseUrl}/account/google/redirect`,
         params.toString(),
         {
-          headers: { 
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept-Language': locale
+          },
+          observe: 'response',
+        }
+      )
+      .pipe(first());
+  }
+
+  public getGithubOauthLink(): Observable<string> {
+    return this.httpClient
+      .get(`${environment.apiBaseUrl}/account/github/login`)
+      .pipe(
+        first(),
+        map((response: any) => response.url)
+      );
+  }
+
+  public registerGithubAccount(account: AccountRegister): Observable<string> {
+    return this.httpClient.post(
+      `${environment.apiBaseUrl}/account/github/register`, account)
+      .pipe(first(), map((response: any) => response.token));
+  }
+
+  public handleGithubRedirect(code: string, locale: string): Observable<any> {
+    const params = new HttpParams().set('code', code);
+    return this.httpClient
+      .post(
+        `${environment.apiBaseUrl}/account/github/redirect`,
+        params.toString(),
+        {
+          headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept-Language': locale
           },

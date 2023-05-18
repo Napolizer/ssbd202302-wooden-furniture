@@ -25,6 +25,7 @@ import {CreateAccountComponent} from './pages/create-account/create-account.comp
 import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/change-password-confirm.component";
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import { AccountType } from './enums/account.type';
+import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
 
 const routes: Routes = [
   {
@@ -39,6 +40,14 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.GUEST]
+    }
+  },
+  {
+    path: 'github',
+    component: GithubRedirectComponent,
     canActivate: [AuthGuard],
     data: {
       roles: [Role.GUEST]

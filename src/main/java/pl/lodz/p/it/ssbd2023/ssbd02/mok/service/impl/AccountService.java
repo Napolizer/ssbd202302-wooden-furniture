@@ -206,6 +206,14 @@ public class AccountService extends AbstractService {
     accountFacade.create(account);
   }
 
+  @PermitAll
+  public void registerGithubAccount(Account account) {
+    account.setAccountState(AccountState.ACTIVE);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setAccountType(AccountType.GITHUB);
+    accountFacade.create(account);
+  }
+
   @RolesAllowed(ADMINISTRATOR)
   public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);

@@ -17,6 +17,7 @@
   "login.success": "Zalogowano pomyślnie!",
   "login.forgot.password": "Nie pamiętasz hasła?",
   "login.google.button": "Zaloguj się za pomocą Google",
+  "login.github.button": "Zaloguj się za pomocą Github",
 
   "forgot.password.title": "Podaj swój adres email",
   "forgot.password.button": "Wyślij",
@@ -86,6 +87,9 @@
 
   "google.register.title": "Dokończ proces rejestracji",
   "google.register.button": "Potwierdź",
+
+  "github.register.title": "Dokończ proces rejestracji",
+  "github.register.button": "Zatwierdź",
 
   "create.account.button": "Utwórz",
   "create.account.title": "Utwórz nowe konto",
@@ -163,6 +167,7 @@
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
   "dialog.edit.locale": "Czy na pewno chcesz zmienić język?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",
+  "dialog.github.register.message": "Czy na pewno chcesz powiązać swoje konto Github z kontem w naszym systemie?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",

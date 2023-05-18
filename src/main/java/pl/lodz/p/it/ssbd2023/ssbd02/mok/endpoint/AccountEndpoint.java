@@ -34,6 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
@@ -50,6 +51,8 @@ public class AccountEndpoint extends AbstractEndpoint {
   private GoogleService googleService;
   @Inject
   private AuthenticationService authenticationService;
+  @Inject
+  private GithubService githubService;
 
 
   @PermitAll
@@ -209,6 +212,31 @@ public class AccountEndpoint extends AbstractEndpoint {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(googleAccountRegisterDto);
     repeatTransaction(() -> accountService.registerGoogleAccount(account));
     String token = authenticationService.loginWithGoogle(account.getEmail(), ip, account.getLocale());
+    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+  }
+
+  @PermitAll
+  public Response handleGithubRedirect(String githubCode, String ip, String locale) {
+    Account account = githubService.getRegisteredAccountOrCreateNew(githubCode);
+
+    if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
+      String token = authenticationService.loginWithGithub(account.getEmail(), ip, locale);
+      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+    } else {
+      return Response.accepted().entity(DtoToEntityMapper.mapAccountToGithubAccountInfoDto(account)).build();
+    }
+  }
+
+  @PermitAll
+  public String getGithubOauthLink() {
+    return repeatTransaction(() -> githubService.getGithubOauthLink());
+  }
+
+  @PermitAll
+  public Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip) {
+    Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(githubAccountRegisterDto);
+    repeatTransaction(() -> accountService.registerGithubAccount(account));
+    String token = authenticationService.loginWithGithub(account.getEmail(), ip, account.getLocale());
     return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
