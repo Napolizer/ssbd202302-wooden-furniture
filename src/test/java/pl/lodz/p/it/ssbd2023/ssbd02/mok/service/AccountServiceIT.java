@@ -579,27 +579,6 @@ public class AccountServiceIT {
   }
 
   @Test
-  void properlyChangesPasswordAsAdmin() {
-    String newPassword = "newPassword";
-    admin.call(() -> {
-      assertEquals(account.getPassword(),
-          accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-      assertDoesNotThrow(() -> accountService.changePasswordAsAdmin(account.getLogin(), newPassword));
-      assertEquals(newPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-    });
-  }
-
-  @Test
-  void failsToChangePasswordAsAdminWhenGivenOldPassword() throws AccountNotFoundException {
-    String oldPassword = account.getPassword();
-    admin.call(() -> {
-      assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-      accountService.changePasswordAsAdmin(account.getLogin(), oldPassword);
-      assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
-    });
-  }
-
-  @Test
   void properlyBlocksActiveAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     assertEquals(AccountState.ACTIVE, account.getAccountState());
     utx.begin();

@@ -24,6 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -33,10 +34,13 @@ public class EmailSendingRetryService {
   private Long expirationAccountConfirmation;
   private Long expirationPasswordReset;
   private Long expirationChangeEmail;
+  private Long expirationChangePassword;
   @Resource
   private TimerService timerService;
   @Inject
   private MailService mailService;
+  @Inject
+  private AccountService accountService;
   @Inject
   private AccountFacadeOperations accountFacade;
 
@@ -48,6 +52,7 @@ public class EmailSendingRetryService {
       expirationAccountConfirmation = Long.parseLong(prop.getProperty("expiration.account.confirmation.milliseconds"));
       expirationPasswordReset = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
       expirationChangeEmail = Long.parseLong(prop.getProperty("expiration.change.email.milliseconds"));
+      expirationChangePassword = Long.parseLong(prop.getProperty("expiration.password.change.milliseconds"));
     } catch (Exception e) {
       throw new RuntimeException("Error loading configuration file: " + e.getMessage());
     }
@@ -75,6 +80,10 @@ public class EmailSendingRetryService {
       );
       case PASSWORD_RESET -> timerService.createSingleActionTimer(
               expirationPasswordReset / 2,
+              new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token }, false)
+      );
+      case CHANGE_PASSWORD -> timerService.createSingleActionTimer(
+              expirationChangePassword,
               new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token }, false)
       );
       default -> throw new RuntimeException();
@@ -107,6 +116,11 @@ public class EmailSendingRetryService {
         Long time = (Long) info[4];
         if (account.getAccountState().equals(AccountState.NOT_VERIFIED)) {
           checkTimer(account, token, time);
+        }
+      }
+      case CHANGE_PASSWORD -> {
+        if (hashOrEmail.equals(account.getPassword())) {
+          accountService.blockAccount(account.getId());
         }
       }
       default -> throw new RuntimeException();
@@ -163,4 +177,5 @@ public class EmailSendingRetryService {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
+
 }

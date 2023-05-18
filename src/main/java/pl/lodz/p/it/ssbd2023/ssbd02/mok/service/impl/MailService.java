@@ -43,6 +43,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendMailWithInfoAboutConfirmingAccount(String to, String locale)
           throws MessagingException {
     sendMail(to,
@@ -89,6 +90,16 @@ public class MailService {
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE1)
             + " " + groupName
             + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE2)
+    );
+  }
+
+  @PermitAll
+  public void sendMailWithPasswordChangeLink(String to, String locale, String token)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
+                    + ("\n" + appUrl + "/change-password/confirm?token=" + token)
     );
   }
 

@@ -115,6 +115,12 @@ export class AccountService {
     );
   }
 
+  public validateChangePasswordToken(token: string): Observable<HttpResponse<any>> {
+    return this.httpClient.get(
+      `${environment.apiBaseUrl}/account/change-password/confirm?token=${token}`,
+      { observe: 'response' }
+    );
+  }
   public resetPassword(token: string, password: ResetPassword): Observable<HttpResponse<any>> {
     return this.httpClient.put(
       `${environment.apiBaseUrl}/account/reset-password?token=${token}`,
@@ -127,6 +133,33 @@ export class AccountService {
     return this.httpClient.put(
       `${environment.apiBaseUrl}/account/self/changePassword`,
       password,
+      {
+        observe: 'response',
+        headers: {
+          Authorization: `Bearer ${ this.tokenService.getToken() }`
+        },
+      }
+    )
+  }
+
+  public changePasswordFromLink(password: ChangePassword, token: string): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/self/changePassword/link?token=${token}`,
+      password,
+      {
+        observe: 'response',
+        headers: {
+          Authorization: `Bearer ${ this.tokenService.getToken() }`
+        },
+      }
+    )
+  }
+
+
+  public changeUserPassword(login: string): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/login/${login}/changePasswordAsAdmin`,
+      null,
       {
         observe: 'response',
         headers: {

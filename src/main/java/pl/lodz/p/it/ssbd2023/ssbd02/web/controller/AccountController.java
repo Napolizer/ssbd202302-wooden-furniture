@@ -212,23 +212,28 @@ public class AccountController {
   }
 
   @PUT
+  @Path("/self/changePassword/link")
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
+                                         @QueryParam("token") String token)
+          throws AccountNotFoundException {
+
+    Account account = accountEndpoint.changePasswordFromLink(token, changePasswordDto.getPassword(),
+            changePasswordDto.getCurrentPassword());
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
+
+    return Response.ok(changedAccount).build();
+  }
+
+  @PUT
   @Path("/login/{login}/changePasswordAsAdmin")
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed(ADMINISTRATOR)
-  public Response changePasswordAsAdmin(@PathParam("login") String login,
-                                        @NotNull @Valid ChangePasswordDto changePasswordDto) {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    Account account = accountEndpoint.getAccountByLogin(login).get();
-    if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-      throw ApplicationExceptionFactory.createOldPasswordGivenException();
-    }
-    accountEndpoint.changePasswordAsAdmin(login,
-        changePasswordDto.getPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
-        accountEndpoint.getAccountByLogin(login).get());
-    return Response.ok(changedAccount).build();
+  @RolesAllowed({ADMINISTRATOR})
+  public Response changePasswordAsAdmin(@PathParam("login") String login) {
+
+    accountEndpoint.changePasswordAsAdmin(login);
+    return Response.ok().build();
   }
 
   @POST
@@ -325,6 +330,13 @@ public class AccountController {
   @Path("/reset-password")
   public Response validatePasswordResetToken(@QueryParam("token") String token) {
     accountEndpoint.validateEmailToken(token, TokenType.PASSWORD_RESET);
+    return Response.ok().build();
+  }
+
+  @GET
+  @Path("/change-password/confirm")
+  public Response validateChangePasswordToken(@QueryParam("token") String token) {
+    accountEndpoint.validateEmailToken(token, TokenType.CHANGE_PASSWORD);
     return Response.ok().build();
   }
 

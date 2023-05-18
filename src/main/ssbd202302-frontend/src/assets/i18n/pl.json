@@ -35,6 +35,7 @@
   "change.password.new": "Nowe hasło",
   "change.password.new.repeat": "Powtórz nowe hasło",
   "change.password.validity.matching": "Nowe hasło nie może być takie samo jak obecne",
+  "change.password.user.send": "Żądanie zmiany hasła wysłane na adres e-mail użytkownika",
 
   "register.title": "Utwórz konto",
   "register.checkbox": "Przedstawiciel firmy",
