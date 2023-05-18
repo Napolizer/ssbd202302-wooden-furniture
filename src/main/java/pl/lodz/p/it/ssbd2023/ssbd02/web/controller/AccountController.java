@@ -211,6 +211,20 @@ public class AccountController {
   }
 
   @PUT
+  @Path("/self/changePassword/link")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
+                                         @QueryParam("token") String token)
+          throws AccountNotFoundException {
+
+    Account account = accountEndpoint.changePassword(login, changePasswordDto.getPassword(),
+            changePasswordDto.getCurrentPassword());
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
+
+    return Response.ok(changedAccount).build();
+  }
+
+  @PUT
   @Path("/login/{login}/changePasswordAsAdmin")
   @Produces(MediaType.APPLICATION_JSON)
   public Response changePasswordAsAdmin(@PathParam("login") String login) {

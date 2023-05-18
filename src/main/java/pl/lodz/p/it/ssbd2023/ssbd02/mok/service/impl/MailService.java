@@ -79,7 +79,7 @@ public class MailService {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
-                    + ("\n" + appUrl + "/change-password/token?" + token)
+                    + ("\n" + appUrl + "/change-password/confirm?token=" + token)
     );
   }
 

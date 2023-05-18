@@ -115,6 +115,12 @@ export class AccountService {
     );
   }
 
+  public validateChangePasswordToken(token: string): Observable<HttpResponse<any>> {
+    return this.httpClient.get(
+      `${environment.apiBaseUrl}/account/change-password/confirm?token=${token}`,
+      { observe: 'response' }
+    );
+  }
   public resetPassword(token: string, password: ResetPassword): Observable<HttpResponse<any>> {
     return this.httpClient.put(
       `${environment.apiBaseUrl}/account/reset-password?token=${token}`,
