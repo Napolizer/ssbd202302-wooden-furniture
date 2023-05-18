@@ -139,7 +139,12 @@ export class AccountService {
   public editOwnAccount(login: string, account: EditAccount): Observable<EditAccount> {
     return this.httpClient.put<EditAccount>(
       `${environment.apiBaseUrl}/account/login/` + login + `/editOwnAccount`,
-      account
+      account,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
     );
   }
 
