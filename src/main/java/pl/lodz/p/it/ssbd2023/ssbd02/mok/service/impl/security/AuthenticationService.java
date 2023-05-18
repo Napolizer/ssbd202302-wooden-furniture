@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
@@ -14,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
+@DenyAll
 public class AuthenticationService {
   @Inject
   private AccountFacadeOperations accountFacade;
@@ -22,6 +25,7 @@ public class AuthenticationService {
   @Inject
   private TokenService tokenService;
 
+  @PermitAll
   public String login(String login, String password, String ip) throws AuthenticationException {
     if (password == null) {
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
@@ -40,6 +44,7 @@ public class AuthenticationService {
     return tokenService.generateToken(account);
   }
 
+  @PermitAll
   private void validateAccount(Account account, String password, String ip) throws AuthenticationException {
     if (account.getArchive()) {
       throw ApplicationExceptionFactory.createAccountArchiveException();
@@ -66,6 +71,7 @@ public class AuthenticationService {
     }
   }
 
+  @PermitAll
   private void tryBlockAccountOperation(Account account)
       throws MessagingException, AccountNotFoundException {
     if (account.getFailedLoginCounter() == 3) {
@@ -77,6 +83,7 @@ public class AuthenticationService {
     accountFacade.update(account);
   }
 
+  @PermitAll
   private void tryBlockAccount(Account account) {
     try {
       tryBlockAccountOperation(account);
