@@ -3,6 +3,7 @@ import {LocalStorageService} from './local-storage.service';
 import {environment} from '../../environments/environment';
 import jwtDecode from "jwt-decode";
 import {TokenData} from "../interfaces/token.data";
+import { AccountType } from '../enums/account.type';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,23 @@ export class TokenService {
 
   public logout(): void {
     this.localStorageService.remove(environment.tokenKey);
+    this.localStorageService.remove(environment.accountTypeKey);
   }
 
   public saveToken(token: string): void {
     this.localStorageService.set(environment.tokenKey, token);
   }
 
+  public saveAccountType(accountType: AccountType): void { 
+    this.localStorageService.set(environment.accountTypeKey, accountType);
+  }
+
   public getToken(): string | null {
     return this.localStorageService.get(environment.tokenKey);
+  }
+
+  public getAccountType(): string | null {
+    return this.localStorageService.get(environment.accountTypeKey);
   }
 
   public getExpirationTime(): number | null {

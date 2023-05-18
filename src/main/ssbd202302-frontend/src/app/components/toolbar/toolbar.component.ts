@@ -5,6 +5,8 @@ import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
 import {first, Subject, takeUntil} from "rxjs";
 import { Role } from 'src/app/enums/role';
+import { TokenService } from 'src/app/services/token.service';
+import { AccountType } from 'src/app/enums/account.type';
 
 @Component({
   selector: 'app-toolbar',
@@ -19,7 +21,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private navigationService: NavigationService,
     private authenticationService: AuthenticationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private tokenService: TokenService
   ) {
   }
 
@@ -69,6 +72,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isCurrentlyOnLoginPage(): boolean {
     return this.navigationService.isCurrentlyOnLoginPage();
+  }
+
+  isUserNormalType(): boolean {
+    return this.tokenService.getAccountType() === AccountType.NORMAL;
   }
 
   switchRole(role: string): void {

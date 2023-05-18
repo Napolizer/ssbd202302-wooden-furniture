@@ -36,6 +36,14 @@ export class AuthGuard implements CanActivate {
       if (route.data['roles'].includes(Role.GUEST) && this.authenticationService.isUserInRole(Role.GUEST)) {
         return true;
       }
+
+      if (route.data['exclude']) {
+        if (route.data['exclude'].includes(this.tokenService.getAccountType())) {
+          this.navigationService.redirectToForbiddenPage();
+          return false;
+        }
+      }
+
       if (this.authenticationService.getLogin() === null) {
         this.displayAuthenticationWarning();
         void this.navigationService.redirectToLoginPage();
