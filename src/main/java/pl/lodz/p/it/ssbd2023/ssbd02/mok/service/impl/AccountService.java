@@ -204,10 +204,10 @@ public class AccountService extends AbstractService {
 
   public void changePasswordAsAdmin(String login) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
-
+    emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
+            TokenType.CHANGE_PASSWORD, account.getPassword());
     try {
-      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(),
-              account.getLocale());
+      mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale());
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
