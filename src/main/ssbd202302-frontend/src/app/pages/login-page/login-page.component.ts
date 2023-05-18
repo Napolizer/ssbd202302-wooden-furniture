@@ -119,11 +119,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: (url) => {
-          console.log(url)
           window.location.href = url;
         },
-        error: (e) => {
-          console.log(e)
+        error: () => {
           this.navigationService.redirectToNotFoundPage();
         }
       })

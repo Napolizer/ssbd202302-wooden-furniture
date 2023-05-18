@@ -16,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -167,6 +168,7 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setAccountType(AccountType.NORMAL);
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
@@ -182,6 +184,7 @@ public class AccountService extends AbstractService {
   public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
+    account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     return accountFacade.create(account);
   }

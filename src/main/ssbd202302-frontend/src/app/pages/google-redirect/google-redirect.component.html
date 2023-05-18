@@ -1,0 +1,339 @@
+<div class="container">
+  <div class="panel" [@loadedUnloadedForm]="{ value: getFormAnimationState() }">
+    <div class="image-container">
+      <img
+        class="background-image"
+        src="assets/images/register-page-furnitures.jpg"
+        alt=""
+      />
+    </div>
+    <form class="form-container" [formGroup]="finishRegistrationForm">
+      <p class="form-title">{{ "google.register.title" | translate }}</p>
+
+      <div class="form">
+        <app-spinner [loading]="loading"></app-spinner>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.20' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.login" | translate }}</mat-label>
+            <input
+              matInput
+              #login
+              type="text"
+              formControlName="login"
+              maxlength="20"
+              required
+            />
+            <mat-error
+              *ngIf="finishRegistrationForm.get('login')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="finishRegistrationForm.get('login')?.hasError('pattern')"
+              >{{ "login.validity.patternMismatch" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="finishRegistrationForm.get('login')?.hasError('minlength')"
+              >{{ "login.validity.tooShort" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ login.value.length }}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.20' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.firstName" | translate }}</mat-label>
+            <input
+              matInput
+              #firstName
+              type="text"
+              formControlName="firstName"
+              maxlength="20"
+              required
+            />
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('firstName')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('firstName')?.hasError('pattern')
+              "
+              >{{
+                "register.validity.person.patternMismatch" | translate
+              }}</mat-error
+            >
+            <mat-hint align="end">{{ firstName.value.length }}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.20' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.lastName" | translate }}</mat-label>
+            <input
+              matInput
+              #lastName
+              type="text"
+              formControlName="lastName"
+              maxlength="20"
+              required
+            />
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('lastName')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('lastName')?.hasError('pattern')
+              "
+              >{{
+                "register.validity.person.patternMismatch" | translate
+              }}</mat-error
+            >
+            <mat-hint align="end">{{ lastName.value.length }}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.20' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.street" | translate }}</mat-label>
+            <input
+              matInput
+              #street
+              type="text"
+              formControlName="street"
+              maxlength="20"
+              required
+            />
+            <mat-error
+              *ngIf="finishRegistrationForm.get('street')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="finishRegistrationForm.get('street')?.hasError('pattern')"
+              >{{
+                "register.validity.person.patternMismatch" | translate
+              }}</mat-error
+            >
+            <mat-hint align="end">{{ street.value.length }}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.4' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{
+              "register.label.streetNumber" | translate
+            }}</mat-label>
+            <input
+              matInput
+              #streetNumber
+              type="number"
+              formControlName="streetNumber"
+              max="9999"
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 4);"
+              required
+            />
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('streetNumber')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('streetNumber')?.hasError('min')
+              "
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ streetNumber.value.length }}/4</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.20' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.country" | translate }}</mat-label>
+            <input
+              matInput
+              #country
+              type="text"
+              formControlName="country"
+              maxlength="20"
+              required
+            />
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('country')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="finishRegistrationForm.get('country')?.hasError('pattern')"
+              >{{
+                "register.validity.person.patternMismatch" | translate
+              }}</mat-error
+            >
+            <mat-hint align="end">{{ country.value.length }}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.20' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.city" | translate }}</mat-label>
+            <input
+              matInput
+              #city
+              type="text"
+              formControlName="city"
+              maxlength="20"
+              required
+            />
+            <mat-error
+              *ngIf="finishRegistrationForm.get('city')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="finishRegistrationForm.get('city')?.hasError('pattern')"
+              >{{
+                "register.validity.person.patternMismatch" | translate
+              }}</mat-error
+            >
+            <mat-hint align="end">{{ city.value.length }}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.6' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "register.label.postalCode" | translate }}</mat-label>
+            <input
+              matInput
+              #postalCode
+              type="text"
+              placeholder="00-000"
+              formControlName="postalCode"
+              maxlength="6"
+              required
+            />
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('postalCode')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('postalCode')?.hasError('pattern')
+              "
+              >{{ "register.validity.format" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ postalCode.value.length }}/6</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.10' | translate }}"
+            appearance="fill"
+            class="input"
+            *ngIf="checked"
+          >
+            <mat-label>{{ "register.label.nip" | translate }}</mat-label>
+            <input
+              matInput
+              #nip
+              type="text"
+              formControlName="nip"
+              digitOnly
+              maxlength="10"
+              required
+            />
+            <mat-error
+              *ngIf="finishRegistrationForm.get('nip')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="finishRegistrationForm.get('nip')?.hasError('minlength')"
+              >{{ "register.validity.nip.tooShort" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ nip.value.length }}/10</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-create">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.32' | translate }}"
+            appearance="fill"
+            class="input"
+            *ngIf="checked"
+          >
+            <mat-label>{{
+              "register.label.company.name" | translate
+            }}</mat-label>
+            <input
+              matInput
+              #companyName
+              type="text"
+              formControlName="companyName"
+              maxlength="32"
+              required
+            />
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('companyName')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="
+                finishRegistrationForm.get('companyName')?.hasError('pattern')
+              "
+              >{{
+                "register.validity.companyName.patternMismatch" | translate
+              }}</mat-error
+            >
+            <mat-hint align="end">{{ companyName.value.length }}/32</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-checkbox">
+          <mat-checkbox
+            color="primary"
+            [(ngModel)]="checked"
+            (ngModelChange)="onCheck()"
+            [ngModelOptions]="{ standalone: true }"
+            >{{ "register.checkbox" | translate }}</mat-checkbox
+          >
+        </div>
+        <div class="button-container">
+          <button mat-button type="submit" (click)="onConfirm()">
+            {{ "google.register.button" | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -8,10 +8,9 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
@@ -146,13 +145,13 @@ public class AccountEndpoint {
   }
 
   public Response handleGoogleRedirect(String code, String state, String ip) {
-   Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
+    Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
       String token = authenticationService.loginWithGoogle(account.getEmail(), ip);
       return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
     } else {
-      return Response.accepted().build();
+      return Response.accepted().entity(DtoToEntityMapper.mapAccountToGoogleAccountInfoDto(account)).build();
     }
   }
 

@@ -28,16 +28,26 @@ export class AuthenticationService {
   }
 
   public getGoogleOauthLink(): Observable<string> {
-    return this.httpClient.get(`${environment.apiBaseUrl}/account/google/login`)
-      .pipe(first(), map((response: any) => response.url));
+    return this.httpClient
+      .get(`${environment.apiBaseUrl}/account/google/login`)
+      .pipe(
+        first(),
+        map((response: any) => response.url)
+      );
   }
 
-  public handleGoogleRedirect(code : string, state : string): Observable<any> {
+  public handleGoogleRedirect(code: string, state: string): Observable<any> {
     const params = new HttpParams().set('code', code).set('state', state);
-    return this.httpClient.post(`${environment.apiBaseUrl}/account/google/redirect`, params.toString(), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      observe: 'response'
-    });
+    return this.httpClient
+      .post(
+        `${environment.apiBaseUrl}/account/google/redirect`,
+        params.toString(),
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          observe: 'response',
+        }
+      )
+      .pipe(first());
   }
 
   public logout(): void {

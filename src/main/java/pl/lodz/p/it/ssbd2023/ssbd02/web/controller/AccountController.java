@@ -361,7 +361,6 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public Response handleGoogleRedirect(@FormParam("code") String code,
                                        @FormParam("state") String state) {
-    accountEndpoint.handleGoogleRedirect(code, state, servletRequest.getRemoteAddr());
-    return Response.ok().build();
+    return accountEndpoint.handleGoogleRedirect(code, state, servletRequest.getRemoteAddr());
   }
 }
