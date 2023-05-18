@@ -26,6 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
+import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.ClientAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
@@ -36,6 +38,10 @@ public class AccountServiceIT {
   private UserTransaction utx;
   @Inject
   private AccountService accountService;
+  @Inject
+  private AdminAuth admin;
+  @Inject
+  private ClientAuth client;
 
   private Account account;
   private Account accountToRegister;
@@ -43,13 +49,14 @@ public class AccountServiceIT {
   @Deployment
   public static WebArchive createDeployment() {
     return ShrinkWrap.create(WebArchive.class)
-            .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
-            .addPackages(true, "org.postgresql")
-            .addPackages(true, "org.hamcrest")
-            .addPackages(true, "at.favre.lib")
-            .addPackages(true, "io.jsonwebtoken")
-            .addPackages(true, "javax.xml.bind")
-            .addAsResource(new File("src/test/resources/"), "");
+        .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
+        .addPackages(true, "org.postgresql")
+        .addPackages(true, "org.hamcrest")
+        .addPackages(true, "at.favre.lib")
+        .addPackages(true, "io.jsonwebtoken")
+        .addPackages(true, "javax.xml.bind")
+        .addAsResource(new File("src/test/resources/"), "")
+        .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }
 
   @BeforeEach
@@ -106,93 +113,93 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyGetsAccountByLogin() {
+  void properlyGetsAccountByLogin() {
     Optional<Account> accountOptional = accountService.getAccountByLogin(account.getLogin());
     assertThat(accountOptional.isPresent(), is(equalTo(true)));
     assertThat(accountOptional.get(), is(equalTo(account)));
   }
 
   @Test
-  public void failsToGetAccountByEmailWhenEmailIsNull() {
+  void failsToGetAccountByEmailWhenEmailIsNull() {
     Optional<Account> accountOptional = accountService.getAccountByEmail(null);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByEmailWhenEmailIsEmpty() {
+  void failsToGetAccountByEmailWhenEmailIsEmpty() {
     Optional<Account> accountOptional = accountService.getAccountByEmail("");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByEmailWhenEmailDoesNotExist() {
+  void failsToGetAccountByEmailWhenEmailDoesNotExist() {
     Optional<Account> accountOptional = accountService.getAccountByLogin("nonexistent@gmail.com");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void properlyGetsAccountById() {
+  void properlyGetsAccountById() {
     Optional<Account> accountOptional = accountService.getAccountById(account.getId());
     assertThat(accountOptional.isPresent(), is(equalTo(true)));
     assertThat(accountOptional.get(), is(equalTo(account)));
   }
 
   @Test
-  public void failsToGetAccountByIdWhenIdDoesNotExist() {
+  void failsToGetAccountByIdWhenIdDoesNotExist() {
     Optional<Account> accountOptional = accountService.getAccountById(0L);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByIdWhenIdIsNull() {
+  void failsToGetAccountByIdWhenIdIsNull() {
     assertNull(accountService.getAccountById(null).orElse(null));
   }
 
   @Test
-  public void failsToGetAccountByIdWhenIdIsNegative() {
+  void failsToGetAccountByIdWhenIdIsNegative() {
     Optional<Account> accountOptional = accountService.getAccountById(-1L);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByIdWhenIdIsMaxLong() {
+  void failsToGetAccountByIdWhenIdIsMaxLong() {
     Optional<Account> accountOptional = accountService.getAccountById(Long.MAX_VALUE);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByIdWhenIdIsMinLong() {
+  void failsToGetAccountByIdWhenIdIsMinLong() {
     Optional<Account> accountOptional = accountService.getAccountById(Long.MIN_VALUE);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void properlyGetsAccountByEmail() {
+  void properlyGetsAccountByEmail() {
     Optional<Account> accountOptional = accountService.getAccountByEmail(account.getEmail());
     assertThat(accountOptional.isPresent(), is(equalTo(true)));
     assertThat(accountOptional.get(), is(equalTo(account)));
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenLoginIsNull() {
+  void failsToGetAccountByLoginWhenLoginIsNull() {
     Optional<Account> accountOptional = accountService.getAccountByLogin(null);
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenLoginIsEmpty() {
+  void failsToGetAccountByLoginWhenLoginIsEmpty() {
     Optional<Account> accountOptional = accountService.getAccountByLogin("");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void failsToGetAccountByLoginWhenLoginDoesNotExist() {
+  void failsToGetAccountByLoginWhenLoginDoesNotExist() {
     Optional<Account> accountOptional = accountService.getAccountByLogin("nonexistent");
     assertThat(accountOptional.isPresent(), is(equalTo(false)));
   }
 
   @Test
-  public void properlyGetsAllAccounts() {
+  void properlyGetsAllAccounts() {
     List<Account> accounts = accountService.getAccountList();
     assertThat(accounts.isEmpty(), is(false));
     assertThat(accounts.size(), is(equalTo(1)));
@@ -200,14 +207,14 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyGetsEmptyAccountList() throws Exception {
+  void properlyGetsEmptyAccountList() throws Exception {
     teardown();
     List<Account> accounts = accountService.getAccountList();
     assertThat(accounts.isEmpty(), is(true));
   }
 
   @Test
-  public void properlyAddsNewAccessLevelToAccount()
+  void properlyAddsNewAccessLevelToAccount()
           throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
     AccessLevel newAccessLevel = new Client();
 
@@ -219,7 +226,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToAddAccessLevelWhenAccessLevelIsAdded()
+  void failsToAddAccessLevelWhenAccessLevelIsAdded()
           throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
     AccessLevel newAccessLevel = new Client();
 
@@ -232,7 +239,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToAddAnyAccessLevelLevelWhenAdministratorAccessLevelIsAlreadyAssigned() {
+  void failsToAddAnyAccessLevelLevelWhenAdministratorAccessLevelIsAlreadyAssigned() {
     AccessLevel administratorAccessLevel = new Administrator();
     AccessLevel clientAccessLevel = new Client();
     AccessLevel employeeAccessLevel = new Employee();
@@ -253,7 +260,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToAddSalesRepAccessLevelWhenClientAccessLevelIsAlreadyAssigned() {
+  void failsToAddSalesRepAccessLevelWhenClientAccessLevelIsAlreadyAssigned() {
     AccessLevel clientAccessLevel = new Client();
     AccessLevel salesRepAccessLevel = new SalesRep();
 
@@ -266,7 +273,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToAddClientAccessLevelWhenSalesRepAccessLevelIsAlreadyAssigned() {
+  void failsToAddClientAccessLevelWhenSalesRepAccessLevelIsAlreadyAssigned() {
     AccessLevel clientAccessLevel = new Client();
     AccessLevel salesRepAccessLevel = new SalesRep();
 
@@ -279,7 +286,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyChangeAccessLevelWhenItsAlreadyOne() {
+  void properlyChangeAccessLevelWhenItsAlreadyOne() {
     AccessLevel oldAccessLevel = new Client();
     AccessLevel newAccessLevel = new Administrator();
 
@@ -297,7 +304,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToChangeAccessLevelWhenItsMoreThanOneAssigned() {
+  void failsToChangeAccessLevelWhenItsMoreThanOneAssigned() {
     AccessLevel oldAccessLevel1 = new Client();
     AccessLevel oldAccessLevel2 = new Employee();
     AccessLevel newAccessLevel = new Administrator();
@@ -314,30 +321,35 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyRemovesAccessLevelFromAccount()
-          throws AccessLevelAlreadyAssignedException, AccessLevelNotAssignedException, AccountNotFoundException {
+  void properlyRemovesAccessLevelFromAccount()
+      throws Exception {
     AccessLevel employeeAccessLevel = new Employee();
     AccessLevel clientAccessLevel = new Client();
-
 
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(0));
     accountService.addAccessLevelToAccount(account.getId(), employeeAccessLevel);
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
-    accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel);
+    admin.call(() -> {
+      accountService.addAccessLevelToAccount(account.getId(), clientAccessLevel);
+    });
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(2));
-    accountService.removeAccessLevelFromAccount(account.getId(), employeeAccessLevel);
+    admin.call(() -> {
+      accountService.removeAccessLevelFromAccount(account.getId(), employeeAccessLevel);
+    });
     assertThat(accountService.getAccountById(account.getId()).orElseThrow().getAccessLevels().size(), equalTo(1));
   }
 
   @Test
-  public void failsToRemoveAccessLevelWhenAccountHasZeroAccessLevelsAssigned() {
+  void failsToRemoveAccessLevelWhenAccountHasZeroAccessLevelsAssigned() {
     AccessLevel accessLevelClient = new Client();
-    assertThrows(RemoveAccessLevelException.class,
-            () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelClient));
+    client.call(() -> {
+      assertThrows(RemoveAccessLevelException.class,
+          () -> accountService.removeAccessLevelFromAccount(account.getId(), accessLevelClient));
+    });
   }
 
   @Test
-  public void failsToRemoveAccessLevelWhenAccountHasOnlyOneAccessLevelAssigned() {
+  void failsToRemoveAccessLevelWhenAccountHasOnlyOneAccessLevelAssigned() {
     AccessLevel accessLevelClient = new Client();
     accountService.addAccessLevelToAccount(account.getId(), accessLevelClient);
     assertThrows(RemoveAccessLevelException.class,
@@ -345,7 +357,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded()
+  void failsToRemoveAccessLevelWhenAccessLevelIsNotAdded()
           throws AccessLevelAlreadyAssignedException, AccountNotFoundException {
     AccessLevel accessLevelClient = new Client();
     AccessLevel accessLevelEmployee = new Employee();
@@ -361,7 +373,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyEditsAccountInfo() throws Exception {
+  void properlyEditsAccountInfo() throws Exception {
     Account editedAccount = Account.builder()
             .person(Person.builder()
                     .firstName("Adam")
@@ -393,7 +405,7 @@ public class AccountServiceIT {
 
 
   @Test
-  public void properlyEditsAccountInfoAsAdmin() throws Exception {
+  void properlyEditsAccountInfoAsAdmin() throws Exception {
     Account editedAccount = Account.builder()
             .email("test1@gmail.com")
             .person(Person.builder()
@@ -431,7 +443,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyRegistersAccount() {
+  void properlyRegistersAccount() {
     assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
     Account account = accountService.getAccountByLogin("test123").orElseThrow();
     assertEquals(2, accountService.getAccountList().size());
@@ -441,7 +453,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyCreatesAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyCreatesAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     accountToRegister.setAccountState(AccountState.ACTIVE);
     AccessLevel client = new Client();
     AccessLevel employee = new Employee();
@@ -456,14 +468,14 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToRegisterAccountWithSameLogin() {
+  void failsToRegisterAccountWithSameLogin() {
     accountToRegister.setLogin(account.getLogin());
     assertThrows(Exception.class, () -> accountService.registerAccount(accountToRegister));
     assertEquals(1, accountService.getAccountList().size());
   }
 
   @Test
-  public void properlyChangesPassword() {
+  void properlyChangesPassword() {
     String newPassword = "newPassword";
     assertEquals(account.getPassword(),
             accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
@@ -476,7 +488,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToChangePasswordWhenGivenOldPassword() throws AccountNotFoundException {
+  void failsToChangePasswordWhenGivenOldPassword() throws AccountNotFoundException {
     String oldPassword = account.getPassword();
     assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     assertThrows(OldPasswordGivenException.class,
@@ -485,7 +497,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyChangesPasswordAsAdmin() {
+  void properlyChangesPasswordAsAdmin() {
     String newPassword = "newPassword";
     assertEquals(account.getPassword(),
             accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
@@ -494,7 +506,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void failsToChangePasswordAsAdminWhenGivenOldPassword() throws AccountNotFoundException {
+  void failsToChangePasswordAsAdminWhenGivenOldPassword() throws AccountNotFoundException {
     String oldPassword = account.getPassword();
     assertEquals(oldPassword, accountService.getAccountByLogin(account.getLogin()).orElseThrow().getPassword());
     accountService.changePasswordAsAdmin(account.getLogin(), oldPassword);
@@ -502,7 +514,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyBlocksActiveAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyBlocksActiveAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     assertEquals(AccountState.ACTIVE, account.getAccountState());
     utx.begin();
     assertDoesNotThrow(() -> accountService.blockAccount(account.getId()));
@@ -512,7 +524,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void blockAlreadyBlockedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void blockAlreadyBlockedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
 
     utx.begin();
     accountService.createAccount(accountToRegister);
@@ -523,14 +535,14 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void blockNonExistingUserShouldThrowException() {
+  void blockNonExistingUserShouldThrowException() {
     assertThrows(AccountNotFoundException.class,
             () -> accountService.blockAccount(Long.MAX_VALUE));
   }
 
 
   @Test
-  public void properlyActivatesBlockedAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void properlyActivatesBlockedAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     accountService.createAccount(accountToRegister);
     accountService.blockAccount(accountToRegister.getId());
@@ -542,7 +554,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void activateAlreadyActivatedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void activateAlreadyActivatedAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     accountToRegister.setAccountState(AccountState.ACTIVE);
     utx.begin();
     accountService.createAccount(accountToRegister);
@@ -552,7 +564,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void activateInactiveAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  void activateInactiveAccountShouldThrowException() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     accountToRegister.setAccountState(AccountState.INACTIVE);
     utx.begin();
     accountService.createAccount(accountToRegister);
@@ -562,13 +574,13 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void activateNonExistingAccountShouldThrowException() {
+  void activateNonExistingAccountShouldThrowException() {
     assertThrows(AccountNotFoundException.class,
             () -> accountService.activateAccount(Long.MAX_VALUE));
   }
 
   @Test
-  public void properlyUpdateEmailWhenNewEmailIsSet() throws Exception {
+  void properlyUpdateEmailWhenNewEmailIsSet() throws Exception {
     utx.begin();
     accountToRegister.setAccountState(AccountState.ACTIVE);
     accountToRegister.setNewEmail("newssbd02Email@gmail.com");
@@ -582,5 +594,21 @@ public class AccountServiceIT {
     assertNull(accountAfterUpdate.getNewEmail());
     utx.commit();
   }
-
 }
+
+//
+//@Stateless
+//@RunAs("Administrator")
+//@PermitAll
+//class AdministratorArquillianConfig {
+//    public <V> V call(Callable<V> callable) throws Exception {
+//        return callable.call();
+//    }
+//}
+
+//
+//@Stateful
+//@Specializes
+//class AccountServiceTestConfiguration extends AccountService {
+//
+//}
