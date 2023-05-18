@@ -104,20 +104,12 @@ export class RemoveAccountRolePageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  changeGroupName(group: string): string {
-    if (group == 'SALES_REP') {
-      return 'SalesRep'
-    }
-    return group.charAt(0).toUpperCase() + group.slice(1).toLowerCase();
-  }
-
   removeAccountGroupFromAccount(accountGroup: string): void {
-    accountGroup = this.changeGroupName(accountGroup);
     this.accountService.removeAccountRole(this.id, accountGroup)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: () => {
-          this.translate.get('account.removegroup.success')
+          this.translate.get('account.removerole.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
               this.alertService.success(msg);

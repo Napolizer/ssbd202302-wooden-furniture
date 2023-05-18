@@ -119,7 +119,7 @@ export class ChangeAccountRolePageComponent implements OnInit {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: () => {
-          this.translate.get('account.changegroup.success')
+          this.translate.get('account.changerole.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
               this.alertService.success(msg);
