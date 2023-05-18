@@ -52,6 +52,8 @@ import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
 import { ChangePasswordConfirmComponent } from './pages/change-password-confirm/change-password-confirm.component';
+import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
+
 
 @NgModule({
   declarations: [
@@ -83,7 +85,8 @@ import { ChangePasswordConfirmComponent } from './pages/change-password-confirm/
     ChangeOwnPasswordComponent,
     DigitOnlyDirective,
     CreateAccountComponent,
-    ChangePasswordConfirmComponent
+    ChangePasswordConfirmComponent,
+    GoogleRedirectComponent
   ],
     imports: [
         BrowserModule,

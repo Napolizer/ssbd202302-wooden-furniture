@@ -14,7 +14,9 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
@@ -27,10 +29,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
@@ -42,6 +46,8 @@ public class AccountEndpoint extends AbstractEndpoint {
 
   @Inject
   private AccountService accountService;
+  @Inject
+  private GoogleService googleService;
   @Inject
   private AuthenticationService authenticationService;
 
@@ -178,6 +184,32 @@ public class AccountEndpoint extends AbstractEndpoint {
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
+  }
+
+  @PermitAll
+  public Response handleGoogleRedirect(String code, String state, String ip, String locale) {
+    Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
+
+    if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
+      String token = authenticationService.loginWithGoogle(account.getEmail(), ip, locale);
+      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+    } else {
+      return Response.accepted().entity(DtoToEntityMapper.mapAccountToGoogleAccountInfoDto(account)).build();
+    }
+  }
+
+  @PermitAll
+  public String getGoogleOauthLink() {
+    return repeatTransaction(() ->  googleService.getGoogleOauthLink());
+  }
+
+  @PermitAll
+  public Response registerGoogleAccount(GoogleAccountRegisterDto googleAccountRegisterDto, String ip) {
+    googleService.validateIdToken(googleAccountRegisterDto.getIdToken());
+    Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(googleAccountRegisterDto);
+    repeatTransaction(() -> accountService.registerGoogleAccount(account));
+    String token = authenticationService.loginWithGoogle(account.getEmail(), ip, account.getLocale());
+    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
   @Override

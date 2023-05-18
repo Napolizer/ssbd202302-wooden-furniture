@@ -100,6 +100,15 @@ public final class ApplicationExceptionFactory {
             cause, Response.Status.INTERNAL_SERVER_ERROR);
   }
 
+  public static BaseWebApplicationException createGoogleOauthConflictException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_GOOGLE_CONFLICT, Response.Status.CONFLICT);
+  }
+
+  public static BaseWebApplicationException createInvalidAccountTypeException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_INVALID_ACCOUNT_TYPE,
+            Response.Status.FORBIDDEN);
+  }
+
   public static AccessDeniedException createAccessDeniedException(Throwable cause) {
     return new AccessDeniedException(cause);
   }

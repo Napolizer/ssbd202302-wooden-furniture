@@ -15,6 +15,7 @@
   "login.password.validity.tooShort": "Password must contain at least 8 characters",
   "login.success": "You have successfully logged in!",
   "login.forgot.password": "Forgot password?",
+  "login.google.button": "Log in with Google",
 
   "forgot.password.title": "Enter your email address",
   "forgot.password.button": "Send",
@@ -82,6 +83,9 @@
   "register.confirm.second": "We hope you find what you're looking for and enjoy shopping with us!",
   "register.confirm.third": "If you have already verified your account, ",
   "register.confirm.fourth": "you can now log in.",
+
+  "google.register.title": "Complete registration process",
+  "google.register.button": "Confirm",
 
   "create.account.button": "Create",
   "create.account.title": "Create new account",
@@ -159,6 +163,7 @@
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
   "dialog.edit.locale": "Are you sure you want to change language?",
+  "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -193,6 +198,8 @@
   "exception.mok.account.remove.access.level": "Chosen role is not assigned to account or it's the only role that is assigned to declared account",
   "exception.mok.account.administrator.access.level.already.assigned": "Account with Administrator role cant have any other role",
   "exception.mok.account.change.state": "The requested account state change cannot be performed due to restrictions or the account is already active",
+  "exception.google.conflict": "Account already exists, please log in using your regular credentials",
+  "exception.invalid.account.type": "You are not allowed to perform this action because this account was registered with an external service",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",

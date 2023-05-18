@@ -10,6 +10,8 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
 import {DatePipe, Location } from "@angular/common";
+import { TokenService } from 'src/app/services/token.service';
+import { AccountType } from 'src/app/enums/account.type';
 
 @Component({
   selector: 'app-account-page',
@@ -51,7 +53,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private location: Location
+    private location: Location,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +123,10 @@ export class AccountPageComponent implements OnInit, OnDestroy {
       case 'NOT_VERIFIED': return 'account.state.notVerified';
       default: return 'account.state.active';
     }
+  }
+
+  isUserNormalType(): boolean {
+    return this.tokenService.getAccountType() === AccountType.NORMAL;
   }
 
   getRoles(): string {

@@ -8,6 +8,8 @@ import { Role } from 'src/app/enums/role';
 import {AccountService} from "../../services/account.service";
 import {ChangeLocale} from "../../interfaces/change.locale";
 import {DialogService} from "../../services/dialog.service";
+import { TokenService } from 'src/app/services/token.service';
+import { AccountType } from 'src/app/enums/account.type';
 
 @Component({
   selector: 'app-toolbar',
@@ -26,6 +28,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private navigationService: NavigationService,
     private authenticationService: AuthenticationService,
     private translate: TranslateService,
+    private tokenService: TokenService,
     private accountService: AccountService,
     private dialogService: DialogService
   ) {
@@ -81,6 +84,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isCurrentlyOnLoginPage(): boolean {
     return this.navigationService.isCurrentlyOnLoginPage();
+  }
+
+  isUserNormalType(): boolean {
+    return this.tokenService.getAccountType() === AccountType.NORMAL;
   }
 
   switchRole(role: string): void {

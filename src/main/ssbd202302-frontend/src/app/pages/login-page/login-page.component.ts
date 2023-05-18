@@ -8,6 +8,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from "@ngx-translate/core";
 import { Location } from '@angular/common';
 import { NavigationService } from 'src/app/services/navigation.service';
+import { AccountType } from 'src/app/enums/account.type';
 
 @Component({
   selector: 'app-login-page',
@@ -91,7 +92,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: token => {
           this.tokenService.saveToken(token);
-
+          this.tokenService.saveAccountType(AccountType.NORMAL);
           this.translate.get('login.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
@@ -110,6 +111,19 @@ export class LoginPageComponent implements OnInit, OnDestroy {
             .subscribe(data => {
               this.alertService.danger(`${data.title}: ${data.message}`);
             });
+        }
+      })
+  }
+
+  onLoginWithGoogle() : void {
+    this.authenticationService.getGoogleOauthLink()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe({
+        next: (url) => {
+          window.location.href = url;
+        },
+        error: () => {
+          this.navigationService.redirectToNotFoundPage();
         }
       })
   }

@@ -161,7 +161,8 @@ public class TokenService {
       return Jwts.parser().parseClaimsJwt(claims).getBody().getSubject();
     } catch (ExpiredJwtException eje) {
       switch (tokenType) {
-        case PASSWORD_RESET, CHANGE_PASSWORD -> throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+        case PASSWORD_RESET,
+                CHANGE_PASSWORD -> throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
         case CHANGE_EMAIL -> throw ApplicationExceptionFactory.createChangeEmailExpiredLinkException();
         default -> throw ApplicationExceptionFactory.createUnknownErrorException(eje);
       }

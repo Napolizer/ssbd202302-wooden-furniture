@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
 
 public final class DtoToEntityMapper {
   public static Account mapAccountRegisterDtoToAccount(AccountRegisterDto accountRegisterDto) {
@@ -102,5 +103,16 @@ public final class DtoToEntityMapper {
       }
       default -> throw ApplicationExceptionFactory.createInvalidAccessLevelException();
     }
+  }
+
+  public static GoogleAccountInfoDto mapAccountToGoogleAccountInfoDto(Account account) {
+    String login = account.getEmail().split("@")[0];
+    String loginCapitalized = login.substring(0, 1).toUpperCase() + login.substring(1);
+    return GoogleAccountInfoDto.builder().login(loginCapitalized)
+            .firstName(account.getPerson().getFirstName())
+            .lastName(account.getPerson().getLastName())
+            .locale(account.getLocale())
+            .idToken(account.getPassword())
+            .email(account.getEmail()).build();
   }
 }

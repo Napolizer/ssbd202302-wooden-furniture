@@ -10,6 +10,12 @@ import jakarta.transaction.*;
 import java.io.File;
 import java.util.List;
 
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -22,6 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.SalesRepAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
@@ -52,6 +59,7 @@ public class AccountFacadeOperationsIT {
         .addPackages(true, "org.postgresql")
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
+        .addPackages(true, "org.apache")
         .addAsResource(new File("src/test/resources/"), "")
         .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }
@@ -79,6 +87,7 @@ public class AccountFacadeOperationsIT {
               .person(person)
               .locale("pl")
               .accountState(AccountState.ACTIVE)
+              .accountType(AccountType.NORMAL)
               .build();
     em.createQuery("DELETE FROM access_level").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
@@ -121,6 +130,7 @@ public class AccountFacadeOperationsIT {
         .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertEquals(0, accountFacadeOperations.findAll().size());
@@ -158,6 +168,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -171,6 +182,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -184,6 +196,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -197,6 +210,7 @@ public class AccountFacadeOperationsIT {
         .email("email")
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -210,6 +224,7 @@ public class AccountFacadeOperationsIT {
         .email("email")
         .person(person)
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -223,6 +238,7 @@ public class AccountFacadeOperationsIT {
         .email("email")
         .person(person)
         .locale("pl")
+        .accountType(AccountType.NORMAL)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -243,6 +259,7 @@ public class AccountFacadeOperationsIT {
         .person(wrongPersonWithAlreadyAssignedAddress)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     utx.begin();
@@ -291,6 +308,7 @@ public class AccountFacadeOperationsIT {
         .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     Address address3 = Address.builder()
@@ -314,6 +332,7 @@ public class AccountFacadeOperationsIT {
         .person(person3)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     utx.begin();
@@ -364,6 +383,7 @@ public class AccountFacadeOperationsIT {
         .person(person2)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     Address address3 = Address.builder()
@@ -387,6 +407,7 @@ public class AccountFacadeOperationsIT {
         .person(person3)
         .locale("pl")
         .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
         .build();
 
     utx.begin();

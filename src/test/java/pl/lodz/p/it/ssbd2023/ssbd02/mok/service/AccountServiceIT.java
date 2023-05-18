@@ -57,14 +57,15 @@ public class AccountServiceIT {
   @Deployment
   public static WebArchive createDeployment() {
     return ShrinkWrap.create(WebArchive.class)
-        .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
-        .addPackages(true, "org.postgresql")
-        .addPackages(true, "org.hamcrest")
-        .addPackages(true, "at.favre.lib")
-        .addPackages(true, "io.jsonwebtoken")
-        .addPackages(true, "javax.xml.bind")
-        .addAsResource(new File("src/test/resources/"), "")
-        .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
+            .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
+            .addPackages(true, "org.postgresql")
+            .addPackages(true, "org.hamcrest")
+            .addPackages(true, "org.apache")
+            .addPackages(true, "at.favre.lib")
+            .addPackages(true, "io.jsonwebtoken")
+            .addPackages(true, "javax.xml.bind")
+            .addAsResource(new File("src/test/resources/"), "")
+            .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }
 
   @BeforeEach

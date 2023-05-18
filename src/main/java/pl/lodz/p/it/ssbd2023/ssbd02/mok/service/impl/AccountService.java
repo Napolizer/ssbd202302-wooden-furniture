@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -184,6 +185,7 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setAccountType(AccountType.NORMAL);
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
@@ -196,10 +198,19 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @PermitAll
+  public void registerGoogleAccount(Account account) {
+    account.setAccountState(AccountState.ACTIVE);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setAccountType(AccountType.GOOGLE);
+    accountFacade.create(account);
+  }
+
   @RolesAllowed(ADMINISTRATOR)
   public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
+    account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     return accountFacade.create(account);
   }
@@ -207,6 +218,10 @@ public class AccountService extends AbstractService {
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Account changePassword(String login, String newPassword, String currentPassword) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    if (!account.getAccountType().equals(AccountType.NORMAL)) {
+      throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+    }
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
       throw ApplicationExceptionFactory.createAccountNotVerifiedException();
@@ -353,6 +368,9 @@ public class AccountService extends AbstractService {
   @PermitAll
   public void sendResetPasswordEmail(String email) {
     Account account = getAccountByEmail(email).get();
+    if (!account.getAccountType().equals(AccountType.NORMAL)) {
+      throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+    }
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.PASSWORD_RESET, resetPasswordToken);
@@ -387,6 +405,11 @@ public class AccountService extends AbstractService {
     if (isAdmin || subject.getId().equals(accountId)) {
       Account account = accountFacade.findById(accountId)
               .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+      if (!account.getAccountType().equals(AccountType.NORMAL)) {
+        throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+      }
+
       account.setNewEmail(newEmail);
       accountFacade.update(account);
       String accountChangeEmailToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);

@@ -207,6 +207,14 @@ export class ChangeEmailComponent implements OnInit {
               .subscribe((msg) => {
                 this.alertService.danger(msg);
               });
+          } else if (e.status == 403) {
+            this.translate
+              .get(e.error.message || 'exception.unknown')
+              .pipe(takeUntil(this.destroy))
+              .subscribe((msg) => {
+                this.alertService.danger(msg);
+                this.navigationService.redirectToMainPage();
+              });
           } else {
             this.navigationService.redirectToNotFoundPage();
           }

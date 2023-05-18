@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PATCH;
@@ -47,6 +48,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
@@ -215,7 +217,6 @@ public class AccountController {
   @PUT
   @Path("/self/changePassword/link")
   @Produces(MediaType.APPLICATION_JSON)
-  @PermitAll
   public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
                                          @QueryParam("token") String token)
           throws AccountNotFoundException {
@@ -369,7 +370,6 @@ public class AccountController {
 
   @PUT
   @Path("/id/{accountId}/change-locale")
-  @PermitAll
   public Response changeLocale(@PathParam("accountId") Long accountId,
                                @Valid ChangeLocaleDto changeLocaleDto) {
     var json = Json.createObjectBuilder();
@@ -380,5 +380,28 @@ public class AccountController {
       json.add("error", e.getMessage());
       return Response.status(400).entity(json.build()).build();
     }
+  }
+
+  @GET
+  @Path("/google/login")
+  public Response getGoogleOauthLink() {
+    return Response.ok().entity(Json.createObjectBuilder()
+            .add("url", accountEndpoint.getGoogleOauthLink()).build()).build();
+  }
+
+  @POST
+  @Path("/google/redirect")
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public Response handleGoogleRedirect(@FormParam("code") String code,
+                                       @FormParam("state") String state,
+                                       @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
+    return accountEndpoint.handleGoogleRedirect(code, state, servletRequest.getRemoteAddr(), locale);
+  }
+
+  @POST
+  @Path("/google/register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response registerGoogleAccount(@NotNull @Valid GoogleAccountRegisterDto googleAccountRegisterDto) {
+    return accountEndpoint.registerGoogleAccount(googleAccountRegisterDto, servletRequest.getRemoteAddr());
   }
 }

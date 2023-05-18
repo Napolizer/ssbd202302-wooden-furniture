@@ -34,7 +34,13 @@
         <div class="button-container">
             <button mat-button color="primary" class="login-button" (click)="onLoginClicked()" [disabled]="!loginForm.valid">{{'login.login' | translate}}</button>
         </div>
+        <div class="google-button-container">
+          <button mat-button type="button" (click)="onLoginWithGoogle()">
+            <mat-icon style="width: 50px; height:30px" svgIcon="google-logo"></mat-icon> {{'login.google.button' | translate}}
+          </button>
+        </div>
       </div>
     </form>
+
   </div>
 </div>

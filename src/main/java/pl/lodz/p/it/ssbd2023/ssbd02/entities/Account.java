@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Data
-@ToString(callSuper = true)
+@ToString
 @AllArgsConstructor
 @SuperBuilder
 @Entity
@@ -101,6 +101,10 @@ public class Account extends AbstractEntity {
 
   @Column(name = "new_email")
   private String newEmail;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "type", nullable = false)
+  private AccountType accountType;
 
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
