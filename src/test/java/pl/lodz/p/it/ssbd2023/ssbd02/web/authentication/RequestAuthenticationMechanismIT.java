@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
-import io.restassured.http.Header;
+import jakarta.ws.rs.core.HttpHeaders;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.microshed.testing.SharedContainerConfig;
@@ -15,11 +15,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
 public class RequestAuthenticationMechanismIT {
-  private Header acceptLanguageHeader = new Header("Accept-Language", "en-US");
   private String retrieveAdminToken() {
     return given()
         .contentType("application/json")
-        .header(acceptLanguageHeader)
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .body("""
                    {
                        "login": "administrator",
@@ -37,10 +36,10 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(1)
-  public void shouldProperlyLoginTest() {
+  void shouldProperlyLoginTest() {
     given()
         .contentType("application/json")
-        .header(acceptLanguageHeader)
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .body("""
                    {
                        "login": "administrator",
@@ -58,9 +57,10 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(2)
-  public void shouldHaveAccessToAdminEndpointTest() {
+  void shouldHaveAccessToAdminEndpointTest() {
     given()
         .header("Authorization", "Bearer " + retrieveAdminToken())
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .when()
         .get("/account")
         .then()
@@ -70,7 +70,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(3)
-  public void shouldNotHaveAccessWhenTokenIsMissing() {
+  void shouldNotHaveAccessWhenTokenIsMissing() {
     given()
         .when()
         .get("/account")
@@ -81,7 +81,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(4)
-  public void shouldNotHaveAccessWhenTokenIsEmpty() {
+  void shouldNotHaveAccessWhenTokenIsEmpty() {
     given()
         .header("Authorization", "")
         .when()
@@ -93,9 +93,10 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(5)
-  public void shouldNotHaveAccessWhenTokenIsMissingBearer() {
+  void shouldNotHaveAccessWhenTokenIsMissingBearer() {
     given()
         .header("Authorization", " " + retrieveAdminToken())
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .when()
         .get("/account")
         .then()
@@ -105,7 +106,7 @@ public class RequestAuthenticationMechanismIT {
 
   @Test
   @Order(6)
-  public void shouldNotHaveAccessWhenTokenDoesNotHaveRequiredRole() {
+  void shouldNotHaveAccessWhenTokenDoesNotHaveRequiredRole() {
     given()
         .header("Authorization", "Bearer " + retrieveAdminToken())
         .header("Content-Type", "application/json")
