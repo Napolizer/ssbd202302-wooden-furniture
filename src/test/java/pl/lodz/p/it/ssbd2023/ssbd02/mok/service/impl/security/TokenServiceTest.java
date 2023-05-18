@@ -8,6 +8,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 
 public class TokenServiceTest {
@@ -43,6 +45,7 @@ public class TokenServiceTest {
             new Client(),
             new Employee(),
             new SalesRep()))
+        .newEmail("newmail@gmail.com")
         .build();
 
     accountNoRoles = Account.builder()
@@ -160,5 +163,52 @@ public class TokenServiceTest {
       TokenClaims tokenClaims = tokenService.getTokenClaims(token);
       assertThat(tokenClaims.getLogin(), is(account.getLogin()));
     }
+  }
+
+  @Test
+  public void properlyGeneratesTokenForAccountConfirmationLinkTest() {
+    String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.ACCOUNT_CONFIRMATION);
+    assertThat(token, is(notNullValue()));
+  }
+
+  @Test
+  public void properlyGeneratesTokenForPasswordResetLinkTest() {
+    String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.PASSWORD_RESET);
+    assertThat(token, is(notNullValue()));
+  }
+
+  @Test
+  public void properlyGeneratesTokenForChangeEmailLinkTest() {
+    String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.CHANGE_EMAIL);
+    assertThat(token, is(notNullValue()));
+  }
+
+  @Test
+  public void shouldProperlyValidateAccountConfirmationTokenTest() {
+    String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.ACCOUNT_CONFIRMATION);
+    assertThat(token, is(notNullValue()));
+    assertDoesNotThrow(() -> tokenService.validateEmailToken(token, TokenType.ACCOUNT_CONFIRMATION, null));
+    assertThat(tokenService.validateEmailToken(token, TokenType.ACCOUNT_CONFIRMATION,
+            null), is(accountAllRoles.getLogin()));
+  }
+
+  @Test
+  public void shouldProperlyValidateChangeEmailTokenTest() {
+    String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.CHANGE_EMAIL);
+    assertThat(token, is(notNullValue()));
+    assertDoesNotThrow(() -> tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL,
+            accountAllRoles.getNewEmail()));
+    assertThat(tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL,
+            accountAllRoles.getNewEmail()), is(accountAllRoles.getLogin()));
+  }
+
+  @Test
+  public void shouldProperlyValidateResetPasswordTokenTest() {
+    String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.PASSWORD_RESET);
+    assertThat(token, is(notNullValue()));
+    assertDoesNotThrow(() -> tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET,
+            accountAllRoles.getPassword()));
+    assertThat(tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET,
+            accountAllRoles.getPassword()), is(accountAllRoles.getLogin()));
   }
 }

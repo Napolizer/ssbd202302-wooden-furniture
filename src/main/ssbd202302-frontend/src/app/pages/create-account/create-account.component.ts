@@ -157,7 +157,7 @@ export class CreateAccountComponent implements OnInit {
           viewValue: msg['role.employee'] as string,
         });
         this.roles.push({
-          value: 'SalesRep',
+          value: 'Sales_Rep',
           viewValue: msg['role.sales_rep'] as string,
         });
         this.roles.push({

@@ -27,11 +27,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.ClientAuth;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
@@ -50,6 +52,9 @@ public class AccountServiceIT {
   private AdminAuth admin;
   @Inject
   private ClientAuth client;
+
+  @Inject
+  private TokenService tokenService;
 
   private Account account;
   private Account accountToRegister;
@@ -70,49 +75,43 @@ public class AccountServiceIT {
 
   @BeforeEach
   public void setup() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    admin.call(() -> {
-      accountService.createAccount(
-          account = Account.builder()
-              .login("test")
-              .password("test")
-              .email("test@gmail.com")
-              .person(Person.builder()
-                  .firstName("John")
-                  .lastName("Doe")
-                  .address(Address.builder()
-                      .country("Poland")
-                      .city("Lodz")
-                      .street("Koszykowa")
-                      .postalCode("90-000")
-                      .streetNumber(12)
-                      .build())
-                  .build())
-              .locale("pl")
-              .accountState(AccountState.ACTIVE)
-              .build()
-      );
-    });
-    utx.begin();
-    admin.call(() -> {
-      accountToRegister = Account.builder()
-          .login("test123")
-          .password("test123")
-          .email("test123@gmail.com")
-          .person(Person.builder()
-              .firstName("Bob")
-              .lastName("Joe")
-              .address(Address.builder()
-                  .country("Poland")
-                  .city("Lodz")
-                  .street("Koszykowa")
-                  .postalCode("90-000")
-                  .streetNumber(15)
-                  .build())
-              .build())
-          .locale("pl")
-          .build();
-    });
-    utx.commit();
+    account = Account.builder()
+            .login("test")
+            .password("test")
+            .email("test@gmail.com")
+            .person(Person.builder()
+                    .firstName("John")
+                    .lastName("Doe")
+                    .address(Address.builder()
+                            .country("Poland")
+                            .city("Lodz")
+                            .street("Koszykowa")
+                            .postalCode("90-000")
+                            .streetNumber(12)
+                            .build())
+                    .build())
+            .locale("pl")
+            .newEmail("newemail123@gmail.com")
+            .accountState(AccountState.ACTIVE)
+            .build();
+    accountService.createAccount(account);
+    accountToRegister = Account.builder()
+            .login("test123")
+            .password("test123")
+            .email("test123@gmail.com")
+            .person(Person.builder()
+                    .firstName("Bob")
+                    .lastName("Joe")
+                    .address(Address.builder()
+                            .country("Poland")
+                            .city("Lodz")
+                            .street("Koszykowa")
+                            .postalCode("90-000")
+                            .streetNumber(15)
+                            .build())
+                    .build())
+            .locale("pl")
+            .build();
   }
 
   @AfterEach
@@ -525,15 +524,44 @@ public class AccountServiceIT {
   }
 
   @Test
-  void properlyRegistersAccount() {
-    admin.call(() -> {
-      assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
-      Account account = accountService.getAccountByLogin("test123").orElseThrow();
-      assertEquals(2, accountService.getAccountList().size());
-      assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
-      assertEquals(false, account.getArchive());
-      assertEquals(0, account.getFailedLoginCounter());
-    });
+  public void properlyRegistersAccountAndConfirm() {
+    assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
+    Account account = accountService.getAccountByLogin("test123").orElseThrow();
+    assertEquals(2, accountService.getAccountList().size());
+    assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
+    assertEquals(false, account.getArchive());
+    assertEquals(0, account.getFailedLoginCounter());
+
+    String token = tokenService.generateTokenForEmailLink(account,
+            TokenType.ACCOUNT_CONFIRMATION);
+
+    assertDoesNotThrow(() -> accountService.confirmAccount(token));
+    Account updated = accountService.getAccountByLogin("test123").orElseThrow();
+    assertEquals(AccountState.ACTIVE, updated.getAccountState());
+  }
+
+
+  @Test
+  public void failsToRegisterAccountWithSameEmail() {
+    accountToRegister.setEmail(account.getEmail());
+    assertThrows(BaseWebApplicationException.class, () -> accountService.registerAccount(accountToRegister));
+    assertEquals(1, accountService.getAccountList().size());
+  }
+
+  @Test
+  public void failsToRegisterAccountWithSameCompanyNip() {
+    Company company = Company.builder().nip("111111111").companyName("Company").build();
+    Client client = Client.builder().company(company).account(accountToRegister).build();
+    accountToRegister.getAccessLevels().add(client);
+    assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
+    assertEquals(2, accountService.getAccountList().size());
+
+    accountToRegister.getPerson().setAddress(Address.builder().streetNumber(12).street("Different")
+            .postalCode("12-123").street("Different").city("Different").country("Different").build());
+    accountToRegister.setLogin("Different");
+    accountToRegister.setEmail("Different@example.com");
+    assertThrows(BaseWebApplicationException.class, () -> accountService.registerAccount(accountToRegister));
+    assertEquals(2, accountService.getAccountList().size());
   }
 
   @Test
@@ -693,4 +721,13 @@ public class AccountServiceIT {
     });
     utx.commit();
   }
+
+  @Test
+  public void properlyResetsPassword() {
+    String newPassword = "NewPassword123!";
+    assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+  }
+
 }
