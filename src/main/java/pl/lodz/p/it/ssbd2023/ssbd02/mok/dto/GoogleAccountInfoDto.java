@@ -13,6 +13,7 @@ public class GoogleAccountInfoDto {
   private String login;
   private String email;
   private String locale;
+  private String idToken;
 
   @Override
   public String toString() {

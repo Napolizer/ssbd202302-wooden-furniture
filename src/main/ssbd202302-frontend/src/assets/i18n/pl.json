@@ -190,6 +190,8 @@
   "exception.mok.account.remove.access.level": "Grupa nie jest przypisana do konta lub jest to jedyna rola konta",
   "exception.mok.account.administrator.access.level.already.assigned": "Konto z rolą Administratora nie może mieć przypisanej innej roli",
   "exception.mok.account.change.state": "Nie można zmienić stanu wybranego konta, z powodu restrykcji lub z powodu zmiany na ten sam stan.",
+  "exception.google.conflict": "Konto już istnieje, zaloguj się za pomocą swoich zwykłych danych",
+  "exception.invalid.account.type": "Nie możesz wykonać tej akcji, ponieważ Twoje konto zostało zarejestrowane za pomocą zewnętrznego serwisu",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

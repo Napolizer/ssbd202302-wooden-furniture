@@ -20,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
@@ -144,11 +145,11 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
   }
 
-  public Response handleGoogleRedirect(String code, String state, String ip) {
+  public Response handleGoogleRedirect(String code, String state, String ip, String locale) {
     Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
-      String token = authenticationService.loginWithGoogle(account.getEmail(), ip);
+      String token = authenticationService.loginWithGoogle(account.getEmail(), ip, locale);
       return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
     } else {
       return Response.accepted().entity(DtoToEntityMapper.mapAccountToGoogleAccountInfoDto(account)).build();
@@ -157,6 +158,14 @@ public class AccountEndpoint {
 
   public String getGoogleOauthLink() {
     return repeatTransaction(() ->  googleService.getGoogleOauthLink());
+  }
+
+  public Response registerGoogleAccount(GoogleAccountRegisterDto googleAccountRegisterDto, String ip) {
+    googleService.validateIdToken(googleAccountRegisterDto.getIdToken());
+    Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(googleAccountRegisterDto);
+    repeatTransaction(() -> accountService.registerGoogleAccount(account));
+    String token = authenticationService.loginWithGoogle(account.getEmail(), ip, account.getLocale());
+    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {

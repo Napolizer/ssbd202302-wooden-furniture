@@ -4,6 +4,7 @@ import {first, map, Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {TokenService} from "./token.service";
 import {Role} from "../enums/role";
+import { AccountGoogleRegister } from '../interfaces/google.register';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,12 @@ export class AuthenticationService {
     }).pipe(first(), map((response: any) => response.token));
   }
 
+  public registerGoogleAccount(account: AccountGoogleRegister): Observable<string> {
+    return this.httpClient.post(
+      `${environment.apiBaseUrl}/account/google/register`, account)
+        .pipe(first(), map((response: any) => response.token));
+  }
+
   public getGoogleOauthLink(): Observable<string> {
     return this.httpClient
       .get(`${environment.apiBaseUrl}/account/google/login`)
@@ -36,14 +43,17 @@ export class AuthenticationService {
       );
   }
 
-  public handleGoogleRedirect(code: string, state: string): Observable<any> {
+  public handleGoogleRedirect(code: string, state: string, locale: string): Observable<any> {
     const params = new HttpParams().set('code', code).set('state', state);
     return this.httpClient
       .post(
         `${environment.apiBaseUrl}/account/google/redirect`,
         params.toString(),
         {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept-Language': locale
+          },
           observe: 'response',
         }
       )

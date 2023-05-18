@@ -5,13 +5,14 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, first, takeUntil } from 'rxjs';
-import { AccountRegister } from 'src/app/interfaces/account.register';
+import { AccountGoogleRegister } from 'src/app/interfaces/google.register';
 import { SelectItem } from 'src/app/interfaces/select.item';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DialogService } from 'src/app/services/dialog.service';
@@ -53,6 +54,7 @@ export class GoogleRedirectComponent implements OnInit {
   checked = false;
   email: string;
   locale: string;
+  idToken: string;
   finishRegistrationForm: FormGroup = new FormGroup(
     {
       login: new FormControl(
@@ -106,16 +108,17 @@ export class GoogleRedirectComponent implements OnInit {
     private tokenService: TokenService,
     private translate: TranslateService,
     private alertService: AlertService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
   ) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.route.queryParams.subscribe((params) => {
       const state = params['state'] as string;
       const code = params['code'] as string;
       if (code && state) {
         this.authenticationService
-          .handleGoogleRedirect(code, state)
+          .handleGoogleRedirect(code, state, this.translate.getBrowserLang() as string)
           .pipe(takeUntil(this.destroy))
           .subscribe({
             next: (response) => {
@@ -129,9 +132,10 @@ export class GoogleRedirectComponent implements OnInit {
                     this.navigationService.redirectToMainPage();
                   });
               } else if (response.status == 202) {
-                console.log(response);
+                this.idToken = response.body.idToken;
                 this.email = response.body.email;
                 this.locale = response.body.locale;
+                this.idToken = response.body.idToken;
                 this.finishRegistrationForm.setValue({
                   login: response.body.login,
                   firstName: response.body.firstName
@@ -167,10 +171,17 @@ export class GoogleRedirectComponent implements OnInit {
                   });
                 this.loading = false;
               }
-              console.log(this.finishRegistrationForm);
             },
-            error: () => {
-              this.navigationService.redirectToLoginPage();
+            error: (e: HttpErrorResponse) => {
+              this.loading = false;
+              const message = e.error.message as string;
+              this.translate
+                .get(message || 'exception.unknown')
+                .pipe(takeUntil(this.destroy))
+                .subscribe((msg) => {
+                  this.alertService.danger(msg);
+                  this.navigationService.redirectToLoginPage();
+                });
             },
           });
       } else {
@@ -190,10 +201,10 @@ export class GoogleRedirectComponent implements OnInit {
 
   finishRegistration(): void {
     this.loading = true;
-    const accountRegister: AccountRegister = {
+    const accountGoogleRegister: AccountGoogleRegister = {
       login: this.finishRegistrationForm.value['login']!,
       email: this.email,
-      password: 'empty',
+      password: 'EmptyPassword!',
       firstName: this.finishRegistrationForm.value['firstName']!,
       lastName: this.finishRegistrationForm.value['lastName']!,
       country: this.finishRegistrationForm.value['country']!,
@@ -208,8 +219,46 @@ export class GoogleRedirectComponent implements OnInit {
       companyName: this.checked
         ? this.finishRegistrationForm.value['companyName']!
         : null,
+      idToken: this.idToken,
     };
-    console.log(accountRegister);
+
+    this.authenticationService
+      .registerGoogleAccount(accountGoogleRegister)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (token) => {
+          this.loading = false;
+            this.tokenService.saveToken(token);
+            this.translate.get('login.success')
+              .pipe(takeUntil(this.destroy))
+              .subscribe(msg => {
+                this.alertService.success(msg);
+                this.navigationService.redirectToMainPage();
+              });
+        },
+        error: (e: HttpErrorResponse) => {
+          console.log(e);
+          this.loading = false;
+          const message = e.error.message as string;
+          this.translate
+            .get(message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+              if (message) {
+                if (message.includes('login')) {
+                  this.finishRegistrationForm
+                    .get('login')
+                    ?.setErrors({ incorrect: true });
+                } else if (message.includes('nip')) {
+                  this.finishRegistrationForm
+                    .get('nip')
+                    ?.setErrors({ incorrect: true });
+                }
+              }
+            });
+        },
+      });
   }
 
   onConfirm(): void {

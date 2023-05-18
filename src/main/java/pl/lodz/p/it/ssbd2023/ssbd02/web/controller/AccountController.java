@@ -46,6 +46,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
@@ -360,7 +361,15 @@ public class AccountController {
   @Path("/google/redirect")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public Response handleGoogleRedirect(@FormParam("code") String code,
-                                       @FormParam("state") String state) {
-    return accountEndpoint.handleGoogleRedirect(code, state, servletRequest.getRemoteAddr());
+                                       @FormParam("state") String state,
+                                       @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
+    return accountEndpoint.handleGoogleRedirect(code, state, servletRequest.getRemoteAddr(), locale);
+  }
+
+  @POST
+  @Path("/google/register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response registerGoogleAccount(@NotNull @Valid GoogleAccountRegisterDto googleAccountRegisterDto) {
+    return accountEndpoint.registerGoogleAccount(googleAccountRegisterDto, servletRequest.getRemoteAddr());
   }
 }

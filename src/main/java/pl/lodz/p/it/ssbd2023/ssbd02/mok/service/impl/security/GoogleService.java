@@ -9,6 +9,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,9 @@ import java.util.Properties;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,6 +38,7 @@ public class GoogleService {
   private AccountFacadeOperations accountFacade;
   private static final String BASE_URI;
   private static final String TOKEN_URI;
+  private static final String VALIDATE_URI;
   private static final String CLIENT_ID;
   private static final String REDIRECT_URI;
   private static final String SCOPE;
@@ -49,6 +54,7 @@ public class GoogleService {
       prop.load(input);
       BASE_URI = prop.getProperty("google.base.uri");
       TOKEN_URI = prop.getProperty("google.token.uri");
+      VALIDATE_URI = prop.getProperty("google.validate.uri");
       CLIENT_ID = prop.getProperty("google.client.id");
       REDIRECT_URI = prop.getProperty("google.redirect.uri");
       SCOPE = prop.getProperty("google.scope");
@@ -63,12 +69,18 @@ public class GoogleService {
   }
 
   public String getGoogleOauthLink() {
-    return BASE_URI + "?" + "client_id=" + CLIENT_ID
-            + "&response_type=" + RESPONSE_TYPE
-            + "&scope=" + SCOPE
-            + "&redirect_uri=" + REDIRECT_URI
-            + "&state=" + STATE
-            + "&prompt=" + PROMPT;
+    try {
+      URIBuilder uriBuilder = new URIBuilder(BASE_URI);
+      uriBuilder.setParameter("client_id", CLIENT_ID);
+      uriBuilder.setParameter("response_type", RESPONSE_TYPE);
+      uriBuilder.setParameter("scope", SCOPE);
+      uriBuilder.setParameter("redirect_uri", REDIRECT_URI);
+      uriBuilder.setParameter("state", STATE);
+      uriBuilder.setParameter("prompt", PROMPT);
+      return uriBuilder.build().toString();
+    } catch (URISyntaxException e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
   }
 
   public Account getRegisteredAccountOrCreateNew(String code, String state) {
@@ -82,7 +94,6 @@ public class GoogleService {
     } else {
       throw ApplicationExceptionFactory.createGoogleOauthConflictException();
     }
-
   }
 
   private String getIdToken(String code, String state) {
@@ -135,12 +146,36 @@ public class GoogleService {
       return Account.builder()
               .email(tokenBody.get("email", String.class))
               .locale(tokenBody.get("locale", String.class))
+              .password(token)
               .person(Person.builder().firstName(tokenBody.get("given_name", String.class))
                       .lastName(tokenBody.get("family_name", String.class))
                       .build())
               .build();
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
+    }
+  }
+
+  public void validateIdToken(String idToken) {
+    URI uri;
+    try {
+      URIBuilder uriBuilder = new URIBuilder(VALIDATE_URI);
+      uriBuilder.setParameter("id_token", idToken);
+      uri = uriBuilder.build();
+    } catch (URISyntaxException e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
+    HttpGet httpGet = new HttpGet(uri);
+    try (CloseableHttpClient client = HttpClients.createDefault();
+         CloseableHttpResponse response = client.execute(httpGet)) {
+
+      if (response.getStatusLine().getStatusCode() != Response.Status.OK.getStatusCode()) {
+        throw ApplicationExceptionFactory.createInvalidLinkException();
+      }
+    } catch (BaseWebApplicationException be) {
+      throw be;
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
     }
   }
 }

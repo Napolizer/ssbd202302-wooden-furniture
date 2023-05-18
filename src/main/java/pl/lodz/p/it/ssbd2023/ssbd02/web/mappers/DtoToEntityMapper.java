@@ -112,6 +112,7 @@ public final class DtoToEntityMapper {
             .firstName(account.getPerson().getFirstName())
             .lastName(account.getPerson().getLastName())
             .locale(account.getLocale())
+            .idToken(account.getPassword())
             .email(account.getEmail()).build();
   }
 }

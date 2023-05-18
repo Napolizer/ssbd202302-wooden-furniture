@@ -104,6 +104,11 @@ public final class ApplicationExceptionFactory {
     return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_GOOGLE_CONFLICT, Response.Status.CONFLICT);
   }
 
+  public static BaseWebApplicationException createInvalidAccountTypeException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_INVALID_ACCOUNT_TYPE,
+            Response.Status.FORBIDDEN);
+  }
+
   public static AccessDeniedException createAccessDeniedException(Throwable cause) {
     return new AccessDeniedException(cause);
   }

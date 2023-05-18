@@ -181,6 +181,13 @@ public class AccountService extends AbstractService {
     }
   }
 
+  public void registerGoogleAccount(Account account) {
+    account.setAccountState(AccountState.ACTIVE);
+    account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setAccountType(AccountType.GOOGLE);
+    accountFacade.create(account);
+  }
+
   public Account createAccount(Account account) {
     account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
