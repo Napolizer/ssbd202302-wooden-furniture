@@ -59,7 +59,7 @@ public class AccountService extends AbstractService {
     return accountFacade.findById(id);
   }
 
-  @RolesAllowed(ADMINISTRATOR)
+  @PermitAll
   public Optional<Account> getAccountByEmail(String email) {
     return accountFacade.findByEmail(email);
   }
@@ -318,7 +318,7 @@ public class AccountService extends AbstractService {
     accountFacade.update(account);
   }
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public void sendResetPasswordEmail(String email) {
     Account account = getAccountByEmail(email).get();
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);

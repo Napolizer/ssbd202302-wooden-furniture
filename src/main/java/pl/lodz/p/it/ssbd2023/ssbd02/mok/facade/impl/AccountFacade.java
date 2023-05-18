@@ -99,7 +99,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
-  @RolesAllowed(ADMINISTRATOR)
+  @PermitAll
   public Optional<Account> findByEmail(String email) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_EMAIL, Account.class)
@@ -123,7 +123,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
-  @RolesAllowed(ADMINISTRATOR)
+  @PermitAll
   public void delete(Account account) {
     em.remove(em.merge(account));
     em.flush();
