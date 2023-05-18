@@ -43,6 +43,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
@@ -346,5 +347,19 @@ public class AccountController {
     String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
     accountEndpoint.updateEmailAfterConfirmation(login);
     return Response.ok().build();
+  }
+
+  @PUT
+  @Path("/id/{accountId}/change-locale")
+  public Response changeLocale(@PathParam("accountId") Long accountId,
+                               @Valid ChangeLocaleDto changeLocaleDto) {
+    var json = Json.createObjectBuilder();
+    try {
+      accountEndpoint.changeLocale(accountId, changeLocaleDto);
+      return Response.ok().build();
+    } catch (Exception e) {
+      json.add("error", e.getMessage());
+      return Response.status(400).entity(json.build()).build();
+    }
   }
 }

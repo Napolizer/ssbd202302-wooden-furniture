@@ -11,6 +11,7 @@ import { Email } from '../interfaces/email';
 import {Accesslevel} from "../interfaces/accesslevel";
 import {ChangePassword} from "../interfaces/change.password";
 import { AccountCreate } from '../interfaces/account.create';
+import {ChangeLocale} from "../interfaces/change.locale";
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +87,16 @@ export class AccountService {
       email,
       { observe: 'response',
         headers: { Authorization: `Bearer ${this.tokenService.getToken()}`}
+      }
+    )
+  }
+
+  public changeLocale(id: number, locale: ChangeLocale): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/id/${id}/change-locale`,
+      locale,
+      {
+        observe: 'response'
       }
     )
   }

@@ -16,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
@@ -137,6 +138,10 @@ public class AccountEndpoint {
 
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
+  }
+
+  public void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto) {
+    repeatTransaction(() -> accountService.changeLocale(accountId, changeLocaleDto.getLocale()));
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {
