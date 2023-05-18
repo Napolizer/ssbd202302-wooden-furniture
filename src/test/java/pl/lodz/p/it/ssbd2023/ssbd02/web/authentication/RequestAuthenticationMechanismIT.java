@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
+import jakarta.ws.rs.core.HttpHeaders;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.microshed.testing.SharedContainerConfig;
@@ -17,6 +18,7 @@ public class RequestAuthenticationMechanismIT {
   private String retrieveAdminToken() {
     return given()
         .contentType("application/json")
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .body("""
                    {
                        "login": "administrator",
@@ -37,6 +39,7 @@ public class RequestAuthenticationMechanismIT {
   public void shouldProperlyLoginTest() {
     given()
         .contentType("application/json")
+        .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
         .body("""
                    {
                        "login": "administrator",

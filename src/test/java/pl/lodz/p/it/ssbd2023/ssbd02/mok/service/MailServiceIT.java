@@ -35,6 +35,7 @@ public class MailServiceIT {
         .addPackages(true, "org.postgresql")
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
+        .addPackages(true, "org.apache")
         .addAsResource(new File("src/test/resources/"), "");
   }
 

@@ -46,6 +46,7 @@ public class AccountServiceIT {
             .addPackages(true, "pl.lodz.p.it.ssbd2023.ssbd02")
             .addPackages(true, "org.postgresql")
             .addPackages(true, "org.hamcrest")
+            .addPackages(true, "org.apache")
             .addPackages(true, "at.favre.lib")
             .addPackages(true, "io.jsonwebtoken")
             .addPackages(true, "javax.xml.bind")
