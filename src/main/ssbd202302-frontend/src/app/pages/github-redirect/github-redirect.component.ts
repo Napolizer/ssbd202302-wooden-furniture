@@ -11,10 +11,10 @@ import {AlertService} from "@full-fledged/alerts";
 import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {SelectItem} from "../../interfaces/select.item";
-import {LocalStorageService} from "../../services/local-storage.service";
 import {AccountRegister} from "../../interfaces/account.register";
 import {AccountService} from "../../services/account.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AccountType} from "../../enums/account.type";
 
 @Component({
   selector: 'app-github-redirect',
@@ -118,6 +118,7 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
             next: (response) => {
               if (response.status == 200) {
                 this.tokenService.saveToken(response.body.token);
+                this.tokenService.saveAccountType(AccountType.GITHUB);
                 this.translate
                   .get('login.success')
                   .pipe(takeUntil(this.destroy))
