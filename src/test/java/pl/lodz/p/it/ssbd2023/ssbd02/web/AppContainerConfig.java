@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Container;
 public class AppContainerConfig implements SharedContainerConfiguration {
   @Container
   public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15.2")
-      .withNetworkAliases("testpostgres")
+      .withNetworkAliases("db")
       .withDatabaseName("ssbd02")
       .withUsername("ssbd02admin")
       .withPassword("dbadmin")
@@ -18,8 +18,9 @@ public class AppContainerConfig implements SharedContainerConfiguration {
 
   @Container
   public static ApplicationContainer container = new ApplicationContainer()
+      .withNetworkAliases("app")
       .withAppContextRoot("/api/v1")
-      .withEnv("DB_HOST", "testpostgres")
+      .withEnv("DB_HOST", "db")
       .withEnv("MAIL_MAIL", System.getenv("MAIL_MAIL"))
       .withEnv("MAIL_PASSWORD", System.getenv("MAIL_PASSWORD"))
       .withReadinessPath("/api/v1/health")
