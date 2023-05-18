@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint;
 
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -22,12 +21,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
 @Interceptors({LoggerInterceptor.class})
-public class AccountEndpoint {
+public class AccountEndpoint extends AbstractEndpoint {
 
   @Inject
   private AccountService accountService;
@@ -139,52 +139,8 @@ public class AccountEndpoint {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
   }
 
-  private <T> T repeatTransaction(TransactionMethod<T> method) {
-    int retryCounter = 3;
-    boolean isRollback;
-    T result = null;
-
-    do {
-      try {
-        result = method.run();
-        isRollback = accountService.isLastTransactionRollback();
-      } catch (EJBTransactionRolledbackException ex) {
-        isRollback = true;
-      }
-
-    } while (isRollback && --retryCounter > 0);
-
-    if (isRollback && retryCounter == 0) {
-      throw new EJBTransactionRolledbackException();
-    } else {
-      return result;
-    }
-  }
-
-  private void repeatTransaction(VoidTransactionMethod method) {
-    int retryCounter = 3;
-    boolean isRollback;
-
-    do {
-      try {
-        method.run();
-        isRollback = accountService.isLastTransactionRollback();
-      } catch (EJBTransactionRolledbackException ex) {
-        isRollback = true;
-      }
-
-    } while (isRollback && --retryCounter > 0);
-
-    if (isRollback && retryCounter == 0) {
-      throw new EJBTransactionRolledbackException();
-    }
-  }
-
-  private interface TransactionMethod<T> {
-    T run();
-  }
-
-  private interface VoidTransactionMethod {
-    void run();
+  @Override
+  protected boolean isLastTransactionRollback() {
+    return accountService.isLastTransactionRollback();
   }
 }
