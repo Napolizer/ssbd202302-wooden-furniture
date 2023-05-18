@@ -2,6 +2,91 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
 public class InitData {
 
+  public static String accountToRegister = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Coe",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "login": "Register123",
+              "email": "register123@example.com"
+          }
+      """;
+
+  public static String accountToRegisterWithCompany = """
+          {
+              "firstName": "John",
+              "lastName": "Coe",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "login": "Company123",
+              "email": "company123@example.com",
+              "nip": 1231231231,
+              "companyName": "Company"
+          }
+      """;
+
+  public static String accountToRegisterWithSameCompanyNip = """
+          {
+              "firstName": "John",
+              "lastName": "Coe",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "login": "Company1231",
+              "email": "company1231@example.com",
+              "nip": 1231231231,
+              "companyName": "Company"
+          }
+      """;
+
+  public static String accountToRegisterWithExistingEmail = """
+          {
+              "firstName": "John",
+              "lastName": "Coe",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "login": "Company999",
+              "email": "register123@example.com",
+              "nip": 9999999999,
+              "companyName": "Company"
+          }
+      """;
+
+  public static String accountToRegisterWithExistingLogin = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Coe",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "login": "Register123",
+              "email": "register12122@example.com"
+          }
+      """;
   public static String accountToEditAccessLevelsJson = """
           {
               "firstName": "Thomas",

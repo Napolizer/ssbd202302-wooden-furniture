@@ -12,10 +12,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
 import io.restassured.http.Header;
-import jakarta.json.JsonObject;
-import org.jose4j.json.internal.json_simple.JSONObject;
-import org.jose4j.json.internal.json_simple.parser.JSONParser;
-import org.jose4j.json.internal.json_simple.parser.ParseException;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
@@ -951,6 +947,85 @@ public class AccountControllerIT {
           .body("address.street", is(equalTo("Przybyszewskiego")))
           .body("address.postalCode", is(equalTo("93-116")))
           .body("address.streetNumber", is(equalTo(13)));
+    }
+  }
+
+  @Nested
+  @Order(13)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+  class registerAccount {
+    @Test
+    @Order(1)
+    void shouldProperlyRegisterClientAccount() {
+      given()
+              .contentType("application/json")
+              .body(InitData.accountToRegister)
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(201);
+
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .when()
+              .get("/account/login/Register123")
+              .then()
+              .statusCode(200)
+              .contentType("application/json")
+              .body("accountState", equalTo("NOT_VERIFIED"))
+              .body("roles", hasSize(1))
+              .body("roles[0]", equalTo("client"));
+    }
+
+    @Test
+    @Order(2)
+    void shouldProperlyRegisterClientAccountWithCompany() {
+      given()
+              .contentType("application/json")
+              .body(InitData.accountToRegisterWithCompany)
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(201);
+    }
+
+    @Test
+    @Order(3)
+    void shouldFailToRegisterAccountWithExistingCompanyNip() {
+      given()
+              .contentType("application/json")
+              .body(InitData.accountToRegisterWithSameCompanyNip)
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(409)
+              .body("message", equalTo(MessageUtil.MessageKey.COMPANY_NIP_ALREADY_EXISTS));
+    }
+
+    @Test
+    @Order(4)
+    void shouldFailToRegisterAccountWithExistingEmail() {
+      given()
+              .contentType("application/json")
+              .body(InitData.accountToRegisterWithExistingEmail)
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(409)
+              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS));
+    }
+
+    @Test
+    @Order(5)
+    void shouldFailToRegisterAccountWithExistingLogin() {
+      given()
+              .contentType("application/json")
+              .body(InitData.accountToRegisterWithExistingLogin)
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(409)
+              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_LOGIN_ALREADY_EXISTS));
     }
   }
 }

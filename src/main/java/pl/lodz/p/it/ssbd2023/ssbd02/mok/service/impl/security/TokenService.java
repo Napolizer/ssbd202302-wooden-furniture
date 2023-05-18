@@ -30,7 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class TokenService {
   private static final String SECRET_KEY;
   private static final Long EXPIRATION_AUTHORIZATION;
