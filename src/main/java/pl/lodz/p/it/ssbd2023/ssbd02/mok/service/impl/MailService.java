@@ -74,12 +74,12 @@ public class MailService {
     );
   }
 
-  public void sendMailWithPasswordChangeLink(String to, String locale)
+  public void sendMailWithPasswordChangeLink(String to, String locale, String token)
           throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
-                    + ("\n" + appUrl + "/change-password")
+                    + ("\n" + appUrl + "/change-password/token?" + token)
     );
   }
 

@@ -119,6 +119,9 @@ public class AccountEndpoint {
       case CHANGE_EMAIL -> {
         return repeatTransaction(() -> accountService.validateChangeEmailToken(token));
       }
+      case CHANGE_PASSWORD -> {
+        return repeatTransaction(() -> accountService.validatePasswordChangeToken(token));
+      }
       default -> throw ApplicationExceptionFactory.createInvalidLinkException();
     }
   }

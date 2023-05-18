@@ -204,10 +204,12 @@ public class AccountService extends AbstractService {
 
   public void changePasswordAsAdmin(String login) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
-            TokenType.CHANGE_PASSWORD, account.getPassword());
+            TokenType.CHANGE_PASSWORD, changePasswordToken);
     try {
-      mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale());
+      mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
@@ -281,6 +283,14 @@ public class AccountService extends AbstractService {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
     tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET, account.getPassword());
+    return login;
+  }
+
+  public String validatePasswordChangeToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_PASSWORD, account.getPassword());
     return login;
   }
 

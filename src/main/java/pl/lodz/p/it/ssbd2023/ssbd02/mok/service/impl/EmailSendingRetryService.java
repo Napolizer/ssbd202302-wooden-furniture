@@ -114,7 +114,7 @@ public class EmailSendingRetryService {
         }
       }
       case CHANGE_PASSWORD -> {
-        if (token.equals(account.getPassword())) {
+        if (hashOrEmail.equals(account.getPassword())) {
           accountService.blockAccount(account.getId());
         }
       }

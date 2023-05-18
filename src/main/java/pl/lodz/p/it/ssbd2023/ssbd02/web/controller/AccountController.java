@@ -312,6 +312,13 @@ public class AccountController {
     return Response.ok().build();
   }
 
+  @GET
+  @Path("/change-password/confirm")
+  public Response validateChangePasswordToken(@QueryParam("token") String token) {
+    accountEndpoint.validateEmailToken(token, TokenType.CHANGE_PASSWORD);
+    return Response.ok().build();
+  }
+
   @PUT
   @Path("/reset-password")
   public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
