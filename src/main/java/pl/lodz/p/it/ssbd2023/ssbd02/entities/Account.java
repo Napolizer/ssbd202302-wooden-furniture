@@ -103,7 +103,7 @@ public class Account extends AbstractEntity {
   private String newEmail;
 
   @Enumerated(value = EnumType.STRING)
-  @Column(name = "type")
+  @Column(name = "type", nullable = false)
   private AccountType accountType;
 
   public void update(Account account) {
