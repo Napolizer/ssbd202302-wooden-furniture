@@ -114,8 +114,6 @@ export class ChangePasswordConfirmComponent implements OnInit {
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: () => {
-          this.loading = false;
-          this.navigationService.redirectToMainPage();
           this.translate
             .get('change.password.success')
             .pipe(takeUntil(this.destroy))

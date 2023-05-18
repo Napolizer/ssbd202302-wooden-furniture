@@ -9,6 +9,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -31,6 +33,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@DenyAll
 public class TokenService {
   private static final String SECRET_KEY;
   private static final Long EXPIRATION_AUTHORIZATION;
@@ -55,6 +58,7 @@ public class TokenService {
     }
   }
 
+  @PermitAll
   public String generateToken(Account account) {
     long now = System.currentTimeMillis();
     var builder = Jwts.builder()
@@ -69,6 +73,7 @@ public class TokenService {
     return builder.compact();
   }
 
+  @PermitAll
   public TokenClaims getTokenClaims(String token) throws ValidationException {
     try {
       Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
@@ -91,6 +96,7 @@ public class TokenService {
     }
   }
 
+  @PermitAll
   public String generateTokenForEmailLink(Account account, TokenType tokenType) {
     long now = System.currentTimeMillis();
     String secret = switch (tokenType) {
@@ -113,6 +119,7 @@ public class TokenService {
     return builder.compact();
   }
 
+  @PermitAll
   public String validateEmailToken(String token, TokenType tokenType, String key) {
     Claims claims;
     try {
@@ -147,6 +154,7 @@ public class TokenService {
     return claims.getSubject();
   }
 
+  @PermitAll
   public String getLoginFromTokenWithoutValidating(String token, TokenType tokenType) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {

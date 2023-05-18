@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -19,9 +21,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({LoggerInterceptor.class})
+@DenyAll
 public class MailService {
   private final String appUrl = "http://localhost:4200";
 
+  @PermitAll
   public void sendMailWithInfoAboutBlockingAccount(String to, String locale)
       throws MessagingException {
     sendMail(to,
@@ -30,6 +34,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendMailWithInfoAboutActivatingAccount(String to, String locale)
           throws MessagingException {
     sendMail(to,
@@ -38,6 +43,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendMailWithInfoAboutConfirmingAccount(String to, String locale)
           throws MessagingException {
     sendMail(to,
@@ -46,6 +52,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login)
           throws MessagingException {
     sendMail(to,
@@ -57,6 +64,7 @@ public class MailService {
                     + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
   }
 
+  @PermitAll
   public void sendResetPasswordMail(String to, String locale, String resetPasswordToken) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
@@ -65,6 +73,7 @@ public class MailService {
             + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
   }
 
+  @PermitAll
   public void sendMailWithEmailChangeConfirmLink(String to, String locale, String token)
       throws MessagingException {
     sendMail(to,
@@ -74,15 +83,7 @@ public class MailService {
     );
   }
 
-  public void sendMailWithPasswordChangeLink(String to, String locale, String token)
-          throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
-                    + ("\n" + appUrl + "/change-password/confirm?token=" + token)
-    );
-  }
-
+  @PermitAll
   public void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT),
@@ -92,6 +93,17 @@ public class MailService {
     );
   }
 
+  @PermitAll
+  public void sendMailWithPasswordChangeLink(String to, String locale, String token)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
+                    + ("\n" + appUrl + "/change-password/confirm?token=" + token)
+    );
+  }
+
+  @PermitAll
   public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),
@@ -101,6 +113,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup)
           throws MessagingException {
     sendMail(to,
@@ -112,6 +125,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_SUBJECT),
@@ -119,6 +133,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendEmailRemindingToConfirmAccount(String to, String locale) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT),
@@ -126,6 +141,7 @@ public class MailService {
     );
   }
 
+  @PermitAll
   public void sendMail(String to, String subject, String message) throws MessagingException {
     Session session = getSession();
 
@@ -137,6 +153,7 @@ public class MailService {
     Transport.send(mail);
   }
 
+  @PermitAll
   private Properties getMailProperties() {
     Properties props = new Properties();
     props.put("mail.smtp.host", "smtp.gmail.com");
@@ -148,6 +165,7 @@ public class MailService {
     return props;
   }
 
+  @PermitAll
   private Session getSession() {
     return Session.getInstance(getMailProperties(), new Authenticator() {
       @Override

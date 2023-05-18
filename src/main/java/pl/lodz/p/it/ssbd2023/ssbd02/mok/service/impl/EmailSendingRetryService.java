@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.Timeout;
 import jakarta.ejb.Timer;
@@ -27,6 +29,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SimpleLoggerInterceptor.class)
+@DenyAll
 public class EmailSendingRetryService {
   private Long expirationAccountConfirmation;
   private Long expirationPasswordReset;
@@ -55,6 +58,7 @@ public class EmailSendingRetryService {
     }
   }
 
+  @PermitAll
   public void sendEmailTokenAfterHalfExpirationTime(String login, String hashOrEmail,
                                                     TokenType tokenType, String token) {
     switch (tokenType) {
@@ -87,6 +91,7 @@ public class EmailSendingRetryService {
   }
 
   @Timeout
+  @PermitAll
   public void send(Timer timer) {
     Object[] info = (Object[]) timer.getInfo();
     String login = (String) info[0];
@@ -122,6 +127,7 @@ public class EmailSendingRetryService {
     }
   }
 
+  @PermitAll
   private void checkTimer(Account account, String token, long time) {
     long timeout = this.expirationAccountConfirmation;
     if (time < timeout) {
@@ -135,6 +141,7 @@ public class EmailSendingRetryService {
     }
   }
 
+  @PermitAll
   private void sendMailWithEmailChangeConfirmLink(String email, String locale, String token) {
     try {
       mailService.sendMailWithEmailChangeConfirmLink(email, locale, token);
@@ -143,6 +150,7 @@ public class EmailSendingRetryService {
     }
   }
 
+  @PermitAll
   private void sendResetPasswordMail(String email, String locale, String token) {
     try {
       mailService.sendResetPasswordMail(email, locale, token);
@@ -151,6 +159,7 @@ public class EmailSendingRetryService {
     }
   }
 
+  @PermitAll
   private void sendAccountConfirmationLink(Account account, String token) {
     try {
       mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
@@ -160,6 +169,7 @@ public class EmailSendingRetryService {
     }
   }
 
+  @PermitAll
   private void sendAccountRemovedMail(Account account) {
     try {
       mailService.sendEmailAboutRemovingNotVerifiedAccount(account.getEmail(), account.getLocale());

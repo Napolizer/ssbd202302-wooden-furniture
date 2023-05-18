@@ -5,6 +5,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -213,6 +214,7 @@ public class AccountController {
   @PUT
   @Path("/self/changePassword/link")
   @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
   public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
                                          @QueryParam("token") String token)
           throws AccountNotFoundException {
@@ -227,6 +229,7 @@ public class AccountController {
   @PUT
   @Path("/login/{login}/changePasswordAsAdmin")
   @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR})
   public Response changePasswordAsAdmin(@PathParam("login") String login) {
 
     accountEndpoint.changePasswordAsAdmin(login);
@@ -287,8 +290,12 @@ public class AccountController {
   @Path("/login/{login}/editOwnAccount")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response editOwnAccount(@PathParam("login") String login,
                                  @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
+    if (principal.getName() == null) {
+      return Response.status(403).build();
+    }
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
