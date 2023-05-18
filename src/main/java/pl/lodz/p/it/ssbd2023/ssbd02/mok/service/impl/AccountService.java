@@ -221,17 +221,40 @@ public class AccountService extends AbstractService {
     }
   }
 
-  @RolesAllowed(ADMINISTRATOR)
-  public void changePasswordAsAdmin(String login, String newPassword) {
+  @PermitAll
+  public Account changePasswordFromLink(String token, String newPassword, String currentPassword) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
+
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
-    if (!Objects.equals(account.getPassword(), newPassword)) {
-      account.setPassword(newPassword);
-      accountFacade.update(account);
+    if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
+      //fixme invalidCredentialsException is checked
+    }
+
+    if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      return accountFacade.update(account);
+    } else {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
   }
 
   @RolesAllowed(ADMINISTRATOR)
+  public void changePasswordAsAdmin(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
+    emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
+            TokenType.CHANGE_PASSWORD, changePasswordToken);
+    try {
+      mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
+
+  @PermitAll
   public void blockAccount(Long id) {
     Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
 
@@ -294,6 +317,15 @@ public class AccountService extends AbstractService {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
     tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET, account.getPassword());
+    return login;
+  }
+
+  @PermitAll
+  public String validatePasswordChangeToken(String token) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_PASSWORD, account.getPassword());
     return login;
   }
 
@@ -370,4 +402,6 @@ public class AccountService extends AbstractService {
       throw ApplicationExceptionFactory.createForbiddenException();
     }
   }
+
+
 }

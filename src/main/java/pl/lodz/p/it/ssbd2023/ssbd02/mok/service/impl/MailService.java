@@ -94,6 +94,16 @@ public class MailService {
   }
 
   @PermitAll
+  public void sendMailWithPasswordChangeLink(String to, String locale, String token)
+          throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
+                    + ("\n" + appUrl + "/change-password/confirm?token=" + token)
+    );
+  }
+
+  @PermitAll
   public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),

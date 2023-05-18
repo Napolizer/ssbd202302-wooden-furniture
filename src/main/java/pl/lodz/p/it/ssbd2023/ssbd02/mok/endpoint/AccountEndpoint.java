@@ -111,8 +111,13 @@ public class AccountEndpoint extends AbstractEndpoint {
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void changePasswordAsAdmin(String login, String newPassword) {
-    repeatTransaction(() -> accountService.changePasswordAsAdmin(login, newPassword));
+  public void changePasswordAsAdmin(String login) {
+    repeatTransaction(() -> accountService.changePasswordAsAdmin(login));
+  }
+
+  @PermitAll
+  public Account changePasswordFromLink(String token, String password, String currentPassword) {
+    return repeatTransaction(() -> accountService.changePasswordFromLink(token, password, currentPassword));
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
@@ -146,6 +151,9 @@ public class AccountEndpoint extends AbstractEndpoint {
       }
       case CHANGE_EMAIL -> {
         return repeatTransaction(() -> accountService.validateChangeEmailToken(token));
+      }
+      case CHANGE_PASSWORD -> {
+        return repeatTransaction(() -> accountService.validatePasswordChangeToken(token));
       }
       default -> throw ApplicationExceptionFactory.createInvalidLinkException();
     }
