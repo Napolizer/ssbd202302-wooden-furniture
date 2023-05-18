@@ -14,6 +14,7 @@ import {SelectItem} from "../../interfaces/select.item";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {AccountRegister} from "../../interfaces/account.register";
 import {AccountService} from "../../services/account.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-github-redirect',
@@ -111,7 +112,7 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
       const code = params['code'] as string;
       if (code) {
         this.authenticationService
-          .handleGithubRedirect(code)
+          .handleGithubRedirect(code, this.translate.getBrowserLang() as string)
           .pipe(takeUntil(this.destroy))
           .subscribe({
             next: (response) => {
@@ -122,11 +123,11 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
                   .pipe(takeUntil(this.destroy))
                   .subscribe(msg => {
                     this.alertService.success(msg);
-                    this.navigationService.redirectToMainPage();
+                    void this.navigationService.redirectToMainPage();
                   });
               } else if (response.status == 202) {
                 this.email = response.body.email;
-                this.locale = this.translate.currentLang;
+                this.locale = this.translate.getBrowserLang() as string;
                 this.finishRegistrationForm.setValue({
                   login: response.body.login,
                   firstName: this.finishRegistrationForm.value['firstName'],
@@ -159,8 +160,16 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
               }
               console.log(this.finishRegistrationForm);
             },
-            error: () => {
-              void this.navigationService.redirectToLoginPage();
+            error: (e: HttpErrorResponse) => {
+              this.loading = false;
+              const message = e.error.message as string;
+              this.translate
+                .get(message || 'exception.unknown')
+                .pipe(takeUntil(this.destroy))
+                .subscribe((msg) => {
+                  this.alertService.danger(msg);
+                  void this.navigationService.redirectToLoginPage();
+                });
             },
           });
       } else {
@@ -180,10 +189,10 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
 
   finishRegistration(): void {
     this.loading = true;
-    const accountRegister: AccountRegister = {
+    const githubAccountRegister: AccountRegister = {
       login: this.finishRegistrationForm.value['login']!,
       email: this.email,
-      password: 'empty',
+      password: 'EmptyPassword!',
       firstName: this.finishRegistrationForm.value['firstName']!,
       lastName: this.finishRegistrationForm.value['lastName']!,
       country: this.finishRegistrationForm.value['country']!,
@@ -199,8 +208,43 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
         ? this.finishRegistrationForm.value['companyName']!
         : null,
     };
-    console.log(accountRegister);
-
+    this.authenticationService
+      .registerGithubAccount(githubAccountRegister)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (token) => {
+          this.loading = false
+          this.tokenService.saveToken(token);
+          this.translate.get('login.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToMainPage();
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          console.log(e);
+          this.loading = false;
+          const message = e.error.message as string;
+          this.translate
+            .get(message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+              if (message) {
+                if (message.includes('login')) {
+                  this.finishRegistrationForm
+                    .get('login')
+                    ?.setErrors({ incorrect: true });
+                } else if (message.includes('nip')) {
+                  this.finishRegistrationForm
+                    .get('nip')
+                    ?.setErrors({ incorrect: true });
+                }
+              }
+            });
+        }
+      });
   }
 
   onConfirm(): void {

@@ -161,7 +161,7 @@
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",
-  "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Github z kontem w naszym systemie?",
+  "dialog.github.register.message": "Czy na pewno chcesz powiązać swoje konto Github z kontem w naszym systemie?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",

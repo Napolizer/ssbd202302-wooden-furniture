@@ -39,14 +39,7 @@ public class AuthenticationService {
 
     validateAccount(account, password, ip);
     account.setFailedLoginCounter(0);
-    account.setLastLogin(LocalDateTime.now());
-    account.setLastLoginIpAddress(ip);
-    if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
-      account.setLocale(locale);
-    }
-    accountFacade.update(account);
-
-    return tokenService.generateToken(account);
+    return setUpAccountAndGenerateToken(ip, locale, account);
   }
 
   public String loginWithGoogle(String email, String ip, String locale) {
@@ -54,23 +47,23 @@ public class AuthenticationService {
             .findByEmail(email)
             .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
 
-    account.setLastLoginIpAddress(ip);
-    account.setLastLogin(LocalDateTime.now());
-    if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
-      account.setLocale(locale);
-    }
-    accountFacade.update(account);
-
-    return tokenService.generateToken(account);
+    return setUpAccountAndGenerateToken(ip, locale, account);
   }
 
-  public String loginWithGithub(String email, String ip) {
+  public String loginWithGithub(String email, String ip, String locale) {
     Account account = accountFacade
         .findByEmail(email)
         .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
 
+    return setUpAccountAndGenerateToken(ip, locale, account);
+  }
+
+  private String setUpAccountAndGenerateToken(String ip, String locale, Account account) {
     account.setLastLogin(LocalDateTime.now());
     account.setLastLoginIpAddress(ip);
+    if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
+      account.setLocale(locale);
+    }
     accountFacade.update(account);
 
     return tokenService.generateToken(account);

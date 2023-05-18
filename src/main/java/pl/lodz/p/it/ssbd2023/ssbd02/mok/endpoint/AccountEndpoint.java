@@ -7,7 +7,6 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
-import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
@@ -25,9 +24,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.GithubService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
@@ -173,11 +171,11 @@ public class AccountEndpoint {
     return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
-  public Response handleGithubRedirect(String githubCode, String ip) {
+  public Response handleGithubRedirect(String githubCode, String ip, String locale) {
     Account account = githubService.getRegisteredAccountOrCreateNew(githubCode);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
-      String token = authenticationService.loginWithGithub(account.getEmail(), ip);
+      String token = authenticationService.loginWithGithub(account.getEmail(), ip, locale);
       return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
     } else {
       return Response.accepted().entity(DtoToEntityMapper.mapAccountToGithubAccountInfoDto(account)).build();
@@ -186,6 +184,13 @@ public class AccountEndpoint {
 
   public String getGithubOauthLink() {
     return repeatTransaction(() -> githubService.getGithubOauthLink());
+  }
+
+  public Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip) {
+    Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(githubAccountRegisterDto);
+    repeatTransaction(() -> accountService.registerGithubAccount(account));
+    String token = authenticationService.loginWithGithub(account.getEmail(), ip, account.getLocale());
+    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {

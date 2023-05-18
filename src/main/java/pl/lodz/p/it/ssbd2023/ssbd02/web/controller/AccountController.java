@@ -51,7 +51,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.GithubService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Path("/account")
@@ -263,8 +263,16 @@ public class AccountController {
   @POST
   @Path("/github/redirect")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  public Response handleGithubRedirect(@FormParam("code") String githubCode) {
-    return accountEndpoint.handleGithubRedirect(githubCode, servletRequest.getRemoteAddr());
+  public Response handleGithubRedirect(@FormParam("code") String githubCode,
+                                       @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
+    return accountEndpoint.handleGithubRedirect(githubCode, servletRequest.getRemoteAddr(), locale);
+  }
+
+  @POST
+  @Path("/github/register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response registerGithubAccount(@NotNull @Valid AccountRegisterDto githubAccountRegisterDto) {
+    return accountEndpoint.registerGithubAccount(githubAccountRegisterDto, servletRequest.getRemoteAddr());
   }
 
   @PUT
