@@ -113,4 +113,19 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         }
       })
   }
+
+  onLoginWithGoogle() : void {
+    this.authenticationService.getGoogleOauthLink()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe({
+        next: (url) => {
+          console.log(url)
+          window.location.href = url;
+        },
+        error: (e) => {
+          console.log(e)
+          this.navigationService.redirectToNotFoundPage();
+        }
+      })
+  }
 }

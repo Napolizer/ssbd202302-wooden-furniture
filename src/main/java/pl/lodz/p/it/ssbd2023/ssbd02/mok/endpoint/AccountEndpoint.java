@@ -6,9 +6,12 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
@@ -22,6 +25,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Stateful
@@ -31,6 +35,8 @@ public class AccountEndpoint {
 
   @Inject
   private AccountService accountService;
+  @Inject
+  private GoogleService googleService;
   @Inject
   private AuthenticationService authenticationService;
 
@@ -137,6 +143,21 @@ public class AccountEndpoint {
 
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
+  }
+
+  public Response handleGoogleRedirect(String code, String state, String ip) {
+   Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
+
+    if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
+      String token = authenticationService.loginWithGoogle(account.getEmail(), ip);
+      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+    } else {
+      return Response.accepted().build();
+    }
+  }
+
+  public String getGoogleOauthLink() {
+    return repeatTransaction(() ->  googleService.getGoogleOauthLink());
   }
 
   private <T> T repeatTransaction(TransactionMethod<T> method) {

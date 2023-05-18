@@ -51,6 +51,8 @@ import { ChangeAccountRolePageComponent } from './pages/change-account-role-page
 import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
+import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
+
 
 @NgModule({
   declarations: [
@@ -81,7 +83,8 @@ import { CreateAccountComponent } from './pages/create-account/create-account.co
     ChangeAccountRolePageComponent,
     ChangeOwnPasswordComponent,
     DigitOnlyDirective,
-    CreateAccountComponent
+    CreateAccountComponent,
+    GoogleRedirectComponent
   ],
     imports: [
         BrowserModule,

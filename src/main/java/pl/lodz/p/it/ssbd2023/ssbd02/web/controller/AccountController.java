@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PATCH;
@@ -345,6 +346,22 @@ public class AccountController {
   public Response submitEmail(@QueryParam("token") String token) {
     String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
     accountEndpoint.updateEmailAfterConfirmation(login);
+    return Response.ok().build();
+  }
+
+  @GET
+  @Path("/google/login")
+  public Response getGoogleOauthLink() {
+    return Response.ok().entity(Json.createObjectBuilder()
+            .add("url", accountEndpoint.getGoogleOauthLink()).build()).build();
+  }
+
+  @POST
+  @Path("/google/redirect")
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public Response handleGoogleRedirect(@FormParam("code") String code,
+                                       @FormParam("state") String state) {
+    accountEndpoint.handleGoogleRedirect(code, state, servletRequest.getRemoteAddr());
     return Response.ok().build();
   }
 }
