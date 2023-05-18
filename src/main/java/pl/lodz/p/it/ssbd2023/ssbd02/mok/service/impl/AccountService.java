@@ -202,6 +202,24 @@ public class AccountService extends AbstractService {
     }
   }
 
+  public Account changePasswordFromLink(String token, String newPassword, String currentPassword) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
+
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+
+    if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
+      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
+      //fixme invalidCredentialsException is checked
+    }
+
+    if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      return accountFacade.update(account);
+    } else {
+      throw ApplicationExceptionFactory.createOldPasswordGivenException();
+    }
+  }
+
   public void changePasswordAsAdmin(String login) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
@@ -362,4 +380,6 @@ public class AccountService extends AbstractService {
       throw ApplicationExceptionFactory.createForbiddenException();
     }
   }
+
+
 }

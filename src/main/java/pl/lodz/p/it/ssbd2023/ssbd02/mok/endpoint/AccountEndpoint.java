@@ -88,6 +88,10 @@ public class AccountEndpoint {
     return repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
   }
 
+  public Account changePasswordFromLink(String token, String password, String currentPassword) {
+    return repeatTransaction(() -> accountService.changePasswordFromLink(token, password, currentPassword));
+  }
+
   public void changePasswordAsAdmin(String login) {
     repeatTransaction(() -> accountService.changePasswordAsAdmin(login));
   }
@@ -182,6 +186,8 @@ public class AccountEndpoint {
       throw new EJBTransactionRolledbackException();
     }
   }
+
+
 
   private interface TransactionMethod<T> {
     T run();

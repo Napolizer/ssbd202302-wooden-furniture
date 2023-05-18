@@ -217,7 +217,7 @@ public class AccountController {
                                          @QueryParam("token") String token)
           throws AccountNotFoundException {
 
-    Account account = accountEndpoint.changePassword(login, changePasswordDto.getPassword(),
+    Account account = accountEndpoint.changePasswordFromLink(token, changePasswordDto.getPassword(),
             changePasswordDto.getCurrentPassword());
     AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
 
