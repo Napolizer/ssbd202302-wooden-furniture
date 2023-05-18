@@ -5,6 +5,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -212,22 +213,28 @@ public class AccountController {
   }
 
   @PUT
+  @Path("/self/changePassword/link")
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
+                                         @QueryParam("token") String token)
+          throws AccountNotFoundException {
+
+    Account account = accountEndpoint.changePasswordFromLink(token, changePasswordDto.getPassword(),
+            changePasswordDto.getCurrentPassword());
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
+
+    return Response.ok(changedAccount).build();
+  }
+
+  @PUT
   @Path("/login/{login}/changePasswordAsAdmin")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response changePasswordAsAdmin(@PathParam("login") String login,
-                                        @NotNull @Valid ChangePasswordDto changePasswordDto) {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    Account account = accountEndpoint.getAccountByLogin(login).get();
-    if (Objects.equals(account.getPassword(), changePasswordDto.getPassword())) {
-      throw ApplicationExceptionFactory.createOldPasswordGivenException();
-    }
-    accountEndpoint.changePasswordAsAdmin(login,
-        changePasswordDto.getPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(
-        accountEndpoint.getAccountByLogin(login).get());
-    return Response.ok(changedAccount).build();
+  @RolesAllowed({ADMINISTRATOR})
+  public Response changePasswordAsAdmin(@PathParam("login") String login) {
+
+    accountEndpoint.changePasswordAsAdmin(login);
+    return Response.ok().build();
   }
 
   @POST
@@ -284,8 +291,12 @@ public class AccountController {
   @Path("/login/{login}/editOwnAccount")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response editOwnAccount(@PathParam("login") String login,
                                  @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
+    if (principal.getName() == null) {
+      return Response.status(403).build();
+    }
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
@@ -323,6 +334,13 @@ public class AccountController {
     return Response.ok().build();
   }
 
+  @GET
+  @Path("/change-password/confirm")
+  public Response validateChangePasswordToken(@QueryParam("token") String token) {
+    accountEndpoint.validateEmailToken(token, TokenType.CHANGE_PASSWORD);
+    return Response.ok().build();
+  }
+
   @PUT
   @Path("/reset-password")
   public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
@@ -351,6 +369,7 @@ public class AccountController {
 
   @PUT
   @Path("/id/{accountId}/change-locale")
+  @PermitAll
   public Response changeLocale(@PathParam("accountId") Long accountId,
                                @Valid ChangeLocaleDto changeLocaleDto) {
     var json = Json.createObjectBuilder();

@@ -9,6 +9,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -31,12 +33,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@DenyAll
 public class TokenService {
   private static final String SECRET_KEY;
   private static final Long EXPIRATION_AUTHORIZATION;
   private static final Long EXPIRATION_ACCOUNT_CONFIRMATION;
   private static final Long EXPIRATION_PASSWORD_RESET;
   private static final Long EXPIRATION_CHANGE_EMAIL;
+  private static Long EXPIRATION_CHANGE_PASSWORD;
 
   static {
     Properties prop = new Properties();
@@ -48,11 +52,13 @@ public class TokenService {
               .getProperty("expiration.account.confirmation.milliseconds"));
       EXPIRATION_PASSWORD_RESET = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
       EXPIRATION_CHANGE_EMAIL = Long.parseLong(prop.getProperty("expiration.change.email.milliseconds"));
+      EXPIRATION_CHANGE_PASSWORD = Long.parseLong(prop.getProperty("expiration.password.change.milliseconds"));
     } catch (Exception e) {
       throw new RuntimeException("Error loading configuration file: " + e.getMessage());
     }
   }
 
+  @PermitAll
   public String generateToken(Account account) {
     long now = System.currentTimeMillis();
     var builder = Jwts.builder()
@@ -67,6 +73,7 @@ public class TokenService {
     return builder.compact();
   }
 
+  @PermitAll
   public TokenClaims getTokenClaims(String token) throws ValidationException {
     try {
       Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
@@ -89,17 +96,19 @@ public class TokenService {
     }
   }
 
+  @PermitAll
   public String generateTokenForEmailLink(Account account, TokenType tokenType) {
     long now = System.currentTimeMillis();
     String secret = switch (tokenType) {
       case ACCOUNT_CONFIRMATION -> SECRET_KEY;
-      case PASSWORD_RESET -> CryptHashUtils.getSecretKeyForEmailToken(account.getPassword());
+      case PASSWORD_RESET, CHANGE_PASSWORD -> CryptHashUtils.getSecretKeyForEmailToken(account.getPassword());
       case CHANGE_EMAIL -> CryptHashUtils.getSecretKeyForEmailToken(account.getNewEmail());
     };
     Long expiration = switch (tokenType) {
       case ACCOUNT_CONFIRMATION -> EXPIRATION_ACCOUNT_CONFIRMATION;
       case PASSWORD_RESET -> EXPIRATION_PASSWORD_RESET;
       case CHANGE_EMAIL -> EXPIRATION_CHANGE_EMAIL;
+      case CHANGE_PASSWORD -> EXPIRATION_CHANGE_PASSWORD;
     };
     var builder = Jwts.builder()
             .setSubject(account.getLogin())
@@ -110,13 +119,14 @@ public class TokenService {
     return builder.compact();
   }
 
+  @PermitAll
   public String validateEmailToken(String token, TokenType tokenType, String key) {
     Claims claims;
     try {
       switch (tokenType) {
         case ACCOUNT_CONFIRMATION ->
                 claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-        case PASSWORD_RESET, CHANGE_EMAIL ->
+        case PASSWORD_RESET, CHANGE_PASSWORD, CHANGE_EMAIL ->
                 claims = Jwts.parser().setSigningKey(CryptHashUtils.getSecretKeyForEmailToken(key))
                   .parseClaimsJws(token).getBody();
         default -> throw ApplicationExceptionFactory.createInvalidLinkException();
@@ -129,6 +139,8 @@ public class TokenService {
                 throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
         case CHANGE_EMAIL ->
                 throw ApplicationExceptionFactory.createChangeEmailExpiredLinkException();
+        case CHANGE_PASSWORD ->
+                throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException(); //change
         default -> throw ApplicationExceptionFactory.createInvalidLinkException();
       }
     } catch (Exception e) {
@@ -142,13 +154,14 @@ public class TokenService {
     return claims.getSubject();
   }
 
+  @PermitAll
   public String getLoginFromTokenWithoutValidating(String token, TokenType tokenType) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {
       return Jwts.parser().parseClaimsJwt(claims).getBody().getSubject();
     } catch (ExpiredJwtException eje) {
       switch (tokenType) {
-        case PASSWORD_RESET -> throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
+        case PASSWORD_RESET, CHANGE_PASSWORD -> throw ApplicationExceptionFactory.createPasswordResetExpiredLinkException();
         case CHANGE_EMAIL -> throw ApplicationExceptionFactory.createChangeEmailExpiredLinkException();
         default -> throw ApplicationExceptionFactory.createUnknownErrorException(eje);
       }

@@ -12,6 +12,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Account} from "../../interfaces/account";
 import {DatePipe} from "@angular/common";
 import { Location } from '@angular/common';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-user-account-page',
@@ -206,5 +207,47 @@ export class UserAccountPageComponent implements OnInit {
             });
         }
       });
+  }
+
+  confirmChangePassword(): void {
+    this.translate
+      .get('dialog.change.password.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.changePassword();
+            }
+          });
+      });
+  }
+
+  changePassword(): void {
+    this.accountService.changeUserPassword(this.account.login)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.translate
+            .get('change.password.user.send')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.success(msg);
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          this.translate
+            .get('exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
+        }
+      })
   }
 }
