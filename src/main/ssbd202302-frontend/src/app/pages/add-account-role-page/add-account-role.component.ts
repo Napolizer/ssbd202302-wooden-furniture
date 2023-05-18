@@ -106,15 +106,7 @@ export class AddAccountRoleComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  changeGroupName(group: string): string {
-    if (group == 'SALES_REP') {
-      return 'SalesRep'
-    }
-    return group.charAt(0).toUpperCase() + group.slice(1).toLowerCase();
-  }
-
   addAccountGroupToAccount(accountGroup: string): void {
-    accountGroup = this.changeGroupName(accountGroup);
     this.accountService.addAccountRole(this.id, accountGroup)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
@@ -141,11 +133,3 @@ export class AddAccountRoleComponent implements OnInit {
       });
   }
 }
-// .subscribe(()=> {
-//   this.translate.get('edit.success')
-//     .pipe(takeUntil(this.destroy))
-//     .subscribe(msg => {
-//       this.alertService.success(msg)
-//       this.navigationService.redirectToAccountPage(this.id)
-//     });
-// },

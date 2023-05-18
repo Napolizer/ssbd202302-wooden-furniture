@@ -1,5 +1,5 @@
 <mat-toolbar [ngStyle]="{
-  'background-color': isUserInGroup('ADMINISTRATOR') ? 'red' :
+  'background-color': isUserInGroup('ADMINISTRATOR') ? 'grey' :
                       (isUserInGroup('EMPLOYEE') ? 'green' :
                       (isUserInGroup('SALES_REP') ? 'yellow' :
                       (isUserInGroup('CLIENT')  ? 'pink' : '')))}">
@@ -28,19 +28,16 @@
   </button>
   <mat-menu #switchAccessLevel [overlapTrigger]="false" yPosition="below">
   <button *ngIf="isUserInGroup('ADMINISTRATOR')" class = "administrator" mat-menu-item routerLink="#" (click)="switchRole('ADMINISTRATOR')">
-    <mat-icon>face</mat-icon><span>{{'role.administrator' | translate}}</span>
+    <mat-icon>security</mat-icon><span>{{'role.administrator' | translate}}</span>
   </button>
   <button *ngIf="isUserInGroup('EMPLOYEE')" class = "employee" mat-menu-item routerLink="#" (click)="switchRole('EMPLOYEE')">
-    <mat-icon>face</mat-icon><span>{{'role.employee' | translate}}</span>
+    <mat-icon>person</mat-icon><span>{{'role.employee' | translate}}</span>
   </button>
   <button *ngIf="isUserInGroup('SALES_REP')" class = "sales_rep" mat-menu-item routerLink="#" (click)="switchRole('SALES_REP')">
-    <mat-icon>face</mat-icon><span>{{'role.sales_rep' | translate}}</span>
+    <mat-icon>shopping_cart</mat-icon><span>{{'role.sales_rep' | translate}}</span>
   </button>
   <button *ngIf="isUserInGroup('CLIENT')" class = "client" mat-menu-item routerLink="#" (click)="switchRole('CLIENT')">
-    <mat-icon>face</mat-icon><span>{{'role.client' | translate}}</span>
-  </button>
-  <button class = "guest" mat-menu-item routerLink="#" (click)="switchRole('GUEST')">
-    <mat-icon>face</mat-icon><span>{{'role.guest' | translate}}</span>
+    <mat-icon>person_pin</mat-icon><span>{{'role.client' | translate}}</span>
   </button>
   </mat-menu>
 
