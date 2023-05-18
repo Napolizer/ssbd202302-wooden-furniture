@@ -254,7 +254,7 @@ public class AccountController {
   @Path("/github/login")
   public Response getGithubOauthLink() {
     var json = Json.createObjectBuilder();
-    String githubUrl = githubService.getGithubOauthLink();
+    String githubUrl = accountEndpoint.getGithubOauthLink();
     json.add("url", githubUrl);
     return Response.ok(json.build()).build();
   }

@@ -13,6 +13,7 @@ import {NavigationService} from "../../services/navigation.service";
 import {SelectItem} from "../../interfaces/select.item";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {AccountRegister} from "../../interfaces/account.register";
+import {AccountService} from "../../services/account.service";
 
 @Component({
   selector: 'app-github-redirect',
@@ -102,6 +103,7 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private alertService: AlertService,
     private dialogService: DialogService,
+    private accountService: AccountService
   ) { }
 
   ngOnInit(): void {
@@ -123,10 +125,8 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
                     this.navigationService.redirectToMainPage();
                   });
               } else if (response.status == 202) {
-                console.log(response);
                 this.email = response.body.email;
                 this.locale = this.translate.currentLang;
-                console.log(this.locale);
                 this.finishRegistrationForm.setValue({
                   login: response.body.login,
                   firstName: this.finishRegistrationForm.value['firstName'],
@@ -200,6 +200,7 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
         : null,
     };
     console.log(accountRegister);
+
   }
 
   onConfirm(): void {
