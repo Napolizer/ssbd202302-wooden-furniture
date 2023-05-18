@@ -23,6 +23,7 @@ import {ChangeEmailComponent} from './pages/change-email/change-email.component'
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
 import {CreateAccountComponent} from './pages/create-account/create-account.component';
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
+import { AccountType } from './enums/account.type';
 import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
 
 const routes: Routes = [
@@ -116,7 +117,8 @@ const routes: Routes = [
     component: ChangeEmailComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP],
+      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
     }
   },
   {
@@ -124,7 +126,8 @@ const routes: Routes = [
     component: ChangeOwnPasswordComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP],
+      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
     }
   },
   {
@@ -140,7 +143,8 @@ const routes: Routes = [
     component: ConfirmEmailChangeComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
+      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP],
+      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
     }
   },
   {
@@ -148,7 +152,8 @@ const routes: Routes = [
     component: ChangeEmailComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR],
+      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
     }
   },
   {

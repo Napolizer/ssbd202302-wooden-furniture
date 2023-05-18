@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, first, takeUntil } from 'rxjs';
+import { AccountType } from 'src/app/enums/account.type';
 import { AccountGoogleRegister } from 'src/app/interfaces/google.register';
 import { SelectItem } from 'src/app/interfaces/select.item';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -124,6 +125,7 @@ export class GoogleRedirectComponent implements OnInit {
             next: (response) => {
               if (response.status == 200) {
                 this.tokenService.saveToken(response.body.token);
+                this.tokenService.saveAccountType(AccountType.GOOGLE);
                 this.translate
                   .get('login.success')
                   .pipe(takeUntil(this.destroy))
@@ -229,6 +231,7 @@ export class GoogleRedirectComponent implements OnInit {
         next: (token) => {
           this.loading = false;
             this.tokenService.saveToken(token);
+            this.tokenService.saveAccountType(AccountType.GOOGLE);
             this.translate.get('login.success')
               .pipe(takeUntil(this.destroy))
               .subscribe(msg => {

@@ -206,6 +206,10 @@ public class AccountService extends AbstractService {
   public Account changePassword(String login, String newPassword, String currentPassword) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
+    if (!account.getAccountType().equals(AccountType.NORMAL)) {
+      throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+    }
+
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
       throw ApplicationExceptionFactory.createAccountNotVerifiedException();
       //fixme invalidCredentialsException is checked
@@ -320,6 +324,9 @@ public class AccountService extends AbstractService {
 
   public void sendResetPasswordEmail(String email) {
     Account account = getAccountByEmail(email).get();
+    if (!account.getAccountType().equals(AccountType.NORMAL)) {
+      throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+    }
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.PASSWORD_RESET, resetPasswordToken);
@@ -352,6 +359,11 @@ public class AccountService extends AbstractService {
     if (isAdmin || subject.getId().equals(accountId)) {
       Account account = accountFacade.findById(accountId)
               .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+      if (!account.getAccountType().equals(AccountType.NORMAL)) {
+        throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+      }
+
       account.setNewEmail(newEmail);
       accountFacade.update(account);
       String accountChangeEmailToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);

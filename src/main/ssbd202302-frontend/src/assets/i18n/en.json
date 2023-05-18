@@ -198,7 +198,7 @@
   "exception.mok.account.administrator.access.level.already.assigned": "Account with Administrator role cant have any other role",
   "exception.mok.account.change.state": "The requested account state change cannot be performed due to restrictions or the account is already active",
   "exception.google.conflict": "Account already exists, please log in using your regular credentials",
-  "exception.invalid.account.type": "You are not allowed to perform this action because your account is registered with an external service",
+  "exception.invalid.account.type": "You are not allowed to perform this action because this account was registered with an external service",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",
