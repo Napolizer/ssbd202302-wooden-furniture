@@ -24,6 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
@@ -182,5 +183,10 @@ public class AccountEndpoint extends AbstractEndpoint {
   @Override
   protected boolean isLastTransactionRollback() {
     return accountService.isLastTransactionRollback();
+  }
+
+  @PermitAll
+  public void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto) {
+    repeatTransaction(() -> accountService.changeLocale(accountId, changeLocaleDto.getLocale()));
   }
 }

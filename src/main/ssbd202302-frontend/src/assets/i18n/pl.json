@@ -21,6 +21,10 @@
   "forgot.password.button": "Wyślij",
   "forgot.password.success": "Link do formularza resetowania hasła został wysłany na Twój adres email",
 
+  "change.locale.english": "Angielski",
+  "change.locale.polish": "Polski",
+  "change.locale.success": "Pomyślnie zmieniono język",
+
   "change.email.button": "Zmień adres email",
   "change.email.success": "Twój adres email został pomyślnie zmieniony",
   "change.email.current": "Aktualny adres email",
@@ -153,6 +157,7 @@
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
+  "dialog.edit.locale": "Czy na pewno chcesz zmienić język?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",

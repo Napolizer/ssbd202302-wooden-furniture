@@ -26,6 +26,9 @@
   <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="Switch Access Level" [matMenuTriggerFor]="switchAccessLevel">
     <mat-icon>autorenew</mat-icon>
   </button>
+  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="Change language" [matMenuTriggerFor]="changeLocale">
+    <mat-icon>language</mat-icon>
+  </button>
   <mat-menu #switchAccessLevel [overlapTrigger]="false" yPosition="below">
   <button *ngIf="isUserInGroup('ADMINISTRATOR')" class = "administrator" mat-menu-item routerLink="#" (click)="switchRole('ADMINISTRATOR')">
     <mat-icon>security</mat-icon><span>{{'role.administrator' | translate}}</span>
@@ -52,6 +55,23 @@
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="#" (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>{{'toolbar.logout' | translate}}
+    </button>
+  </mat-menu>
+
+  <mat-menu #changeLocale [overlapTrigger]="false" yPosition="below">
+    <button mat-menu-item [disabled]="getCurrentLocale() === 'en'" (click)="changeLocaleToEnglish()">
+      <mat-icon *ngIf="getCurrentLocale() === 'en'; else radioUnchecked">radio_button_checked</mat-icon>
+      <ng-template #radioUnchecked>
+        <mat-icon>radio_button_unchecked</mat-icon>
+      </ng-template>
+      <span>{{'change.locale.english' | translate}}</span>
+    </button>
+    <button mat-menu-item [disabled]="getCurrentLocale() === 'pl'" (click)="changeLocaleToPolish()">
+      <mat-icon *ngIf="getCurrentLocale() === 'pl'; else radioUnchecked">radio_button_checked</mat-icon>
+      <ng-template #radioUnchecked>
+        <mat-icon>radio_button_unchecked</mat-icon>
+      </ng-template>
+      <span>{{'change.locale.polish' | translate}}</span>
     </button>
   </mat-menu>
 </mat-toolbar>

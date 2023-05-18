@@ -403,5 +403,12 @@ public class AccountService extends AbstractService {
     }
   }
 
+  @PermitAll
+  public void changeLocale(Long accountId, String locale) {
+    Account account = accountFacade.findById(accountId)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
+    account.setLocale(locale);
+    accountFacade.update(account);
+  }
 }
