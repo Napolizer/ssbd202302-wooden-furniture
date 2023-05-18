@@ -1,5 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -23,6 +31,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
     AccountFacadeExceptionsInterceptor.class,
     LoggerInterceptor.class
 })
+@DenyAll
 public class AccountFacade extends AbstractFacade<Account> implements AccountFacadeOperations {
   @PersistenceContext(unitName = "ssbd02mokPU")
   private EntityManager em;
@@ -32,11 +41,13 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @PermitAll
   protected EntityManager getEntityManager() {
     return em;
   }
 
   @Override
+  @PermitAll
   public Account create(Account entity) {
     Account account = super.create(entity);
     em.flush();
@@ -44,6 +55,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @PermitAll
   public Account update(Account entity) {
     Account account = super.update(entity);
     em.flush();
@@ -51,6 +63,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @RolesAllowed(ADMINISTRATOR)
   public List<Account> findAllByFirstName(String firstName) {
     return em.createNamedQuery(Account.FIND_ALL_BY_FIRST_NAME, Account.class)
         .setParameter("firstName", firstName)
@@ -58,6 +71,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @RolesAllowed(ADMINISTRATOR)
   public List<Account> findAllByLastName(String lastName) {
     return em.createNamedQuery(Account.FIND_ALL_BY_LAST_NAME, Account.class)
         .setParameter("lastName", lastName)
@@ -65,6 +79,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @RolesAllowed(ADMINISTRATOR)
   public List<Account> findAllByAddressId(Long addressId) {
     return em.createNamedQuery(Account.FIND_ALL_BY_ADDRESS_ID, Account.class)
         .setParameter("addressId", addressId)
@@ -72,6 +87,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @PermitAll
   public Optional<Account> findByLogin(String login) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_LOGIN, Account.class)
@@ -83,6 +99,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @RolesAllowed(ADMINISTRATOR)
   public Optional<Account> findByEmail(String email) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_EMAIL, Account.class)
@@ -94,6 +111,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @PermitAll
   public Optional<Account> findById(Long accountId) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_ACCOUNT_ID, Account.class)
@@ -105,6 +123,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   }
 
   @Override
+  @RolesAllowed(ADMINISTRATOR)
   public void delete(Account account) {
     em.remove(em.merge(account));
     em.flush();
