@@ -1,0 +1,20 @@
+<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN"
+        "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
+<glassfish-web-app>
+    <security-role-mapping>
+        <principal-name>Administrator</principal-name>
+        <role-name>administrator</role-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <principal-name>Client</principal-name>
+        <role-name>client</role-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <principal-name>Employee</principal-name>
+        <role-name>employee</role-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <principal-name>SalesRep</principal-name>
+        <role-name>sales_rep</role-name>
+    </security-role-mapping>
+</glassfish-web-app>

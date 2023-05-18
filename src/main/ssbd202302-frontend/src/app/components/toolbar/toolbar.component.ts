@@ -5,6 +5,9 @@ import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
 import {first, Subject, takeUntil} from "rxjs";
 import { Role } from 'src/app/enums/role';
+import {AccountService} from "../../services/account.service";
+import {ChangeLocale} from "../../interfaces/change.locale";
+import {DialogService} from "../../services/dialog.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -15,15 +18,24 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
 
   public currentRole: Role;
+  private id: number;
+  private locale: string;
+  private changeLocale: ChangeLocale;
   constructor(
     private alertService: AlertService,
     private navigationService: NavigationService,
     private authenticationService: AuthenticationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private accountService: AccountService,
+    private dialogService: DialogService
   ) {
   }
 
   ngOnInit(): void {
+    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
+      .subscribe(account => {
+        this.id = account.id
+      })
   }
 
   ngOnDestroy(): void {
@@ -130,5 +142,93 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.alertService.success(message);
         this.redirectToMainPage();
       });
+  }
+
+  getCurrentLocale(): string {
+    return this.translate.currentLang as string;
+  }
+
+  changeLocaleToPolish(): void {
+    this.translate.get('dialog.edit.locale')
+      .pipe(takeUntil(this.destroy))
+      .subscribe(msg => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary')
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe(result => {
+            if (result === 'action') {
+              this.locale = 'pl';
+              this.changeLocale = {
+                locale: this.locale
+              }
+              this.accountService.changeLocale(this.id, this.changeLocale)
+                .pipe(first(), takeUntil(this.destroy))
+                .subscribe({
+                  next: () => {
+                    this.translate.use('pl');
+                    this.translate.get('change.locale.success')
+                      .pipe(takeUntil(this.destroy))
+                      .subscribe(msg => {
+                        this.alertService.success(msg)
+                        void this.navigationService.redirectToMainPage();
+                      })
+                  },
+                  error: e => {
+                    const title = this.translate.instant('exception.occurred');
+                    const message = this.translate.instant(e.error.message || 'exception.unknown');
+                    const ref = this.dialogService.openErrorDialog(title, message);
+                    ref.afterClosed()
+                      .pipe(first(), takeUntil(this.destroy))
+                      .subscribe(() => {
+                        void this.navigationService.redirectToMainPage();
+                      });
+                  }
+                })
+            }
+          })
+      })
+  }
+
+  changeLocaleToEnglish(): void {
+    this.translate.get('dialog.edit.locale')
+      .pipe(takeUntil(this.destroy))
+      .subscribe(msg => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary')
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe(result => {
+            if (result === 'action') {
+              this.locale = 'en';
+              this.changeLocale = {
+                locale: this.locale
+              }
+              this.accountService.changeLocale(this.id, this.changeLocale)
+                .pipe(first(), takeUntil(this.destroy))
+                .subscribe({
+                  next: () => {
+                    this.translate.use('en');
+                    this.translate.get('change.locale.success')
+                      .pipe(takeUntil(this.destroy))
+                      .subscribe(msg => {
+                        this.alertService.success(msg);
+                        void this.navigationService.redirectToMainPage();
+                      })
+                  },
+                  error: e => {
+                    const title = this.translate.instant('exception.occurred');
+                    const message = this.translate.instant(e.error.message || 'exception.unknown');
+                    const ref = this.dialogService.openErrorDialog(title, message);
+                    ref.afterClosed()
+                      .pipe(first(), takeUntil(this.destroy))
+                      .subscribe(() => {
+                        void this.navigationService.redirectToMainPage();
+                      });
+                  }
+                })
+            }
+          })
+      })
   }
 }
