@@ -110,7 +110,7 @@ export class ChangePasswordConfirmComponent implements OnInit {
       currentPassword: this.changePasswordForm.value['currentPassword']!
     };
     this.accountService
-      .changePassword(newPassword)
+      .changePasswordFromLink(newPassword, this.token)
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: () => {
