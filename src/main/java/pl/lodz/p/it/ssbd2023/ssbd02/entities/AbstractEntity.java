@@ -1,12 +1,14 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import pl.lodz.p.it.ssbd2023.ssbd02.listeners.EntityListener;
 
 @MappedSuperclass
 @Getter
@@ -24,6 +27,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @EqualsAndHashCode
 @SuperBuilder
+@EntityListeners(EntityListener.class)
 public abstract class AbstractEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -38,21 +42,21 @@ public abstract class AbstractEntity {
   @Builder.Default
   private Boolean archive = false;
 
+  @Setter
   @Column(name = "created_at", nullable = false, updatable = false)
-  @Setter(AccessLevel.NONE)
   private LocalDateTime createdAt;
 
+  @Setter
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "created_by")
+  private Account createdBy;
+
+  @Setter
   @Column(name = "updated_at")
-  @Setter(AccessLevel.NONE)
   private LocalDateTime updatedAt;
 
-  @PrePersist
-  private void prePersist() {
-    this.createdAt = LocalDateTime.now();
-  }
-
-  @PreUpdate
-  private void preUpdate() {
-    this.updatedAt = LocalDateTime.now();
-  }
+  @Setter
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "updated_by")
+  private Account updatedBy;
 }

@@ -52,6 +52,8 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_ACTIVATED_MESSAGE = "mok.email.account.activated.message";
     public static final String EMAIL_ACCOUNT_VERIFIED_SUBJECT = "mok.email.account.verified.subject";
     public static final String EMAIL_ACCOUNT_VERIFIED_MESSAGE = "mok.email.account.verified.message";
+    public static final String EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT = "mok.email.account.change.password.subject";
+    public static final String EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC = "mok.email.account.change.password.topic";
     public static final String ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED =
         "exception.mok.account.access.level.already.assigned";
     public static final String ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED =
@@ -94,6 +96,7 @@ public class MessageUtil {
     public static final String ERROR_FORBIDDEN = "exception.forbidden";
     public static final String ERROR_GOOGLE_CONFLICT = "exception.google.conflict";
     public static final String ERROR_INVALID_ACCOUNT_TYPE = "exception.invalid.account.type";
+    public static final String ERROR_GITHUB_CONFLICT = "exception.github.conflict";
     public static final String ACCOUNT_EMAIL_DOES_NOT_EXIST = "exception.mok.account.email.does.not.exist";
     public static final String EMAIL_RESET_PASSWORD_SUBJECT = "mok.email.account.reset.password.subject";
     public static final String EMAIL_RESET_PASSWORD_MESSAGE1 = "mok.email.account.reset.password.message1";

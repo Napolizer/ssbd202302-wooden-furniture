@@ -22,8 +22,10 @@ import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.c
 import {ChangeEmailComponent} from './pages/change-email/change-email.component';
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
 import {CreateAccountComponent} from './pages/create-account/create-account.component';
+import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/change-password-confirm.component";
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import { AccountType } from './enums/account.type';
+import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
 
 const routes: Routes = [
   {
@@ -38,6 +40,14 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.GUEST]
+    }
+  },
+  {
+    path: 'github',
+    component: GithubRedirectComponent,
     canActivate: [AuthGuard],
     data: {
       roles: [Role.GUEST]
@@ -158,6 +168,14 @@ const routes: Routes = [
   {
     path: 'reset-password',
     component: ResetPasswordComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.GUEST]
+    }
+  },
+  {
+    path: 'change-password/confirm',
+    component: ChangePasswordConfirmComponent,
     canActivate: [AuthGuard],
     data: {
       roles: [Role.GUEST]

@@ -1,5 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
@@ -18,6 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
@@ -25,13 +34,16 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
 @Interceptors({LoggerInterceptor.class})
-public class AccountEndpoint {
+@DenyAll
+public class AccountEndpoint extends AbstractEndpoint {
 
   @Inject
   private AccountService accountService;
@@ -39,84 +51,109 @@ public class AccountEndpoint {
   private GoogleService googleService;
   @Inject
   private AuthenticationService authenticationService;
+  @Inject
+  private GithubService githubService;
 
 
+  @PermitAll
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(accountRegisterDto);
     repeatTransaction(() -> accountService.registerAccount(account));
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public Account createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
     return repeatTransaction(() -> accountService.createAccount(account));
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void blockAccount(Long id) {
     repeatTransaction(() -> accountService.blockAccount(id));
 
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void activateAccount(Long id) {
     repeatTransaction(() -> accountService.activateAccount(id));
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public Optional<Account> getAccountByAccountId(Long accountId) {
     return repeatTransaction(() -> accountService.getAccountById(accountId));
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Optional<Account> getAccountByLogin(String login) {
     return repeatTransaction(() -> accountService.getAccountByLogin(login));
   }
 
+  @PermitAll
   public Optional<Account> getAccountByEmail(SetEmailToSendPasswordDto emailDto) {
     return repeatTransaction(() -> accountService.getAccountByEmail(emailDto.getEmail()));
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public List<Account> getAccountList() {
     return repeatTransaction(() -> accountService.getAccountList());
   }
 
+  @PermitAll
   public String login(UserCredentialsDto userCredentialsDto, String ip, String locale) throws AuthenticationException {
     return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip, locale);
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
     repeatTransaction(() -> accountService.addAccessLevelToAccount(accountId, accessLevel));
     Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
     repeatTransaction(() -> accountService.removeAccessLevelFromAccount(accountId, accessLevel));
     Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Account changePassword(String login, String newPassword, String currentPassword) {
     return repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
   }
 
-  public void changePasswordAsAdmin(String login, String newPassword) {
-    repeatTransaction(() -> accountService.changePasswordAsAdmin(login, newPassword));
+  @RolesAllowed(ADMINISTRATOR)
+  public void changePasswordAsAdmin(String login) {
+    repeatTransaction(() -> accountService.changePasswordAsAdmin(login));
   }
 
+  @PermitAll
+  public Account changePasswordFromLink(String token, String password, String currentPassword) {
+    return repeatTransaction(() -> accountService.changePasswordFromLink(token, password, currentPassword));
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
     repeatTransaction(() -> accountService.editAccountInfo(login,
             DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public void editAccountInfoAsAdmin(String login,
                                      EditPersonInfoDto editPersonInfoDto) {
     repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
             DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
+  @RolesAllowed(ADMINISTRATOR)
   public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
     return repeatTransaction(() -> accountService.changeAccessLevel(accountId, accessLevel));
   }
 
+  @PermitAll
   public void confirmAccount(String token) {
     repeatTransaction(() -> accountService.confirmAccount(token));
   }
 
+  @PermitAll
   public String validateEmailToken(String token, TokenType tokenType) {
     switch (tokenType) {
       case PASSWORD_RESET -> {
@@ -125,26 +162,34 @@ public class AccountEndpoint {
       case CHANGE_EMAIL -> {
         return repeatTransaction(() -> accountService.validateChangeEmailToken(token));
       }
+      case CHANGE_PASSWORD -> {
+        return repeatTransaction(() -> accountService.validatePasswordChangeToken(token));
+      }
       default -> throw ApplicationExceptionFactory.createInvalidLinkException();
     }
   }
 
+  @PermitAll
   public void resetPassword(String login, ChangePasswordDto changePasswordDto) {
     repeatTransaction(() -> accountService.resetPassword(login, changePasswordDto.getPassword()));
   }
 
+  @PermitAll
   public void sendResetPasswordEmail(SetEmailToSendPasswordDto emailDto) {
     repeatTransaction(() -> accountService.sendResetPasswordEmail(emailDto.getEmail()));
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void updateEmailAfterConfirmation(String login) {
     repeatTransaction(() -> accountService.updateEmailAfterConfirmation(login));
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
     repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
   }
 
+  @PermitAll
   public Response handleGoogleRedirect(String code, String state, String ip, String locale) {
     Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
 
@@ -156,10 +201,12 @@ public class AccountEndpoint {
     }
   }
 
+  @PermitAll
   public String getGoogleOauthLink() {
     return repeatTransaction(() ->  googleService.getGoogleOauthLink());
   }
 
+  @PermitAll
   public Response registerGoogleAccount(GoogleAccountRegisterDto googleAccountRegisterDto, String ip) {
     googleService.validateIdToken(googleAccountRegisterDto.getIdToken());
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(googleAccountRegisterDto);
@@ -168,52 +215,38 @@ public class AccountEndpoint {
     return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
-  private <T> T repeatTransaction(TransactionMethod<T> method) {
-    int retryCounter = 3;
-    boolean isRollback;
-    T result = null;
+  @PermitAll
+  public Response handleGithubRedirect(String githubCode, String ip, String locale) {
+    Account account = githubService.getRegisteredAccountOrCreateNew(githubCode);
 
-    do {
-      try {
-        result = method.run();
-        isRollback = accountService.isLastTransactionRollback();
-      } catch (EJBTransactionRolledbackException ex) {
-        isRollback = true;
-      }
-
-    } while (isRollback && --retryCounter > 0);
-
-    if (isRollback && retryCounter == 0) {
-      throw new EJBTransactionRolledbackException();
+    if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
+      String token = authenticationService.loginWithGithub(account.getEmail(), ip, locale);
+      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
     } else {
-      return result;
+      return Response.accepted().entity(DtoToEntityMapper.mapAccountToGithubAccountInfoDto(account)).build();
     }
   }
 
-  private void repeatTransaction(VoidTransactionMethod method) {
-    int retryCounter = 3;
-    boolean isRollback;
-
-    do {
-      try {
-        method.run();
-        isRollback = accountService.isLastTransactionRollback();
-      } catch (EJBTransactionRolledbackException ex) {
-        isRollback = true;
-      }
-
-    } while (isRollback && --retryCounter > 0);
-
-    if (isRollback && retryCounter == 0) {
-      throw new EJBTransactionRolledbackException();
-    }
+  @PermitAll
+  public String getGithubOauthLink() {
+    return repeatTransaction(() -> githubService.getGithubOauthLink());
   }
 
-  private interface TransactionMethod<T> {
-    T run();
+  @PermitAll
+  public Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip) {
+    Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(githubAccountRegisterDto);
+    repeatTransaction(() -> accountService.registerGithubAccount(account));
+    String token = authenticationService.loginWithGithub(account.getEmail(), ip, account.getLocale());
+    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
   }
 
-  private interface VoidTransactionMethod {
-    void run();
+  @Override
+  protected boolean isLastTransactionRollback() {
+    return accountService.isLastTransactionRollback();
+  }
+
+  @PermitAll
+  public void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto) {
+    repeatTransaction(() -> accountService.changeLocale(accountId, changeLocaleDto.getLocale()));
   }
 }

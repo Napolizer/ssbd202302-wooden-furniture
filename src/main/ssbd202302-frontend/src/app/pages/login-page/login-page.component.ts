@@ -127,4 +127,17 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         }
       })
   }
+
+  onLoginWithGithubClicked(): void {
+    this.authenticationService.getGithubOauthLink()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe({
+        next: (url) => {
+          window.location.href = url;
+        },
+        error: () => {
+          void this.navigationService.redirectToNotFoundPage();
+        }
+      })
+  }
 }

@@ -15,7 +15,7 @@ export class AppComponent {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer
   ) {
-    this.matIconRegistry.addSvgIcon('google-logo', 
+    this.matIconRegistry.addSvgIcon('google-logo',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/google-logo.svg'))
     translate.setDefaultLang('en');
     translate.use(translate.getBrowserLang() || 'en');

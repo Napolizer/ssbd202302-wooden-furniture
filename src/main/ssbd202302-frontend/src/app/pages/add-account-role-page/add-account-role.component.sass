@@ -1,12 +1,42 @@
+$border-radius: 10px
+
 .container
   position: fixed
-  width: 100%
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  width: 80%
+  max-width: 600px
   height: 100%
-  padding-top: 150px
-  padding-left: 350px
-  padding-right: 350px
+  padding-top: 100px
   box-sizing: border-box
   font-family: Lato, sans-serif
+
+.panel
   display: flex
-  background: inherit
-  overflow-y: scroll
+  flex-direction: row
+  justify-content: space-evenly
+  border-radius: $border-radius
+  padding: 3px
+
+.list-container
+  padding-top: 0
+  flex-grow: 1
+  background-color: #f8f8f8
+  border-radius: $border-radius
+
+.styled-button
+  margin: 5px
+  padding: 10px 20px
+  border-radius: $border-radius
+  font-size: 14px
+  background-color: #454545
+  color: #fff
+  border: none
+  width: 90%
+
+  &:hover
+    background-color: #0056b3
+
+  &:active
+    background-color: #003d80

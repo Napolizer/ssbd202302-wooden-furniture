@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
 
 public final class DtoToEntityMapper {
@@ -114,5 +115,12 @@ public final class DtoToEntityMapper {
             .locale(account.getLocale())
             .idToken(account.getPassword())
             .email(account.getEmail()).build();
+  }
+
+  public static GithubAccountInfoDto mapAccountToGithubAccountInfoDto(Account account) {
+    return GithubAccountInfoDto.builder()
+        .login(account.getLogin())
+        .email(account.getEmail())
+        .build();
   }
 }
