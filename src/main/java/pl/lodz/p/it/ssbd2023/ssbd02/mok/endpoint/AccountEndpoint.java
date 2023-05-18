@@ -88,8 +88,8 @@ public class AccountEndpoint {
   }
 
   @PermitAll
-  public String login(UserCredentialsDto userCredentialsDto, String ip) throws AuthenticationException {
-    return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip);
+  public String login(UserCredentialsDto userCredentialsDto, String ip, String locale) throws AuthenticationException {
+    return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip, locale);
   }
 
   @RolesAllowed(ADMINISTRATOR)

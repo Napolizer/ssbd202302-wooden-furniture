@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
+import io.restassured.http.Header;
 import jakarta.json.JsonObject;
 import org.jose4j.json.internal.json_simple.JSONObject;
 import org.jose4j.json.internal.json_simple.parser.JSONParser;
@@ -44,6 +45,7 @@ public class AccountControllerIT {
   private String retrieveToken(String login, String password) {
     return given()
         .contentType("application/json")
+        .header(acceptLanguageHeader)
         .body("""
                    {
                        "login": "$login",
@@ -62,6 +64,7 @@ public class AccountControllerIT {
   private int retrieveAccountId(String login) {
     return given()
         .header("Authorization", "Bearer " + retrieveAdminToken())
+        .header(acceptLanguageHeader)
         .when()
         .get("/account/login/" + login)
         .then()
@@ -73,6 +76,7 @@ public class AccountControllerIT {
   private String retrieveAccountHash(String login) {
     return given()
             .header("Authorization", "Bearer " + retrieveAdminToken())
+            .header(acceptLanguageHeader)
             .when()
             .get("/account/login/" + login)
             .then()
@@ -80,6 +84,8 @@ public class AccountControllerIT {
             .extract()
             .path("hash");
   }
+
+  private Header acceptLanguageHeader = new Header("Accept-Language", "en-US");
 
   @Nested
   @Order(1)
@@ -89,6 +95,7 @@ public class AccountControllerIT {
     void shouldProperlyLoginTest() {
       given()
           .contentType("application/json")
+          .header(acceptLanguageHeader)
           .body("""
                      {
                          "login": "administrator",

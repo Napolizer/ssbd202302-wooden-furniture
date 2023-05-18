@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
@@ -26,7 +27,7 @@ public class AuthenticationService {
   private TokenService tokenService;
 
   @PermitAll
-  public String login(String login, String password, String ip) throws AuthenticationException {
+  public String login(String login, String password, String ip, String locale) throws AuthenticationException {
     if (password == null) {
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
@@ -39,6 +40,9 @@ public class AuthenticationService {
     account.setFailedLoginCounter(0);
     account.setLastLogin(LocalDateTime.now());
     account.setLastLoginIpAddress(ip);
+    if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
+      account.setLocale(locale);
+    }
     accountFacade.update(account);
 
     return tokenService.generateToken(account);
