@@ -52,6 +52,8 @@ import { DigitOnlyDirective } from './utils/digit.only.directive';
 import { ChangeOwnPasswordComponent } from './pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
 import { GithubRedirectComponent } from './pages/github-redirect/github-redirect.component';
+import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
+
 
 @NgModule({
   declarations: [
@@ -84,6 +86,8 @@ import { GithubRedirectComponent } from './pages/github-redirect/github-redirect
     DigitOnlyDirective,
     CreateAccountComponent,
     GithubRedirectComponent,
+    CreateAccountComponent,
+    GoogleRedirectComponent
   ],
     imports: [
         BrowserModule,

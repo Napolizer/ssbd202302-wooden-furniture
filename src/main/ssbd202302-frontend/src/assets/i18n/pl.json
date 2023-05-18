@@ -16,6 +16,7 @@
   "login.password.validity.tooShort": "Hasło musi zawierać przynajmniej 8 znaków",
   "login.success": "Zalogowano pomyślnie!",
   "login.forgot.password": "Nie pamiętasz hasła?",
+  "login.google.button": "Zaloguj się za pomocą Google",
   "login.github.button": "Zaloguj się za pomocą Github",
 
   "forgot.password.title": "Podaj swój adres email",
@@ -78,6 +79,9 @@
   "register.confirm.second": "Mamy nadzieję, że znajdziesz to, czego szukasz i będziesz cieszył/a się zakupami u nas!",
   "register.confirm.third": "Jeśli twoje konto zostało już zweryfikowane, ",
   "register.confirm.fourth": "możesz się teraz zalogować.",
+
+  "google.register.title": "Dokończ proces rejestracji",
+  "google.register.button": "Potwierdź",
 
   "github.register.title": "Dokończ proces rejestracji",
   "github.register.button": "Zatwierdź",
@@ -156,6 +160,7 @@
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
+  "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Github z kontem w naszym systemie?",
 
   "exception.occurred": "Wystąpił błąd",
@@ -190,6 +195,8 @@
   "exception.mok.account.remove.access.level": "Grupa nie jest przypisana do konta lub jest to jedyna rola konta",
   "exception.mok.account.administrator.access.level.already.assigned": "Konto z rolą Administratora nie może mieć przypisanej innej roli",
   "exception.mok.account.change.state": "Nie można zmienić stanu wybranego konta, z powodu restrykcji lub z powodu zmiany na ten sam stan.",
+  "exception.google.conflict": "Konto już istnieje, zaloguj się za pomocą swoich zwykłych danych",
+  "exception.invalid.account.type": "Nie możesz wykonać tej akcji, ponieważ Twoje konto zostało zarejestrowane za pomocą zewnętrznego serwisu",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

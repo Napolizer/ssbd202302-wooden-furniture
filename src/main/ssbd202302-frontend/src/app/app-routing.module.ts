@@ -22,6 +22,7 @@ import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.c
 import {ChangeEmailComponent} from './pages/change-email/change-email.component';
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
 import {CreateAccountComponent} from './pages/create-account/create-account.component';
+import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
 
 const routes: Routes = [
@@ -97,6 +98,14 @@ const routes: Routes = [
   {
     path: 'confirm',
     component: ConfirmAccountComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.GUEST]
+    }
+  },
+  {
+    path: 'google',
+    component: GoogleRedirectComponent,
     canActivate: [AuthGuard],
     data: {
       roles: [Role.GUEST]

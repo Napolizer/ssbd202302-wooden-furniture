@@ -7,6 +7,7 @@ import jakarta.security.enterprise.AuthenticationException;
 import java.time.LocalDateTime;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -32,10 +33,29 @@ public class AuthenticationService {
         .findByLogin(login)
         .orElseThrow(ApplicationExceptionFactory::createInvalidCredentialsException);
 
+    if (!account.getAccountType().equals(AccountType.NORMAL)) {
+      throw ApplicationExceptionFactory.createInvalidAccountTypeException();
+    }
+
     validateAccount(account, password, ip);
     account.setFailedLoginCounter(0);
     account.setLastLogin(LocalDateTime.now());
     account.setLastLoginIpAddress(ip);
+    if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
+      account.setLocale(locale);
+    }
+    accountFacade.update(account);
+
+    return tokenService.generateToken(account);
+  }
+
+  public String loginWithGoogle(String email, String ip, String locale) {
+    Account account = accountFacade
+            .findByEmail(email)
+            .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
+
+    account.setLastLoginIpAddress(ip);
+    account.setLastLogin(LocalDateTime.now());
     if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
       account.setLocale(locale);
     }
