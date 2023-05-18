@@ -23,18 +23,26 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class AccountServiceIT {
   @PersistenceContext(unitName = "ssbd02adminPU")
   private EntityManager em;
   @Resource
   private UserTransaction utx;
+  @Mock
+  private MailService mailService;
   @Inject
+  @InjectMocks
   private AccountService accountService;
 
   private Account account;
@@ -441,7 +449,7 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyCreatesAccount() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+  public void properlyCreatesAccount() {
     accountToRegister.setAccountState(AccountState.ACTIVE);
     AccessLevel client = new Client();
     AccessLevel employee = new Employee();
