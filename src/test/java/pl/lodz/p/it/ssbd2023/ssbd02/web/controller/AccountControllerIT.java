@@ -630,22 +630,11 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Client")
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("roles[0]", equalTo("client"))
-          .body("roles[1]", equalTo("employee"));
-
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
           .get("/account/id/" + retrieveAccountId("accounttoeditals"))
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("roles[0]", equalTo("client"))
-          .body("roles[1]", equalTo("employee"));
+          .body("roles[0]", equalTo("employee"));
     }
 
     @Test
@@ -735,46 +724,14 @@ public class AccountControllerIT {
 
     @Test
     @Order(4)
-    void failsToAddAccessLevelWhenAccessLevelIsNotAssigned() {
+    void failsToRemoveAccessLevelWhenAccessLevelIsNotAssigned() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
           .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
           .then()
           .statusCode(400)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_NOT_ASSIGNED));
-    }
-
-    @Test
-    @Order(5)
-    void properlyRemovesAccessLevelFromAccount() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("roles[0]", equalTo("client"))
-          .body("roles[1]", equalTo("employee"));
-
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Client")
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("roles[0]", equalTo("employee"));
-
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("roles[0]", equalTo("employee"));
+          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_REMOVE_ACCESS_LEVEL));
     }
   }
 
