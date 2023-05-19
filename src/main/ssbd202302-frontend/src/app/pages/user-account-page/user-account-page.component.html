@@ -127,6 +127,7 @@
           <button mat-raised-button color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
           <button mat-raised-button color="warn" (click)="onBlockClicked()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>
           <button mat-raised-button color="success" (click)="onActivateClicked()" [disabled]="isBlocked()">{{'account.activate' | translate}}</button>
+          <button mat-raised-button color="primary" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
         </mat-card-actions>
       </mat-card>
     </form>
