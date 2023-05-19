@@ -101,12 +101,12 @@ public class AuthenticationServiceIT {
                 .build())
             .build())
         .build();
-    accountFacade.create(account);
     Client client = Client.builder()
             .company(null)
             .account(account)
             .build();
     account.setAccessLevels(List.of(client));
+    accountFacade.create(account);
     accountFacade.update(account);
     utx.commit();
   }
