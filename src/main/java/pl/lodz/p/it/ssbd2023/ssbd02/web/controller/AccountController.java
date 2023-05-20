@@ -381,8 +381,9 @@ public class AccountController {
   @Path("/change-email/{accountId}")
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response changeEmail(@PathParam("accountId") Long accountId,
+                              @HeaderParam(HttpHeaders.IF_MATCH) String version,
                               @NotNull @Valid SetEmailToSendPasswordDto emailDto) {
-    accountEndpoint.changeEmail(emailDto, accountId, principal.getName());
+    accountEndpoint.changeEmail(emailDto, accountId, principal.getName(), version);
     return Response.ok().build();
   }
 

@@ -185,8 +185,8 @@ public class AccountEndpoint extends AbstractEndpoint {
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login) {
-    repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login));
+  public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login, String version) {
+    repeatTransaction(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login, version));
   }
 
   @PermitAll

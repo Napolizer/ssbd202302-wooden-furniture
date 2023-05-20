@@ -399,7 +399,7 @@ public class AccountService extends AbstractService {
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void changeEmail(String newEmail, Long accountId, String principal) {
+  public void changeEmail(String newEmail, Long accountId, String principal, String version) {
     Account subject = accountFacade.findByLogin(principal)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
@@ -413,6 +413,10 @@ public class AccountService extends AbstractService {
     if (isAdmin || subject.getId().equals(accountId)) {
       Account account = accountFacade.findById(accountId)
               .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+      if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), version)) {
+        throw new OptimisticLockException();
+      }
 
       if (!account.getAccountType().equals(AccountType.NORMAL)) {
         throw ApplicationExceptionFactory.createInvalidAccountTypeException();

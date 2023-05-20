@@ -49,6 +49,7 @@ export class ChangeEmailComponent implements OnInit {
   destroy = new Subject<boolean>();
   loading = true;
   id: string;
+  version: string;
   currentEmail: string;
   changeEmailForm: FormGroup;
 
@@ -81,6 +82,7 @@ export class ChangeEmailComponent implements OnInit {
         .pipe(first(), takeUntil(this.destroy))
         .subscribe({
           next: (account) => {
+            this.version = account.hash;
             this.changeEmailForm.setValue({
               currentEmail: account.email,
               newEmail: '',
@@ -121,6 +123,7 @@ export class ChangeEmailComponent implements OnInit {
         .subscribe({
           next: (account) => {
             this.id = account.id.toString();
+            this.version = account.hash;
             this.changeEmailForm.setValue({
               currentEmail: account.email,
               newEmail: '',
@@ -182,7 +185,7 @@ export class ChangeEmailComponent implements OnInit {
       email: this.changeEmailForm.value['newEmail']!,
     };
     this.accountService
-      .changeEmail(this.id, email)
+      .changeEmail(this.id, email, this.version)
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: () => {
@@ -206,6 +209,12 @@ export class ChangeEmailComponent implements OnInit {
               .pipe(takeUntil(this.destroy))
               .subscribe((msg) => {
                 this.alertService.danger(msg);
+                const id = this.route.snapshot.paramMap.get('id');
+                if (id) {
+                  this.navigationService.redirectToAccountPage(this.id)
+                } else {
+                  this.navigationService.redirectToOwnAccountPage();
+                }
               });
           } else if (e.status == 403) {
             this.translate
