@@ -41,7 +41,6 @@ public class AccountWithoutSensitiveDataDto {
   private String locale;
   @NotNull
   private Integer failedLoginCounter;
-  @NotNull
   private LocalDateTime blockadeEnd;
   @NotNull
   private AccountState accountState;
