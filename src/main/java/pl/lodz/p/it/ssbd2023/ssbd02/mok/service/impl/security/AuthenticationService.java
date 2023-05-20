@@ -7,9 +7,9 @@ import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import java.time.LocalDateTime;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+
+import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -43,6 +43,18 @@ public class AuthenticationService {
 
     validateAccount(account, password, ip);
     account.setFailedLoginCounter(0);
+
+    boolean isAdmin = account.getAccessLevels().stream()
+            .anyMatch(a -> a.getRoleName().equals(Role.ADMINISTRATOR));
+
+    if (isAdmin) {
+      try {
+        mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), ip);
+      } catch (MessagingException e) {
+        throw ApplicationExceptionFactory.createMailServiceException(e);
+      }
+    }
+
     return setUpAccountAndGenerateToken(ip, locale, account);
   }
 
