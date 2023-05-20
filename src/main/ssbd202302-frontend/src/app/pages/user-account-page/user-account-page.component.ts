@@ -155,7 +155,24 @@ export class UserAccountPageComponent implements OnInit {
     return this.account.accountState == "ACTIVE";
   }
 
-  onBlockClicked(): void {
+  confirmBlock(): void {
+    this.translate
+      .get('dialog.block.account.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.blockAccount();
+            }
+          });
+      });
+  }
+
+  blockAccount(): void {
     this.accountService.blockAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe( {
@@ -182,7 +199,24 @@ export class UserAccountPageComponent implements OnInit {
       });
   }
 
-  onActivateClicked(): void {
+  confirmUnblock(): void {
+    this.translate
+      .get('dialog.unblock.account.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.unblockAccount();
+            }
+          });
+      });
+  }
+
+  unblockAccount(): void {
     this.accountService.activateAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe( {

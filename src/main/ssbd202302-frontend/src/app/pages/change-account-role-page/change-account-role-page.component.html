@@ -4,25 +4,25 @@
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
       <ul class="button-list">
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('administrator')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmChange('administrator')">
             <mat-icon>security</mat-icon>
             {{'role.administrator' | translate}}
           </button>
         </li>
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('employee')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmChange('employee')">
             <mat-icon>person</mat-icon>
             {{'role.employee' | translate}}
           </button>
         </li>
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('sales_rep')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmChange('sales_rep')">
             <mat-icon>shopping_cart</mat-icon>
             {{'role.sales_rep' | translate}}
           </button>
         </li>
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="changeAccountGroup('client')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmChange('client')">
             <mat-icon>person_pin</mat-icon>
             {{'role.client' | translate}}
           </button>

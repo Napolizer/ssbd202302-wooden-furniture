@@ -4,25 +4,25 @@
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
       <ul class="button-list">
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="removeAccountGroupFromAccount('administrator')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmRemove('administrator')">
             <mat-icon>security</mat-icon>
             {{'role.administrator' | translate}}
           </button>
         </li>
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="removeAccountGroupFromAccount('employee')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmRemove('employee')">
             <mat-icon>person</mat-icon>
             {{'role.employee' | translate}}
           </button>
         </li>
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="removeAccountGroupFromAccount('sales_rep')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmRemove('sales_rep')">
             <mat-icon>shopping_cart</mat-icon>
             {{'role.sales_rep' | translate}}
           </button>
         </li>
         <li>
-          <button mat-raised-button color="primary" class="styled-button" (click)="removeAccountGroupFromAccount('client')">
+          <button mat-raised-button color="primary" class="styled-button" (click)="confirmRemove('client')">
             <mat-icon>person_pin</mat-icon>
             {{'role.client' | translate}}
           </button>

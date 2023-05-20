@@ -106,8 +106,25 @@ export class AddAccountRoleComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  addAccountGroupToAccount(accountGroup: string): void {
-    this.accountService.addAccountRole(this.id, accountGroup)
+  confirmAdd(accountRole: string): void {
+    this.translate
+      .get('dialog.add.role.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.addAccountRoleToAccount(accountRole);
+            }
+          });
+      });
+  }
+
+  addAccountRoleToAccount(accountRole: string): void {
+    this.accountService.addAccountRole(this.id, accountRole)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: () => {
