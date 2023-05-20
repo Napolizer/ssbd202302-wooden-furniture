@@ -3,7 +3,7 @@
                       (isUserInGroup('EMPLOYEE') ? 'green' :
                       (isUserInGroup('SALES_REP') ? 'yellow' :
                       (isUserInGroup('CLIENT')  ? 'pink' : '')))}">
-  <button mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
+  <button *ngIf="isUserLoggedIn()" mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
