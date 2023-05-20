@@ -22,7 +22,7 @@ public class RequestAuthenticationMechanismIT {
         .body("""
                    {
                        "login": "administrator",
-                       "password": "Kochamssbd!"
+                       "password": "Student123!"
                    }
             """)
         .when()
@@ -43,7 +43,7 @@ public class RequestAuthenticationMechanismIT {
         .body("""
                    {
                        "login": "administrator",
-                       "password": "Kochamssbd!"
+                       "password": "Student123!"
                    }
             """)
         .when()
