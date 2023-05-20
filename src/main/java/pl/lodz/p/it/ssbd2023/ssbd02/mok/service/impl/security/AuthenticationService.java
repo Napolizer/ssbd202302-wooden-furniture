@@ -1,18 +1,26 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
+
+import java.io.InputStream;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Properties;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountUnblockerService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
@@ -26,6 +34,22 @@ public class AuthenticationService {
   private MailService mailService;
   @Inject
   private TokenService tokenService;
+  @Inject
+  private AccountUnblockerService unblockerService;
+  private Long blockadeTimeInSeconds;
+  @PostConstruct
+  public void init() {
+    Properties prop = new Properties();
+    try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
+      prop.load(input);
+      blockadeTimeInSeconds = Long.parseLong(prop.getProperty("account.blockade.time.seconds"));
+    } catch (Exception e) {
+      long minute = 60;
+      long hour = 60 * minute;
+      blockadeTimeInSeconds =  24 * hour;
+      throw new RuntimeException("Error loading configuration file: " + e.getMessage());
+    }
+  }
 
   @PermitAll
   public String login(String login, String password, String ip, String locale) throws AuthenticationException {
@@ -118,11 +142,15 @@ public class AuthenticationService {
   @PermitAll
   private void tryBlockAccountOperation(Account account)
       throws MessagingException, AccountNotFoundException {
+
     if (account.getFailedLoginCounter() == 3) {
       account.setAccountState(AccountState.BLOCKED);
 
       mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
       account.setFailedLoginCounter(0);
+      LocalDateTime blockadeEnd = LocalDateTime.now().plusSeconds(blockadeTimeInSeconds);
+      account.setBlockadeEnd(blockadeEnd);
+      unblockerService.unblockAccountAfterTimeout(account.getId(), convertToDate(blockadeEnd));
     }
     accountFacade.update(account);
   }
@@ -133,8 +161,12 @@ public class AuthenticationService {
       tryBlockAccountOperation(account);
     } catch (AccountNotFoundException | MessagingException e) {
       //ignore
-      // try send mail few times
     }
+  }
+
+  private Date convertToDate(LocalDateTime localDateTime) {
+    Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+    return Date.from(instant);
   }
 
 }
