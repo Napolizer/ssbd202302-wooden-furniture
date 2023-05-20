@@ -31,11 +31,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 public class AccountControllerIT {
 
   private String retrieveAdminToken() {
-    return retrieveToken("administrator", "Kochamssbd!");
+    return retrieveToken("administrator", "Student123!");
   }
 
   private String retrieveClientToken() {
-    return retrieveToken("client", "Kochamssbd!Client");
+    return retrieveToken("client", "Student123!");
   }
 
   private String retrieveToken(String login, String password) {
@@ -95,7 +95,7 @@ public class AccountControllerIT {
           .body("""
                      {
                          "login": "administrator",
-                         "password": "Kochamssbd!"
+                         "password": "Student123!"
                      }
               """)
           .when()
