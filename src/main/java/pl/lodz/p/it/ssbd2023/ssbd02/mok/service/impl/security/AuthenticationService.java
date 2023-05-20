@@ -7,16 +7,16 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
-
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Properties;
-
 import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -37,6 +37,7 @@ public class AuthenticationService {
   @Inject
   private AccountUnblockerService unblockerService;
   private Long blockadeTimeInSeconds;
+
   @PostConstruct
   public void init() {
     Properties prop = new Properties();
