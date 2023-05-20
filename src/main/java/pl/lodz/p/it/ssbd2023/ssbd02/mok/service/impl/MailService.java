@@ -5,6 +5,7 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
@@ -15,6 +16,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
@@ -23,6 +25,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 @Interceptors({LoggerInterceptor.class})
 @DenyAll
 public class MailService {
+  @Inject
+  private EnvironmentConfig environmentConfig;
+
   private final String appUrl = "http://localhost:4200";
 
   @PermitAll
@@ -152,13 +157,15 @@ public class MailService {
 
   @PermitAll
   public void sendMail(String to, String subject, String message) throws MessagingException {
-    Session session = getSession();
+    if (environmentConfig.isTest()) {
+      return;
+    }
 
+    Session session = getSession();
     MimeMessage mail = new MimeMessage(session);
     mail.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
     mail.setSubject(subject);
     mail.setText(message);
-
     Transport.send(mail);
   }
 
