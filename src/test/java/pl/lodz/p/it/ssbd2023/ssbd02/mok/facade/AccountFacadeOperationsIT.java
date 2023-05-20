@@ -451,7 +451,9 @@ public class AccountFacadeOperationsIT {
 
   @Test
   void failsToGetAccountByLoginWhenAccountDoesNotExist() {
-    assertNull(accountFacadeOperations.findByLogin("login").get());
+    salesRep.call(() -> {
+      assertTrue(accountFacadeOperations.findByLogin("login").isEmpty());
+    });
   }
 
   @Test
