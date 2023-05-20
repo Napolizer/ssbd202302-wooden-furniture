@@ -134,6 +134,15 @@ public class MailService {
   }
 
   @PermitAll
+  public void sendEmailAboutAdminSession(String to, String locale, String ip) throws MessagingException {
+    sendMail(to,
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_SUBJECT),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_MESSAGE)
+            + ip + "."
+    );
+  }
+
+  @PermitAll
   public void sendEmailRemindingToConfirmAccount(String to, String locale) throws MessagingException {
     sendMail(to,
             MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT),
