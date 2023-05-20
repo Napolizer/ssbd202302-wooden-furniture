@@ -53,7 +53,7 @@ public class MailServiceIT {
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutActivatingAccount(
-            "jegek60138@fectode.com", "pl"));
+            "mikolaj.kacprzyk333@gmail.com", "pl"));
     utx.commit();
   }
 
