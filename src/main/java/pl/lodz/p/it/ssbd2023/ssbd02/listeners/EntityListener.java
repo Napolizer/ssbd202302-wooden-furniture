@@ -17,6 +17,10 @@ public class EntityListener {
 
     String login = CDI.current().select(Principal.class).get().getName();
     AccountFacadeOperations accountFacade = CDI.current().select(AccountFacadeOperations.class).get();
+    if (login.equals("ANONYMOUS")) {
+      entity.setCreatedBy(null);
+      return;
+    }
     Optional<Account> accountOptional = accountFacade.findByLogin(login);
     if (accountOptional.isPresent()) {
       entity.setCreatedBy(accountOptional.get());
@@ -31,6 +35,10 @@ public class EntityListener {
 
     String login = CDI.current().select(Principal.class).get().getName();
     AccountFacadeOperations accountFacade = CDI.current().select(AccountFacadeOperations.class).get();
+    if (login.equals("ANONYMOUS")) {
+      entity.setUpdatedBy(null);
+      return;
+    }
     Optional<Account> accountOptional = accountFacade.findByLogin(login);
     if (accountOptional.isPresent()) {
       entity.setUpdatedBy(accountOptional.get());
