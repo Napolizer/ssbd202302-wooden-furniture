@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
@@ -88,6 +89,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
 
   @Override
   @PermitAll
+  @TransactionAttribute(REQUIRES_NEW)
   public Optional<Account> findByLogin(String login) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_LOGIN, Account.class)
@@ -100,6 +102,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
 
   @Override
   @PermitAll
+  @TransactionAttribute(REQUIRES_NEW)
   public Optional<Account> findByEmail(String email) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_EMAIL, Account.class)
@@ -112,6 +115,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
 
   @Override
   @PermitAll
+  @TransactionAttribute(REQUIRES_NEW)
   public Optional<Account> findById(Long accountId) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_ACCOUNT_ID, Account.class)

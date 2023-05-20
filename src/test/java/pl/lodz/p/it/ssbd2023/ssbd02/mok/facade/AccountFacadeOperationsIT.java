@@ -442,16 +442,18 @@ public class AccountFacadeOperationsIT {
   void properlyGetsAccountByLogin() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
+    utx.commit();
     salesRep.call(() -> {
       assertEquals(persistedAccount,
           accountFacadeOperations.findByLogin(persistedAccount.getLogin()).orElse(null));
     });
-    utx.commit();
   }
 
   @Test
   void failsToGetAccountByLoginWhenAccountDoesNotExist() {
-    assertThrows(EJBException.class, () -> accountFacadeOperations.findByLogin("login"));
+    salesRep.call(() -> {
+      assertTrue(accountFacadeOperations.findByLogin("login").isEmpty());
+    });
   }
 
   @Test
@@ -474,11 +476,11 @@ public class AccountFacadeOperationsIT {
   void properlyGetsAccountByEmail() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
     Account persistedAccount = accountFacadeOperations.create(account);
+    utx.commit();
     admin.call(() -> {
       assertEquals(persistedAccount,
           accountFacadeOperations.findByEmail(persistedAccount.getEmail()).orElse(null));
     });
-    utx.commit();
   }
 
   @Test
