@@ -125,8 +125,8 @@
           <button mat-raised-button color="primary" (click)="redirectToChangeAccountRolesPage()">{{'account.changerole' | translate}}</button>
           <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
           <button mat-raised-button color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
-          <button mat-raised-button color="warn" (click)="onBlockClicked()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>
-          <button mat-raised-button color="success" (click)="onActivateClicked()" [disabled]="isBlocked()">{{'account.activate' | translate}}</button>
+          <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>
+          <button mat-raised-button color="success" (click)="confirmUnblock()" [disabled]="isBlocked()">{{'account.activate' | translate}}</button>
           <button mat-raised-button color="primary" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
         </mat-card-actions>
       </mat-card>

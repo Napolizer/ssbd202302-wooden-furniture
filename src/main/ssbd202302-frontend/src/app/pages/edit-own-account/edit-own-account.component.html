@@ -63,7 +63,7 @@
             </mat-form-field>
           </div>
           <div class="button-container">
-            <button type="button" mat-raised-button color="primary" class="reset-button" (click)="onResetClicked()">{{'reset' | translate}}</button>
+            <button type="button" mat-raised-button color="primary" class="reset-button" (click)="confirmReset()">{{'reset' | translate}}</button>
             <button type="submit" mat-raised-button color="primary" class="save-button" [disabled]="!editAccountForm.valid">{{'save' | translate}}</button>
           </div>
         </div>

@@ -169,7 +169,24 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  onResetClicked() {
+  confirmReset(): void {
+    this.translate
+      .get('dialog.reset.account.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.resetEditAccount();
+            }
+          });
+      });
+  }
+
+  resetEditAccount() {
     this.loading = true;
     this.editAccountForm.setValue({
       firstName: this.editableAccount.firstName!,

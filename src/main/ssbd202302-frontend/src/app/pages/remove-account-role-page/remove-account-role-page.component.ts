@@ -104,7 +104,24 @@ export class RemoveAccountRolePageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  removeAccountGroupFromAccount(accountGroup: string): void {
+  confirmRemove(accountRole: string): void {
+    this.translate
+      .get('dialog.remove.role.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.removeAccountRoleFromAccount(accountRole);
+            }
+          });
+      });
+  }
+
+  removeAccountRoleFromAccount(accountGroup: string): void {
     this.accountService.removeAccountRole(this.id, accountGroup)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({

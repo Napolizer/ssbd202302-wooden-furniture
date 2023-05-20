@@ -104,16 +104,33 @@ export class ChangeAccountRolePageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  changeGroupName(group: string): string {
-    if (group == 'SALES_REP') {
+  changeRoleName(role: string): string {
+    if (role == 'SALES_REP') {
       return 'SalesRep'
     }
-    return group.charAt(0).toUpperCase() + group.slice(1).toLowerCase();
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
   }
 
-  changeAccountGroup(accountGroup: string): void {
+  confirmChange(accountRole: string): void {
+    this.translate
+      .get('dialog.change.role.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.changeAccountRole(accountRole);
+            }
+          });
+      });
+  }
+
+  changeAccountRole(accountRole: string): void {
     const accessLevel: Accesslevel = {
-      name: this.changeGroupName(accountGroup)
+      name: this.changeRoleName(accountRole)
     }
     this.accountService.changeAccountRole(this.id, accessLevel)
       .pipe(first(), takeUntil(this.destroy))

@@ -169,6 +169,12 @@
   "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
   "dialog.github.register.message": "Are you sure you want to link your Github account with account in our system?",
+  "dialog.add.role.message": "Are you sure you want to add chosen role to this account?",
+  "dialog.remove.role.message": "Are you sure you want to delete chosen role from this account?",
+  "dialog.change.role.message": "Are you sure you want to change this account role?",
+  "dialog.reset.account.message": "Are you sure you want to discard changes?",
+  "dialog.block.account.message":"Are you sure you want to block this account?",
+  "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
