@@ -18,7 +18,7 @@ public class CorsResponseFilter implements ContainerResponseFilter {
     responseContext.getHeaders().add("Cache-Control", "no-cache");
     responseContext.getHeaders().add(
         "Access-Control-Allow-Headers",
-        "origin, content-type, accept, authorization");
+        "origin, content-type, accept, authorization, if-match");
     responseContext.getHeaders().add(
         "Access-Control-Allow-Methods",
         "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD");

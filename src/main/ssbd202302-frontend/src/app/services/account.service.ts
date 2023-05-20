@@ -81,14 +81,18 @@ export class AccountService {
     );
   }
 
-  public changeEmail(id : string, email: Email): Observable<HttpResponse<any>> {
+  public changeEmail(id: string, email: Email, version: string): Observable<HttpResponse<any>> {
     return this.httpClient.put(
       `${environment.apiBaseUrl}/account/change-email/${id}`,
       email,
-      { observe: 'response',
-        headers: { Authorization: `Bearer ${this.tokenService.getToken()}`}
+      {
+        observe: 'response',
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+          'If-Match': version,
+        },
       }
-    )
+    );
   }
 
   public changeLocale(id: number, locale: ChangeLocale): Observable<HttpResponse<any>> {
