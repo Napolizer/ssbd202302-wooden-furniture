@@ -10,6 +10,7 @@ import {ChangeLocale} from "../../interfaces/change.locale";
 import {DialogService} from "../../services/dialog.service";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-toolbar',
@@ -30,15 +31,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private tokenService: TokenService,
     private accountService: AccountService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private router: Router
   ) {
   }
 
   ngOnInit(): void {
-    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
-      .subscribe(account => {
-        this.id = account.id
-      })
+    this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
   }
 
   ngOnDestroy(): void {
@@ -123,20 +122,15 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     switch(group) {
     case 'ADMINISTRATOR':
       return this.authenticationService.isUserInRole(Role.ADMINISTRATOR);
-      break;
-    case 'EMPLOYEE':
+      case 'EMPLOYEE':
       return this.authenticationService.isUserInRole(Role.EMPLOYEE);
-      break;
-    case 'SALES_REP':
+      case 'SALES_REP':
       return this.authenticationService.isUserInRole(Role.SALES_REP);
-      break;
-    case 'CLIENT':
+      case 'CLIENT':
       return this.authenticationService.isUserInRole(Role.CLIENT);
-      break;
-    case 'GUEST':
+      case 'GUEST':
       return this.authenticationService.isUserInRole(Role.GUEST);
-      break;
-    default:
+      default:
       return false;
     }
   }
@@ -156,6 +150,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   changeLocaleToPolish(): void {
+    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
+      .subscribe(account => {
+        this.id = account.id
+      })
     this.translate.get('dialog.edit.locale')
       .pipe(takeUntil(this.destroy))
       .subscribe(msg => {
@@ -177,8 +175,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     this.translate.get('change.locale.success')
                       .pipe(takeUntil(this.destroy))
                       .subscribe(msg => {
-                        this.alertService.success(msg)
-                        void this.navigationService.redirectToMainPage();
+                        void this.navigationService.redirectToCurrentPage();
+                        this.alertService.success(msg);
                       })
                   },
                   error: e => {
@@ -198,6 +196,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   changeLocaleToEnglish(): void {
+    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
+      .subscribe(account => {
+        this.id = account.id
+      })
     this.translate.get('dialog.edit.locale')
       .pipe(takeUntil(this.destroy))
       .subscribe(msg => {
@@ -219,8 +221,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     this.translate.get('change.locale.success')
                       .pipe(takeUntil(this.destroy))
                       .subscribe(msg => {
+                        void this.navigationService.redirectToCurrentPage();
                         this.alertService.success(msg);
-                        void this.navigationService.redirectToMainPage();
                       })
                   },
                   error: e => {

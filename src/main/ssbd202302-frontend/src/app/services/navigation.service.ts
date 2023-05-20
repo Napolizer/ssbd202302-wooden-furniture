@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -7,11 +7,16 @@ import {Router} from "@angular/router";
 export class NavigationService {
 
   constructor(
-    private router: Router
+    private router: Router,
   ) { }
 
   public redirectToMainPage(): Promise<boolean> {
     return this.router.navigate(['/']);
+  }
+
+  public redirectToCurrentPage(): Promise<boolean> {
+
+    return this.router.navigateByUrl(this.router.url);
   }
 
   public redirectToAdminPage(): Promise<boolean> {

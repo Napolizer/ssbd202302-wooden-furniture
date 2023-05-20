@@ -18,7 +18,6 @@ export class AppComponent {
     this.matIconRegistry.addSvgIcon('google-logo',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/google-logo.svg'))
     translate.setDefaultLang('en');
-    translate.use(translate.getBrowserLang() || 'en');
 
     translate.onLangChange.subscribe(() => {
       translate.get('page.title').subscribe((res: string) => {
