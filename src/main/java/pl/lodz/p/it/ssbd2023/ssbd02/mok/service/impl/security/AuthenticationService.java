@@ -144,7 +144,7 @@ public class AuthenticationService {
     if (account.getFailedLoginCounter() == 3) {
       account.setAccountState(AccountState.BLOCKED);
 
-      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
+      mailService.sendEmailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
       account.setFailedLoginCounter(0);
       LocalDateTime blockadeEnd = LocalDateTime.now().plusSeconds(blockadeTimeInSeconds);
       account.setBlockadeEnd(blockadeEnd);

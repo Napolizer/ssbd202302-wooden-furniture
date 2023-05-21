@@ -19,7 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 
 public class TokenServiceTest {

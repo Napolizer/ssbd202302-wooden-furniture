@@ -12,11 +12,10 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import jakarta.mail.MessagingException;
+
 import java.util.Date;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -56,7 +55,7 @@ public class AccountUnblockerService {
       account.setBlockadeEnd(null);
       accountFacade.update(account);
 
-      mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
+      mailService.sendEmailWithInfoAboutActivatingAccount(account.getEmail(),
               account.getLocale());
 
     }

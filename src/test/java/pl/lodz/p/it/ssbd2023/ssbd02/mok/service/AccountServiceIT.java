@@ -30,7 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;

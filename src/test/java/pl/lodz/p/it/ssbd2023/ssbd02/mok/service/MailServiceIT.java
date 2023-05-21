@@ -43,7 +43,7 @@ public class MailServiceIT {
   void shouldSendMailWithInfoAboutBlockingAccount() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
-      assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutBlockingAccount(
+      assertDoesNotThrow(() -> mailService.sendEmailWithInfoAboutBlockingAccount(
               "jegek60138@fectode.com", "en"));
       utx.commit();
   }
@@ -52,7 +52,7 @@ public class MailServiceIT {
   void shouldSendMailWithInfoAboutActivatingAccount() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
-    assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutActivatingAccount(
+    assertDoesNotThrow(() -> mailService.sendEmailWithInfoAboutActivatingAccount(
             "jegek60138@fectode.com", "pl"));
     utx.commit();
   }
@@ -61,7 +61,7 @@ public class MailServiceIT {
   void shouldSendMailWithInfoAboutConfirmingAccount() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
     utx.begin();
-    assertDoesNotThrow(() -> mailService.sendMailWithInfoAboutConfirmingAccount(
+    assertDoesNotThrow(() -> mailService.sendEmailWithInfoAboutConfirmingAccount(
             "jegek60138@fectode.com", "pl"));
     utx.commit();
   }
@@ -70,7 +70,7 @@ public class MailServiceIT {
   void shouldSendMailWithAccountConfirmationLink() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
-      assertDoesNotThrow(() -> mailService.sendMailWithAccountConfirmationLink(
+      assertDoesNotThrow(() -> mailService.sendEmailWithAccountConfirmationLink(
               "jegek60138@fectode.com", "en", "1", "login"));
       utx.commit();
   }
@@ -78,7 +78,7 @@ public class MailServiceIT {
   void shouldSendResetPasswordMail() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
-      assertDoesNotThrow(() -> mailService.sendResetPasswordMail(
+      assertDoesNotThrow(() -> mailService.sendResetPasswordEmail(
               "jegek60138@fectode.com", "en", "1"));
       utx.commit();
   }
@@ -86,7 +86,7 @@ public class MailServiceIT {
   void shouldSendMailWithEmailChangeConfirmLink() throws SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       utx.begin();
-      assertDoesNotThrow(() -> mailService.sendMailWithEmailChangeConfirmLink(
+      assertDoesNotThrow(() -> mailService.sendEmailWithEmailChangeConfirmLink(
               "jegek60138@fectode.com", "en", "token"));
       utx.commit();
   }

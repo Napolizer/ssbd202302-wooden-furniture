@@ -32,10 +32,12 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
@@ -73,10 +75,10 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response getAllAccounts() {
     List<Account> accounts = accountEndpoint.getAccountList();
-    List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
-    for (Account account : accounts) {
-      accountsDto.add(accountMapper.mapToAccountWithoutSensitiveDataDto(account));
-    }
+    List<AccountWithoutSensitiveDataDto> accountsDto = accounts.stream()
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .collect(Collectors.toList());
+
     return Response.ok(accountsDto).build();
   }
 
@@ -85,11 +87,10 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response getAccountByAccountId(@PathParam("accountId") Long accountId) {
-    Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
-    if (accountOptional.isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account = accountEndpoint.getAccountByAccountId(accountId)
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
     return Response.ok(account).build();
   }
 
@@ -98,11 +99,10 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response getAccountByLogin(@PathParam("login") String login) {
-    Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
-    if (accountOptional.isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account = accountEndpoint.getAccountByLogin(login)
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
     return Response.ok(account).build();
   }
 

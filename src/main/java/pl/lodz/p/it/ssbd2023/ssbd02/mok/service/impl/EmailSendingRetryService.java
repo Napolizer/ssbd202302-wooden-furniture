@@ -13,13 +13,12 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import jakarta.mail.MessagingException;
+
 import java.io.InputStream;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -121,12 +120,12 @@ public class EmailSendingRetryService {
     switch (tokenType) {
       case CHANGE_EMAIL -> {
         if (!account.getEmail().equals(hashOrEmail)) {
-          mailService.sendMailWithEmailChangeConfirmLink(hashOrEmail, account.getLocale(), token);
+          mailService.sendEmailWithEmailChangeConfirmLink(hashOrEmail, account.getLocale(), token);
         }
       }
       case PASSWORD_RESET -> {
         if (account.getPassword().equals(hashOrEmail)) {
-          mailService.sendResetPasswordMail(account.getEmail(), account.getLocale(), token);
+          mailService.sendResetPasswordEmail(account.getEmail(), account.getLocale(), token);
         }
       }
       case ACCOUNT_CONFIRMATION -> {
@@ -148,7 +147,7 @@ public class EmailSendingRetryService {
   private void checkTimer(Account account, String token, long time) {
     long timeout = this.expirationAccountConfirmation;
     if (time < timeout) {
-      mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
+      mailService.sendEmailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
               token, account.getLogin());
       return;
     }

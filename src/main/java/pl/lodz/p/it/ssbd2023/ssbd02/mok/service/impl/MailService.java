@@ -32,9 +32,9 @@ public class MailService {
   private final String appUrl = "http://localhost:4200";
 
   @PermitAll
-  public void sendMailWithInfoAboutBlockingAccount(String to, String locale) {
+  public void sendEmailWithInfoAboutBlockingAccount(String to, String locale) {
     try {
-      sendMail(to,
+      sendEmail(to,
           MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT),
           MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_MESSAGE)
       );
@@ -44,9 +44,9 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendMailWithInfoAboutActivatingAccount(String to, String locale) {
+  public void sendEmailWithInfoAboutActivatingAccount(String to, String locale) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_MESSAGE)
       );
@@ -56,9 +56,9 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendMailWithInfoAboutConfirmingAccount(String to, String locale) {
+  public void sendEmailWithInfoAboutConfirmingAccount(String to, String locale) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_MESSAGE)
       );
@@ -68,9 +68,9 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login) {
+  public void sendEmailWithAccountConfirmationLink(String to, String locale, String token, String login) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC1)
                       + (" " + login + ",\n")
@@ -83,9 +83,9 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendResetPasswordMail(String to, String locale, String resetPasswordToken) {
+  public void sendResetPasswordEmail(String to, String locale, String resetPasswordToken) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
               + " " + appUrl + "/reset-password?token=" + resetPasswordToken + " "
@@ -96,9 +96,9 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendMailWithEmailChangeConfirmLink(String to, String locale, String token) {
+  public void sendEmailWithEmailChangeConfirmLink(String to, String locale, String token) {
     try {
-      sendMail(to,
+      sendEmail(to,
           MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
           MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
           + ("\n" + appUrl + "/change-email/confirm?token=" + token)
@@ -111,7 +111,7 @@ public class MailService {
   @PermitAll
   public void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE1)
               + " " + groupName
@@ -123,9 +123,9 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendMailWithPasswordChangeLink(String to, String locale, String token) {
+  public void sendEmailWithPasswordChangeLink(String to, String locale, String token) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
                       + ("\n" + appUrl + "/change-password/confirm?token=" + token)
@@ -138,7 +138,7 @@ public class MailService {
   @PermitAll
   public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE1)
               + " " + groupName
@@ -152,7 +152,7 @@ public class MailService {
   @PermitAll
   public void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE1)
               + " " + oldGroup
@@ -167,7 +167,7 @@ public class MailService {
   @PermitAll
   public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_MESSAGE)
       );
@@ -179,7 +179,7 @@ public class MailService {
   @PermitAll
   public void sendEmailAboutAdminSession(String to, String locale, String ip) {
     try {
-      sendMail(to,
+      sendEmail(to,
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_SUBJECT),
               MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_MESSAGE)
               + ip + "."
@@ -190,7 +190,7 @@ public class MailService {
   }
 
   @PermitAll
-  public void sendMail(String to, String subject, String message) throws MessagingException {
+  public void sendEmail(String to, String subject, String message) throws MessagingException {
     if (environmentConfig.isTest()) {
       return;
     }

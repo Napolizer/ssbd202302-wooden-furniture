@@ -13,7 +13,6 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import jakarta.mail.MessagingException;
 import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
@@ -184,7 +183,7 @@ public class AccountService extends AbstractService {
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
             TokenType.ACCOUNT_CONFIRMATION, accountConfirmationToken);
-    mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
+    mailService.sendEmailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
             accountConfirmationToken, account.getLogin());
   }
 
@@ -261,7 +260,7 @@ public class AccountService extends AbstractService {
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.CHANGE_PASSWORD, changePasswordToken);
 
-    mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
+    mailService.sendEmailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
 
   }
 
@@ -276,7 +275,7 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.BLOCKED);
     accountFacade.update(account);
 
-    mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
+    mailService.sendEmailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
 
   }
 
@@ -292,7 +291,7 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
 
-    mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(), account.getLocale());
+    mailService.sendEmailWithInfoAboutActivatingAccount(account.getEmail(), account.getLocale());
 
   }
 
@@ -306,7 +305,7 @@ public class AccountService extends AbstractService {
     }
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
-    mailService.sendMailWithInfoAboutConfirmingAccount(account.getEmail(), account.getLocale());
+    mailService.sendEmailWithInfoAboutConfirmingAccount(account.getEmail(), account.getLocale());
   }
 
   @PermitAll
@@ -358,7 +357,7 @@ public class AccountService extends AbstractService {
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.PASSWORD_RESET, resetPasswordToken);
 
-    mailService.sendResetPasswordMail(account.getEmail(), account.getLocale(), resetPasswordToken);
+    mailService.sendResetPasswordEmail(account.getEmail(), account.getLocale(), resetPasswordToken);
 
   }
 
@@ -400,7 +399,7 @@ public class AccountService extends AbstractService {
       emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), newEmail,
               TokenType.CHANGE_EMAIL, accountChangeEmailToken);
 
-      mailService.sendMailWithEmailChangeConfirmLink(newEmail, account.getLocale(), accountChangeEmailToken);
+      mailService.sendEmailWithEmailChangeConfirmLink(newEmail, account.getLocale(), accountChangeEmailToken);
 
     } else {
       throw ApplicationExceptionFactory.createForbiddenException();
