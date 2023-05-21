@@ -112,8 +112,8 @@ public class AccountService extends AbstractService {
 
   @RolesAllowed(ADMINISTRATOR)
   public Account removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
-    Account foundAccount =
-        accountFacade.findById(accountId).orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+    Account foundAccount = accountFacade.findById(accountId)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
     if (accessLevels.size() <= 1) {
