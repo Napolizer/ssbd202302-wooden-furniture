@@ -157,27 +157,29 @@ public class AccountService extends AbstractService {
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void editAccountInfo(String login, Account accountWithChanges, String hash) {
-    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+  public Account editAccountInfo(String login, Account accountWithChanges, String hash) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), hash)) {
       throw new OptimisticLockException();
     }
 
     account.update(accountWithChanges);
-    accountFacade.update(account);
+    return accountFacade.update(account);
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash) {
-    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+  public Account editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     if (!CryptHashUtils.verifyVersion(account.getSumOfVersions(), hash)) {
       throw new OptimisticLockException();
     }
 
     account.update(accountWithChanges);
-    accountFacade.update(account);
+    return accountFacade.update(account);
   }
 
   @PermitAll
@@ -272,23 +274,25 @@ public class AccountService extends AbstractService {
   }
 
   @PermitAll
-  public void blockAccount(Long id) {
-    Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
+  public Account blockAccount(Long id) {
+    Account account = accountFacade.findById(id)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     if (!account.getAccountState().equals(AccountState.ACTIVE)) {
       throw ApplicationExceptionFactory.createIllegalAccountStateChangeException();
     }
 
     account.setAccountState(AccountState.BLOCKED);
-    accountFacade.update(account);
+    Account accountAfterUpdate = accountFacade.update(account);
 
     mailService.sendEmailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
-
+    return accountAfterUpdate;
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void activateAccount(Long id) {
-    Account account = accountFacade.findById(id).orElseThrow(AccountNotFoundException::new);
+  public Account activateAccount(Long id) {
+    Account account = accountFacade.findById(id)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
     AccountState state = account.getAccountState();
 
     if (state.equals(AccountState.INACTIVE) || state.equals(AccountState.ACTIVE)) {
@@ -296,10 +300,10 @@ public class AccountService extends AbstractService {
     }
 
     account.setAccountState(AccountState.ACTIVE);
-    accountFacade.update(account);
+    Account accountAfterUpdate = accountFacade.update(account);
 
     mailService.sendEmailWithInfoAboutActivatingAccount(account.getEmail(), account.getLocale());
-
+    return accountAfterUpdate;
   }
 
   @PermitAll

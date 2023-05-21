@@ -202,6 +202,7 @@ public class AccountController {
   public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
                                          @QueryParam("token") String token) {
 
+    accountEndpoint.validateEmailToken(token, TokenType.CHANGE_PASSWORD);
     Account account = accountEndpoint.changePasswordFromLink(token, changePasswordDto.getPassword(),
             changePasswordDto.getCurrentPassword());
     AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
@@ -267,12 +268,10 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response editAccountAsAdmin(@PathParam("login") String login,
                                      @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    accountEndpoint.editAccountInfoAsAdmin(login,
-        editPersonInfoDto);
-    return Response.ok(editPersonInfoDto).build();
+
+    Account account = accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto);
+    EditPersonInfoDto person = DtoToEntityMapper.mapAccountToEditPersonInfoDto(account);
+    return Response.ok(person).build();
   }
 
   @PATCH
@@ -303,11 +302,10 @@ public class AccountController {
     if (principal.getName() == null) {
       return Response.status(403).build();
     }
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    accountEndpoint.editAccountInfo(login, editPersonInfoDto);
-    return Response.ok(editPersonInfoDto).build();
+
+    Account account = accountEndpoint.editAccountInfo(login, editPersonInfoDto);
+    EditPersonInfoDto accountAfterUpdate = DtoToEntityMapper.mapAccountToEditPersonInfoDto(account);
+    return Response.ok(accountAfterUpdate).build();
   }
 
   @PATCH

@@ -67,14 +67,13 @@ public class AccountEndpoint extends AbstractEndpoint {
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void blockAccount(Long id) {
-    repeatTransaction(() -> accountService.blockAccount(id));
-
+  public Account blockAccount(Long id) {
+    return repeatTransaction(() -> accountService.blockAccount(id));
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void activateAccount(Long id) {
-    repeatTransaction(() -> accountService.activateAccount(id));
+  public Account activateAccount(Long id) {
+    return repeatTransaction(() -> accountService.activateAccount(id));
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -128,15 +127,15 @@ public class AccountEndpoint extends AbstractEndpoint {
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
-    repeatTransaction(() -> accountService.editAccountInfo(login,
+  public Account editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
+    return repeatTransaction(() -> accountService.editAccountInfo(login,
             DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void editAccountInfoAsAdmin(String login,
+  public Account editAccountInfoAsAdmin(String login,
                                      EditPersonInfoDto editPersonInfoDto) {
-    repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
+    return repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
             DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
   }
 
