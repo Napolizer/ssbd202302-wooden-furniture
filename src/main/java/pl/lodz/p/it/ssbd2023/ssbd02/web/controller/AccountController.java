@@ -384,7 +384,11 @@ public class AccountController {
                               @HeaderParam(HttpHeaders.IF_MATCH) String version,
                               @NotNull @Valid SetEmailToSendPasswordDto emailDto) {
     accountEndpoint.changeEmail(emailDto, accountId, principal.getName(), version);
-    return Response.ok().build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "mok.email.change.successful")
+            .build()
+    ).build();
   }
 
   @PATCH
