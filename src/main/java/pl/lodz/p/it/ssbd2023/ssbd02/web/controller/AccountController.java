@@ -128,8 +128,8 @@ public class AccountController {
   public Response addAccessLevelToAccount(@PathParam("accountId") Long accountId,
                                           @PathParam("accessLevel") String accessLevel) {
 
-    AccessLevel newAccessLevel =
-        DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
+    AccessLevel newAccessLevel = DtoToEntityMapper
+            .mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
     Account account = accountEndpoint.addAccessLevelToAccount(accountId, newAccessLevel);
     AccountWithoutSensitiveDataDto mappedAccount= accountMapper.mapToAccountWithoutSensitiveDataDto(account);
 
@@ -142,8 +142,8 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response changeAccessLevel(@PathParam("accountId") Long accountId,
                                     @NotNull @Valid AccessLevelDto accessLevel) {
-    AccessLevel newAccessLevel =
-            DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(accessLevel);
+    AccessLevel newAccessLevel = DtoToEntityMapper
+            .mapAccessLevelDtoToAccessLevel(accessLevel);
     Account upadatedAccount = accountEndpoint.changeAccessLevel(accountId, newAccessLevel);
     AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(upadatedAccount);
 
@@ -157,8 +157,8 @@ public class AccountController {
   public Response removeAccessLevelFromAccount(@PathParam("accountId") Long accountId,
                                                @PathParam("accessLevel") String accessLevel) {
 
-    AccessLevel newAccessLevel =
-        DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
+    AccessLevel newAccessLevel = DtoToEntityMapper
+            .mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
     Account updatedAccount = accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
     AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(updatedAccount);
     return Response.ok(account).build();
@@ -187,16 +187,11 @@ public class AccountController {
   @Path("/self/changePassword")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Response changePassword(@NotNull @Valid ChangePasswordDto changePasswordDto)
-      throws AccountNotFoundException {
-
-    String login = principal.getName();
-    if (login == null) {
-      return Response.status(403).build();
-    }
-    Account account = accountEndpoint.changePassword(login, changePasswordDto.getPassword(),
+  public Response changePassword(@NotNull @Valid ChangePasswordDto changePasswordDto) {
+    Account account = accountEndpoint.changePassword(principal.getName(), changePasswordDto.getPassword(),
             changePasswordDto.getCurrentPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
+    AccountWithoutSensitiveDataDto changedAccount = accountMapper
+            .mapToAccountWithoutSensitiveDataDto(account);
 
     return Response.ok(changedAccount).build();
   }
@@ -327,11 +322,10 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {
-    Optional<Account> foundAccount = accountEndpoint.getAccountByEmail(emailDto);
-    if (foundAccount.isEmpty()) {
-      throw ApplicationExceptionFactory.createEmailNotFoundException();
-    }
-    if (foundAccount.get().getAccountState() != AccountState.ACTIVE) {
+    Account foundAccount = accountEndpoint.getAccountByEmail(emailDto)
+            .orElseThrow(ApplicationExceptionFactory::createEmailNotFoundException);
+
+    if (foundAccount.getAccountState() != AccountState.ACTIVE) {
       throw ApplicationExceptionFactory.createAccountNotActiveException();
     }
     accountEndpoint.sendResetPasswordEmail(emailDto);
