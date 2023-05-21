@@ -764,7 +764,7 @@ public class AccountControllerIT {
     void failsToAddAccessLevelWithoutAuthorizationToken() {
       given()
           .when()
-          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
+          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/Sales_Rep")
           .then()
           .statusCode(401);
     }
@@ -775,7 +775,7 @@ public class AccountControllerIT {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .put("account/id/0/accessLevel/SalesRep")
+          .put("account/id/0/accessLevel/Sales_Rep")
           .then()
           .statusCode(404)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
