@@ -3,6 +3,7 @@
   <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
     <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
       <mat-card class="profile-card">
+        <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
         <mat-card-header>
           <mat-card-title>{{account.login}}</mat-card-title>
           <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>

@@ -2,6 +2,7 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
     <form class="form-container" *ngIf="!loading" [formGroup]="editAccountForm" (ngSubmit)="onSaveClicked()">
+      <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
       <p class="form-title">{{'edit.account' | translate}}</p>
       <div class="form">
         <div class="row">

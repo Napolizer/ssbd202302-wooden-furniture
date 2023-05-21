@@ -180,4 +180,10 @@ export class EditUserAccountPageComponent implements OnInit {
     });
     this.loading = false;
   }
+
+  onBackClicked(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    void this.navigationService.redirectToAccountPage(id);
+  }
+  
 }

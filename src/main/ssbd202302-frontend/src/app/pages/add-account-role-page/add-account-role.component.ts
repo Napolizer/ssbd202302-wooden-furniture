@@ -132,4 +132,9 @@ export class AddAccountRoleComponent implements OnInit {
         }
       });
   }
+
+  onBackClicked(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    void this.navigationService.redirectToAccountPage(id);
+  }
 }
