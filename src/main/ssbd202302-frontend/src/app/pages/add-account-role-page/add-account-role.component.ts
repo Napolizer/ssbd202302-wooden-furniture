@@ -39,10 +39,6 @@ import {Role} from "../../enums/role";
   ]
 })
 export class AddAccountRoleComponent implements OnInit {
-
-  accountForm = new FormGroup({
-    login: new FormControl({value: '', disabled: true})
-  });
   destroy = new Subject<boolean>();
   account: Account;
 
