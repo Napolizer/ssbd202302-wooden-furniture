@@ -70,9 +70,14 @@ public class AccountService extends AbstractService {
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
+  public Account addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
     Account foundAccount =
-        accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+        accountFacade.findById(accountId).orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    if (!foundAccount.getAccountState().equals(AccountState.ACTIVE)) {
+      throw ApplicationExceptionFactory.createAccountNotActiveException();
+    }
+
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
     if ((accessLevels.size() > 0 && Objects.equals(accessLevel.getRoleName(), ADMINISTRATOR))) {
@@ -94,19 +99,21 @@ public class AccountService extends AbstractService {
         throw ApplicationExceptionFactory.createClientAndSalesRepAccessLevelsConflictException();
       }
     }
+
     accessLevel.setAccount(foundAccount);
     accessLevels.add(accessLevel);
     foundAccount.setAccessLevels(accessLevels);
-    accountFacade.update(foundAccount);
+
+    Account updatedAccount = accountFacade.update(foundAccount);
     mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale(),
             accessLevel.getRoleName());
-
+    return updatedAccount;
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
+  public Account removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
     Account foundAccount =
-        accountFacade.findById(accountId).orElseThrow(AccountNotFoundException::new);
+        accountFacade.findById(accountId).orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
     List<AccessLevel> accessLevels = foundAccount.getAccessLevels();
 
     if (accessLevels.size() <= 1) {
@@ -117,10 +124,10 @@ public class AccountService extends AbstractService {
       if (item.getClass() == accessLevel.getClass()) {
         accessLevels.remove(item);
         foundAccount.setAccessLevels(accessLevels);
-        accountFacade.update(foundAccount);
+        Account updatedAccount = accountFacade.update(foundAccount);
         mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(),
                 foundAccount.getLocale(), item.getRoleName());
-        return;
+        return updatedAccount;
       }
     }
     throw ApplicationExceptionFactory.createAccessLevelNotAssignedException();

@@ -103,15 +103,13 @@ public class AccountEndpoint extends AbstractEndpoint {
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
-    repeatTransaction(() -> accountService.addAccessLevelToAccount(accountId, accessLevel));
-    Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
+  public Account addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
+     return repeatTransaction(() -> accountService.addAccessLevelToAccount(accountId, accessLevel));
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
-    repeatTransaction(() -> accountService.removeAccessLevelFromAccount(accountId, accessLevel));
-    Account foundAccount = repeatTransaction(() -> accountService.getAccountById(accountId)).orElseThrow();
+  public Account removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
+    return repeatTransaction(() -> accountService.removeAccessLevelFromAccount(accountId, accessLevel));
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
