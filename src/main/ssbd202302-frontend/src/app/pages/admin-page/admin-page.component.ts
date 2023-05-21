@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {AccountService} from "../../services/account.service";
 import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {NavigationService} from "../../services/navigation.service";
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -31,13 +34,16 @@ import {NavigationService} from "../../services/navigation.service";
 export class AdminPageComponent implements OnInit {
   allAccounts: Account[] = [];
   loading = true;
+  breadcrumbsData: string[] = [];
 
   constructor(
     private accountService: AccountService,
-    private navigationService: NavigationService
-  ) { }
+    private navigationService: NavigationService,
+    private breadcrumbsService: BreadcrumbsService
+  ) {}
 
   ngOnInit(): void {
+    this.breadcrumbsData = this.breadcrumbsService.getAdminBreadcrumb();
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
         this.allAccounts = accounts;

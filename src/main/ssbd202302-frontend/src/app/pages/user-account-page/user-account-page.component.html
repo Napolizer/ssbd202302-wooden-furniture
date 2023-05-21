@@ -4,6 +4,9 @@
     <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
       <mat-card class="profile-card">
         <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
+        <ul class="breadcrumb-list">
+          <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
+        </ul>
         <mat-card-header>
           <mat-card-title>{{account.login}}</mat-card-title>
           <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
@@ -75,10 +78,10 @@
                 <p class="title">{{'account.accountState' | translate}}</p>
                 <p class="content">{{getAccountState() | translate}}</p>
                 <mat-card-actions>
-              <button mat-raised-button color="warn" (click)="onBlockClicked()" [disabled]="!isBlocked()">{{'account.block' | translate}} 
+              <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}} 
                 <mat-icon>lock</mat-icon> 
               </button>
-              <button mat-raised-button color="success" (click)="onActivateClicked()" [disabled]="isBlocked()">{{'account.activate' | translate}}
+              <button mat-raised-button color="success" (click)="confirmUnblock()" [disabled]="isBlocked()">{{'account.activate' | translate}}
                 <mat-icon>lock_open</mat-icon>
               </button>
                 </mat-card-actions>

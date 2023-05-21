@@ -11,6 +11,7 @@ import {AlertService} from "@full-fledged/alerts";
 import {CustomValidators} from "../../utils/custom.validators";
 import {ChangePassword} from "../../interfaces/change.password";
 import {HttpErrorResponse} from "@angular/common/http";
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-change-own-password',
@@ -46,16 +47,19 @@ export class ChangeOwnPasswordComponent implements OnInit {
   currentPassword: string;
   newPassword: string;
   changePasswordForm: FormGroup;
+  breadcrumbData: string[];
   constructor(
     private accountService: AccountService,
     private translate: TranslateService,
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private breadcrumbService: BreadcrumbsService
   ) { }
 
   ngOnInit(): void {
+    this.breadcrumbData = this.breadcrumbService.getChangeOwnPasswordBreadcrumb();
     this.changePasswordForm = new FormGroup({
       currentPassword: new FormControl(
         '',
@@ -152,6 +156,4 @@ export class ChangeOwnPasswordComponent implements OnInit {
       this.changePasswordForm.markAllAsTouched();
     }
   }
-
-
 }

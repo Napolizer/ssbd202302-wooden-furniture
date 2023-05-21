@@ -19,6 +19,7 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { Constants } from 'src/app/utils/constants';
 import { CustomValidators } from 'src/app/utils/custom.validators';
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-create-account',
@@ -54,16 +55,19 @@ export class CreateAccountComponent implements OnInit {
   languages: SelectItem[] = [];
   roles: SelectItem[] = [];
   checked = false;
+  breadcrumbData: string[];
 
   constructor(
     private accountService: AccountService,
     private translate: TranslateService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private breadcrumbService: BreadcrumbsService
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbData = this.breadcrumbService.getCreateAccountBreadcrumb();
     this.createAccountForm = new FormGroup(
       {
         email: new FormControl('', Validators.compose([Validators.email])),

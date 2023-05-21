@@ -145,3 +145,20 @@ $border-radius: 10px
         .form
           .form-create
             width: 40%
+
+ul 
+  list-style: none
+  display: inline
+  margin: 0
+  padding: 30
+
+
+li 
+  display: inline
+
+
+li:not(:last-child)::after 
+  content: " > "
+
+li:last-child
+  font-weight: bold

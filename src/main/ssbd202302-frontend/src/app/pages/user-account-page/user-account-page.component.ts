@@ -13,6 +13,7 @@ import {Account} from "../../interfaces/account";
 import {DatePipe} from "@angular/common";
 import { Location } from '@angular/common';
 import {HttpErrorResponse} from "@angular/common/http";
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-user-account-page',
@@ -46,6 +47,7 @@ export class UserAccountPageComponent implements OnInit {
   account: Account;
   loading = true;
   id = ''
+  breadcrumbsData: string[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,10 +58,12 @@ export class UserAccountPageComponent implements OnInit {
     private dialogService: DialogService,
     private navigationService: NavigationService,
     private datePipe: DatePipe,
-    private location: Location
+    private location: Location,
+    private breadcrumbsService: BreadcrumbsService
   ) { }
 
   ngOnInit(): void {
+    this.breadcrumbsData = this.breadcrumbsService.getUserAccountBreadcrumb();
     this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
     this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))

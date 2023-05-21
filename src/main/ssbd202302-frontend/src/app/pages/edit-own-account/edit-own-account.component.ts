@@ -9,6 +9,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup} from "@angular/forms";
 import {EditAccount} from "../../interfaces/edit.account";
 import {AlertService} from "@full-fledged/alerts";
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-edit-own-account',
@@ -56,6 +57,7 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     streetNumber: 0,
     hash: ''
   }
+  breadcrumbData: string[]
 
   constructor(
     private accountService: AccountService,
@@ -63,10 +65,12 @@ export class EditOwnAccountComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private breadcrumbService: BreadcrumbsService
   ) { }
 
   ngOnInit(): void {
+    this.breadcrumbData = this.breadcrumbService.getEditOwnAccountBreadcrumb();
     this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
