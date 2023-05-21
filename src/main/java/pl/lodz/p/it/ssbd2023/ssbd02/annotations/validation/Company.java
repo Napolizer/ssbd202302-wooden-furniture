@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 @Constraint(validatedBy = {})
-@Pattern(regexp = "^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ.\\s\\d]*$",
+@Pattern(regexp = "^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s\\d.-]*$",
     message = "Field must start with a capital letter")
 @Size(min = 1, max = 32, message = "The length of the field must be between {min} and {max} characters")
 public @interface Company {
