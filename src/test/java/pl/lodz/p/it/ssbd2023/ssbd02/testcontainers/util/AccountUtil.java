@@ -46,4 +46,16 @@ public class AccountUtil {
         .statusCode(201);
     return getAccountId(login);
   }
+
+  public static int countAccounts() {
+    return given()
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header(acceptLanguageHeader)
+        .when()
+        .get("/account")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("size()");
+  }
 }
