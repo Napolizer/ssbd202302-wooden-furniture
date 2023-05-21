@@ -5,5 +5,5 @@ export class Constants {
     '^[A-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]*$';
   public static readonly POSTAL_CODE_PATTERN = '[0-9]{2}-[0-9]{3}';
   public static readonly COMPANY_PATTERN =
-    '^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s.-]*$';
+    '^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s\\d.-]*$';
 }
