@@ -24,6 +24,15 @@ $border-radius: 10px
       border-bottom-right-radius: $border-radius
       border-top-right-radius: $border-radius
 
+      .icon-back
+        position: absolute
+        transform: scale(1.5)
+        margin-left: 10px
+        margin-top: 10px
+
+      .icon-back:hover
+        cursor: pointer
+
       .form-title
         font-size: 35px
         font-weight: bold
@@ -136,3 +145,20 @@ $border-radius: 10px
         .form
           .form-create
             width: 40%
+
+ul 
+  list-style: none
+  display: inline
+  margin: 0
+  padding: 30
+
+
+li 
+  display: inline
+
+
+li:not(:last-child)::after 
+  content: " > "
+
+li:last-child
+  font-weight: bold

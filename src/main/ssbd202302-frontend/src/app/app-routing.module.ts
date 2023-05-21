@@ -82,7 +82,8 @@ const routes: Routes = [
     component: AdminPageComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR],
+      breadcrumbs: ['Home']
     }
   },
   {
@@ -186,7 +187,8 @@ const routes: Routes = [
     component: UserAccountPageComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.ADMINISTRATOR]
+      roles: [Role.ADMINISTRATOR],
+      breadcrumbs: ['Home','Admin Panelsad']
     }
   },
   {

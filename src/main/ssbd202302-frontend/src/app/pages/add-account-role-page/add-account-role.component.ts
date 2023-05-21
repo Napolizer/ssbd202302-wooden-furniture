@@ -146,7 +146,8 @@ export class AddAccountRoleComponent implements OnInit {
       });
   }
 
-  onBackClicked() {
-    void this.navigationService.redirectToAccountPage(this.id);
+  onBackClicked(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    void this.navigationService.redirectToAccountPage(id);
   }
 }

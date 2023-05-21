@@ -96,3 +96,20 @@ $border-radius: 10px
 
     .panel
       margin-bottom: 5px
+
+ul 
+  list-style: none
+  display: inline
+  margin: 0
+  padding: 1
+
+
+li 
+  display: inline
+
+
+li:not(:last-child)::after 
+  content: " > "
+
+li:last-child
+  font-weight: bold

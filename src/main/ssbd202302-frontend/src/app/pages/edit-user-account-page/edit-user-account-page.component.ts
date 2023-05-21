@@ -10,6 +10,7 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {AlertService} from "@full-fledged/alerts";
 import {ActivatedRoute} from "@angular/router";
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-edit-user-account-page',
@@ -59,6 +60,7 @@ export class EditUserAccountPageComponent implements OnInit {
   }
   login = ''
   id = ''
+  breadcrumbData: string[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -67,10 +69,12 @@ export class EditUserAccountPageComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private breadcrumbService: BreadcrumbsService
   ) { }
 
   ngOnInit(): void {
+    this.breadcrumbData = this.breadcrumbService.getEditAccountBreadcrumb();
     this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
     this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
@@ -180,4 +184,10 @@ export class EditUserAccountPageComponent implements OnInit {
     });
     this.loading = false;
   }
+
+  onBackClicked(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    void this.navigationService.redirectToAccountPage(id);
+  }
+  
 }

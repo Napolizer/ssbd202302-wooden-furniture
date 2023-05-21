@@ -3,6 +3,10 @@
   <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
     <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
       <mat-card class="profile-card">
+        <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
+        <ul class="breadcrumb-list">
+          <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
+        </ul>
         <mat-card-header>
           <mat-card-title>{{account.login}}</mat-card-title>
           <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
@@ -64,21 +68,40 @@
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">{{'account.roles' | translate}}</p>
-                <p class="content">{{getRoles()}}</p>
+                <p class="title">{{'account.archive' | translate}}</p>
+                <p class="content">{{account.archive.toString() | translate}}</p>
                 <div class="border"></div>
-              </div>
+              </div>  
             </div>
             <div class="row">
               <div class="entry">
                 <p class="title">{{'account.accountState' | translate}}</p>
                 <p class="content">{{getAccountState() | translate}}</p>
+                <mat-card-actions>
+              <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}} 
+                <mat-icon>lock</mat-icon> 
+              </button>
+              <button mat-raised-button color="success" (click)="confirmUnblock()" [disabled]="isBlocked()">{{'account.activate' | translate}}
+                <mat-icon>lock_open</mat-icon>
+              </button>
+                </mat-card-actions>
                 <div class="border"></div>
               </div>
               <div class="entry">
-                <p class="title">{{'account.archive' | translate}}</p>
-                <p class="content">{{account.archive.toString() | translate}}</p>
+                <p class="title">{{'account.roles' | translate}}</p>
+                <p class="content">{{getRoles()}}</p>
                 <div class="border"></div>
+                <mat-card-actions>
+                  <button mat-raised-button color="success" (click)="redirectToAddAccountRolesPage()">{{'account.addrole' | translate}}
+                    <mat-icon>thumb_up</mat-icon>
+                  </button>
+                  <button mat-raised-button color="warn" (click)="redirectToRemoveAccountRolesPage()">{{'account.removerole' | translate}}
+                    <mat-icon>thumb_down</mat-icon>
+                  </button>
+                  <button mat-raised-button color="primary" class= "right-button" (click)="redirectToChangeAccountRolesPage()">{{'account.changerole' | translate}}
+                    <mat-icon>compare_arrows</mat-icon>
+                  </button>
+                </mat-card-actions>
               </div>
             </div>
             <div class="row">
@@ -117,18 +140,15 @@
                 <div class="border"></div>
               </div>
             </div>
+            <mat-card-actions>
+              <div class="button-group">
+                <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
+                <button mat-raised-button color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
+                <button mat-raised-button color="primary" class= "right-button" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
+              </div>
+            </mat-card-actions>
           </div>
         </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary" (click)="redirectToAddAccountRolesPage()">{{'account.addrole' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="redirectToRemoveAccountRolesPage()">{{'account.removerole' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="redirectToChangeAccountRolesPage()">{{'account.changerole' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
-          <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}}</button>
-          <button mat-raised-button color="success" (click)="confirmUnblock()" [disabled]="isBlocked()">{{'account.activate' | translate}}</button>
-          <button mat-raised-button color="primary" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
-        </mat-card-actions>
       </mat-card>
     </form>
   </div>

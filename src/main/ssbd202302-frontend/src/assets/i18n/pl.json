@@ -217,12 +217,14 @@
   "role.client": "Klient",
   "role.guest": "Gość",
 
+  "toolbar.home": "Strona Domowa",
   "toolbar.adminPanel": "Panel Administracyjny",
   "toolbar.myAccount": "Moje konto",
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
   "toolbar.settings": "Ustawienia",
   "toolbar.createAccount": "Utwórz Konto",
+  "toolbar.account": "Konto Użytkownika",
 
   "auth.token.expired": "Twój token wygasł",
   "auth.not.authenticated": "Nie jesteś zalogowany",

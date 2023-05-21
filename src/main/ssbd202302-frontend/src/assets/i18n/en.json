@@ -218,12 +218,14 @@
   "role.client": "Client",
   "role.guest": "Guest",
 
+  "toolbar.home": "Home Page",
   "toolbar.adminPanel": "Admin Panel",
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
   "toolbar.settings": "Settings",
   "toolbar.createAccount": "Create Account",
+  "toolbar.account": "Account",
 
   "auth.token.expired": "Your token has expired",
   "auth.not.authenticated": "You are not authenticated",
