@@ -7,6 +7,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @Stateless
 public class AccountMapper {
   @Inject
@@ -35,5 +38,17 @@ public class AccountMapper {
         .address(addressMapper.mapToAddressDto(account.getPerson().getAddress()))
         .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
         .build();
+  }
+
+  public LocalDateTime mapTimeToNewZone(LocalDateTime oldDateTime, String zone) {
+    if (oldDateTime != null) {
+      ZoneId oldZone = ZoneId.of("Europe/Warsaw");
+      ZoneId newZone = ZoneId.of(zone);
+
+      return oldDateTime.atZone(oldZone)
+              .withZoneSameInstant(newZone)
+              .toLocalDateTime();
+    }
+    return null;
   }
 }
