@@ -142,39 +142,25 @@ public class EmailSendingRetryService {
 
   @PermitAll
   private void sendMailWithEmailChangeConfirmLink(String email, String locale, String token) {
-    try {
-      mailService.sendMailWithEmailChangeConfirmLink(email, locale, token);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendMailWithEmailChangeConfirmLink(email, locale, token);
   }
 
   @PermitAll
   private void sendResetPasswordMail(String email, String locale, String token) {
-    try {
-      mailService.sendResetPasswordMail(email, locale, token);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendResetPasswordMail(email, locale, token);
+
   }
 
   @PermitAll
   private void sendAccountConfirmationLink(Account account, String token) {
-    try {
-      mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
+    mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
               token, account.getLogin());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+
   }
 
   @PermitAll
   private void sendAccountRemovedMail(Account account) {
-    try {
-      mailService.sendEmailAboutRemovingNotVerifiedAccount(account.getEmail(), account.getLocale());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendEmailAboutRemovingNotVerifiedAccount(account.getEmail(), account.getLocale());
   }
 
 }

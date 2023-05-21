@@ -73,11 +73,8 @@ public class AuthenticationService {
             .anyMatch(a -> a.getRoleName().equals(Role.ADMINISTRATOR));
 
     if (isAdmin) {
-      try {
-        mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), ip);
-      } catch (MessagingException e) {
-        throw ApplicationExceptionFactory.createMailServiceException(e);
-      }
+      mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), ip);
+
     }
 
     return setUpAccountAndGenerateToken(ip, locale, account);
@@ -165,6 +162,7 @@ public class AuthenticationService {
     }
   }
 
+  @PermitAll
   private Date convertToDate(LocalDateTime localDateTime) {
     Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);

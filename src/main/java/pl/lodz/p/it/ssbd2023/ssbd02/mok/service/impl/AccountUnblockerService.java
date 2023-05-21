@@ -56,12 +56,9 @@ public class AccountUnblockerService {
       account.setBlockadeEnd(null);
       accountFacade.update(account);
 
-      try {
-        mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
-                account.getLocale());
-      } catch (MessagingException e) {
-        throw ApplicationExceptionFactory.createMailServiceException(e);
-      }
+      mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
+              account.getLocale());
+
     }
   }
 }

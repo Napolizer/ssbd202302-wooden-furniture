@@ -99,12 +99,9 @@ public class AccountService extends AbstractService {
     accessLevels.add(accessLevel);
     foundAccount.setAccessLevels(accessLevels);
     accountFacade.update(foundAccount);
-    try {
-      mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(),
-              foundAccount.getLocale(), accessLevel.getRoleName());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendEmailAboutAddingAccessLevel(foundAccount.getEmail(), foundAccount.getLocale(),
+            accessLevel.getRoleName());
+
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -122,12 +119,8 @@ public class AccountService extends AbstractService {
         accessLevels.remove(item);
         foundAccount.setAccessLevels(accessLevels);
         accountFacade.update(foundAccount);
-        try {
-          mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(),
-                  foundAccount.getLocale(), item.getRoleName());
-        } catch (MessagingException e) {
-          throw ApplicationExceptionFactory.createMailServiceException(e);
-        }
+        mailService.sendEmailAboutRemovingAccessLevel(foundAccount.getEmail(),
+                foundAccount.getLocale(), item.getRoleName());
         return;
       }
     }
@@ -146,12 +139,9 @@ public class AccountService extends AbstractService {
         accessLevel.setAccount(account);
         account.setAccessLevels(accessLevels);
         accountFacade.update(account);
-        try {
-          mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
-                  account.getLocale(), oldAccessLevel.getRoleName(), accessLevel.getRoleName());
-        } catch (MessagingException e) {
-          throw ApplicationExceptionFactory.createMailServiceException(e);
-        }
+        mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
+                account.getLocale(), oldAccessLevel.getRoleName(), accessLevel.getRoleName());
+
       } else {
         throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
       }
@@ -194,12 +184,8 @@ public class AccountService extends AbstractService {
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
             TokenType.ACCOUNT_CONFIRMATION, accountConfirmationToken);
-    try {
-      mailService.sendMailWithAccountConfirmationLink(account.getEmail(),
-              account.getLocale(), accountConfirmationToken, account.getLogin());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
+            accountConfirmationToken, account.getLogin());
   }
 
   @PermitAll
@@ -274,11 +260,9 @@ public class AccountService extends AbstractService {
     String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.CHANGE_PASSWORD, changePasswordToken);
-    try {
-      mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+
+    mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
+
   }
 
   @PermitAll
@@ -292,12 +276,8 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.BLOCKED);
     accountFacade.update(account);
 
-    try {
-      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(),
-              account.getLocale());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
+
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -312,12 +292,8 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
 
-    try {
-      mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(),
-              account.getLocale());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendMailWithInfoAboutActivatingAccount(account.getEmail(), account.getLocale());
+
   }
 
   @PermitAll
@@ -330,12 +306,7 @@ public class AccountService extends AbstractService {
     }
     account.setAccountState(AccountState.ACTIVE);
     accountFacade.update(account);
-    try {
-      mailService.sendMailWithInfoAboutConfirmingAccount(account.getEmail(),
-              account.getLocale());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+    mailService.sendMailWithInfoAboutConfirmingAccount(account.getEmail(), account.getLocale());
   }
 
   @PermitAll
@@ -386,12 +357,9 @@ public class AccountService extends AbstractService {
     String resetPasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.PASSWORD_RESET, resetPasswordToken);
-    try {
-      mailService.sendResetPasswordMail(account.getEmail(),
-              account.getLocale(), resetPasswordToken);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
+
+    mailService.sendResetPasswordMail(account.getEmail(), account.getLocale(), resetPasswordToken);
+
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
@@ -431,12 +399,9 @@ public class AccountService extends AbstractService {
       String accountChangeEmailToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
       emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), newEmail,
               TokenType.CHANGE_EMAIL, accountChangeEmailToken);
-      try {
-        mailService.sendMailWithEmailChangeConfirmLink(newEmail,
-                account.getLocale(), accountChangeEmailToken);
-      } catch (MessagingException e) {
-        throw ApplicationExceptionFactory.createMailServiceException(e);
-      }
+
+      mailService.sendMailWithEmailChangeConfirmLink(newEmail, account.getLocale(), accountChangeEmailToken);
+
     } else {
       throw ApplicationExceptionFactory.createForbiddenException();
     }
