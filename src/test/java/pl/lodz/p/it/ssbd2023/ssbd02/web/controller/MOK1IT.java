@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOK.1 - register new account")
+@DisplayName("MOK.1 - Register new account")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class MOK1IT {
 
