@@ -21,6 +21,9 @@ import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
@@ -284,71 +287,153 @@ public class AccountControllerIT {
   class createAccount {
     @Test
     @Order(1)
-    void shouldProperlyCreateActiveUser() {
+    void shouldProperlyCreateActiveAccount() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Active123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
-          .body(InitData.activeAccountJson)
+          .body(InitData.mapToJsonString(account))
           .when()
           .post("/account/create")
           .then()
           .statusCode(201);
+
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .when()
+              .get("/account/login/Active123")
+              .then()
+              .statusCode(200)
+              .contentType("application/json")
+              .body("accountState", equalTo("ACTIVE"))
+              .body("roles", hasSize(1))
+              .body("roles[0]", equalTo("administrator"));
     }
 
     @Test
     @Order(2)
-    void shouldProperlyCreateInactiveUser() {
+    void shouldProperlyCreateAccountWithClientAccessLevel() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Client123");
+      account.setEmail("client123@example.com");
+      account.setNip("9999999999");
+      account.setAccessLevel(new AccessLevelDto("client"));
       given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.inactiveAccountJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(201);
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .when()
+              .get("/account/login/Client123")
+              .then()
+              .statusCode(200)
+              .contentType("application/json")
+              .body("accountState", equalTo("ACTIVE"))
+              .body("roles", hasSize(1))
+              .body("roles[0]", equalTo("client"));
     }
 
     @Test
     @Order(3)
-    void shouldProperlyCreateBlockedUser() {
+    void shouldProperlyCreateAccountWithEmployeeAccessLevel() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Employee123");
+      account.setEmail("employee123@example.com");
+      account.setAccessLevel(new AccessLevelDto("employee"));
       given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.blockedAccountJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(201);
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
 
-      int id = retrieveAccountId("blocked123");
       given()
               .header("Authorization", "Bearer " + retrieveAdminToken())
               .when()
-              .patch("/account/block/" + id)
+              .get("/account/login/Employee123")
               .then()
-              .statusCode(200);
+              .statusCode(200)
+              .contentType("application/json")
+              .body("accountState", equalTo("ACTIVE"))
+              .body("roles", hasSize(1))
+              .body("roles[0]", equalTo("employee"));
     }
 
     @Test
     @Order(4)
-    void shouldProperlyCreateNotVerifiedUser() {
+    void shouldProperlyCreateAccountWithAdministratorAccessLevel() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Administrator123");
+      account.setEmail("administrator123@example.com");
+      account.setAccessLevel(new AccessLevelDto("administrator"));
       given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.notVerifiedAccountJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(201);
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .when()
+              .get("/account/login/Administrator123")
+              .then()
+              .statusCode(200)
+              .contentType("application/json")
+              .body("accountState", equalTo("ACTIVE"))
+              .body("roles", hasSize(1))
+              .body("roles[0]", equalTo("administrator"));
     }
 
     @Test
     @Order(5)
+    void shouldProperlyCreateAccountWithSalesRepAccessLevel() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("SalesRep123");
+      account.setEmail("salesrep123@example.com");
+      account.setAccessLevel(new AccessLevelDto("sales_rep"));
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .when()
+              .get("/account/login/SalesRep123")
+              .then()
+              .statusCode(200)
+              .contentType("application/json")
+              .body("accountState", equalTo("ACTIVE"))
+              .body("roles", hasSize(1))
+              .body("roles[0]", equalTo("sales_rep"));
+    }
+
+    @Test
+    @Order(6)
     void shouldFailToCreateAccountWithSameLogin() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Active123");
+      account.setEmail("another123@example.com");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
-          .body(InitData.sameLoginAccountJson)
+          .body(InitData.mapToJsonString(account))
           .when()
           .post("/account/create")
           .then()
@@ -357,31 +442,68 @@ public class AccountControllerIT {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void shouldFailToCreateAccountWithSameEmail() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Another123");
       given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.sameEmailAccountJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(409)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS));
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(409)
+              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS));
     }
 
     @Test
-    @Order(7)
+    @Order(8)
+    void shouldFailToCreateAccountWithSameCompanyNip() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setLogin("Another123");
+      account.setEmail("another123@example.com");
+      account.setNip("9999999999");
+      account.setAccessLevel(new AccessLevelDto("client"));
+      given()
+              .header("Authorization", "Bearer " + retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(409)
+              .body("message", equalTo(MessageUtil.MessageKey.COMPANY_NIP_ALREADY_EXISTS));
+    }
+
+    @Test
+    @Order(9)
     void shouldFailToCreateAccountWithInvalidAccessLevel() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      account.setAccessLevel(new AccessLevelDto("invalid"));
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .contentType("application/json")
-          .body(InitData.invalidAccessLevelAccountJson)
+          .body(InitData.mapToJsonString(account))
           .when()
           .post("/account/create")
           .then()
           .statusCode(400)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
+    }
+
+    @Test
+    @Order(10)
+    void shouldFailToCreateAccountAsClient() {
+      AccountCreateDto account = InitData.getAccountToCreate();
+      given()
+              .header("Authorization", "Bearer " + retrieveClientToken())
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(403);
     }
   }
 
@@ -393,7 +515,7 @@ public class AccountControllerIT {
     @Test
     @Order(1)
     void shouldProperlyBlockActiveAccount() {
-      int id = retrieveAccountId("active123");
+      int id = retrieveAccountId("Active123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/block/" + id)
@@ -404,7 +526,7 @@ public class AccountControllerIT {
     @Test
     @Order(2)
     void shouldFailToBlockAlreadyBlockedAccount() {
-      int id = retrieveAccountId("blocked123");
+      int id = retrieveAccountId("Active123");
       given()
               .header("Authorization", "Bearer " + retrieveAdminToken())
               .patch("/account/block/" + id)
@@ -472,7 +594,7 @@ public class AccountControllerIT {
     @Test
     @Order(2)
     void shouldFailToActivateInactiveAccount() {
-      int id = retrieveAccountId("inactive123");
+      int id = retrieveAccountId("administrator");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/activate/" + id)
@@ -507,7 +629,7 @@ public class AccountControllerIT {
     @Test
     @Order(5)
     void shouldProperlyActivateBlockedAccount() {
-      int id = retrieveAccountId("blocked123");
+      int id = retrieveAccountId("Active123");
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .patch("/account/activate/" + id)
@@ -904,9 +1026,11 @@ public class AccountControllerIT {
     @Test
     @Order(1)
     void shouldProperlyRegisterClientAccount() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setLogin("Register123");
       given()
               .contentType("application/json")
-              .body(InitData.accountToRegister)
+              .body(InitData.mapToJsonString(account))
               .when()
               .post("/account/register")
               .then()
@@ -927,9 +1051,10 @@ public class AccountControllerIT {
     @Test
     @Order(2)
     void shouldProperlyRegisterClientAccountWithCompany() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
       given()
               .contentType("application/json")
-              .body(InitData.accountToRegisterWithCompany)
+              .body(InitData.mapToJsonString(account))
               .when()
               .post("/account/register")
               .then()
@@ -939,9 +1064,12 @@ public class AccountControllerIT {
     @Test
     @Order(3)
     void shouldFailToRegisterAccountWithExistingCompanyNip() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setEmail("different123@example.com");
+      account.setLogin("Different123");
       given()
               .contentType("application/json")
-              .body(InitData.accountToRegisterWithSameCompanyNip)
+              .body(InitData.mapToJsonString(account))
               .when()
               .post("/account/register")
               .then()
@@ -952,9 +1080,11 @@ public class AccountControllerIT {
     @Test
     @Order(4)
     void shouldFailToRegisterAccountWithExistingEmail() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setLogin("Different123");
       given()
               .contentType("application/json")
-              .body(InitData.accountToRegisterWithExistingEmail)
+              .body(InitData.mapToJsonString(account))
               .when()
               .post("/account/register")
               .then()
@@ -962,17 +1092,527 @@ public class AccountControllerIT {
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_EMAIL_ALREADY_EXISTS));
     }
 
+
     @Test
     @Order(5)
     void shouldFailToRegisterAccountWithExistingLogin() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setEmail("different123@example.com");
       given()
               .contentType("application/json")
-              .body(InitData.accountToRegisterWithExistingLogin)
+              .body(InitData.mapToJsonString(account))
               .when()
               .post("/account/register")
               .then()
               .statusCode(409)
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_LOGIN_ALREADY_EXISTS));
+    }
+
+    @Test
+    @Order(6)
+    void shouldFailToRegisterAccountWithEmptyData() {
+      AccountRegisterDto account = AccountRegisterDto.builder().build();
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(11));
+    }
+
+    @Test
+    @Order(7)
+    void shouldFailToRegisterAccountWithInvalidEmailFormat() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setEmail("invalidEmail");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("email"))
+              .body("errors[0].message", equalTo("Invalid email address format"));
+    }
+
+    @Test
+    @Order(8)
+    void shouldFailToRegisterAccountWithInvalidLoginPattern() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setLogin("login123_");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("login"))
+              .body("errors[0].message",
+                      equalTo("Login must start with a letter and contain only letters and digits."));
+
+      account.setLogin("Login_123");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("login"))
+              .body("errors[0].message",
+                      equalTo("Login must start with a letter and contain only letters and digits."));
+
+      account.setLogin("123Login");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("login"))
+              .body("errors[0].message",
+                      equalTo("Login must start with a letter and contain only letters and digits."));
+    }
+
+    @Test
+    @Order(9)
+    void shouldFailToRegisterAccountWithTooShortLogin() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setLogin("Joe11");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("login"))
+              .body("errors[0].message",
+                      equalTo("The length of the field must be between 6 and 20 characters"));
+
+    }
+
+    @Test
+    @Order(10)
+    void shouldFailToRegisterAccountWithTooLongLogin() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setLogin("Joe11joe11joe11joe11x");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("login"))
+              .body("errors[0].message",
+                      equalTo("The length of the field must be between 6 and 20 characters"));
+    }
+
+    @Test
+    @Order(11)
+    void shouldFailToRegisterAccountWithWithInvalidPasswordPattern() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setPassword("password123");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("password"))
+              .body("errors[0].message", equalTo("Password must contain at least " +
+                      "one uppercase letter and one special character from the following set: !@#$%^&+="));
+
+      account.setPassword("password!!!");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("password"))
+              .body("errors[0].message", equalTo("Password must contain at least " +
+                      "one uppercase letter and one special character from the following set: !@#$%^&+="));
+
+      account.setPassword("password123!");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("password"))
+              .body("errors[0].message", equalTo("Password must contain at least " +
+                      "one uppercase letter and one special character from the following set: !@#$%^&+="));
+
+      account.setPassword("Password123");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("password"))
+              .body("errors[0].message", equalTo("Password must contain at least " +
+                      "one uppercase letter and one special character from the following set: !@#$%^&+="));
+
+    }
+
+    @Test
+    @Order(12)
+    void shouldFailToRegisterAccountWithTooShortPassword() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setPassword("Pass!!!");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("password"))
+              .body("errors[0].message",
+                      equalTo("The length of the field must be between 8 and 32 characters"));
+    }
+
+    @Test
+    @Order(13)
+    void shouldFailToRegisterAccountWithTooLongPassword() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setPassword("Pass123!Pass123!Pass123!Pass123!!");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("password"))
+              .body("errors[0].message",
+                      equalTo("The length of the field must be between 8 and 32 characters"));
+    }
+
+    @Test
+    @Order(14)
+    void shouldFailToRegisterAccountWithWithInvalidCapitalizedPattern() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setFirstName("joe");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("firstName"))
+              .body("errors[0].message",
+                      equalTo("Field must start with a capital letter and contain only letters"));
+
+      account.setFirstName("Joe123");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("firstName"))
+              .body("errors[0].message",
+                      equalTo("Field must start with a capital letter and contain only letters"));
+
+      account.setFirstName("Joe!");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("firstName"))
+              .body("errors[0].message",
+                      equalTo("Field must start with a capital letter and contain only letters"));
+    }
+
+    @Test
+    @Order(15)
+    void shouldFailToRegisterAccountWithEmptyCapitalized() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setFirstName("");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(2))
+              .body("errors[0].field", equalTo("firstName"))
+              .body("errors[1].field", equalTo("firstName"));
+
+    }
+
+    @Test
+    @Order(16)
+    void shouldFailToRegisterAccountWithTooLongCapitalized() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setFirstName("John DoeBo John DoeBo");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("firstName"))
+              .body("errors[0].message",
+                      equalTo("The length of the field must be between 1 and 20 characters"));
+    }
+
+    @Test
+    @Order(17)
+    void shouldFailToRegisterAccountWithInvalidLocalePattern() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setLocale("pl_PL");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("locale"))
+              .body("errors[0].message",
+                      equalTo("Locale must contain only two lowercase letters"));
+
+      account.setLocale("PL");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("locale"))
+              .body("errors[0].message",
+                      equalTo("Locale must contain only two lowercase letters"));
+
+      account.setLocale("pl_pl");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("locale"))
+              .body("errors[0].message",
+                      equalTo("Locale must contain only two lowercase letters"));
+    }
+
+    @Test
+    @Order(18)
+    void shouldFailToRegisterAccountWithInvalidPostalCodePattern() {
+      AccountRegisterDto account = InitData.getAccountToRegister();
+      account.setPostalCode("90222");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("postalCode"))
+              .body("errors[0].message",
+                      equalTo("Postal code must be in the format xx-xxx"));
+
+      account.setPostalCode("902-22");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("postalCode"))
+              .body("errors[0].message",
+                      equalTo("Postal code must be in the format xx-xxx"));
+
+      account.setPostalCode("902-222");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("postalCode"))
+              .body("errors[0].message",
+                      equalTo("Postal code must be in the format xx-xxx"));
+    }
+
+    @Test
+    @Order(19)
+    void shouldFailToRegisterAccountWithInvalidCompanyNipPattern() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setNip("111111111z");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("nip"))
+              .body("errors[0].message",
+                      equalTo("NIP must contain 10 digits"));
+    }
+
+    @Test
+    @Order(20)
+    void shouldFailToRegisterAccountWithTooShortCompanyNip() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setNip("111111111");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("nip"))
+              .body("errors[0].message",
+                      equalTo("NIP must contain 10 digits"));
+    }
+
+    @Test
+    @Order(21)
+    void shouldFailToRegisterAccountWithTooLongCompanyNip() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setNip("11111111111");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("nip"))
+              .body("errors[0].message",
+                      equalTo("NIP must contain 10 digits"));
+    }
+
+    @Test
+    @Order(22)
+    void shouldFailToRegisterAccountWithInvalidCompanyNamePattern() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setCompanyName("11Company");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("companyName"))
+              .body("errors[0].message",
+                      equalTo("Field must start with a capital letter"));
+
+      account.setCompanyName("New/Company");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("companyName"))
+              .body("errors[0].message",
+                      equalTo("Field must start with a capital letter"));
+
+      account.setCompanyName("company123");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("companyName"))
+              .body("errors[0].message",
+                      equalTo("Field must start with a capital letter"));
+    }
+
+    @Test
+    @Order(23)
+    void shouldFailToRegisterAccountWithEmptyCompanyName() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setCompanyName("");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(2))
+              .body("errors[0].field", equalTo("companyName"))
+              .body("errors[1].field", equalTo("companyName"));
+    }
+
+    @Test
+    @Order(24)
+    void shouldFailToRegisterAccountWithTooLongCompanyName() {
+      AccountRegisterDto account = InitData.getAccountWithCompany();
+      account.setCompanyName("CompanyNCompanyNCompanyNCompanyN1");
+      given()
+              .contentType("application/json")
+              .body(InitData.mapToJsonString(account))
+              .when()
+              .post("/account/register")
+              .then()
+              .statusCode(400)
+              .body("errors", hasSize(1))
+              .body("errors[0].field", equalTo("companyName"))
+              .body("errors[0].message",
+                      equalTo("The length of the field must be between 1 and 32 characters"));
     }
   }
 }
