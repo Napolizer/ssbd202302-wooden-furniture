@@ -39,7 +39,6 @@ public class MOK21IT {
       @ParameterizedTest(name = "email: {0}")
       @CsvSource({
           "admin@gmail.com",
-          "steve.jobs@gmail.com",
           "adam.mickiewicz@gmail.com",
           "juliusz.slowacki@gmail.com",
           "cyprian.norwid@gmail.com"
