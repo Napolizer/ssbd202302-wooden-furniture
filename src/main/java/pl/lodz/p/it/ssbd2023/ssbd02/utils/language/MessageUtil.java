@@ -103,5 +103,7 @@ public class MessageUtil {
     public static final String EMAIL_RESET_PASSWORD_MESSAGE2 = "mok.email.account.reset.password.message2";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_SUBJECT = "mok.email.admin.login.subject";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_MESSAGE = "mok.email.admin.login.message";
+    public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
+    public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
   }
 }

@@ -36,7 +36,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 @DenyAll
 public class TokenService {
   private static final String SECRET_KEY;
+  private static final String SECRET_KEY_REFRESH;
   private static final Long EXPIRATION_AUTHORIZATION;
+  private static final Long EXPIRATION_AUTHORIZATION_REFRESH;
   private static final Long EXPIRATION_ACCOUNT_CONFIRMATION;
   private static final Long EXPIRATION_PASSWORD_RESET;
   private static final Long EXPIRATION_CHANGE_EMAIL;
@@ -47,7 +49,10 @@ public class TokenService {
     try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
       prop.load(input);
       SECRET_KEY = prop.getProperty("secret.key");
+      SECRET_KEY_REFRESH = prop.getProperty("secret.key.refresh");
       EXPIRATION_AUTHORIZATION = Long.parseLong(prop.getProperty("expiration.authorization.milliseconds"));
+      EXPIRATION_AUTHORIZATION_REFRESH = Long.parseLong(prop
+          .getProperty("expiration.authorization.refresh.milliseconds"));
       EXPIRATION_ACCOUNT_CONFIRMATION = Long.parseLong(prop
               .getProperty("expiration.account.confirmation.milliseconds"));
       EXPIRATION_PASSWORD_RESET = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
@@ -68,9 +73,31 @@ public class TokenService {
         .claim("roles", account.getAccessLevels()
             .stream()
             .map(AccessLevel::getRoleName)
-            .collect(Collectors.toList()))
-            .signWith(SignatureAlgorithm.HS512, SECRET_KEY);
+            .toList())
+        .signWith(SignatureAlgorithm.HS512, SECRET_KEY);
     return builder.compact();
+  }
+
+  @PermitAll
+  public String generateRefreshToken(Account account) {
+    long now = System.currentTimeMillis();
+    var builder = Jwts.builder()
+        .setSubject(account.getLogin())
+        .setIssuedAt(new Date(now))
+        .setExpiration(new Date(now + EXPIRATION_AUTHORIZATION_REFRESH))
+        .signWith(SignatureAlgorithm.HS512, SECRET_KEY_REFRESH);
+    return builder.compact();
+  }
+
+  @PermitAll
+  public void validateRefreshToken(String refreshToken) {
+    try {
+      Jwts.parser().setSigningKey(SECRET_KEY_REFRESH).parseClaimsJws(refreshToken);
+    } catch (ExpiredJwtException e) {
+      throw ApplicationExceptionFactory.expiredRefreshTokenException();
+    } catch (RuntimeException e) {
+      throw ApplicationExceptionFactory.invalidRefreshTokenException();
+    }
   }
 
   @PermitAll
