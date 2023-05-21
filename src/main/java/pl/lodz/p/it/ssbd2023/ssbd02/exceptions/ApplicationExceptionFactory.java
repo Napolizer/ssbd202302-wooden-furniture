@@ -175,4 +175,14 @@ public final class ApplicationExceptionFactory {
   public static BaseWebApplicationException createGithubOauthConflictException() {
     return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_GITHUB_CONFLICT, Response.Status.CONFLICT);
   }
+
+  public static BaseWebApplicationException expiredRefreshTokenException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_EXPIRED_REFRESH_TOKEN, Response.Status.UNAUTHORIZED);
+  }
+
+  public static BaseWebApplicationException invalidRefreshTokenException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_INVALID_REFRESH_TOKEN, Response.Status.UNAUTHORIZED);
+  }
 }
