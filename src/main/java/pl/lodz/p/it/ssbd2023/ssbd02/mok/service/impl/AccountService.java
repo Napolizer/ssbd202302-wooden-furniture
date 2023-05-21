@@ -141,15 +141,19 @@ public class AccountService extends AbstractService {
 
     if (accessLevels.size() == 1) {
       AccessLevel oldAccessLevel = accessLevels.get(0);
-      accessLevels.set(0, accessLevel);
-      accessLevel.setAccount(account);
-      account.setAccessLevels(accessLevels);
-      accountFacade.update(account);
-      try {
-        mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
-                account.getLocale(), oldAccessLevel.getRoleName(), accessLevel.getRoleName());
-      } catch (MessagingException e) {
-        throw ApplicationExceptionFactory.createMailServiceException(e);
+      if (!Objects.equals(oldAccessLevel.getRoleName(), accessLevel.getRoleName())) {
+        accessLevels.set(0, accessLevel);
+        accessLevel.setAccount(account);
+        account.setAccessLevels(accessLevels);
+        accountFacade.update(account);
+        try {
+          mailService.sendEmailAboutChangingAccessLevel(account.getEmail(),
+                  account.getLocale(), oldAccessLevel.getRoleName(), accessLevel.getRoleName());
+        } catch (MessagingException e) {
+          throw ApplicationExceptionFactory.createMailServiceException(e);
+        }
+      } else {
+        throw ApplicationExceptionFactory.createAccessLevelAlreadyAssignedException();
       }
       return account;
     }

@@ -157,4 +157,8 @@ export class ChangeAccountRolePageComponent implements OnInit {
         }
       });
   }
+
+  onBackClicked() {
+    void this.navigationService.redirectToAccountPage(this.id);
+  }
 }
