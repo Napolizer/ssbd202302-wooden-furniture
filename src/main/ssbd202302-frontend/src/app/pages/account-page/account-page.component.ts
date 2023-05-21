@@ -140,4 +140,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   onChangeEmailClicked(): void {
     void this.navigationService.redirectToChangeOwnEmailPage();
   }
+
+  onBackClicked(): void {
+    void this.navigationService.redirectToMainPage();
+  }
 }

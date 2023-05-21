@@ -301,4 +301,8 @@ export class CreateAccountComponent implements OnInit {
       this.createAccountForm.get('companyName')?.updateValueAndValidity();
     }
   }
+
+  onBackClicked(): void {
+    void this.navigationService.redirectToMainPage();
+  }
 }

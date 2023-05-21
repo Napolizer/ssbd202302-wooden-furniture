@@ -52,4 +52,8 @@ export class AdminPageComponent implements OnInit {
   redirectToAccountPage(id: string): void {
     void this.navigationService.redirectToAccountPage(id);
   }
+
+  onBackClicked(): void {
+    void this.navigationService.redirectToMainPage();
+  }
 }

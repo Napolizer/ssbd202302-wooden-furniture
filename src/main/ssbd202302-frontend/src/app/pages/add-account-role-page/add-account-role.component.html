@@ -2,6 +2,7 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
+      <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
       <ul class="button-list">
         <li>
           <button mat-raised-button color="primary" class="styled-button" (click)="confirmAdd('administrator')">

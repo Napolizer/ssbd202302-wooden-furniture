@@ -284,4 +284,8 @@ export class UserAccountPageComponent implements OnInit {
         }
       })
   }
+
+  onBackClicked(): void {
+    void this.navigationService.redirectToAdminPage();
+  }
 }
