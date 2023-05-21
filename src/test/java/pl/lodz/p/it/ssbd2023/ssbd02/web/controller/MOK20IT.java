@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.IF_MATCH;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -18,6 +19,7 @@ import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
@@ -33,16 +35,18 @@ class MOK20IT {
     @ParameterizedTest(name = "login: {0}, email: {1}")
     @CsvSource({
         "client,client.new.email@ssbd.com",
-        "administrator,admin.new.email@ssbd.com",
         "salesrep,salesrep.new.email@ssbd.com",
         "employee,employee.new.email@ssbd.com",
         "clientemployee,clientemployee.new.email@ssbd.com"
     })
     @Order(1)
     void shouldProperlyChangeEmail(String login, String email) {
+      String token = AuthUtil.retrieveToken(login, "Student123!");
+      String version = InitData.retrieveVersion(login);
       given()
           .contentType("application/json")
-          .header("Authorization", "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
+          .header("Authorization", "Bearer " + token)
+          .header(IF_MATCH, version)
           .body("""
                      {
                          "email": "%s"
@@ -184,5 +188,34 @@ class MOK20IT {
           .then()
           .statusCode(403);
     }
+
+    @DisplayName("Should fail to change email if version is invalid")
+    @ParameterizedTest(name = "login: {0}, email: {1}, version: {2}")
+    @CsvSource({
+        "client,client.new.email@ssbd.com,1",
+        "administrator,admin.new.email@ssbd.com,1",
+        "salesrep,salesrep.new.email@ssbd.com,1",
+        "employee,employee.new.email@ssbd.com,1",
+        "clientemployee,clientemployee.new.email@ssbd.com,1"
+    })
+    @Order(6)
+    void shouldFailToChangeEmailIfVersionIsInvalid(String login, String email, String version) {
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
+          .header(IF_MATCH, version)
+          .body("""
+                     {
+                         "email": "%s"
+                     }
+              """.formatted(email))
+          .when()
+          .put("/account/change-email/" + AccountUtil.getAccountId(login))
+          .then()
+          .statusCode(409)
+          .contentType("application/json")
+          .body("message", is(equalTo("exception.optimistic.lock")));
+    }
+
   }
 }
