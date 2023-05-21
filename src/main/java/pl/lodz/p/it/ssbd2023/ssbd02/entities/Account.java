@@ -20,6 +20,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Data

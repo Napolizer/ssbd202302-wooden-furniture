@@ -8,7 +8,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
@@ -36,8 +35,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.endpoint.AbstractEndpoint;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)

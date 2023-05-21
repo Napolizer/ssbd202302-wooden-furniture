@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint;
+package pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.endpoint;
 
 import jakarta.ejb.EJBTransactionRolledbackException;
 

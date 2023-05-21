@@ -18,12 +18,12 @@ import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
+
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
@@ -31,7 +31,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
+import pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

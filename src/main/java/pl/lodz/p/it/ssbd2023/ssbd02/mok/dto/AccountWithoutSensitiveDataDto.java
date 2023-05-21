@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Login;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 
 @Data
 @NoArgsConstructor

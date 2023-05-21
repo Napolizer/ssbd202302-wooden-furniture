@@ -15,7 +15,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
 import java.util.Date;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;

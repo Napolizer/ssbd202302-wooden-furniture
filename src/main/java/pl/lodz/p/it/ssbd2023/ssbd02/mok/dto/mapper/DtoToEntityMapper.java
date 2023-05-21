@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;

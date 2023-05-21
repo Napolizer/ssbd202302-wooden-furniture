@@ -6,7 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.CategoryFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.facade.AbstractFacade;
 
 @Stateless
 public class CategoryFacade extends AbstractFacade<Category> implements CategoryFacadeOperations {

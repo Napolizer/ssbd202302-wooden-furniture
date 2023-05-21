@@ -6,7 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.RateFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.facade.AbstractFacade;
 
 @Stateless
 public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperations {

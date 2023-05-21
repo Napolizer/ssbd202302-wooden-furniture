@@ -5,7 +5,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -32,12 +31,11 @@ import jakarta.ws.rs.core.Response;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
@@ -54,7 +52,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Path("/account")
 @Interceptors({SimpleLoggerInterceptor.class})

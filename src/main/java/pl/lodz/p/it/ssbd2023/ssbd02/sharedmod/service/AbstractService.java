@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.utils.service;
+package pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.service;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;

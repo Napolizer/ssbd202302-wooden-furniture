@@ -4,11 +4,11 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.ProductFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.facade.AbstractFacade;
 
 @Stateless
 public class ProductFacade extends AbstractFacade<Product> implements ProductFacadeOperations {

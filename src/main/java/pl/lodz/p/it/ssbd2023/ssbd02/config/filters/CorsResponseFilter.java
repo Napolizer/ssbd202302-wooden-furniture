@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.web.filters;
+package pl.lodz.p.it.ssbd2023.ssbd02.config.filters;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;

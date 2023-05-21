@@ -2,9 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
@@ -23,7 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.AccountFacadeExceptionsIntercep
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.facade.AbstractFacade;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)

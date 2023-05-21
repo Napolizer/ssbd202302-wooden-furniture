@@ -14,12 +14,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 
 public class TokenServiceTest {

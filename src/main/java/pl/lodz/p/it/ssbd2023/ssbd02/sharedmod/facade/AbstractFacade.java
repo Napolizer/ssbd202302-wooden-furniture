@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.utils.facade;
+package pl.lodz.p.it.ssbd2023.ssbd02.sharedmod.facade;
 
 import jakarta.persistence.EntityManager;
 import java.util.List;
