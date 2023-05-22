@@ -12,15 +12,15 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.web.InitData.retrieveAdminToken;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("MOK.16 - View user accounts")
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class MOK16IT {
     @Nested
     @Order(1)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class Positive {
-        @Order(1)
         @Test
+        @Order(1)
         @DisplayName("Should properly get all accounts")
         void shouldProperlyGetAllAccountsTest() {
             String adminToken = retrieveAdminToken();
@@ -39,8 +39,8 @@ public class MOK16IT {
     @Order(2)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class Negative {
-        @Order(1)
         @Test
+        @Order(1)
         @DisplayName("Should fail when trying to get all accounts without admin token")
         void shouldFailToGetAllAccountsWithoutAdminTokenTest() {
           given()
