@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -34,7 +36,6 @@ public class MOK1IT {
 		@DisplayName("Should properly register new account with client role")
 		void shouldProperlyRegisterClientAccount() {
 			AccountRegisterDto account = InitData.getAccountToRegister();
-			account.setLogin("Register123");
 			given()
 							.contentType("application/json")
 							.body(InitData.mapToJsonString(account))
@@ -68,6 +69,36 @@ public class MOK1IT {
 							.then()
 							.statusCode(201);
 		}
+
+		@ParameterizedTest(name = "timeZone: {0}, login: {1}")
+		@Order(3)
+		@DisplayName("Should properly register new account with each timezone")
+		@CsvSource({
+						"EUROPE_WARSAW,europewarsaw",
+						"AMERICA_NEW_YORK,americanewyork",
+						"AMERICA_LOS_ANGELES,americelosangeles",
+						"ASIA_TOKYO,asiatokyo",
+						"AUSTRALIA_SYDNEY,australiasydney",
+						"EUROPE_LONDON,europelondon",
+						"EUROPE_BERLIN,europeberlin",
+						"AMERICA_CHICAGO,americachicago",
+						"ASIA_SHANGHAI,asiashanghai",
+						"AMERICA_SAO_PAULO,americasaopaulo"
+
+		})
+		void shouldProperlyRegisterClientAccountWithEachTimeZone(String timeZone, String login) {
+			AccountRegisterDto account = InitData.getAccountToRegister();
+			account.setLogin(login + "123");
+			account.setEmail(login + "@example.com");
+			account.setTimeZone(timeZone);
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(201);
+		}
 	}
 
 	@Nested
@@ -79,6 +110,14 @@ public class MOK1IT {
 		@DisplayName("Should fail to register account with existing company NIP")
 		void shouldFailToRegisterAccountWithExistingCompanyNip() {
 			AccountRegisterDto account = InitData.getAccountWithCompany();
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(201);
+
 			account.setEmail("different123@example.com");
 			account.setLogin("Different123");
 			given()
@@ -96,6 +135,14 @@ public class MOK1IT {
 		@DisplayName("Should fail to register account with existing account email")
 		void shouldFailToRegisterAccountWithExistingEmail() {
 			AccountRegisterDto account = InitData.getAccountToRegister();
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(201);
+
 			account.setLogin("Different123");
 			given()
 							.contentType("application/json")
@@ -135,7 +182,7 @@ public class MOK1IT {
 							.post("/account/register")
 							.then()
 							.statusCode(400)
-							.body("errors", hasSize(11));
+							.body("errors", hasSize(12));
 		}
 
 		@Test
@@ -649,5 +696,26 @@ public class MOK1IT {
 											equalTo("The length of the field must be between 1 and 32 characters"));
 		}
 
+
+		@Order(23)
+		@DisplayName("Should fail to register account with invalid timezones")
+		@ParameterizedTest(name = "timeZone: {0}")
+		@CsvSource({
+						"EUROPE/WARSAW",
+						"Europe/Warsaw",
+						"Europe-Warsaw",
+		})
+		void shouldFailToRegisterAccountWithInvalidTimeZones(String timeZone) {
+			AccountRegisterDto account = InitData.getAccountToRegister();
+			account.setTimeZone(timeZone);
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(400)
+							.body("message", equalTo(MessageUtil.MessageKey.ERROR_INVALID_TIME_ZONE));
+		}
 	}
 }
