@@ -37,7 +37,8 @@ public class AccountUtil {
                 "streetNumber": "1",
                 "postalCode": "90-000",
                 "locale": "en",
-                "language": "en-US"
+                "language": "en-US",
+                "timeZone": "EUROPE_WARSAW"
             }
             """.formatted(login, login + "@ssbd.com"))
         .when()

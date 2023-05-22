@@ -93,6 +93,7 @@ public class AccountServiceIT {
             .locale("pl")
             .newEmail("newemail123@gmail.com")
             .accountState(AccountState.ACTIVE)
+            .timeZone(TimeZone.EUROPE_WARSAW)
             .build();
     accountService.createAccount(account);
     accountToRegister = Account.builder()
@@ -111,6 +112,7 @@ public class AccountServiceIT {
                             .build())
                     .build())
             .locale("pl")
+            .timeZone(TimeZone.EUROPE_WARSAW)
             .build();
   }
 
