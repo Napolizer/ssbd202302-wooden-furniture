@@ -303,7 +303,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response blockAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.blockAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "mok.account.block.successful")
+                    .build()
+    ).build();
   }
 
   @PATCH

@@ -251,6 +251,69 @@ public class InitData {
           }
       """;
 
+  public static String accountToBlock1Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount1",
+              "email": "blockaccount1@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock2Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount2",
+              "email": "blockaccount2@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock3Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount3",
+              "email": "blockaccount3@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
   public static String editedAccountExampleJson = """
       {
         "firstName": "Adam",
