@@ -50,7 +50,9 @@ public class MOK13IT {
               .statusCode(200)
               .contentType("application/json")
               .body("token", notNullValue())
-              .body("token", not(emptyString()));
+              .body("token", not(emptyString()))
+              .body("refresh_token", notNullValue())
+              .body("refresh_token", not(emptyString()));
     }
   }
 

@@ -252,7 +252,7 @@ public class AccountController {
       String token = tokens.get(0);
       String refreshToken = tokens.get(1);
       json.add("token", token);
-      json.add("refreshToken", refreshToken);
+      json.add("refresh_token", refreshToken);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
       json.add("message", e.getMessage());
