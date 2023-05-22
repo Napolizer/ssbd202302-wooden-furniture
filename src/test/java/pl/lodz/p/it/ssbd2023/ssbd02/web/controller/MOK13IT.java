@@ -20,19 +20,34 @@ import static org.hamcrest.Matchers.*;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("MOK.13 - Login")
 public class MOK13IT {
-
   @Nested
   @Order(1)
+  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  class Init {
+    @Test
+    @DisplayName("Should properly create account1")
+    @Order(1)
+    void shouldProperlyCreateAccount1() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.accountToLogin)
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+    }
+  }
+
+  @Nested
+  @Order(2)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
   class Positive {
 
     @DisplayName("Should properly login")
     @ParameterizedTest(name = "login: {0}")
     @CsvSource({
-            "client",
-            "salesrep",
-            "employee",
-            "clientemployee"
+            "loginlogin"
     })
     @Order(1)
     void shouldProperlyLogin(String login) {
@@ -55,17 +70,14 @@ public class MOK13IT {
   }
 
   @Nested
-  @Order(2)
+  @Order(3)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
   class Negative {
 
     @DisplayName("Should fail to login with wrong password")
     @ParameterizedTest(name = "login: {0}")
     @CsvSource({
-            "client",
-            "salesrep",
-            "employee",
-            "clientemployee"
+            "loginlogin"
     })
     @Order(1)
     void shouldFailToLoginWithWrongPassword(String login) {
@@ -107,10 +119,7 @@ public class MOK13IT {
     @DisplayName("Should fail to login with missing password")
     @ParameterizedTest(name = "login: {0}")
     @CsvSource({
-            "client",
-            "salesrep",
-            "employee",
-            "clientemployee"
+            "loginlogin"
     })
     @Order(4)
     void shouldFailToLoginWithMissingPassword(String login) {
