@@ -3,6 +3,8 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
@@ -12,6 +14,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -38,6 +43,7 @@ public class InitData {
     return given()
             .contentType("application/json")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + retrieveAdminToken())
+            .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
             .get("/account/login/" + login)
             .then()
             .statusCode(200)
@@ -64,6 +70,7 @@ public class InitData {
       throw new RuntimeException();
     }
   }
+
   public static String retrieveAdminToken() {
     return retrieveToken(InitData.getUserCredentials("administrator", "Student123!"));
   }
@@ -141,6 +148,19 @@ public class InitData {
             .nip("1111111111")
             .companyName("Example Company")
             .timeZone(TimeZone.EUROPE_WARSAW.name())
+            .build();
+  }
+
+  public static EditPersonInfoDto getEditedAccount(String login) {
+    return EditPersonInfoDto.builder()
+            .firstName("John")
+            .lastName("Coe")
+            .country("Poland")
+            .city("Lodz")
+            .street("Karpacka")
+            .streetNumber(55)
+            .postalCode("93-539")
+            .hash(retrieveVersion(login))
             .build();
   }
 
@@ -247,6 +267,90 @@ public class InitData {
                 },
               "login": "changeaccesslevel",
               "email": "changeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock1Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount1",
+              "email": "blockaccount1@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock2Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount2",
+              "email": "blockaccount2@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock3Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount3",
+              "email": "blockaccount3@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToLogin = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "loginlogin",
+              "email": "loginlogin@example.com",
               "timeZone": "EUROPE_WARSAW"
           }
       """;

@@ -5,7 +5,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -26,9 +25,11 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -288,12 +289,13 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response editAccountAsAdmin(@PathParam("login") String login,
-                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
+                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
+                                     @Context SecurityContext securityContext) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    accountEndpoint.editAccountInfoAsAdmin(login,
-        editPersonInfoDto);
+
+    accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto);
     return Response.ok(editPersonInfoDto).build();
   }
 
@@ -303,7 +305,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response blockAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.blockAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "mok.account.block.successful")
+                    .build()
+    ).build();
   }
 
   @PATCH
@@ -321,15 +327,21 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response editOwnAccount(@PathParam("login") String login,
-                                 @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
-    if (principal.getName() == null) {
-      return Response.status(403).build();
-    }
+                                 @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
+                                 @Context SecurityContext securityContext) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    accountEndpoint.editAccountInfo(login, editPersonInfoDto);
-    return Response.ok(editPersonInfoDto).build();
+
+    if (Objects.equals(securityContext.getUserPrincipal().getName(), login)) {
+      accountEndpoint.editAccountInfo(login, editPersonInfoDto);
+      return Response.ok(editPersonInfoDto).build();
+    } else {
+      return Response.status(403).entity(
+              Json.createObjectBuilder()
+                      .add("message", "exception.forbidden")
+                      .build()).build();
+    }
   }
 
   @PATCH
