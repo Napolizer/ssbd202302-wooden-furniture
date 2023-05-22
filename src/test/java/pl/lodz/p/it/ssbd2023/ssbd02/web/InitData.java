@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
@@ -100,6 +101,7 @@ public class InitData {
             .locale("pl")
             .login("Register123")
             .email("register123@example.com")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
   }
 
@@ -118,6 +120,7 @@ public class InitData {
             .email("company123@example.com")
             .nip("1111111111")
             .companyName("New Company")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
   }
 
@@ -137,6 +140,7 @@ public class InitData {
             .email("active123@example.com")
             .nip("1111111111")
             .companyName("Example Company")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
   }
 
@@ -157,7 +161,8 @@ public class InitData {
                   }
               ],
               "login": "accounttoeditals",
-              "email": "toeditaccesslevel@example.com"
+              "email": "toeditaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
           }
       """;
 
@@ -178,7 +183,71 @@ public class InitData {
                   "name": "Employee"
                 },
               "login": "accounttoedit123",
-              "email": "toedit@example.com"
+              "email": "toedit@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToAddAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "addaccesslevel",
+              "email": "addaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToRemoveAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "removeaccesslevel",
+              "email": "removeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToChangeAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "changeaccesslevel",
+              "email": "changeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
           }
       """;
 

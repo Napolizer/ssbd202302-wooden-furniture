@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("MOK.26 - Change access level")
 public class MOK26IT {
+  private String login = "changeaccesslevel";
   @Nested
   @Order(1)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -28,7 +29,7 @@ public class MOK26IT {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .contentType("application/json")
-              .body(InitData.accountToEditAccessLevelsJson)
+              .body(InitData.accountToChangeAccessLevelsJson)
               .when()
               .post("/account/create")
               .then()
@@ -42,7 +43,7 @@ public class MOK26IT {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .get("/account/id/" + InitData.retrieveAccountId("accounttoeditals"))
+              .get("/account/id/" + InitData.retrieveAccountId(login))
               .then()
               .statusCode(200)
               .contentType("application/json")
@@ -60,7 +61,7 @@ public class MOK26IT {
               .contentType(ContentType.JSON)
               .body(InitData.mapToJsonString(accessLevel))
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId("accounttoeditals") + "/accessLevel/change")
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/change")
               .then()
               .statusCode(200)
               .contentType("application/json")
@@ -74,7 +75,7 @@ public class MOK26IT {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId("accounttoeditals") + "/accessLevel/employee")
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/employee")
               .then()
               .statusCode(200);
     }
@@ -95,7 +96,7 @@ public class MOK26IT {
               .when()
               .contentType(ContentType.JSON)
               .body(InitData.mapToJsonString(accessLevel))
-              .put("/account/id/" + InitData.retrieveAccountId("accounttoeditals") + "/accessLevel/change")
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/change")
               .then()
               .statusCode(401);
     }
@@ -107,7 +108,7 @@ public class MOK26IT {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .delete("/account/id/" + InitData.retrieveAccountId("accounttoeditals") + "/accessLevel/client")
+              .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/client")
               .then()
               .statusCode(200);
     }
@@ -139,7 +140,7 @@ public class MOK26IT {
               .contentType(ContentType.JSON)
               .body(InitData.mapToJsonString(accessLevel))
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId("accounttoeditals") + "/accessLevel/change")
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/change")
               .then()
               .statusCode(400)
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
@@ -154,7 +155,7 @@ public class MOK26IT {
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .contentType(ContentType.JSON)
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId("accounttoeditals") + "/accessLevel/change")
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/change")
               .then()
               .statusCode(400);
     }

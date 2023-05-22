@@ -31,6 +31,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
@@ -88,6 +89,7 @@ public class AccountFacadeOperationsIT {
               .locale("pl")
               .accountState(AccountState.ACTIVE)
               .accountType(AccountType.NORMAL)
+              .timeZone(TimeZone.EUROPE_WARSAW)
               .build();
     em.createQuery("DELETE FROM access_level").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
@@ -131,6 +133,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertEquals(0, accountFacadeOperations.findAll().size());
@@ -169,6 +172,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -183,6 +187,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -197,6 +202,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -211,6 +217,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -225,6 +232,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -239,6 +247,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .locale("pl")
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -260,6 +269,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -309,6 +319,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     Address address3 = Address.builder()
@@ -333,6 +344,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -384,6 +396,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     Address address3 = Address.builder()
@@ -408,6 +421,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
