@@ -15,6 +15,7 @@ import {AccountRegister} from "../../interfaces/account.register";
 import {AccountService} from "../../services/account.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {AccountType} from "../../enums/account.type";
+import { TimeZone } from 'src/app/utils/time.zone';
 
 @Component({
   selector: 'app-github-redirect',
@@ -141,22 +142,6 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
                   nip: this.finishRegistrationForm.value['nip'],
                   companyName: this.finishRegistrationForm.value['companyName'],
                 });
-                this.translate
-                  .get([
-                    'register.label.language.pl',
-                    'register.label.language.en',
-                  ])
-                  .pipe(takeUntil(this.destroy))
-                  .subscribe((msg) => {
-                    this.languages.push({
-                      value: 'pl',
-                      viewValue: msg['register.label.language.pl'] as string,
-                    });
-                    this.languages.push({
-                      value: 'en',
-                      viewValue: msg['register.label.language.en'] as string,
-                    });
-                  });
                 this.loading = false;
               }
               console.log(this.finishRegistrationForm);
@@ -208,6 +193,7 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
       companyName: this.checked
         ? this.finishRegistrationForm.value['companyName']!
         : null,
+      timeZone: TimeZone.EUROPE_WARSAW.value,
     };
     this.authenticationService
       .registerGithubAccount(githubAccountRegister)

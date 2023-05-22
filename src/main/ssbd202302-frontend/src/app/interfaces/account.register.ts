@@ -12,4 +12,5 @@ export interface AccountRegister {
   locale: string;
   nip: string;
   companyName: string;
+  timeZone: string;
 }
