@@ -126,8 +126,12 @@ public class AuthenticationServiceIT {
   @Test
   void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
-      String token = authenticationService.login(account.getLogin(), password, "127.0.0.1", MessageUtil.LOCALE_EN);
+      List<String> tokens = authenticationService.login(account.getLogin(), password,
+          "127.0.0.1", MessageUtil.LOCALE_EN);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
       assertNotNull(token);
+      assertNotNull(refreshToken);
       utx.begin();
       List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
       utx.commit();

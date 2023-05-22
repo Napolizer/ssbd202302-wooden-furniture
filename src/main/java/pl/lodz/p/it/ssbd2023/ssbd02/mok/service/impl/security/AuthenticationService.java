@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
@@ -53,7 +54,7 @@ public class AuthenticationService {
   }
 
   @PermitAll
-  public String login(String login, String password, String ip, String locale) throws AuthenticationException {
+  public List<String> login(String login, String password, String ip, String locale) throws AuthenticationException {
     if (password == null) {
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
@@ -84,7 +85,7 @@ public class AuthenticationService {
   }
 
   @PermitAll
-  public String loginWithGoogle(String email, String ip, String locale) {
+  public List<String> loginWithGoogle(String email, String ip, String locale) {
     Account account = accountFacade
             .findByEmail(email)
             .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
@@ -93,7 +94,7 @@ public class AuthenticationService {
   }
 
   @PermitAll
-  public String loginWithGithub(String email, String ip, String locale) {
+  public List<String> loginWithGithub(String email, String ip, String locale) {
     Account account = accountFacade
         .findByEmail(email)
         .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
@@ -102,7 +103,7 @@ public class AuthenticationService {
   }
 
   @PermitAll
-  private String setUpAccountAndGenerateToken(String ip, String locale, Account account) {
+  private List<String> setUpAccountAndGenerateToken(String ip, String locale, Account account) {
     account.setLastLogin(LocalDateTime.now());
     account.setLastLoginIpAddress(ip);
     if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
@@ -110,7 +111,7 @@ public class AuthenticationService {
     }
     accountFacade.update(account);
 
-    return tokenService.generateToken(account);
+    return List.of(tokenService.generateToken(account), tokenService.generateRefreshToken(account));
   }
 
   @PermitAll

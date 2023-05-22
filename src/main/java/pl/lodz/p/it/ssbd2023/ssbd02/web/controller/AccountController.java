@@ -5,7 +5,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -249,8 +248,11 @@ public class AccountController {
                         @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
     var json = Json.createObjectBuilder();
     try {
-      String token = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      List<String> tokens = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
       json.add("token", token);
+      json.add("refreshToken", refreshToken);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
       json.add("message", e.getMessage());
