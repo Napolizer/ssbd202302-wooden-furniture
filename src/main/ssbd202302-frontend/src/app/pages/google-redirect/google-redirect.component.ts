@@ -14,12 +14,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject, first, takeUntil } from 'rxjs';
 import { AccountType } from 'src/app/enums/account.type';
 import { AccountGoogleRegister } from 'src/app/interfaces/google.register';
-import { SelectItem } from 'src/app/interfaces/select.item';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { TokenService } from 'src/app/services/token.service';
 import { Constants } from 'src/app/utils/constants';
+import { TimeZone } from 'src/app/utils/time.zone';
 
 @Component({
   selector: 'app-google-redirect',
@@ -51,7 +51,6 @@ export class GoogleRedirectComponent implements OnInit {
   destroy = new Subject<boolean>();
   loading = true;
   hide = true;
-  languages: SelectItem[] = [];
   checked = false;
   email: string;
   locale: string;
@@ -109,7 +108,7 @@ export class GoogleRedirectComponent implements OnInit {
     private tokenService: TokenService,
     private translate: TranslateService,
     private alertService: AlertService,
-    private dialogService: DialogService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -155,22 +154,6 @@ export class GoogleRedirectComponent implements OnInit {
                   nip: this.finishRegistrationForm.value['nip'],
                   companyName: this.finishRegistrationForm.value['companyName'],
                 });
-                this.translate
-                  .get([
-                    'register.label.language.pl',
-                    'register.label.language.en',
-                  ])
-                  .pipe(takeUntil(this.destroy))
-                  .subscribe((msg) => {
-                    this.languages.push({
-                      value: 'pl',
-                      viewValue: msg['register.label.language.pl'] as string,
-                    });
-                    this.languages.push({
-                      value: 'en',
-                      viewValue: msg['register.label.language.en'] as string,
-                    });
-                  });
                 this.loading = false;
               }
             },
@@ -222,6 +205,7 @@ export class GoogleRedirectComponent implements OnInit {
         ? this.finishRegistrationForm.value['companyName']!
         : null,
       idToken: this.idToken,
+      timeZone: TimeZone.EUROPE_WARSAW.value,
     };
 
     this.authenticationService

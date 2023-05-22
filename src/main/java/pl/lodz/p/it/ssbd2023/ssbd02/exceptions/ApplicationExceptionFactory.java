@@ -109,6 +109,11 @@ public final class ApplicationExceptionFactory {
             Response.Status.FORBIDDEN);
   }
 
+  public static BaseWebApplicationException createInvalidTimeZoneException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_INVALID_TIME_ZONE,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static AccessDeniedException createAccessDeniedException(Throwable cause) {
     return new AccessDeniedException(cause);
   }

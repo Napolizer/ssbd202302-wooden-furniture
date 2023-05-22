@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
@@ -48,6 +49,7 @@ public final class DtoToEntityMapper {
         .email(accountRegisterDto.getEmail())
         .password(accountRegisterDto.getPassword())
         .locale(accountRegisterDto.getLocale())
+        .timeZone(mapStringToTimeZone(accountRegisterDto.getTimeZone()))
         .person(person).build();
     client.setAccount(account);
     account.getAccessLevels().add(client);
@@ -55,6 +57,13 @@ public final class DtoToEntityMapper {
     return account;
   }
 
+  public static TimeZone mapStringToTimeZone(String timeZone) {
+    try {
+      return TimeZone.valueOf(timeZone);
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createInvalidTimeZoneException();
+    }
+  }
 
   public static Account mapAccountCreateDtoToAccount(AccountCreateDto accountCreateDto) {
     Account account = mapAccountRegisterDtoToAccount(accountCreateDto);

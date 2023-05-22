@@ -106,6 +106,10 @@ public class Account extends AbstractEntity {
   @Column(name = "type", nullable = false)
   private AccountType accountType;
 
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "time_zone", nullable = false)
+  private TimeZone timeZone;
+
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());
