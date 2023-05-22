@@ -96,6 +96,7 @@ public class MessageUtil {
     public static final String ERROR_FORBIDDEN = "exception.forbidden";
     public static final String ERROR_GOOGLE_CONFLICT = "exception.google.conflict";
     public static final String ERROR_INVALID_ACCOUNT_TYPE = "exception.invalid.account.type";
+    public static final String ERROR_INVALID_TIME_ZONE = "exception.invalid.time.zone";
     public static final String ERROR_GITHUB_CONFLICT = "exception.github.conflict";
     public static final String ACCOUNT_EMAIL_DOES_NOT_EXIST = "exception.mok.account.email.does.not.exist";
     public static final String EMAIL_RESET_PASSWORD_SUBJECT = "mok.email.account.reset.password.subject";

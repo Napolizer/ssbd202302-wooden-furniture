@@ -186,8 +186,8 @@ public class AccountService extends AbstractService {
 
   @PermitAll
   public void registerAccount(Account account) {
-    account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
+    account.setAccountState(AccountState.NOT_VERIFIED);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.NORMAL);
     Account persistedAccount = accountFacade.create(account);
@@ -204,6 +204,7 @@ public class AccountService extends AbstractService {
 
   @PermitAll
   public void registerGoogleAccount(Account account) {
+    account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.GOOGLE);
@@ -212,6 +213,7 @@ public class AccountService extends AbstractService {
 
   @PermitAll
   public void registerGithubAccount(Account account) {
+    account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.GITHUB);
