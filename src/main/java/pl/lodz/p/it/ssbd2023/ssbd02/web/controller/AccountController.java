@@ -289,12 +289,13 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response editAccountAsAdmin(@PathParam("login") String login,
-                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
+                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
+                                     @Context SecurityContext securityContext) {
     if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    accountEndpoint.editAccountInfoAsAdmin(login,
-        editPersonInfoDto);
+
+    accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto);
     return Response.ok(editPersonInfoDto).build();
   }
 
@@ -324,6 +325,10 @@ public class AccountController {
   public Response editOwnAccount(@PathParam("login") String login,
                                  @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
                                  @Context SecurityContext securityContext) {
+    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
+    }
+
     if (Objects.equals(securityContext.getUserPrincipal().getName(), login)) {
       accountEndpoint.editAccountInfo(login, editPersonInfoDto);
       return Response.ok(editPersonInfoDto).build();

@@ -630,43 +630,6 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(11)
-  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class EditAccountAsAdmin {
-
-    @Test
-    @Order(1)
-    void editOtherUserAsAdmin() {
-      InitData.editedAccountAsAdminExampleJson =
-              InitData.editedAccountAsAdminExampleJson
-                      .replace("$hash", retrieveAccountHash("accounttoedit123"));
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.editedAccountAsAdminExampleJson)
-          .when()
-          .put("/account/login/accounttoedit123/editAccountAsAdmin")
-          .then()
-          .statusCode(200)
-          .contentType("application/json");
-    }
-
-    @Test
-    @Order(2)
-    void failsIfGivenInvalidLogin() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.editedAccountAsAdminExampleJson)
-          .when()
-          .put("/account/login/invalidLogin/editAccountAsAdmin")
-          .then()
-          .statusCode(404)
-          .contentType("application/json")
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
-    }
-  }
-  @Nested
   @Order(12)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class getOwnAccountInformation {

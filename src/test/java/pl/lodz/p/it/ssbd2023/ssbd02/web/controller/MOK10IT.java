@@ -12,17 +12,18 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOK.9 - Edit own account")
+@DisplayName("MOK.10 - Edit account as admin")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-public class MOK9IT {
-  private static final String accountToEditLogin = "accounttoedit123";
+public class MOK10IT {
+  private static final String accountToEditAsAdminLogin = "accountToEditAsAdm";
 
   @Nested
   @Order(1)
@@ -31,9 +32,9 @@ public class MOK9IT {
 
     @Test
     @Order(1)
-    @DisplayName("Should properly create account to edit")
+    @DisplayName("Should properly create account to edit as admin")
     void shouldProperlyCreateAccountToEdit() {
-      int id = AccountUtil.registerUser(accountToEditLogin);
+      int id = AccountUtil.registerUser(accountToEditAsAdminLogin);
       given()
               .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
               .when()
@@ -44,16 +45,16 @@ public class MOK9IT {
 
     @Test
     @Order(2)
-    @DisplayName("Should properly edit own account")
-    void shouldProperlyEditOwnAccount() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should properly edit account as admin")
+    void shouldProperlyEditAccountAsAdmin() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(200)
               .contentType("application/json");
@@ -62,7 +63,7 @@ public class MOK9IT {
               .header("Authorization", "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
               .contentType("application/json")
               .when()
-              .get("/account/login/" + accountToEditLogin)
+              .get("/account/login/" + accountToEditAsAdminLogin)
               .then()
               .statusCode(200)
               .extract()
@@ -86,53 +87,51 @@ public class MOK9IT {
 
     @Test
     @Order(1)
-    @DisplayName("Should fail to edit own account with invalid login")
-    void shouldFailToEditOwnAccountWithInvalidLogin() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
-      given()
-          .header(AUTHORIZATION, "Bearer " + token)
-          .contentType("application/json")
-          .accept("application/json")
-          .body(InitData.mapToJsonString(editedAccount))
-          .when()
-          .put("/account/login/randomLogin/editOwnAccount")
-          .then()
-          .statusCode(404)
-          .contentType("application/json");
-    }
-
-    @Test
-    @Order(2)
-    @DisplayName("Should fail to edit other account")
-    void shouldFailToEditOtherAccount() {
-      String token = AuthUtil.retrieveToken(CLIENT);
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid login")
+    void shouldFailToEditAccountAsAdminWithInvalidLogin() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .accept("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/"  + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/randomLogin/editAccountAsAdmin")
               .then()
-              .statusCode(403)
+              .statusCode(404)
+              .contentType("application/json");
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Should fail to edit account as admin with invalid role")
+    void shouldFailToEditAccountAsAdminWithInvalidRole() {
+      String token = AuthUtil.retrieveToken(CLIENT);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
+      given()
+              .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
-              .body("message", equalTo("exception.forbidden"));
+              .accept("application/json")
+              .body(InitData.mapToJsonString(editedAccount))
+              .when()
+              .put("/account/login/"  + accountToEditAsAdminLogin + "/editAccountAsAdmin")
+              .then()
+              .statusCode(403);
     }
 
     @Test
     @Order(3)
-    @DisplayName("Should fail to edit own account with empty data")
-    void shouldFailToEditOwnAccountWithEmptyData() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
+    @DisplayName("Should fail to edit account as admin with empty data")
+    void shouldFailToEditAccountAsAdminWithEmptyData() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
       EditPersonInfoDto emptyData = EditPersonInfoDto.builder().build();
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(emptyData))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(8));
@@ -140,17 +139,17 @@ public class MOK9IT {
 
     @Test
     @Order(5)
-    @DisplayName("Should fail to edit own account with invalid last name format")
-    void shouldFailToEditOwnAccountWithInvalidLastNameFormat() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid last name format")
+    void shouldFailToEditAccountAsAdminWithInvalidLastNameFormat() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setLastName("invalidlastname");
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(1))
@@ -160,17 +159,17 @@ public class MOK9IT {
 
     @Test
     @Order(6)
-    @DisplayName("Should fail to edit own account with invalid country format")
-    void shouldFailToEditOwnAccountWithInvalidCountryFormat() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid country format")
+    void shouldFailToEditAccountAsAdminWithInvalidCountryFormat() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setCountry("invalidcountry");
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(1))
@@ -180,17 +179,17 @@ public class MOK9IT {
 
     @Test
     @Order(7)
-    @DisplayName("Should fail to edit own account with invalid city format")
-    void shouldFailToEditOwnAccountWithInvalidCityFormat() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid city format")
+    void shouldFailToEditAccountAsAdminWithInvalidCityFormat() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setCity("invalidcity");
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(1))
@@ -200,17 +199,17 @@ public class MOK9IT {
 
     @Test
     @Order(8)
-    @DisplayName("Should fail to edit own account with invalid street format")
-    void shouldFailToEditOwnAccountWithInvalidStreetFormat() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid street format")
+    void shouldFailToEditAccountAsAdminWithInvalidStreetFormat() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setStreet("invalidstreet");
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(1))
@@ -220,17 +219,17 @@ public class MOK9IT {
 
     @Test
     @Order(9)
-    @DisplayName("Should fail to edit own account with invalid postal code format")
-    void shouldFailToEditOwnAccountWithInvalidPostalCodeFormat() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid postal code format")
+    void shouldFailToEditAccountAsAdminWithInvalidPostalCodeFormat() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setPostalCode("invalidpostalcode");
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(1))
@@ -240,17 +239,17 @@ public class MOK9IT {
 
     @Test
     @Order(10)
-    @DisplayName("Should fail to edit own account with invalid street number format")
-    void shouldFailToEditOwnAccountWithInvalidStreetNumberFormat() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin with invalid street number format")
+    void shouldFailToEditAccountAsAdminWithInvalidStreetNumberFormat() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setStreetNumber(-2);
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(400)
               .body("errors", hasSize(1))
@@ -260,27 +259,27 @@ public class MOK9IT {
 
     @Test
     @Order(11)
-    @DisplayName("Should fail to edit own account when OptimisticLockException is thrown")
-    void shouldFailToEditOwnAccountWhenOptimisticLockExceptionIsThrown() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin when OptimisticLockException is thrown")
+    void shouldFailToEditAccountAsAdminWhenOptimisticLockExceptionIsThrown() {
+      String token = AuthUtil.retrieveToken(ADMINISTRATOR);
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       editedAccount.setFirstName("Jan");
       given()
               .header(AUTHORIZATION, "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(200)
               .contentType("application/json");
 
       given()
-              .header(AUTHORIZATION, "Bearer " + token)
+              .header("Authorization", "Bearer " + token)
               .contentType("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/" + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/" + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(409)
               .contentType("application/json");
@@ -288,15 +287,15 @@ public class MOK9IT {
 
     @Test
     @Order(12)
-    @DisplayName("Should fail to edit own account without token")
-    void shouldFailToEditOwnAccountWithoutToken() {
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
+    @DisplayName("Should fail to edit account as admin without token")
+    void shouldFailToEditAccountAsAdminWithoutToken() {
+      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditAsAdminLogin);
       given()
               .contentType("application/json")
               .accept("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/"  + accountToEditLogin + "/editOwnAccount")
+              .put("/account/login/"  + accountToEditAsAdminLogin + "/editAccountAsAdmin")
               .then()
               .statusCode(401);
     }
