@@ -18,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'src/app/services/dialog.service';
 import { Constants } from 'src/app/utils/constants';
 import { SelectItem } from 'src/app/interfaces/select.item';
+import { TimeZone } from 'src/app/utils/time.zone';
 
 @Component({
   selector: 'app-register-page',
@@ -53,7 +54,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   loaded = false;
   loading = false;
   destroy = new Subject<boolean>();
-  languages: SelectItem[] = [];
+  timeZones: SelectItem[] = [];
   checked = false;
 
   constructor(
@@ -143,7 +144,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
             Validators.pattern(Constants.POSTAL_CODE_PATTERN),
           ])
         ),
-        locale: new FormControl(''),
+        timeZone: new FormControl(''),
         nip: new FormControl(''),
         companyName: new FormControl(''),
       },
@@ -152,19 +153,18 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.translate
-      .get(['register.label.language.pl', 'register.label.language.en'])
-      .pipe(takeUntil(this.destroy))
-      .subscribe((msg) => {
-        this.languages.push({
-          value: 'pl',
-          viewValue: msg['register.label.language.pl'] as string,
+    for (const key of Object.keys(TimeZone)) {
+      const timeZone: TimeZone = TimeZone[key as keyof typeof TimeZone];
+      this.translate
+        .get(timeZone.displayName || 'exception.unknown')
+        .pipe(takeUntil(this.destroy))
+        .subscribe((displayName) => {
+          this.timeZones.push({
+            value: timeZone.value,
+            viewValue: this.translate.instant(displayName),
+          });
         });
-        this.languages.push({
-          value: 'en',
-          viewValue: msg['register.label.language.en'] as string,
-        });
-      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -189,9 +189,10 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
       street: this.personForm.value['street']!,
       streetNumber: parseInt(this.personForm.value['streetNumber']!),
       postalCode: this.personForm.value['postalCode']!,
-      locale: this.personForm.value['locale']!,
+      locale: this.translate.getBrowserLang() as string,
       nip: this.checked ? this.personForm.value['nip']! : null,
       companyName: this.checked ? this.personForm.value['companyName']! : null,
+      timeZone: this.personForm.value['timeZone']!,
     };
     this.accountService
       .register(accountRegister)

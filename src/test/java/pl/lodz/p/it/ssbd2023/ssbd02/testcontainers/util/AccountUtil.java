@@ -37,7 +37,8 @@ public class AccountUtil {
                 "streetNumber": "1",
                 "postalCode": "90-000",
                 "locale": "en",
-                "language": "en-US"
+                "language": "en-US",
+                "timeZone": "EUROPE_WARSAW"
             }
             """.formatted(login, login + "@ssbd.com"))
         .when()
@@ -45,5 +46,17 @@ public class AccountUtil {
         .then()
         .statusCode(201);
     return getAccountId(login);
+  }
+
+  public static int countAccounts() {
+    return given()
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header(acceptLanguageHeader)
+        .when()
+        .get("/account")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("size()");
   }
 }

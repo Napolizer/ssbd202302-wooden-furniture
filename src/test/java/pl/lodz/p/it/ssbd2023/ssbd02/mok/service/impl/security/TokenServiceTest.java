@@ -8,7 +8,9 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 
-public class TokenServiceTest {
+class TokenServiceTest {
   private TokenService tokenService;
   private Account accountAllRoles;
   private Account accountNoRoles;
@@ -32,7 +34,7 @@ public class TokenServiceTest {
   private Account salesRep;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     tokenService = new TokenService();
     accountAllRoles = Account.builder()
         .login("test")
@@ -94,13 +96,13 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void properlyGeneratesTokenTest() {
+  void properlyGeneratesTokenTest() {
     String token = tokenService.generateToken(accountAllRoles);
     assertThat(token, is(notNullValue()));
   }
 
   @Test
-  public void shouldProperlyRetrieveAllRolesTest() {
+  void shouldProperlyRetrieveAllRolesTest() {
     String token = tokenService.generateToken(accountAllRoles);
     TokenClaims tokenClaims = tokenService.getTokenClaims(token);
     assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
@@ -114,14 +116,14 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyRetrieveNoRolesTest() {
+  void shouldProperlyRetrieveNoRolesTest() {
     String token = tokenService.generateToken(accountNoRoles);
     TokenClaims tokenClaims = tokenService.getTokenClaims(token);
     assertThat(tokenClaims.getAccessLevels(), is(empty()));
   }
 
   @Test
-  public void shouldProperlyRetrieveAdministratorRoleTest() {
+  void shouldProperlyRetrieveAdministratorRoleTest() {
     String token = tokenService.generateToken(administrator);
     TokenClaims tokenClaims = tokenService.getTokenClaims(token);
     assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
@@ -130,7 +132,7 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyRetrieveClientRoleTest() {
+  void shouldProperlyRetrieveClientRoleTest() {
     String token = tokenService.generateToken(client);
     TokenClaims tokenClaims = tokenService.getTokenClaims(token);
     assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
@@ -139,7 +141,7 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyRetrieveEmployeeRoleTest() {
+  void shouldProperlyRetrieveEmployeeRoleTest() {
     String token = tokenService.generateToken(employee);
     TokenClaims tokenClaims = tokenService.getTokenClaims(token);
     assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
@@ -148,7 +150,7 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyRetrieveSalesRepRoleTest() {
+  void shouldProperlyRetrieveSalesRepRoleTest() {
     String token = tokenService.generateToken(salesRep);
     TokenClaims tokenClaims = tokenService.getTokenClaims(token);
     assertThat(tokenClaims.getAccessLevels(), is(not(empty())));
@@ -157,7 +159,7 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyRetrieveLoginTest() {
+  void shouldProperlyRetrieveLoginTest() {
     for (Account account : List.of(accountAllRoles, accountNoRoles, administrator, client, employee, salesRep)) {
       String token = tokenService.generateToken(account);
       TokenClaims tokenClaims = tokenService.getTokenClaims(token);
@@ -166,25 +168,25 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void properlyGeneratesTokenForAccountConfirmationLinkTest() {
+  void properlyGeneratesTokenForAccountConfirmationLinkTest() {
     String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.ACCOUNT_CONFIRMATION);
     assertThat(token, is(notNullValue()));
   }
 
   @Test
-  public void properlyGeneratesTokenForPasswordResetLinkTest() {
+  void properlyGeneratesTokenForPasswordResetLinkTest() {
     String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.PASSWORD_RESET);
     assertThat(token, is(notNullValue()));
   }
 
   @Test
-  public void properlyGeneratesTokenForChangeEmailLinkTest() {
+  void properlyGeneratesTokenForChangeEmailLinkTest() {
     String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.CHANGE_EMAIL);
     assertThat(token, is(notNullValue()));
   }
 
   @Test
-  public void shouldProperlyValidateAccountConfirmationTokenTest() {
+  void shouldProperlyValidateAccountConfirmationTokenTest() {
     String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.ACCOUNT_CONFIRMATION);
     assertThat(token, is(notNullValue()));
     assertDoesNotThrow(() -> tokenService.validateEmailToken(token, TokenType.ACCOUNT_CONFIRMATION, null));
@@ -193,7 +195,7 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyValidateChangeEmailTokenTest() {
+  void shouldProperlyValidateChangeEmailTokenTest() {
     String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.CHANGE_EMAIL);
     assertThat(token, is(notNullValue()));
     assertDoesNotThrow(() -> tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL,
@@ -203,12 +205,37 @@ public class TokenServiceTest {
   }
 
   @Test
-  public void shouldProperlyValidateResetPasswordTokenTest() {
+  void shouldProperlyValidateResetPasswordTokenTest() {
     String token = tokenService.generateTokenForEmailLink(accountAllRoles, TokenType.PASSWORD_RESET);
     assertThat(token, is(notNullValue()));
     assertDoesNotThrow(() -> tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET,
             accountAllRoles.getPassword()));
     assertThat(tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET,
             accountAllRoles.getPassword()), is(accountAllRoles.getLogin()));
+  }
+
+  @Test
+  void properlyGeneratesRefreshToken() {
+    String refreshToken = tokenService.generateRefreshToken(accountAllRoles);
+    assertThat(refreshToken, is(notNullValue()));
+    String token = tokenService.generateToken(accountAllRoles);
+    assertThat(token, is(notNullValue()));
+    assertThat(token, is(not(equalTo(refreshToken))));
+  }
+
+  @Test
+  void properlyValidatesRefreshToken() {
+    String refreshToken = tokenService.generateRefreshToken(accountAllRoles);
+    assertThat(refreshToken, is(notNullValue()));
+    String token = tokenService.generateToken(accountAllRoles);
+    assertThat(token, is(notNullValue()));
+    assertThat(token, is(not(equalTo(refreshToken))));
+    assertDoesNotThrow(() -> tokenService.validateRefreshToken(refreshToken));
+  }
+
+  @Test
+  void failsToValidateRefreshToken() {
+    String token = tokenService.generateToken(accountAllRoles);
+    assertThrows(RuntimeException.class, () -> tokenService.validateRefreshToken(token));
   }
 }
