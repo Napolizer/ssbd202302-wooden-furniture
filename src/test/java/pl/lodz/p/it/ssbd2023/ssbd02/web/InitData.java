@@ -140,6 +140,69 @@ public class InitData {
             .build();
   }
 
+  public static String blockedAccountToActivateJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "blockedThomas",
+              "email": "blockedToActivate@example.com"
+          }
+      """;
+
+  public static String notVerifiedAccountToActivateJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "NotVerified",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "notVerifiedThomas",
+              "email": "notVerifiedToActivate@example.com"
+          }
+      """;
+
+  public static String activeAccountToActivateJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Active",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "activeThomas",
+              "email": "activeToActivate@example.com"
+          }
+      """;
+
   public static String accountToEditAccessLevelsJson = """
           {
               "firstName": "Thomas",

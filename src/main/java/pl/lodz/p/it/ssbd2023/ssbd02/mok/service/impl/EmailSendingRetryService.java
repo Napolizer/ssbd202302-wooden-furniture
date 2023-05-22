@@ -53,7 +53,7 @@ public class EmailSendingRetryService {
     try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
       prop.load(input);
       expirationAccountConfirmation = environmentConfig.isProd()
-          ? Long.parseLong(prop.getProperty("expiration.account.confirmation.milliseconds")) : 3000L;
+          ? Long.parseLong(prop.getProperty("expiration.account.confirmation.milliseconds")) : 20000L;
       expirationPasswordReset = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
       expirationChangeEmail = Long.parseLong(prop.getProperty("expiration.change.email.milliseconds"));
       expirationChangePassword = Long.parseLong(prop.getProperty("expiration.password.change.milliseconds"));

@@ -312,7 +312,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response activateAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.activateAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "mok.account.activate.successful")
+            .build()
+    ).build();
   }
 
   @PUT
