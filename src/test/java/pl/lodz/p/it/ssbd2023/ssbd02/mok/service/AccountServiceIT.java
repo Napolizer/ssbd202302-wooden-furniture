@@ -732,4 +732,33 @@ public class AccountServiceIT {
     assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
   }
 
+  @Test
+  public void properlyPersistsOldPasswordDuringResetPassword() {
+    String newPassword = "NewPassword123!";
+    String oldHash = account.getPassword();
+    assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+  }
+
+  @Test
+  public void properlyPersistsOldPasswordDuringChangePassword() {
+    String newPassword = "NewPassword123!";
+    String oldHash = account.getPassword();
+    assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword, "test"));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+  }
+
+  @Test
+  public void properlyPersistsOldPasswordDuringPasswordChangeFromLink() {
+    String newPassword = "NewPassword123!";
+    String oldHash = account.getPassword();
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+    assertDoesNotThrow(() -> accountService.changePasswordFromLink(token, newPassword, "test"));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+  }
+
 }
