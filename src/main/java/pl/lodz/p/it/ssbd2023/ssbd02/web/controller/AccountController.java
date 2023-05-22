@@ -333,10 +333,7 @@ public class AccountController {
       accountEndpoint.editAccountInfo(login, editPersonInfoDto);
       return Response.ok(editPersonInfoDto).build();
     } else {
-      return Response.status(403).entity(
-              Json.createObjectBuilder()
-                      .add("message", "exception.forbidden")
-                      .build()).build();
+      throw ApplicationExceptionFactory.createForbiddenException();
     }
   }
 
