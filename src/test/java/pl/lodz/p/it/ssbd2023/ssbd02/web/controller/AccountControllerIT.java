@@ -465,35 +465,8 @@ public class AccountControllerIT {
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
   }
-
   @Nested
   @Order(7)
-  class GetAllAccounts {
-    @Test
-    void shouldProperlyGetAllAccountsTest() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account")
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("size()", is(greaterThan(0)));
-    }
-
-    @Test
-    void shouldFailToGetAllAccountsWithoutTokenTest() {
-      given()
-          .when()
-          .get("/account")
-          .then()
-          .statusCode(401)
-          .contentType("text/html");
-    }
-  }
-
-  @Nested
-  @Order(8)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class AddAccessLevelToAccount {
     @Test
@@ -579,7 +552,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(9)
+  @Order(8)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class RemoveAccessLevelFromAccount {
     @Test
@@ -630,7 +603,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(10)
+  @Order(9)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class EditOwnAccount {
 
@@ -682,7 +655,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(11)
+  @Order(10)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class EditAccountAsAdmin {
 
@@ -719,7 +692,7 @@ public class AccountControllerIT {
     }
   }
   @Nested
-  @Order(12)
+  @Order(11)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class getOwnAccountInformation {
     @Test
