@@ -12,15 +12,14 @@ import static org.hamcrest.Matchers.equalTo;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOK.5 - Add access level")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-public class MOK5IT {
-  private String login = "addaccesslevel";
+@DisplayName("MOK.6 - Delete access level")
+public class MOK6IT {
+  private String login = "removeaccesslevel";
   @Nested
   @Order(1)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Positive {
-
     @Test
     @DisplayName("Should properly create account with Employee access level to edit access levels")
     @Order(1)
@@ -28,7 +27,7 @@ public class MOK5IT {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .contentType("application/json")
-              .body(InitData.accountToAddAccessLevelsJson)
+              .body(InitData.accountToRemoveAccessLevelsJson)
               .when()
               .post("/account/create")
               .then()
@@ -60,87 +59,85 @@ public class MOK5IT {
               .then()
               .statusCode(200);
     }
+
+    @Test
+    @DisplayName("Should properly remove client access level")
+    @Order(4)
+    void shouldProperlyRemoveAccessLevelWhenTwoAreAssigned() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .when()
+              .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Client")
+              .then()
+              .statusCode(200);
+    }
   }
 
   @Nested
   @Order(2)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Negative {
-
     @Test
-    @DisplayName("Should fail to add access level without authorization token")
+    @DisplayName("Should fail to remove access level without authorization token")
     @Order(1)
-    void failsToAddAccessLevelWithoutAuthorizationToken() {
+    void failsToRemoveAccessLevelWithoutAuthorizationToken() {
       given()
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId("administrator") + "/accessLevel/SalesRep")
+              .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Administrator")
               .then()
               .statusCode(401);
     }
 
     @Test
-    @DisplayName("Should fail to add access level when account does not exist")
+    @DisplayName("Should fail to remove access level when account does not exist")
     @Order(2)
-    void failsToAddAccessLevelWhenAccountDoesNotExist() {
+    void failsToRemoveAccessLevelWhenAccountDoesNotExist() {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .put("account/id/0/accessLevel/Sales_Rep")
+              .put("account/id/0/accessLevel/Administrator")
               .then()
               .statusCode(404)
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
     }
 
     @Test
-    @DisplayName("Should fail to add access level when access level is invalid")
+    @DisplayName("Should fail to remove access level when access level is invalid")
     @Order(3)
-    void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
+    void failsToRemoveAccessLevelWhenAccessLevelIsInvalid() {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/NotValidAccessLevel")
+              .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/NotValidAccessLevel")
               .then()
               .statusCode(400)
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
     }
 
     @Test
-    @DisplayName("Should fail to add access level when access level is already assigned")
+    @DisplayName("Should fail to remove access level when access level is not assigned")
     @Order(4)
-    void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
+    void failsToRemoveAccessLevelWhenAccessLevelIsNotAssigned() {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Employee")
+              .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Administrator")
               .then()
               .statusCode(400)
-              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED));
+              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_REMOVE_ACCESS_LEVEL));
     }
 
     @Test
-    @DisplayName("Should fail to add administrator access level")
+    @DisplayName("Should fail to remove access level when there is only one assigned ")
     @Order(5)
-    void failsToAddAdministratorAccessLevel() {
+    void failsToRemoveAccessLevelWhenThereIsOnlyOneAccessLevelAssigned() {
       given()
               .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
               .when()
-              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Administrator")
+              .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Employee")
               .then()
               .statusCode(400)
-              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ADMINISTRATOR_ACCESS_LEVEL_ALREADY_ASSIGNED));
-    }
-
-    @Test
-    @DisplayName("Should fail to add sales rep access level when employee is assigned")
-    @Order(6)
-    void failsToAddSalesRepWhenEmployeeIsAlreadyAssignedAccessLevel() {
-      given()
-              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
-              .when()
-              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Sales_rep")
-              .then()
-              .statusCode(400)
-              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CLIENT_AND_SALES_REP_ACCESS_LEVEL_CONFLICT));
+              .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_REMOVE_ACCESS_LEVEL));
     }
   }
 }

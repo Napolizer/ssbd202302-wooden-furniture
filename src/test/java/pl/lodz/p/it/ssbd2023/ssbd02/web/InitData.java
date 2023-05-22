@@ -188,6 +188,69 @@ public class InitData {
           }
       """;
 
+  public static String accountToAddAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "addaccesslevel",
+              "email": "addaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToRemoveAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "removeaccesslevel",
+              "email": "removeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToChangeAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "changeaccesslevel",
+              "email": "changeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
   public static String editedAccountExampleJson = """
       {
         "firstName": "Adam",
