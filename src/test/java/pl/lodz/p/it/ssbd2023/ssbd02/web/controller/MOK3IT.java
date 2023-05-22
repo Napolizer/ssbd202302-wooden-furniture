@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -27,13 +28,62 @@ public class MOK3IT {
   @Nested
   @Order(1)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  class Init {
+    @Test
+    @DisplayName("Should properly create account1")
+    @Order(1)
+    void shouldProperlyCreateAccount1() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.accountToBlock1Json)
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+    }
+
+    @Test
+    @DisplayName("Should properly create account2")
+    @Order(2)
+    void shouldProperlyCreateAccount2() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.accountToBlock2Json)
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+    }
+
+    @Test
+    @DisplayName("Should properly create account3")
+    @Order(3)
+    void shouldProperlyCreateAccount3() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .contentType("application/json")
+              .body(InitData.accountToBlock3Json)
+              .when()
+              .post("/account/create")
+              .then()
+              .statusCode(201);
+    }
+
+  }
+
+
+  @Nested
+  @Order(2)
+  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
   class Positive {
     @DisplayName("Should properly block active account")
     @ParameterizedTest(name = "login {0}")
     @CsvSource({
-        "client",
-        "employee",
-        "salesrep"
+        "blockaccount1",
+        "blockaccount2",
+        "blockaccount3"
     })
     @Order(1)
     void shouldProperlyBlockActiveAccount(String login) {
@@ -48,7 +98,7 @@ public class MOK3IT {
   }
 
   @Nested
-  @Order(2)
+  @Order(3)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
   class Negative {
     @DisplayName("Should fail to block already blocked account")

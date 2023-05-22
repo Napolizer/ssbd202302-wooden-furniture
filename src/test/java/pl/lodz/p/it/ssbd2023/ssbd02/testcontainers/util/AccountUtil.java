@@ -9,21 +9,21 @@ public class AccountUtil {
 
   public static int getAccountId(String login) {
     return given()
-            .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
-            .header(acceptLanguageHeader)
-            .when()
-            .get("/account/login/" + login)
-            .then()
-            .statusCode(200)
-            .extract()
-            .path("id");
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header(acceptLanguageHeader)
+        .when()
+        .get("/account/login/" + login)
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("id");
   }
 
   public static int registerUser(String login) {
     given()
-            .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
-            .header("Content-Type", "application/json")
-            .body("""
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header("Content-Type", "application/json")
+        .body("""
             {
                 "login": "%s",
                 "password": "Student123!",
@@ -37,13 +37,26 @@ public class AccountUtil {
                 "streetNumber": "1",
                 "postalCode": "90-000",
                 "locale": "en",
-                "language": "en-US"
+                "language": "en-US",
+                "timeZone": "EUROPE_WARSAW"
             }
             """.formatted(login, login + "@ssbd.com"))
-            .when()
-            .post("/account/register")
-            .then()
-            .statusCode(201);
+        .when()
+        .post("/account/register")
+        .then()
+        .statusCode(201);
     return getAccountId(login);
+  }
+
+  public static int countAccounts() {
+    return given()
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header(acceptLanguageHeader)
+        .when()
+        .get("/account")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("size()");
   }
 }

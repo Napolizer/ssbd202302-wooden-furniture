@@ -93,6 +93,7 @@ public class AccountServiceIT {
             .locale("pl")
             .newEmail("newemail123@gmail.com")
             .accountState(AccountState.ACTIVE)
+            .timeZone(TimeZone.EUROPE_WARSAW)
             .build();
     accountService.createAccount(account);
     accountToRegister = Account.builder()
@@ -111,6 +112,7 @@ public class AccountServiceIT {
                             .build())
                     .build())
             .locale("pl")
+            .timeZone(TimeZone.EUROPE_WARSAW)
             .build();
   }
 
@@ -728,6 +730,35 @@ public class AccountServiceIT {
     assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
     Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
     assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+  }
+
+  @Test
+  public void properlyPersistsOldPasswordDuringResetPassword() {
+    String newPassword = "NewPassword123!";
+    String oldHash = account.getPassword();
+    assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+  }
+
+  @Test
+  public void properlyPersistsOldPasswordDuringChangePassword() {
+    String newPassword = "NewPassword123!";
+    String oldHash = account.getPassword();
+    assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword, "test"));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+  }
+
+  @Test
+  public void properlyPersistsOldPasswordDuringPasswordChangeFromLink() {
+    String newPassword = "NewPassword123!";
+    String oldHash = account.getPassword();
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+    assertDoesNotThrow(() -> accountService.changePasswordFromLink(token, newPassword, "test"));
+    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
   }
 
 }

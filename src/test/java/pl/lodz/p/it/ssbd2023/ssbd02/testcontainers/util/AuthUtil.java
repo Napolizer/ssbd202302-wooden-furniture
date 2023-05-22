@@ -12,21 +12,21 @@ public class AuthUtil {
   private static Header acceptLanguageHeader = new Header("Accept-Language", "en-US");
   public static String retrieveToken(String login, String password) {
     return given()
-            .contentType("application/json")
-            .header(acceptLanguageHeader)
-            .body("""
+        .contentType("application/json")
+        .header(acceptLanguageHeader)
+        .body("""
                    {
                        "login": "$login",
                        "password": "$password"
                    }
             """.replace("$login", login).replace("$password", password))
-            .when()
-            .post("/account/login")
-            .then()
-            .statusCode(200)
-            .contentType("application/json")
-            .extract()
-            .path("token");
+        .when()
+        .post("/account/login")
+        .then()
+        .statusCode(200)
+        .contentType("application/json")
+        .extract()
+        .path("token");
   }
 
   public static String retrieveToken(String role) {
