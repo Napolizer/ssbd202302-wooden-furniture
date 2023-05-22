@@ -242,6 +242,12 @@ public class AccountService extends AbstractService {
       //fixme invalidCredentialsException is checked
     }
 
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(newPassword, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));

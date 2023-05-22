@@ -106,5 +106,6 @@ public class MessageUtil {
     public static final String EMAIL_ADMIN_LOGIN_SESSION_MESSAGE = "mok.email.admin.login.message";
     public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
+    public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
   }
 }
