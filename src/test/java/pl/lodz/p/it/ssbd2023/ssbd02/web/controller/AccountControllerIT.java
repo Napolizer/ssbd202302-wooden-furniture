@@ -412,59 +412,30 @@ public class AccountControllerIT {
 
   @Nested
   @Order(6)
-  class GetAccountByAccountId {
+  class GetAllAccounts {
     @Test
-    void shouldProperlyGetAccountByAccountIdTest() {
+    void shouldProperlyGetAllAccountsTest() {
       given()
           .header("Authorization", "Bearer " + retrieveAdminToken())
           .when()
-          .get("/account/id/" + retrieveAccountId("administrator"))
+          .get("/account")
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("accountState", equalTo("ACTIVE"))
-          .body("roles", hasSize(1))
-          .body("roles[0]", equalTo("administrator"))
-          .body("archive", equalTo(false))
-          .body("email", equalTo("admin@gmail.com"))
-          .body("id", is(notNullValue()))
-          .body("locale", equalTo("pl"))
-          .body("login", equalTo("administrator"));
+          .body("size()", is(greaterThan(0)));
     }
 
     @Test
-    void shouldFailToGetAccountByAccountIdWithoutTokenTest() {
+    void shouldFailToGetAllAccountsWithoutTokenTest() {
       given()
           .when()
-          .get("/account/id/555")
+          .get("/account")
           .then()
           .statusCode(401)
           .contentType("text/html");
     }
-
-    @Test
-    void shouldFailToGetAccountByAccountIdNoneIdGiven() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id")
-          .then()
-          .statusCode(404)
-          .contentType("text/html");
-    }
-
-    @Test
-    void shouldFailToGetAccountByAccountIdWhenAccountIdDoesNotExist() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/555")
-          .then()
-          .statusCode(404)
-          .contentType("application/json")
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
-    }
   }
+
   @Nested
   @Order(7)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
