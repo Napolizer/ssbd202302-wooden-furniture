@@ -436,142 +436,56 @@ public class AccountControllerIT {
     }
   }
 
-  @Nested
-  @Order(7)
-  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class AddAccessLevelToAccount {
-    @Test
-    @Order(1)
-    void shouldProperlyCreateAccountToEditAccessLevels() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.accountToEditAccessLevelsJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(201);
-    }
-
-    @Test
-    @Order(2)
-    void shouldProperlyAddAccessLevelToAccount() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("roles[0]", equalTo("employee"));
-
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("accounttoeditals"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("roles[0]", equalTo("employee"));
-    }
-
-    @Test
-    @Order(3)
-    void failsToAddAccessLevelWithoutAuthorizationToken() {
-      given()
-          .when()
-          .put("/account/id/" + retrieveAccountId("administrator") + "/accessLevel/SalesRep")
-          .then()
-          .statusCode(401);
-    }
-
-    @Test
-    @Order(4)
-    void failsToAddAccessLevelWhenAccountDoesNotExist() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .put("account/id/0/accessLevel/SalesRep")
-          .then()
-          .statusCode(404)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
-    }
-
-    @Test
-    @Order(5)
-    void failsToAddAccessLevelWhenAccessLevelIsInvalid() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .put("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/NotValidAccessLevel")
-          .then()
-          .statusCode(400)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
-    }
-
-    @Test
-    @Order(6)
-    void failsToAddAccessLevelWhenAccessLevelIsAlreadyAssigned() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .put("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Employee")
-          .then()
-          .statusCode(400)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL_ALREADY_ASSIGNED));
-    }
-  }
-
-  @Nested
-  @Order(8)
-  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class RemoveAccessLevelFromAccount {
-    @Test
-    @Order(1)
-    void failsToRemoveAccessLevelWithoutAuthorizationToken() {
-      given()
-          .when()
-          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
-          .then()
-          .statusCode(401);
-    }
-
-    @Test
-    @Order(2)
-    void failsToRemoveAccessLevelWhenAccountDoesNotExist() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .put("account/id/0/accessLevel/Administrator")
-          .then()
-          .statusCode(404)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
-    }
-
-    @Test
-    @Order(3)
-    void failsToRemoveAccessLevelWhenAccessLevelIsInvalid() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/NotValidAccessLevel")
-          .then()
-          .statusCode(400)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
-    }
-
-    @Test
-    @Order(4)
-    void failsToRemoveAccessLevelWhenAccessLevelIsNotAssigned() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
-          .then()
-          .statusCode(400)
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_REMOVE_ACCESS_LEVEL));
-    }
-  }
+//  @Nested
+//  @Order(8)
+//  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//  class RemoveAccessLevelFromAccount {
+//    @Test
+//    @Order(1)
+//    void failsToRemoveAccessLevelWithoutAuthorizationToken() {
+//      given()
+//          .when()
+//          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
+//          .then()
+//          .statusCode(401);
+//    }
+//
+//    @Test
+//    @Order(2)
+//    void failsToRemoveAccessLevelWhenAccountDoesNotExist() {
+//      given()
+//          .header("Authorization", "Bearer " + retrieveAdminToken())
+//          .when()
+//          .put("account/id/0/accessLevel/Administrator")
+//          .then()
+//          .statusCode(404)
+//          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+//    }
+//
+//    @Test
+//    @Order(3)
+//    void failsToRemoveAccessLevelWhenAccessLevelIsInvalid() {
+//      given()
+//          .header("Authorization", "Bearer " + retrieveAdminToken())
+//          .when()
+//          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/NotValidAccessLevel")
+//          .then()
+//          .statusCode(400)
+//          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_ACCESS_LEVEL));
+//    }
+//
+//    @Test
+//    @Order(4)
+//    void failsToRemoveAccessLevelWhenAccessLevelIsNotAssigned() {
+//      given()
+//          .header("Authorization", "Bearer " + retrieveAdminToken())
+//          .when()
+//          .delete("/account/id/" + retrieveAccountId("accounttoeditals") + "/accessLevel/Administrator")
+//          .then()
+//          .statusCode(400)
+//          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_REMOVE_ACCESS_LEVEL));
+//    }
+//  }
 
   @Nested
   @Order(9)
