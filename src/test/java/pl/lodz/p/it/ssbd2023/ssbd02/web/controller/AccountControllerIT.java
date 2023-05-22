@@ -630,58 +630,6 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(10)
-  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class EditOwnAccount {
-
-    @Test
-    @Order(1)
-    void shouldProperlyCreateAccountToEdit() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.accountToEditJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(201);
-    }
-
-    @Test
-    @Order(2)
-    void editOwnAccount() {
-      InitData.editedAccountExampleJson =
-              InitData.editedAccountAsAdminExampleJson
-                      .replace("$hash", retrieveAccountHash("accounttoedit123"));
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.editedAccountExampleJson)
-          .when()
-          .put("/account/login/accounttoedit123/editOwnAccount")
-          .then()
-          .statusCode(200)
-          .contentType("application/json");
-    }
-
-    @Test
-    @Order(3)
-    void failsIfGivenInvalidLogin() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .contentType("application/json")
-          .body(InitData.editedAccountAsAdminExampleJson)
-          .when()
-          .put("/account/login/invalidLogin/editOwnAccount")
-          .then()
-          .statusCode(404)
-          .contentType("application/json")
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
-    }
-
-  }
-
-  @Nested
   @Order(11)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class EditAccountAsAdmin {

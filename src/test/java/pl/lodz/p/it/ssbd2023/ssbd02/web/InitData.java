@@ -3,14 +3,12 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -37,6 +35,7 @@ public class InitData {
     return given()
             .contentType("application/json")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + retrieveAdminToken())
+            .header(HttpHeaders.ACCEPT_LANGUAGE, "pl")
             .get("/account/login/" + login)
             .then()
             .statusCode(200)
@@ -63,6 +62,7 @@ public class InitData {
       throw new RuntimeException();
     }
   }
+
   public static String retrieveAdminToken() {
     return retrieveToken(InitData.getUserCredentials("administrator", "Student123!"));
   }
@@ -140,6 +140,19 @@ public class InitData {
             .build();
   }
 
+  public static EditPersonInfoDto getEditedAccount(String login) {
+    return EditPersonInfoDto.builder()
+            .firstName("John")
+            .lastName("Coe")
+            .country("Poland")
+            .city("Lodz")
+            .street("Karpacka")
+            .streetNumber(55)
+            .postalCode("93-539")
+            .hash(retrieveVersion(login))
+            .build();
+  }
+
   public static String accountToEditAccessLevelsJson = """
           {
               "firstName": "Thomas",
@@ -159,40 +172,6 @@ public class InitData {
               "login": "accounttoeditals",
               "email": "toeditaccesslevel@example.com"
           }
-      """;
-
-
-  public static String accountToEditJson = """
-          {
-              "firstName": "John",
-              "lastName": "Boe",
-              "country": "Poland",
-              "city": "Lodz",
-              "street": "Karpacka",
-              "streetNumber": 55,
-              "postalCode": "93-539",
-              "password": "Password123!",
-              "locale": "pl",
-              "accessLevel":
-                {
-                  "name": "Employee"
-                },
-              "login": "accounttoedit123",
-              "email": "toedit@example.com"
-          }
-      """;
-
-  public static String editedAccountExampleJson = """
-      {
-        "firstName": "Adam",
-        "lastName": "Doe",
-        "country": "USA",
-        "city": "Warsaw",
-        "street": "Wladyslawa",
-        "postalCode": "95-200",
-        "streetNumber": 20,
-        "hash": "$hash"
-      }
       """;
 
   public static String editedAccountAsAdminExampleJson = """
