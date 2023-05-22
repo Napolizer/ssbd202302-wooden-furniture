@@ -190,4 +190,9 @@ public final class ApplicationExceptionFactory {
     return new BaseWebApplicationException(
         MessageUtil.MessageKey.ERROR_INVALID_REFRESH_TOKEN, Response.Status.UNAUTHORIZED);
   }
+
+  public static BaseWebApplicationException passwordAlreadyUsedException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_PASSWORD_ALREADY_USED, Response.Status.CONFLICT);
+  }
 }

@@ -277,4 +277,10 @@ public class InitData {
       }
       """;
 
+  public static String changePasswordJsonTemplate = """
+      {
+        "currentPassword": "%s",
+        "password": "%s"
+      }
+      """;
 }
