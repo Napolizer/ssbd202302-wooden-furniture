@@ -18,11 +18,11 @@ import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -243,6 +243,7 @@ public class AccountService extends AbstractService {
     }
 
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
       return accountFacade.update(account);
     } else {
@@ -262,6 +263,7 @@ public class AccountService extends AbstractService {
     }
 
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
       return accountFacade.update(account);
     } else {
@@ -375,6 +377,7 @@ public class AccountService extends AbstractService {
     if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
+    account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
     account.setPassword(hash);
     accountFacade.update(account);
   }
