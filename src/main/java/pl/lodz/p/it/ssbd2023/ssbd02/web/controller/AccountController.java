@@ -453,4 +453,13 @@ public class AccountController {
   public Response registerGoogleAccount(@NotNull @Valid GoogleAccountRegisterDto googleAccountRegisterDto) {
     return accountEndpoint.registerGoogleAccount(googleAccountRegisterDto, servletRequest.getRemoteAddr());
   }
+
+  @GET
+  @Path("/token/refresh/{refreshToken}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response generateTokenFromRefresh(@NotNull @PathParam("refreshToken") String refreshToken) {
+    var json = Json.createObjectBuilder();
+    json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));
+    return Response.ok(json.build()).build();
+  }
 }
