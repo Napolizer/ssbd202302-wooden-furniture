@@ -3,8 +3,10 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -23,12 +25,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
@@ -37,7 +42,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
-@ExtendWith(MockitoExtension.class)
 public class AccountServiceIT {
   @PersistenceContext(unitName = "ssbd02adminPU")
   private EntityManager em;
@@ -46,8 +50,9 @@ public class AccountServiceIT {
   @Mock
   private MailService mailService;
   @Inject
-  @InjectMocks
   private AccountService accountService;
+  @Inject
+  private AccountFacadeOperations accountFacade;
   @Inject
   private AdminAuth admin;
   @Inject
@@ -74,46 +79,48 @@ public class AccountServiceIT {
   }
 
   @BeforeEach
-  public void setup() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-    account = Account.builder()
-            .login("test")
-            .password("test")
-            .email("test@gmail.com")
-            .person(Person.builder()
-                    .firstName("John")
-                    .lastName("Doe")
-                    .address(Address.builder()
-                            .country("Poland")
-                            .city("Lodz")
-                            .street("Koszykowa")
-                            .postalCode("90-000")
-                            .streetNumber(12)
-                            .build())
-                    .build())
-            .locale("pl")
-            .newEmail("newemail123@gmail.com")
-            .accountState(AccountState.ACTIVE)
-            .timeZone(TimeZone.EUROPE_WARSAW)
-            .build();
-    accountService.createAccount(account);
-    accountToRegister = Account.builder()
-            .login("test123")
-            .password("test123")
-            .email("test123@gmail.com")
-            .person(Person.builder()
-                    .firstName("Bob")
-                    .lastName("Joe")
-                    .address(Address.builder()
-                            .country("Poland")
-                            .city("Lodz")
-                            .street("Koszykowa")
-                            .postalCode("90-000")
-                            .streetNumber(15)
-                            .build())
-                    .build())
-            .locale("pl")
-            .timeZone(TimeZone.EUROPE_WARSAW)
-            .build();
+  public void setup() {
+    admin.call(() -> {
+      account = Account.builder()
+          .login("Administrator")
+          .password("test")
+          .email("test@gmail.com")
+          .person(Person.builder()
+              .firstName("John")
+              .lastName("Doe")
+              .address(Address.builder()
+                  .country("Poland")
+                  .city("Lodz")
+                  .street("Koszykowa")
+                  .postalCode("90-000")
+                  .streetNumber(12)
+                  .build())
+              .build())
+          .locale("pl")
+          .newEmail("newemail123@gmail.com")
+          .accountState(AccountState.ACTIVE)
+          .timeZone(TimeZone.EUROPE_WARSAW)
+          .build();
+      accountService.createAccount(account);
+      accountToRegister = Account.builder()
+          .login("test123")
+          .password("test123")
+          .email("test123@gmail.com")
+          .person(Person.builder()
+              .firstName("Bob")
+              .lastName("Joe")
+              .address(Address.builder()
+                  .country("Poland")
+                  .city("Lodz")
+                  .street("Koszykowa")
+                  .postalCode("90-000")
+                  .streetNumber(15)
+                  .build())
+              .build())
+          .locale("pl")
+          .timeZone(TimeZone.EUROPE_WARSAW)
+          .build();
+    });
   }
 
   @AfterEach
@@ -526,44 +533,50 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyRegistersAccountAndConfirm() {
+  void properlyRegistersAccountAndConfirm() {
     assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
-    Account account = accountService.getAccountByLogin("test123").orElseThrow();
-    assertEquals(2, accountService.getAccountList().size());
-    assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
-    assertEquals(false, account.getArchive());
-    assertEquals(0, account.getFailedLoginCounter());
+    admin.call(() -> {
+      Account account = accountService.getAccountByLogin("test123").orElseThrow();
+      assertEquals(2, accountService.getAccountList().size());
+      assertEquals(AccountState.NOT_VERIFIED, account.getAccountState());
+      assertEquals(false, account.getArchive());
+      assertEquals(0, account.getFailedLoginCounter());
 
-    String token = tokenService.generateTokenForEmailLink(account,
-            TokenType.ACCOUNT_CONFIRMATION);
+      String token = tokenService.generateTokenForEmailLink(account,
+          TokenType.ACCOUNT_CONFIRMATION);
 
-    assertDoesNotThrow(() -> accountService.confirmAccount(token));
-    Account updated = accountService.getAccountByLogin("test123").orElseThrow();
-    assertEquals(AccountState.ACTIVE, updated.getAccountState());
+      assertDoesNotThrow(() -> accountService.confirmAccount(token));
+      Account updated = accountService.getAccountByLogin("test123").orElseThrow();
+      assertEquals(AccountState.ACTIVE, updated.getAccountState());
+    });
   }
 
 
   @Test
-  public void failsToRegisterAccountWithSameEmail() {
-    accountToRegister.setEmail(account.getEmail());
-    assertThrows(BaseWebApplicationException.class, () -> accountService.registerAccount(accountToRegister));
-    assertEquals(1, accountService.getAccountList().size());
+  void failsToRegisterAccountWithSameEmail() {
+    admin.call(() -> {
+      accountToRegister.setEmail(account.getEmail());
+      assertThrows(BaseWebApplicationException.class, () -> accountService.registerAccount(accountToRegister));
+      assertEquals(1, accountService.getAccountList().size());
+    });
   }
 
   @Test
-  public void failsToRegisterAccountWithSameCompanyNip() {
+  void failsToRegisterAccountWithSameCompanyNip() {
     Company company = Company.builder().nip("111111111").companyName("Company").build();
     Client client = Client.builder().company(company).account(accountToRegister).build();
     accountToRegister.getAccessLevels().add(client);
     assertDoesNotThrow(() -> accountService.registerAccount(accountToRegister));
-    assertEquals(2, accountService.getAccountList().size());
+    admin.call(() -> {
+      assertEquals(2, accountService.getAccountList().size());
 
-    accountToRegister.getPerson().setAddress(Address.builder().streetNumber(12).street("Different")
-            .postalCode("12-123").street("Different").city("Different").country("Different").build());
-    accountToRegister.setLogin("Different");
-    accountToRegister.setEmail("Different@example.com");
-    assertThrows(BaseWebApplicationException.class, () -> accountService.registerAccount(accountToRegister));
-    assertEquals(2, accountService.getAccountList().size());
+      accountToRegister.getPerson().setAddress(Address.builder().streetNumber(12).street("Different")
+          .postalCode("12-123").street("Different").city("Different").country("Different").build());
+      accountToRegister.setLogin("Different");
+      accountToRegister.setEmail("Different@example.com");
+      assertThrows(BaseWebApplicationException.class, () -> accountService.registerAccount(accountToRegister));
+      assertEquals(2, accountService.getAccountList().size());
+    });
   }
 
   @Test
@@ -725,11 +738,25 @@ public class AccountServiceIT {
   }
 
   @Test
-  public void properlyResetsPassword() {
+  void properlyResetsPassword() {
     String newPassword = "NewPassword123!";
     assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
-    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
-    assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+    admin.call(() -> {
+      Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+      assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+    });
+  }
+
+  @Test
+  void properlyGeneratesTokenFromRefresh() {
+    admin.call(() -> {
+      account.setLogin("Administrator");
+      String refreshToken = tokenService.generateRefreshToken(account);
+      String generatedToken = accountService.generateTokenFromRefresh(refreshToken);
+      assertThat(generatedToken, is(notNullValue()));
+      assertThat(tokenService.getTokenClaims(generatedToken).getLogin(), is(equalTo(account.getLogin())));
+      assertThat(tokenService.getTokenClaims(generatedToken).getAccessLevels(), is(equalTo(account.getAccessLevels())));
+    });
   }
 
   @Test
@@ -761,4 +788,44 @@ public class AccountServiceIT {
     assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
   }
 
+  @ParameterizedTest(name= "invalid refresh token: {0}")
+  @CsvSource({
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb",
+      "123",
+      "asda"
+  })
+  void shouldFailToGenerateRefreshTokenIfRefreshTokenIsInvalid(String invalidRefreshToken) {
+    client.call(() -> {
+      assertThrows(BaseWebApplicationException.class, () -> accountService.generateTokenFromRefresh(invalidRefreshToken));
+    });
+  }
+
+  @ParameterizedTest(name= "expired refresh token: {0}")
+  @CsvSource({
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNjg0Nzc1NjMzLCJleHAiOjE2ODQ4NjIwMzN9.sMj1YDOyxayETaJ3Ry60E1K6Y1CgTvfguu2LFtLq1E8gtx_mPR_DpZ6Qj77qGnZk_nHQA3SiwmjqdVoQ0TueUQ",
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNjg0Nzc1NzExLCJleHAiOjE2ODQ4NjIxMTF9.mbM5mCxAlMEE3bFGbX05A72IX4MKF7zyrVXN2TZ1xbzzjD7gx0x9Egc608o1L-NtW5kAE2hwiPqs0NLrGPgjzA",
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNjg0Nzc1NzIxLCJleHAiOjE2ODQ4NjIxMjF9.wpKcillrdKaMsv_xYZmaQj635HPAz5my5ZezJXrS235IkED8JFVDKuduF81nGgranWCi7no0sxVYIVa-O3fp-g"
+  })
+  void shouldFailToGenerateRefreshTokenIfRefreshTokenIsExpired(String expiredRefreshToken) {
+    client.call(() -> {
+      assertThrows(BaseWebApplicationException.class, () -> accountService.generateTokenFromRefresh(expiredRefreshToken));
+    });
+  }
+
+  @Test
+  void shouldFailToGenerateRefreshTokenForAnotherUser() {
+    client.call(() -> {
+      String refreshToken = tokenService.generateRefreshToken(account);
+      assertThrows(BaseWebApplicationException.class, () -> accountService.generateTokenFromRefresh(refreshToken));
+    });
+  }
+
+  @Test
+  void shouldFailToGenerateRefreshTokenIfAccountDoesNotExist() {
+    admin.call(() -> {
+      String refreshToken = tokenService.generateRefreshToken(account);
+      accountFacade.delete(account);
+      assertThrows(BaseWebApplicationException.class, () -> accountService.generateTokenFromRefresh(refreshToken));
+    });
+  }
 }
