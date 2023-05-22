@@ -367,18 +367,4 @@ public class InitData {
         "hash": "$hash"
       }
       """;
-
-  public static String editedAccountAsAdminExampleJson = """
-      {
-        "firstName": "John",
-        "lastName": "Doe",
-        "country": "United States",
-        "city": "New York",
-        "street": "Broadway",
-        "postalCode": "10-001",
-        "streetNumber": 123,
-        "hash": "$hash"
-      }
-      """;
-
 }
