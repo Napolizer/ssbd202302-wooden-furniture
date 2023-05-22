@@ -64,7 +64,7 @@ public class MOK14IT {
         @Test
         @Order(1)
         @DisplayName("Fails to confirm email address with invalid token")
-        void shouldFail() {
+        void shouldFailWhenConfirmingEmailWithInvalidToken() {
 
             given()
                     .queryParam("token", "tokenn")
@@ -78,8 +78,8 @@ public class MOK14IT {
 
         @Test
         @Order(2)
-        @DisplayName("Should fail2")
-        void shouldFail2() {
+        @DisplayName("Fails to confirm email address with null token")
+        void shouldFailWhenConfirmingEmailWithNullToken() {
 
             given()
                     .queryParam("token", "")
