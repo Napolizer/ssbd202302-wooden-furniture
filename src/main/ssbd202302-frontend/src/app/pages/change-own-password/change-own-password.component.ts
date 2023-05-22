@@ -124,14 +124,12 @@ export class ChangeOwnPasswordComponent implements OnInit {
         },
         error: (e: HttpErrorResponse) => {
           this.loading = false;
-          if (e.status == 400) {
-            this.translate
-              .get('exception.mok.account.credentials.password')
-              .pipe(takeUntil(this.destroy))
-              .subscribe((msg) => {
-                this.alertService.danger(msg);
-              });
-          }
+          this.translate
+            .get(e.error.message || 'exception.mok.account.credentials.password')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
         }
       })
   }
