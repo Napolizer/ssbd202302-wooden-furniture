@@ -2,9 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.impl;
 
 import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
@@ -124,6 +121,14 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
     } catch (PersistenceException e) {
       return Optional.empty();
     }
+  }
+
+  @Override
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return em.createNamedQuery(Account.FIND_ALL_BY_FULL_NAME_LIKE, Account.class)
+            .setParameter("fullName", fullName)
+            .getResultList();
   }
 
   @Override
