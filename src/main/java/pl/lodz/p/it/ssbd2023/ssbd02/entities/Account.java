@@ -110,6 +110,12 @@ public class Account extends AbstractEntity {
   @Column(name = "time_zone", nullable = false)
   private TimeZone timeZone;
 
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @Builder.Default
+  @ToString.Exclude
+  @JoinColumn(name = "account_id")
+  private List<PasswordHistory> passwordHistory = new ArrayList<>();
+
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());
