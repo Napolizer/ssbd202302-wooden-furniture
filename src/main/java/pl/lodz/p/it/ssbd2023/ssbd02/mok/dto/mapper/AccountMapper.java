@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
@@ -35,5 +37,17 @@ public class AccountMapper {
         .address(addressMapper.mapToAddressDto(account.getPerson().getAddress()))
         .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
         .build();
+  }
+
+  public LocalDateTime mapTimeToNewZone(LocalDateTime oldDateTime, String zone) {
+    if (oldDateTime != null) {
+      ZoneId oldZone = ZoneId.of("Europe/Warsaw");
+      ZoneId newZone = ZoneId.of(zone);
+
+      return oldDateTime.atZone(oldZone)
+              .withZoneSameInstant(newZone)
+              .toLocalDateTime();
+    }
+    return null;
   }
 }

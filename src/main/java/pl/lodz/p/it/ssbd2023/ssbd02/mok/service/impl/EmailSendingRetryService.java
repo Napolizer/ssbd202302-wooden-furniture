@@ -16,6 +16,7 @@ import jakarta.interceptor.Interceptors;
 
 import java.io.InputStream;
 import java.util.Properties;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
@@ -41,13 +42,16 @@ public class EmailSendingRetryService {
   private AccountService accountService;
   @Inject
   private AccountFacadeOperations accountFacade;
+  @Inject
+  private EnvironmentConfig environmentConfig;
 
   @PostConstruct
   public void init() {
     Properties prop = new Properties();
     try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
       prop.load(input);
-      expirationAccountConfirmation = Long.parseLong(prop.getProperty("expiration.account.confirmation.milliseconds"));
+      expirationAccountConfirmation = environmentConfig.isProd()
+          ? Long.parseLong(prop.getProperty("expiration.account.confirmation.milliseconds")) : 3000L;
       expirationPasswordReset = Long.parseLong(prop.getProperty("expiration.password.reset.milliseconds"));
       expirationChangeEmail = Long.parseLong(prop.getProperty("expiration.change.email.milliseconds"));
       expirationChangePassword = Long.parseLong(prop.getProperty("expiration.password.change.milliseconds"));

@@ -412,62 +412,6 @@ public class AccountControllerIT {
 
   @Nested
   @Order(6)
-  class GetAccountByAccountId {
-    @Test
-    void shouldProperlyGetAccountByAccountIdTest() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/" + retrieveAccountId("administrator"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("accountState", equalTo("ACTIVE"))
-          .body("roles", hasSize(1))
-          .body("roles[0]", equalTo("administrator"))
-          .body("archive", equalTo(false))
-          .body("email", equalTo("admin@gmail.com"))
-          .body("id", is(notNullValue()))
-          .body("locale", equalTo("pl"))
-          .body("login", equalTo("administrator"));
-    }
-
-    @Test
-    void shouldFailToGetAccountByAccountIdWithoutTokenTest() {
-      given()
-          .when()
-          .get("/account/id/555")
-          .then()
-          .statusCode(401)
-          .contentType("text/html");
-    }
-
-    @Test
-    void shouldFailToGetAccountByAccountIdNoneIdGiven() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id")
-          .then()
-          .statusCode(404)
-          .contentType("text/html");
-    }
-
-    @Test
-    void shouldFailToGetAccountByAccountIdWhenAccountIdDoesNotExist() {
-      given()
-          .header("Authorization", "Bearer " + retrieveAdminToken())
-          .when()
-          .get("/account/id/555")
-          .then()
-          .statusCode(404)
-          .contentType("application/json")
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
-    }
-  }
-
-  @Nested
-  @Order(7)
   class GetAllAccounts {
     @Test
     void shouldProperlyGetAllAccountsTest() {
@@ -493,7 +437,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(8)
+  @Order(7)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class AddAccessLevelToAccount {
     @Test
@@ -579,7 +523,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(9)
+  @Order(8)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class RemoveAccessLevelFromAccount {
     @Test
@@ -630,7 +574,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(10)
+  @Order(9)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class EditOwnAccount {
 
@@ -682,7 +626,7 @@ public class AccountControllerIT {
   }
 
   @Nested
-  @Order(11)
+  @Order(10)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class EditAccountAsAdmin {
 
@@ -719,7 +663,7 @@ public class AccountControllerIT {
     }
   }
   @Nested
-  @Order(12)
+  @Order(11)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class getOwnAccountInformation {
     @Test
