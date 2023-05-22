@@ -5,7 +5,6 @@ import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.*;
 
 import java.io.File;
 import java.util.List;
@@ -64,6 +63,32 @@ public class AccountFacadeOperationsIT {
         .addPackages(true, "org.apache")
         .addAsResource(new File("src/test/resources/"), "")
         .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
+  }
+
+  public static Account buildAccount(String firstName, String lastName) {
+    Address address = Address.builder()
+            .country("England")
+            .city("London")
+            .street("Fakestreet")
+            .postalCode("40-200")
+            .streetNumber(30)
+            .build();
+
+    Person person = Person.builder()
+            .firstName(firstName)
+            .lastName(lastName)
+            .address(address)
+            .build();
+    return Account.builder()
+            .login(firstName)
+            .password(firstName)
+            .email(firstName)
+            .person(person)
+            .locale("pl")
+            .accountState(AccountState.ACTIVE)
+            .accountType(AccountType.NORMAL)
+            .timeZone(TimeZone.EUROPE_WARSAW)
+            .build();
   }
 
   @BeforeEach
@@ -534,6 +559,52 @@ public class AccountFacadeOperationsIT {
     admin.call(() -> {
       Account created = accountFacadeOperations.findByLogin(account.getLogin()).orElseThrow();
       assertEquals(1, created.getPasswordHistory().size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLike() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+      accountFacadeOperations.create(buildAccount("Johny", "Donovan"));
+      accountFacadeOperations.create(buildAccount("Joe", "Davis"));
+
+      assertEquals(3, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("joHN DOE").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("DOE").size());
+      assertEquals(2, accountFacadeOperations.findByFullNameLike("JOHN").size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLike("jo").size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLike("JO").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("john ").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike(" donovan").size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void failsToFindByFullNameLike() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+
+      assertEquals(1, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findByFullNameLike(" j").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("john  ").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("moe").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("  doe").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("johndoe").size());
     });
     utx.commit();
   }
