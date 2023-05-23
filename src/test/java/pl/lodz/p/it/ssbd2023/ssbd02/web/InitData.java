@@ -84,6 +84,11 @@ public class InitData {
     return tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
   }
 
+  public static String generateConfirmEmailToken(String login) {
+    Account account = Account.builder().login(login).build();
+    return tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
+  }
+
   public static UserCredentialsDto getUserCredentials(String login, String password) {
     return UserCredentialsDto.builder()
             .login(login)
