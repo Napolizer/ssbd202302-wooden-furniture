@@ -45,9 +45,9 @@ public class MOK4IT {
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator", "Student123!"))
           .patch("/account/block/" + AccountUtil.getAccountId("blockedThomas"))
           .then()
-          .statusCode(200);
-//          .contentType("application/json")
-//          .body("message", is(equalTo("mok.account.block.successful")));
+          .statusCode(200)
+          .contentType("application/json")
+          .body("message", is(equalTo("mok.account.block.successful")));
     }
 
     @DisplayName("Should properly create account for second positive test")

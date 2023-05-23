@@ -124,7 +124,7 @@ public class MOK1IT {
 							.when()
 							.post("/account/register")
 							.then()
-							.statusCode(201);
+							.statusCode(409);
 
 			account.setEmail("different123@example.com");
 			account.setLogin("Different123");
@@ -149,7 +149,7 @@ public class MOK1IT {
 							.when()
 							.post("/account/register")
 							.then()
-							.statusCode(201);
+							.statusCode(409);
 
 			account.setLogin("Different123");
 			given()
@@ -735,7 +735,7 @@ public class MOK1IT {
 			List<Future<Response>> futures = new ArrayList<>();
 			for (int i = 0; i < 10; i++) {
 				futures.add(executorService.submit(() -> {
-					AccountRegisterDto account = InitData.getAccountToRegister();
+					AccountRegisterDto account = InitData.getAccountToRegisterForMultipleThreads();
 					return given()
 									.contentType("application/json")
 									.body(InitData.mapToJsonString(account))

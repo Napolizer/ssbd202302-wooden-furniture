@@ -117,6 +117,23 @@ public class InitData {
             .build();
   }
 
+  public static AccountRegisterDto getAccountToRegisterForMultipleThreads() {
+    return AccountRegisterDto.builder()
+            .firstName("Thomas")
+            .lastName("Coe")
+            .country("Germany")
+            .city("Berlin")
+            .street("Street")
+            .streetNumber(34)
+            .postalCode("93-540")
+            .password("Password123!")
+            .locale("pl")
+            .login("Register123MT")
+            .email("register123MT@example.com")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
+            .build();
+  }
+
   public static AccountRegisterDto getAccountWithCompany() {
     return AccountRegisterDto.builder()
             .firstName("John")
@@ -186,7 +203,30 @@ public class InitData {
                   }
               ],
               "login": "blockedThomas",
-              "email": "blockedToActivate@example.com"
+              "email": "blockedToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToGetInformationsJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "getInformations",
+              "email": "betInformations@example.com",
+              "timeZone": "EUROPE_WARSAW"
           }
       """;
 
@@ -207,7 +247,8 @@ public class InitData {
                   }
               ],
               "login": "notVerifiedThomas",
-              "email": "notVerifiedToActivate@example.com"
+              "email": "notVerifiedToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
           }
       """;
 
@@ -228,7 +269,8 @@ public class InitData {
                   }
               ],
               "login": "activeThomas",
-              "email": "activeToActivate@example.com"
+              "email": "activeToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
           }
       """;
 
