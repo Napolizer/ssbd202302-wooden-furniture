@@ -122,6 +122,7 @@ public class Account extends AbstractEntity {
   private List<PasswordHistory> passwordHistory = new ArrayList<>();
 
   @Column(name = "force_password_change", columnDefinition = "boolean default false not null")
+  @Builder.Default
   private Boolean forcePasswordChange = false;
 
   public void update(Account account) {
