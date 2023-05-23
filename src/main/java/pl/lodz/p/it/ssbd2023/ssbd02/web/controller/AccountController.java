@@ -456,7 +456,7 @@ public class AccountController {
 
   @GET
   @Path("/token/refresh/{refreshToken}")
-  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response generateTokenFromRefresh(@NotNull @PathParam("refreshToken") String refreshToken) {
     var json = Json.createObjectBuilder();
     json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));

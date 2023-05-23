@@ -120,6 +120,7 @@ public class AccountServiceIT {
     em.createNativeQuery("ALTER TABLE account DROP CONSTRAINT fk_account_created_by").executeUpdate();
     em.createNativeQuery("ALTER TABLE address DROP CONSTRAINT fk_address_created_by").executeUpdate();
     em.createNativeQuery("DELETE FROM sales_rep").executeUpdate();
+    em.createNativeQuery("DELETE FROM password_history").executeUpdate();
     em.createNativeQuery("DELETE FROM administrator").executeUpdate();
     em.createNativeQuery("DELETE FROM client").executeUpdate();
     em.createNativeQuery("DELETE FROM employee").executeUpdate();
@@ -640,18 +641,22 @@ public class AccountServiceIT {
     String newPassword = "NewPassword123!";
     String oldHash = account.getPassword();
     assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
-    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
-    assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
-    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+    admin.call(() -> {
+      Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+      assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
+      assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+    });
   }
 
   @Test
   public void properlyPersistsOldPasswordDuringChangePassword() {
     String newPassword = "NewPassword123!";
     String oldHash = account.getPassword();
-    assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword, "test"));
-    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
-    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+    admin.call(() -> {
+      assertDoesNotThrow(() -> accountService.changePassword(account.getLogin(), newPassword, "test"));
+      Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+      assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+    });
   }
 
   @Test
@@ -659,9 +664,11 @@ public class AccountServiceIT {
     String newPassword = "NewPassword123!";
     String oldHash = account.getPassword();
     String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
-    assertDoesNotThrow(() -> accountService.changePasswordFromLink(token, newPassword, "test"));
-    Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
-    assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+    admin.call(() -> {
+      assertDoesNotThrow(() -> accountService.changePasswordFromLink(token, newPassword, "test"));
+      Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
+      assertEquals(updated.getPasswordHistory().get(0).getHash(), oldHash);
+    });
   }
 
   @ParameterizedTest(name= "invalid refresh token: {0}")
