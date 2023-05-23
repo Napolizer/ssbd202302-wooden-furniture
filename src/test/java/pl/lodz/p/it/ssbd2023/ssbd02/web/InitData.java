@@ -401,6 +401,66 @@ public class InitData {
               "timeZone": "EUROPE_WARSAW"
           }
       """;
+  public static String accountToBlock4Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount4",
+              "email": "blockaccount4@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+  public static String accountToBlock5Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount5",
+              "email": "blockaccount5@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+  public static String accountToBlock6Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount6",
+              "email": "blockaccount6@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
 
   public static String accountToLogin = """
           {
