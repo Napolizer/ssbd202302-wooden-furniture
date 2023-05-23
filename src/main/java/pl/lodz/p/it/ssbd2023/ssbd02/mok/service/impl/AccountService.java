@@ -273,6 +273,12 @@ public class AccountService extends AbstractService {
       //fixme invalidCredentialsException is checked
     }
 
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(newPassword, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
@@ -387,10 +393,19 @@ public class AccountService extends AbstractService {
   public void resetPassword(String login, String password) {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
-    String hash = CryptHashUtils.hashPassword(password);
+
+    final String hash = CryptHashUtils.hashPassword(password);
+
     if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
+
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(password, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
     account.setPassword(hash);
     account.setForcePasswordChange(false);

@@ -1,82 +1,160 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.ClassOrderer;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestClassOrder;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
+import jakarta.ws.rs.core.HttpHeaders;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.microshed.testing.SharedContainerConfig;
+import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-@DisplayName("MOK.7 - Change own password")
+@DisplayName("MOK.7 - Change password")
 public class MOK7IT {
   @Nested
   @Order(1)
-  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-  class Init {
-    @Test
-    @DisplayName("Should properly create account")
-    @Order(1)
-    void shouldProperlyCreateAccount() {
-      given()
-          .header("Authorization", "Bearer " +
-              AuthUtil.retrieveToken("administrator", "Student123!"))
-          .contentType("application/json")
-          .body(InitData.accountToChangePasswordJson)
-          .when()
-          .post("/account/create")
-          .then()
-          .statusCode(201);
-    }
-  }
-
-  @Nested
-  @Order(2)
-  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Positive {
-    @Test
     @DisplayName("Should properly change password")
+    @ParameterizedTest(name = "login: {0}")
+    @CsvSource({
+        "asterix",
+        "obelix"
+    })
     @Order(1)
-    void shouldProperlyChangePassword() {
+    void shouldProperlyChangePassword(String login) {
+      AccountUtil.createUser(login);
       given()
-          .header("Authorization", "Bearer " + AuthUtil.retrieveToken(
-              "JohnChangePassword", "Student123!"))
           .contentType("application/json")
-          .body(InitData.changePasswordJson)
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
+          .body("""
+                     {
+                         "currentPassword": "Student123!",
+                         "password": "Student321!"
+                     }
+              """)
           .when()
           .put("/account/self/changePassword")
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("login", equalTo("JohnChangePassword"));
+          .body("login", is(equalTo(login)));
     }
   }
 
   @Nested
-  @Order(3)
-  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  @Order(2)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Negative {
-    @Test
-    @DisplayName("Should fail because of missing header")
+    @DisplayName("Should fail to change password to previous one")
+    @ParameterizedTest(name = "login: {0}")
+    @CsvSource({
+        "panoramix",
+        "kakofonix"
+    })
     @Order(1)
-    void shouldFailToChangePasswordWithMissingHeader() {
+    void shouldFailToChangePasswordToPreviousOne(String login) {
+      AccountUtil.createUser(login);
       given()
           .contentType("application/json")
-          .body(InitData.changePasswordJson)
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
+          .body("""
+                     {
+                         "currentPassword": "Student123!",
+                         "password": "Student321!"
+                     }
+              """)
           .when()
           .put("/account/self/changePassword")
           .then()
-          .statusCode(401);
+          .statusCode(200)
+          .contentType("application/json")
+          .body("login", is(equalTo(login)));
+      given()
+          .contentType("application/json")
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(login, "Student321!"))
+          .body("""
+                     {
+                         "currentPassword": "Student321!",
+                         "password": "Student123!"
+                     }
+              """)
+          .when()
+          .put("/account/self/changePassword")
+          .then()
+          .statusCode(409)
+          .contentType("application/json")
+          .body("message", is(equalTo("exception.password.already.used")));
+    }
+
+    @DisplayName("Should fail to change password to already used one")
+    @ParameterizedTest(name = "login: {0}")
+    @CsvSource({
+        "idefix",
+        "miraculix"
+    })
+    @Order(2)
+    void shouldFailToChangePasswordToAlreadyUsedOne(String login) {
+          AccountUtil.createUser(login);
+          given()
+              .contentType("application/json")
+              .header(HttpHeaders.AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
+              .body("""
+                     {
+                         "currentPassword": "Student123!",
+                         "password": "Student321!"
+                     }
+              """)
+          .when()
+          .put("/account/self/changePassword")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("login", is(equalTo(login)));
+      given()
+          .contentType("application/json")
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(login, "Student321!"))
+          .body("""
+                     {
+                         "currentPassword": "Student321!",
+                         "password": "Student555!"
+                     }
+              """)
+          .when()
+          .put("/account/self/changePassword")
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("login", is(equalTo(login)));
+      given()
+          .contentType("application/json")
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(login, "Student555!"))
+          .body("""
+                     {
+                         "currentPassword": "Student555!",
+                         "password": "Student123!"
+                     }
+              """)
+          .when()
+          .put("/account/self/changePassword")
+          .then()
+          .statusCode(409)
+          .contentType("application/json")
+          .body("message", is(equalTo("exception.password.already.used")));
     }
   }
 }
