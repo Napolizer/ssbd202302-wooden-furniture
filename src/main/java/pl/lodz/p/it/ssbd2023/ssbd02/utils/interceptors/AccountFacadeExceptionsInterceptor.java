@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.interceptors;
+package pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;

@@ -47,6 +47,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
@@ -57,9 +59,9 @@ public class AuthenticationServiceIT {
   @Resource
   private UserTransaction utx;
   @Inject
-  private AuthenticationService authenticationService;
+  private AuthenticationServiceOperations authenticationService;
   @Inject
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
   @Inject
   private AccountFacadeOperations accountFacade;
 

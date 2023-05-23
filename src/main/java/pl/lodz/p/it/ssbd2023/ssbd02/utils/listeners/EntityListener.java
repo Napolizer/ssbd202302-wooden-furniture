@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.listeners;
+package pl.lodz.p.it.ssbd2023.ssbd02.utils.listeners;
 
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.PrePersist;

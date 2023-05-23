@@ -12,12 +12,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 
 @Stateless
 public class RequestAuthenticationMechanism implements HttpAuthenticationMechanism {
   @Inject
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
 
   @Override
   public AuthenticationStatus validateRequest(HttpServletRequest request,

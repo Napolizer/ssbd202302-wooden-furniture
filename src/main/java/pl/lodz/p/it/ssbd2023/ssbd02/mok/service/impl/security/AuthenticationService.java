@@ -21,6 +21,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountUnblockerServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountUnblockerService;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
@@ -28,15 +32,15 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @DenyAll
-public class AuthenticationService {
+public class AuthenticationService implements AuthenticationServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject
-  private MailService mailService;
+  private MailServiceOperations mailService;
   @Inject
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
   @Inject
-  private AccountUnblockerService unblockerService;
+  private AccountUnblockerServiceOperations unblockerService;
   private Long blockadeTimeInSeconds;
 
   @PostConstruct
