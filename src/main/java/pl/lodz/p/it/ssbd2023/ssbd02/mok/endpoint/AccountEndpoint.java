@@ -248,6 +248,11 @@ public class AccountEndpoint extends AbstractEndpoint {
     }
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String generateTokenFromRefresh(String refreshToken) {
+    return repeatTransaction(() -> accountService.generateTokenFromRefresh(refreshToken));
+  }
+
   @PermitAll
   public String getGithubOauthLink() {
     return repeatTransaction(() -> githubService.getGithubOauthLink());
