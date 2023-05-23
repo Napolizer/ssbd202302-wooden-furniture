@@ -6,6 +6,7 @@ import {TokenService} from "./token.service";
 import {Role} from "../enums/role";
 import { AccountGoogleRegister } from '../interfaces/google.register';
 import {AccountRegister} from "../interfaces/account.register";
+import {LocalStorageService} from "./local-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class AuthenticationService {
 
   constructor(
     private httpClient: HttpClient,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private localStorageService: LocalStorageService
   ) {}
 
   public login(login: string, password: string, locale : string): Observable<string> {
@@ -120,5 +122,9 @@ export class AuthenticationService {
 
   public isUserInRole(role: Role): boolean {
     return this.getRoles()?.includes(role);
+  }
+
+  public isCurrentRole(role: Role): boolean {
+    return this.localStorageService.get(environment.currentRoleKey) == role
   }
 }

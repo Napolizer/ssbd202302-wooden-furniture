@@ -18,13 +18,14 @@ export class TokenService {
   public logout(): void {
     this.localStorageService.remove(environment.tokenKey);
     this.localStorageService.remove(environment.accountTypeKey);
+    this.localStorageService.remove(environment.currentRoleKey);
   }
 
   public saveToken(token: string): void {
     this.localStorageService.set(environment.tokenKey, token);
   }
 
-  public saveAccountType(accountType: AccountType): void { 
+  public saveAccountType(accountType: AccountType): void {
     this.localStorageService.set(environment.accountTypeKey, accountType);
   }
 

@@ -9,6 +9,8 @@ import {TranslateService} from "@ngx-translate/core";
 import { Location } from '@angular/common';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { AccountType } from 'src/app/enums/account.type';
+import {LocalStorageService} from "../../services/local-storage.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-login-page',
@@ -49,7 +51,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private navigationService: NavigationService,
     private tokenService: TokenService,
     private translate: TranslateService,
-    private location: Location
+    private location: Location,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +96,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         next: token => {
           this.tokenService.saveToken(token);
           this.tokenService.saveAccountType(AccountType.NORMAL);
+          this.localStorageService.set(environment.currentRoleKey, this.tokenService.getTokenData()?.roles[0] ?? '')
           this.translate.get('login.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
