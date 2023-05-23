@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.interceptors;
+package pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;

@@ -31,9 +31,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 
 @Stateless
-public class GoogleService {
+public class GoogleService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   private static final String BASE_URI;

@@ -22,16 +22,18 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.EmailSendingRetryServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SimpleLoggerInterceptor.class)
 @DenyAll
-public class EmailSendingRetryService {
+public class EmailSendingRetryService implements EmailSendingRetryServiceOperations {
   private Long expirationAccountConfirmation;
   private Long expirationPasswordReset;
   private Long expirationChangeEmail;
@@ -39,9 +41,9 @@ public class EmailSendingRetryService {
   @Resource
   private TimerService timerService;
   @Inject
-  private MailService mailService;
+  private MailServiceOperations mailService;
   @Inject
-  private AccountService accountService;
+  private AccountServiceOperations accountService;
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject

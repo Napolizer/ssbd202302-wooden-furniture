@@ -11,7 +11,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import pl.lodz.p.it.ssbd2023.ssbd02.listeners.EntityListener;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.listeners.EntityListener;
 
 @MappedSuperclass
 @Getter

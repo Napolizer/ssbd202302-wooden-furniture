@@ -30,12 +30,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @DenyAll
-public class TokenService {
+public class TokenService implements TokenServiceOperations {
   private static final String SECRET_KEY;
   private static final String SECRET_KEY_REFRESH;
   private static final Long EXPIRATION_AUTHORIZATION;

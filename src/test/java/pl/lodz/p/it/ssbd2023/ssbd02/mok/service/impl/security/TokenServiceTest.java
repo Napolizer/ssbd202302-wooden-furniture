@@ -23,9 +23,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 
 class TokenServiceTest {
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
   private Account accountAllRoles;
   private Account accountNoRoles;
   private Account administrator;
