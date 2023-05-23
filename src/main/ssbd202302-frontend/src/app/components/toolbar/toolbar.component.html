@@ -1,8 +1,8 @@
 <mat-toolbar [ngStyle]="{
-  'background-color': isUserInGroup('ADMINISTRATOR') ? 'grey' :
-                      (isUserInGroup('EMPLOYEE') ? 'green' :
-                      (isUserInGroup('SALES_REP') ? 'yellow' :
-                      (isUserInGroup('CLIENT')  ? 'pink' : '')))}">
+  'background-color': isCurrentGroup('ADMINISTRATOR') ? 'grey' :
+                      (isCurrentGroup('EMPLOYEE') ? 'green' :
+                      (isCurrentGroup('SALES_REP') ? 'yellow' :
+                      (isCurrentGroup('CLIENT')  ? 'pink' : '')))}">
   <button *ngIf="isUserLoggedIn()" mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>

@@ -6,6 +6,7 @@ import {TokenService} from "../services/token.service";
 import {NavigationService} from "../services/navigation.service";
 import { Role } from '../enums/role';
 import {TranslateService} from "@ngx-translate/core";
+import { Constants } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,20 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     if (route.data['roles']) {
+
+      if (state.url !== Constants.CHANGE_PASSWORD_URL) {
+        if (this.authenticationService.getLogin()) {
+          this.authenticationService
+          .isUserForcedToChangePassword()
+          .subscribe((result) => {
+            if (result) {
+              this.alertService.danger(this.translate.instant('change.password.force.message'))
+              this.navigationService.redirectToChangeOwnPasswordPage();
+            }
+          });
+        }
+      }
+
       if (route.data['roles'].includes(Role.GUEST) && this.authenticationService.isUserInRole(Role.GUEST)) {
         return true;
       }

@@ -229,6 +229,7 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.ACTIVE);
     account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setForcePasswordChange(true);
     return accountFacade.create(account);
   }
 
@@ -254,6 +255,7 @@ public class AccountService extends AbstractService {
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      account.setForcePasswordChange(false);
       return accountFacade.update(account);
     } else {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
@@ -280,6 +282,7 @@ public class AccountService extends AbstractService {
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      account.setForcePasswordChange(false);
       return accountFacade.update(account);
     } else {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
@@ -293,6 +296,8 @@ public class AccountService extends AbstractService {
     String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.CHANGE_PASSWORD, changePasswordToken);
+    account.setForcePasswordChange(true);
+    accountFacade.update(account);
     try {
       mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
     } catch (MessagingException e) {
@@ -388,7 +393,9 @@ public class AccountService extends AbstractService {
   public void resetPassword(String login, String password) {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
-    String hash = CryptHashUtils.hashPassword(password);
+
+    final String hash = CryptHashUtils.hashPassword(password);
+
     if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
@@ -401,6 +408,7 @@ public class AccountService extends AbstractService {
 
     account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
     account.setPassword(hash);
+    account.setForcePasswordChange(false);
     accountFacade.update(account);
   }
 
@@ -479,6 +487,13 @@ public class AccountService extends AbstractService {
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public boolean checkIfUserIsForcedToChangePassword(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+    return account.getForcePasswordChange();
+  }
+
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public String generateTokenFromRefresh(String refreshToken) {
     tokenService.validateRefreshToken(refreshToken);
 
@@ -494,4 +509,5 @@ public class AccountService extends AbstractService {
 
     return tokenService.generateToken(account.get());
   }
+
 }

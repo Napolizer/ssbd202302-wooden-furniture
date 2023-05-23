@@ -121,6 +121,10 @@ public class Account extends AbstractEntity {
   @JoinColumn(name = "account_id")
   private List<PasswordHistory> passwordHistory = new ArrayList<>();
 
+  @Column(name = "force_password_change", columnDefinition = "boolean default false not null")
+  @Builder.Default
+  private Boolean forcePasswordChange = false;
+
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());
