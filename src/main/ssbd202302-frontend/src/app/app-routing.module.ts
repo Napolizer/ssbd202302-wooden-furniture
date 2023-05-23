@@ -35,7 +35,11 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomePageComponent
+    component: HomePageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.GUEST, Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
+    }
   },
   {
     path: 'login',
