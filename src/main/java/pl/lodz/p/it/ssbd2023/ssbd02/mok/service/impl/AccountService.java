@@ -494,4 +494,5 @@ public class AccountService extends AbstractService {
 
     return tokenService.generateToken(account.get());
   }
+
 }
