@@ -1,12 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,10 +28,11 @@ public class AccountSearchSettings extends AbstractEntity {
   private Integer searchPage;
   @Column(name = "displayed_accounts", columnDefinition = "integer default 3")
   private Integer displayedAccounts;
-  @Column(name = "search_keyword", columnDefinition = "varchar(5) default ''")
+  @Column(name = "search_keyword", columnDefinition = "varchar(3) default ''")
   private String searchKeyword;
   @Column(name = "sort_by")
-  private String sortBy;
-  @Column(name = "sort_order", columnDefinition = "boolean default true")
-  private Boolean sortOrder;
+  @Enumerated(value = EnumType.STRING)
+  private SortBy sortBy;
+  @Column(name = "sort_ascending", columnDefinition = "boolean default true")
+  private Boolean sortAscending;
 }
