@@ -105,7 +105,7 @@ public class MOK7IT {
     @ParameterizedTest(name = "login: {0}")
     @CsvSource({
         "idefix",
-        "cezar"
+        "miraculix"
     })
     @Order(2)
     void shouldFailToChangePasswordToAlreadyUsedOne(String login) {
