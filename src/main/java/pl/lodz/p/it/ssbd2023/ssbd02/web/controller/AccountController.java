@@ -9,6 +9,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
+import jakarta.json.stream.JsonCollectors;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -48,6 +49,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ForcePasswordChangeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -124,6 +126,18 @@ public class AccountController {
     AccountWithoutSensitiveDataDto account =
         accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
     return Response.ok(account).build();
+  }
+
+  @GET
+  @Path("/self/force-password-change")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response checkIfUserIsForcedToChangePassword() {
+    if (principal.getName() == null) {
+      return Response.status(403).build();
+    }
+    boolean result = accountEndpoint.checkIfUserIsForcedToChangePassword(principal.getName());
+    return Response.ok(new ForcePasswordChangeDto(result)).build();
   }
 
   @PUT
@@ -462,5 +476,24 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response registerGoogleAccount(@NotNull @Valid GoogleAccountRegisterDto googleAccountRegisterDto) {
     return accountEndpoint.registerGoogleAccount(googleAccountRegisterDto, servletRequest.getRemoteAddr());
+  }
+
+  @GET
+  @Path("/token/refresh/{refreshToken}")
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response generateTokenFromRefresh(@NotNull @PathParam("refreshToken") String refreshToken) {
+    var json = Json.createObjectBuilder();
+    json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));
+    return Response.ok(json.build()).build();
+  }
+
+  @GET
+  @Path("/find/fullName/{fullName}")
+  @RolesAllowed(ADMINISTRATOR)
+  public Response findByFullNameLike(@NotNull @PathParam("fullName") String fullName) {
+    List<Account> accounts = accountEndpoint.findByFullNameLike(fullName);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
   }
 }

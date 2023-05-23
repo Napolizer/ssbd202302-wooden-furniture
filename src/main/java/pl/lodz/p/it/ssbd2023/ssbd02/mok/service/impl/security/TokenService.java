@@ -11,6 +11,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -90,12 +91,22 @@ public class TokenService implements TokenServiceOperations {
     return builder.compact();
   }
 
-  @PermitAll
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void validateRefreshToken(String refreshToken) {
     try {
       Jwts.parser().setSigningKey(SECRET_KEY_REFRESH).parseClaimsJws(refreshToken);
     } catch (ExpiredJwtException e) {
       throw ApplicationExceptionFactory.expiredRefreshTokenException();
+    } catch (RuntimeException e) {
+      throw ApplicationExceptionFactory.invalidRefreshTokenException();
+    }
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String getLoginFromRefreshToken(String refreshToken) {
+    try {
+      Claims claims = Jwts.parser().setSigningKey(SECRET_KEY_REFRESH).parseClaimsJws(refreshToken).getBody();
+      return claims.getSubject();
     } catch (RuntimeException e) {
       throw ApplicationExceptionFactory.invalidRefreshTokenException();
     }

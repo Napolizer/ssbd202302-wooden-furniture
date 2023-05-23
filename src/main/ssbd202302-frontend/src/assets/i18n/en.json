@@ -42,6 +42,7 @@
   "change.password.validity.matching": "New password cannot be same as the current one",
   "change.password.success": "Your password has been successfully changed",
   "change.password.user.send": "Password change request sent to user's email",
+  "change.password.force.message": "You must change your password to continue",
 
   "register.title": "Create your account",
   "register.checkbox": "Company representative",

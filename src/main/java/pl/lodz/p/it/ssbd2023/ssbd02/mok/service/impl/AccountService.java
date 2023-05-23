@@ -15,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.OptimisticLockException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -52,6 +53,8 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   private TokenServiceOperations tokenService;
   @Inject
   private EmailSendingRetryServiceOperations emailSendingRetryService;
+  @Inject
+  private Principal principal;
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Optional<Account> getAccountByLogin(String login) {
@@ -229,6 +232,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     account.setAccountState(AccountState.ACTIVE);
     account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setForcePasswordChange(true);
     return accountFacade.create(account);
   }
 
@@ -254,6 +258,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      account.setForcePasswordChange(false);
       return accountFacade.update(account);
     } else {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
@@ -271,9 +276,16 @@ public class AccountService extends AbstractService implements AccountServiceOpe
       //fixme invalidCredentialsException is checked
     }
 
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(newPassword, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      account.setForcePasswordChange(false);
       return accountFacade.update(account);
     } else {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
@@ -287,6 +299,8 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.CHANGE_PASSWORD, changePasswordToken);
+    account.setForcePasswordChange(true);
+    accountFacade.update(account);
     try {
       mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
     } catch (MessagingException e) {
@@ -382,12 +396,22 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   public void resetPassword(String login, String password) {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
-    String hash = CryptHashUtils.hashPassword(password);
+
+    final String hash = CryptHashUtils.hashPassword(password);
+
     if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
+
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(password, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
     account.setPassword(hash);
+    account.setForcePasswordChange(false);
     accountFacade.update(account);
   }
 
@@ -463,5 +487,34 @@ public class AccountService extends AbstractService implements AccountServiceOpe
 
     account.setLocale(locale);
     accountFacade.update(account);
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public boolean checkIfUserIsForcedToChangePassword(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+    return account.getForcePasswordChange();
+  }
+
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String generateTokenFromRefresh(String refreshToken) {
+    tokenService.validateRefreshToken(refreshToken);
+
+    String login = tokenService.getLoginFromRefreshToken(refreshToken);
+    if (!principal.getName().equals(login)) {
+      throw ApplicationExceptionFactory.createForbiddenException();
+    }
+
+    Optional<Account> account = accountFacade.findByLogin(login);
+    if (account.isEmpty()) {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
+    }
+
+    return tokenService.generateToken(account.get());
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return accountFacade.findByFullNameLike(fullName);
   }
 }

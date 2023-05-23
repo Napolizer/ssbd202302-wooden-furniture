@@ -29,6 +29,25 @@ public class AuthUtil {
         .path("token");
   }
 
+  public static String retrieveRefreshToken(String login, String password) {
+    return given()
+        .contentType("application/json")
+        .header(acceptLanguageHeader)
+        .body("""
+                   {
+                       "login": "$login",
+                       "password": "$password"
+                   }
+            """.replace("$login", login).replace("$password", password))
+        .when()
+        .post("/account/login")
+        .then()
+        .statusCode(200)
+        .contentType("application/json")
+        .extract()
+        .path("refresh_token");
+  }
+
   public static String retrieveToken(String role) {
     return switch (role) {
       case ADMINISTRATOR -> retrieveToken("administrator", "Student123!");

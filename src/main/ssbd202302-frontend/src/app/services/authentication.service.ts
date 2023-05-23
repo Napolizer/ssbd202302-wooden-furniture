@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {first, map, Observable} from 'rxjs';
+import {catchError, first, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {TokenService} from "./token.service";
 import {Role} from "../enums/role";
 import { AccountGoogleRegister } from '../interfaces/google.register';
 import {AccountRegister} from "../interfaces/account.register";
+import {LocalStorageService} from "./local-storage.service";
+import { ForcePasswordChange } from '../interfaces/force.password.change';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,8 @@ export class AuthenticationService {
 
   constructor(
     private httpClient: HttpClient,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private localStorageService: LocalStorageService
   ) {}
 
   public login(login: string, password: string, locale : string): Observable<string> {
@@ -120,5 +123,30 @@ export class AuthenticationService {
 
   public isUserInRole(role: Role): boolean {
     return this.getRoles()?.includes(role);
+  }
+
+  public isCurrentRole(role: Role): boolean {
+    return this.localStorageService.get(environment.currentRoleKey) == role
+  }
+
+  private retrieveForcePasswordChange(): Observable<ForcePasswordChange> {
+    return this.httpClient.get<ForcePasswordChange>(
+      `${environment.apiBaseUrl}/account/self/force-password-change`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
+  }
+
+  public isUserForcedToChangePassword(): Observable<any> {
+    return this.retrieveForcePasswordChange()
+      .pipe(
+        map((result) => {
+          return result.value ?? false;
+        }),
+        catchError(() => of(false))
+      );
   }
 }

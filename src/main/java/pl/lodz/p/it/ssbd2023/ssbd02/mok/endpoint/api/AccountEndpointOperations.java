@@ -80,4 +80,11 @@ public interface AccountEndpointOperations {
   Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip);
 
   void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto);
+
+  String generateTokenFromRefresh(String refreshToken);
+
+  boolean checkIfUserIsForcedToChangePassword(String login);
+
+  List<Account> findByFullNameLike(String fullName);
+
 }

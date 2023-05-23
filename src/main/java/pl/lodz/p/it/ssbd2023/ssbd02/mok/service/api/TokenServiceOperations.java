@@ -23,4 +23,6 @@ public interface TokenServiceOperations {
 
   String getLoginFromTokenWithoutValidating(String token, TokenType tokenType);
 
+  String getLoginFromRefreshToken(String refreshToken);
+
 }

@@ -64,4 +64,10 @@ public interface AccountServiceOperations {
   void changeEmail(String newEmail, Long accountId, String principal, String version);
 
   void changeLocale(Long accountId, String locale);
+
+  boolean checkIfUserIsForcedToChangePassword(String login);
+
+  String generateTokenFromRefresh(String refreshToken);
+
+  List<Account> findByFullNameLike(String fullName);
 }

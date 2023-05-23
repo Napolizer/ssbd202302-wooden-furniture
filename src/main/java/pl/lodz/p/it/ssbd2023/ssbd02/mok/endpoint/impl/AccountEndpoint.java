@@ -249,6 +249,11 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
     }
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String generateTokenFromRefresh(String refreshToken) {
+    return repeatTransaction(() -> accountService.generateTokenFromRefresh(refreshToken));
+  }
+
   @PermitAll
   public String getGithubOauthLink() {
     return repeatTransaction(() -> githubService.getGithubOauthLink());
@@ -269,6 +274,11 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
         .build();
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public boolean checkIfUserIsForcedToChangePassword(String login) {
+    return this.accountService.checkIfUserIsForcedToChangePassword(login);
+  }
+
   @Override
   protected boolean isLastTransactionRollback() {
     return accountService.isLastTransactionRollback();
@@ -277,5 +287,10 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   @PermitAll
   public void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto) {
     repeatTransaction(() -> accountService.changeLocale(accountId, changeLocaleDto.getLocale()));
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
   }
 }
