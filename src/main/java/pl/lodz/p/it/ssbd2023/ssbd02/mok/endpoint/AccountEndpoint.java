@@ -268,6 +268,11 @@ public class AccountEndpoint extends AbstractEndpoint {
         .build();
   }
 
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public boolean checkIfUserIsForcedToChangePassword(String login) {
+    return this.accountService.checkIfUserIsForcedToChangePassword(login);
+  }
+
   @Override
   protected boolean isLastTransactionRollback() {
     return accountService.isLastTransactionRollback();

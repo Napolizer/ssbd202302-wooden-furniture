@@ -49,6 +49,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ForcePasswordChangeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -124,6 +125,18 @@ public class AccountController {
     AccountWithoutSensitiveDataDto account =
         accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
     return Response.ok(account).build();
+  }
+
+  @GET
+  @Path("/self/force-password-change")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response checkIfUserIsForcedToChangePassword() {
+    if (principal.getName() == null) {
+      return Response.status(403).build();
+    }
+    boolean result = accountEndpoint.checkIfUserIsForcedToChangePassword(principal.getName());
+    return Response.ok(new ForcePasswordChangeDto(result)).build();
   }
 
   @PUT
