@@ -9,6 +9,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
+import jakarta.json.stream.JsonCollectors;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -471,5 +472,15 @@ public class AccountController {
     var json = Json.createObjectBuilder();
     json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));
     return Response.ok(json.build()).build();
+  }
+
+  @GET
+  @Path("/find/fullName/{fullName}")
+  @RolesAllowed(ADMINISTRATOR)
+  public Response findByFullNameLike(@NotNull @PathParam("fullName") String fullName) {
+    List<Account> accounts = accountEndpoint.findByFullNameLike(fullName);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
   }
 }

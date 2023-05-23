@@ -282,4 +282,9 @@ public class AccountEndpoint extends AbstractEndpoint {
   public void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto) {
     repeatTransaction(() -> accountService.changeLocale(accountId, changeLocaleDto.getLocale()));
   }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
+  }
 }

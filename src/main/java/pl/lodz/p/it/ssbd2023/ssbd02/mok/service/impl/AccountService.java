@@ -481,4 +481,9 @@ public class AccountService extends AbstractService {
 
     return tokenService.generateToken(account.get());
   }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return accountFacade.findByFullNameLike(fullName);
+  }
 }
