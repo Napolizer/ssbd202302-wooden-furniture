@@ -15,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.OptimisticLockException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,6 +50,8 @@ public class AccountService extends AbstractService {
   private TokenService tokenService;
   @Inject
   private EmailSendingRetryService emailSendingRetryService;
+  @Inject
+  private Principal principal;
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Optional<Account> getAccountByLogin(String login) {
@@ -240,6 +243,12 @@ public class AccountService extends AbstractService {
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
       throw ApplicationExceptionFactory.createAccountNotVerifiedException();
       //fixme invalidCredentialsException is checked
+    }
+
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(newPassword, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
     }
 
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
@@ -454,5 +463,22 @@ public class AccountService extends AbstractService {
 
     account.setLocale(locale);
     accountFacade.update(account);
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String generateTokenFromRefresh(String refreshToken) {
+    tokenService.validateRefreshToken(refreshToken);
+
+    String login = tokenService.getLoginFromRefreshToken(refreshToken);
+    if (!principal.getName().equals(login)) {
+      throw ApplicationExceptionFactory.createForbiddenException();
+    }
+
+    Optional<Account> account = accountFacade.findByLogin(login);
+    if (account.isEmpty()) {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
+    }
+
+    return tokenService.generateToken(account.get());
   }
 }

@@ -221,6 +221,7 @@
   "exception.google.conflict": "Account already exists, please log in using your regular credentials",
   "exception.invalid.account.type": "You are not allowed to perform this action because this account was registered with an external service",
   "exception.invalid.time.zone": "Invalid timezone",
+  "exception.password.already.used": "Password has already been used",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",

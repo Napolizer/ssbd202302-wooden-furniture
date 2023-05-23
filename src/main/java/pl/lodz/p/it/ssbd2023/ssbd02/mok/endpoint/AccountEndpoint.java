@@ -8,7 +8,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -99,7 +98,8 @@ public class AccountEndpoint extends AbstractEndpoint {
   }
 
   @PermitAll
-  public String login(UserCredentialsDto userCredentialsDto, String ip, String locale) throws AuthenticationException {
+  public List<String> login(UserCredentialsDto userCredentialsDto, String ip, String locale)
+      throws AuthenticationException {
     return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip, locale);
   }
 
@@ -194,8 +194,15 @@ public class AccountEndpoint extends AbstractEndpoint {
     Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
-      String token = authenticationService.loginWithGoogle(account.getEmail(), ip, locale);
-      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+      List<String> tokens = authenticationService.loginWithGoogle(account.getEmail(), ip, locale);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
+      return Response.ok()
+          .entity(Json.createObjectBuilder()
+              .add("token", token)
+              .add("refresh_token", refreshToken)
+              .build())
+          .build();
     } else {
       return Response.accepted().entity(DtoToEntityMapper.mapAccountToGoogleAccountInfoDto(account)).build();
     }
@@ -211,8 +218,15 @@ public class AccountEndpoint extends AbstractEndpoint {
     googleService.validateIdToken(googleAccountRegisterDto.getIdToken());
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(googleAccountRegisterDto);
     repeatTransaction(() -> accountService.registerGoogleAccount(account));
-    String token = authenticationService.loginWithGoogle(account.getEmail(), ip, account.getLocale());
-    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+    List<String> tokens = authenticationService.loginWithGoogle(account.getEmail(), ip, account.getLocale());
+    String token = tokens.get(0);
+    String refreshToken = tokens.get(1);
+    return Response.ok()
+        .entity(Json.createObjectBuilder()
+            .add("token", token)
+            .add("refresh_token", refreshToken)
+            .build())
+        .build();
   }
 
   @PermitAll
@@ -220,11 +234,23 @@ public class AccountEndpoint extends AbstractEndpoint {
     Account account = githubService.getRegisteredAccountOrCreateNew(githubCode);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
-      String token = authenticationService.loginWithGithub(account.getEmail(), ip, locale);
-      return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+      List<String> tokens = authenticationService.loginWithGithub(account.getEmail(), ip, locale);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(0);
+      return Response.ok()
+          .entity(Json.createObjectBuilder()
+              .add("token", token)
+              .add("refresh_token", refreshToken)
+              .build())
+          .build();
     } else {
       return Response.accepted().entity(DtoToEntityMapper.mapAccountToGithubAccountInfoDto(account)).build();
     }
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String generateTokenFromRefresh(String refreshToken) {
+    return repeatTransaction(() -> accountService.generateTokenFromRefresh(refreshToken));
   }
 
   @PermitAll
@@ -236,8 +262,15 @@ public class AccountEndpoint extends AbstractEndpoint {
   public Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(githubAccountRegisterDto);
     repeatTransaction(() -> accountService.registerGithubAccount(account));
-    String token = authenticationService.loginWithGithub(account.getEmail(), ip, account.getLocale());
-    return Response.ok().entity(Json.createObjectBuilder().add("token", token).build()).build();
+    List<String> tokens = authenticationService.loginWithGithub(account.getEmail(), ip, account.getLocale());
+    String token = tokens.get(0);
+    String refreshToken = tokens.get(1);
+    return Response.ok()
+        .entity(Json.createObjectBuilder()
+            .add("token", token)
+            .add("refresh_token", refreshToken)
+            .build())
+        .build();
   }
 
   @Override

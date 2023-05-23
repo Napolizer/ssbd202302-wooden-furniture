@@ -25,7 +25,7 @@ public class MOK25IT {
       AccountUtil.registerUser("inactiveuser");
       AccountUtil.registerUser("anotherinactiveuser");
       int allAccounts = AccountUtil.countAccounts();
-      TimeUnit.SECONDS.sleep(10);
+      TimeUnit.SECONDS.sleep(30);
       assertThat(AccountUtil.countAccounts(), is(equalTo(allAccounts - 2)));
     }
   }

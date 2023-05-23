@@ -1,5 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import io.restassured.response.Response;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -18,7 +24,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
 
 @MicroShedTest
@@ -116,7 +124,7 @@ public class MOK1IT {
 							.when()
 							.post("/account/register")
 							.then()
-							.statusCode(201);
+							.statusCode(409);
 
 			account.setEmail("different123@example.com");
 			account.setLogin("Different123");
@@ -141,7 +149,7 @@ public class MOK1IT {
 							.when()
 							.post("/account/register")
 							.then()
-							.statusCode(201);
+							.statusCode(409);
 
 			account.setLogin("Different123");
 			given()
@@ -716,6 +724,34 @@ public class MOK1IT {
 							.then()
 							.statusCode(400)
 							.body("message", equalTo(MessageUtil.MessageKey.ERROR_INVALID_TIME_ZONE));
+		}
+
+		@Order(24)
+		@DisplayName("Should only create one account with same login")
+		@Test
+		void shouldOnlyCreateOneAccountWithSameLogin() throws Exception {
+			// Create 10 threads creating account
+			ExecutorService executorService = Executors.newFixedThreadPool(10);
+			List<Future<Response>> futures = new ArrayList<>();
+			for (int i = 0; i < 10; i++) {
+				futures.add(executorService.submit(() -> {
+					AccountRegisterDto account = InitData.getAccountToRegisterForMultipleThreads();
+					return given()
+									.contentType("application/json")
+									.body(InitData.mapToJsonString(account))
+									.when()
+									.post("/account/register");
+				}));
+			}
+
+			// Wait for 10 threads to stop
+			int successResponses = 0;
+			for (Future<Response> future : futures) {
+				successResponses += future.get().statusCode() == 201 ? 1 : 0;
+			}
+
+			// Check if only one account was created
+			assertThat(successResponses, is(equalTo(1)));
 		}
 	}
 }

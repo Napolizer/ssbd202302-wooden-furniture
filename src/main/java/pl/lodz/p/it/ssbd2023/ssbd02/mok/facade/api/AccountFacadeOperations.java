@@ -18,5 +18,7 @@ public interface AccountFacadeOperations extends Facade<Account> {
 
   Optional<Account> findById(Long accountId);
 
+  List<Account> findByFullNameLike(String fullName);
+
   void delete(Account account);
 }

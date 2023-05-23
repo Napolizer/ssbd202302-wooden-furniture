@@ -250,8 +250,11 @@ public class AccountController {
                         @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
     var json = Json.createObjectBuilder();
     try {
-      String token = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      List<String> tokens = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
       json.add("token", token);
+      json.add("refresh_token", refreshToken);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
       json.add("message", e.getMessage());
@@ -318,7 +321,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response activateAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.activateAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "mok.account.activate.successful")
+            .build()
+    ).build();
   }
 
   @PUT
@@ -337,10 +344,7 @@ public class AccountController {
       accountEndpoint.editAccountInfo(login, editPersonInfoDto);
       return Response.ok(editPersonInfoDto).build();
     } else {
-      return Response.status(403).entity(
-              Json.createObjectBuilder()
-                      .add("message", "exception.forbidden")
-                      .build()).build();
+      throw ApplicationExceptionFactory.createForbiddenException();
     }
   }
 
@@ -458,5 +462,14 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response registerGoogleAccount(@NotNull @Valid GoogleAccountRegisterDto googleAccountRegisterDto) {
     return accountEndpoint.registerGoogleAccount(googleAccountRegisterDto, servletRequest.getRemoteAddr());
+  }
+
+  @GET
+  @Path("/token/refresh/{refreshToken}")
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response generateTokenFromRefresh(@NotNull @PathParam("refreshToken") String refreshToken) {
+    var json = Json.createObjectBuilder();
+    json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));
+    return Response.ok(json.build()).build();
   }
 }
