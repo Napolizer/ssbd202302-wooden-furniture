@@ -337,6 +337,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     }
 
     account.setAccountState(AccountState.ACTIVE);
+    account.setBlockadeEnd(null);
     accountFacade.update(account);
 
     try {

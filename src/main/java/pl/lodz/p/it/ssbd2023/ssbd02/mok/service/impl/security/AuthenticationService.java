@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
@@ -42,6 +43,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
   @Inject
   private AccountUnblockerServiceOperations unblockerService;
   private Long blockadeTimeInSeconds;
+  private Integer failedAccountAuthenticationAttempts;
 
   @PostConstruct
   public void init() {
@@ -49,11 +51,13 @@ public class AuthenticationService implements AuthenticationServiceOperations {
     try (InputStream input = TokenService.class.getClassLoader().getResourceAsStream("config.properties")) {
       prop.load(input);
       blockadeTimeInSeconds = Long.parseLong(prop.getProperty("account.blockade.time.seconds"));
+      failedAccountAuthenticationAttempts =
+              Integer.parseInt(prop.getProperty("account.failed.authentication.attempts"));
     } catch (Exception e) {
       long minute = 60;
       long hour = 60 * minute;
       blockadeTimeInSeconds =  24 * hour;
-      throw new RuntimeException("Error loading configuration file: " + e.getMessage());
+      failedAccountAuthenticationAttempts = 3;
     }
   }
 
@@ -149,7 +153,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
   private void tryBlockAccountOperation(Account account)
       throws MessagingException, AccountNotFoundException {
 
-    if (account.getFailedLoginCounter() == 3) {
+    if (Objects.equals(account.getFailedLoginCounter(), failedAccountAuthenticationAttempts)) {
       account.setAccountState(AccountState.BLOCKED);
 
       mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
