@@ -5,7 +5,6 @@ import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.*;
 
 import java.io.File;
 import java.util.List;
@@ -30,7 +29,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
@@ -64,6 +65,32 @@ public class AccountFacadeOperationsIT {
         .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }
 
+  public static Account buildAccount(String firstName, String lastName) {
+    Address address = Address.builder()
+            .country("England")
+            .city("London")
+            .street("Fakestreet")
+            .postalCode("40-200")
+            .streetNumber(30)
+            .build();
+
+    Person person = Person.builder()
+            .firstName(firstName)
+            .lastName(lastName)
+            .address(address)
+            .build();
+    return Account.builder()
+            .login(firstName)
+            .password(firstName)
+            .email(firstName)
+            .person(person)
+            .locale("pl")
+            .accountState(AccountState.ACTIVE)
+            .accountType(AccountType.NORMAL)
+            .timeZone(TimeZone.EUROPE_WARSAW)
+            .build();
+  }
+
   @BeforeEach
   public void setup() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     address = Address.builder()
@@ -88,6 +115,7 @@ public class AccountFacadeOperationsIT {
               .locale("pl")
               .accountState(AccountState.ACTIVE)
               .accountType(AccountType.NORMAL)
+              .timeZone(TimeZone.EUROPE_WARSAW)
               .build();
     em.createQuery("DELETE FROM access_level").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
@@ -100,7 +128,8 @@ public class AccountFacadeOperationsIT {
   @AfterEach
   public void teardown() throws Exception {
     utx.begin();
-    em.createQuery("DELETE FROM access_level").executeUpdate();
+    em.createQuery("DELETE FROM access_level ").executeUpdate();
+    em.createQuery("DELETE FROM PasswordHistory ").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
     em.createQuery("DELETE FROM Person").executeUpdate();
     em.createQuery("DELETE FROM Address").executeUpdate();
@@ -131,6 +160,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertEquals(0, accountFacadeOperations.findAll().size());
@@ -169,6 +199,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -183,6 +214,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -197,6 +229,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -211,6 +244,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -225,6 +259,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -239,6 +274,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .locale("pl")
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -260,6 +296,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -309,6 +346,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     Address address3 = Address.builder()
@@ -333,6 +371,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -384,6 +423,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     Address address3 = Address.builder()
@@ -408,6 +448,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -499,6 +540,71 @@ public class AccountFacadeOperationsIT {
       assertEquals(1, accountFacadeOperations.findAll().size());
       accountFacadeOperations.delete(account);
       assertEquals(0, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyAddsNewHashToPasswordHistory() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      account.getPasswordHistory().add(PasswordHistory.builder().hash("password").build());
+      accountFacadeOperations.create(account);
+      assertEquals(1, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+
+    utx.begin();
+    admin.call(() -> {
+      Account created = accountFacadeOperations.findByLogin(account.getLogin()).orElseThrow();
+      assertEquals(1, created.getPasswordHistory().size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLike() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+      accountFacadeOperations.create(buildAccount("Johny", "Donovan"));
+      accountFacadeOperations.create(buildAccount("Joe", "Davis"));
+
+      assertEquals(3, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("joHN DOE").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("DOE").size());
+      assertEquals(2, accountFacadeOperations.findByFullNameLike("JOHN").size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLike("jo").size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLike("JO").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("john ").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike(" donovan").size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void failsToFindByFullNameLike() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+
+      assertEquals(1, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findByFullNameLike(" j").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("john  ").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("moe").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("  doe").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("johndoe").size());
     });
     utx.commit();
   }

@@ -1,5 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import io.restassured.response.Response;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -8,6 +14,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -16,7 +24,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
 
 @MicroShedTest
@@ -34,7 +44,6 @@ public class MOK1IT {
 		@DisplayName("Should properly register new account with client role")
 		void shouldProperlyRegisterClientAccount() {
 			AccountRegisterDto account = InitData.getAccountToRegister();
-			account.setLogin("Register123");
 			given()
 							.contentType("application/json")
 							.body(InitData.mapToJsonString(account))
@@ -68,6 +77,36 @@ public class MOK1IT {
 							.then()
 							.statusCode(201);
 		}
+
+		@ParameterizedTest(name = "timeZone: {0}, login: {1}")
+		@Order(3)
+		@DisplayName("Should properly register new account with each timezone")
+		@CsvSource({
+						"EUROPE_WARSAW,europewarsaw",
+						"AMERICA_NEW_YORK,americanewyork",
+						"AMERICA_LOS_ANGELES,americelosangeles",
+						"ASIA_TOKYO,asiatokyo",
+						"AUSTRALIA_SYDNEY,australiasydney",
+						"EUROPE_LONDON,europelondon",
+						"EUROPE_BERLIN,europeberlin",
+						"AMERICA_CHICAGO,americachicago",
+						"ASIA_SHANGHAI,asiashanghai",
+						"AMERICA_SAO_PAULO,americasaopaulo"
+
+		})
+		void shouldProperlyRegisterClientAccountWithEachTimeZone(String timeZone, String login) {
+			AccountRegisterDto account = InitData.getAccountToRegister();
+			account.setLogin(login + "123");
+			account.setEmail(login + "@example.com");
+			account.setTimeZone(timeZone);
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(201);
+		}
 	}
 
 	@Nested
@@ -79,6 +118,14 @@ public class MOK1IT {
 		@DisplayName("Should fail to register account with existing company NIP")
 		void shouldFailToRegisterAccountWithExistingCompanyNip() {
 			AccountRegisterDto account = InitData.getAccountWithCompany();
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(409);
+
 			account.setEmail("different123@example.com");
 			account.setLogin("Different123");
 			given()
@@ -96,6 +143,14 @@ public class MOK1IT {
 		@DisplayName("Should fail to register account with existing account email")
 		void shouldFailToRegisterAccountWithExistingEmail() {
 			AccountRegisterDto account = InitData.getAccountToRegister();
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(409);
+
 			account.setLogin("Different123");
 			given()
 							.contentType("application/json")
@@ -135,7 +190,7 @@ public class MOK1IT {
 							.post("/account/register")
 							.then()
 							.statusCode(400)
-							.body("errors", hasSize(11));
+							.body("errors", hasSize(12));
 		}
 
 		@Test
@@ -649,5 +704,54 @@ public class MOK1IT {
 											equalTo("The length of the field must be between 1 and 32 characters"));
 		}
 
+
+		@Order(23)
+		@DisplayName("Should fail to register account with invalid timezones")
+		@ParameterizedTest(name = "timeZone: {0}")
+		@CsvSource({
+						"EUROPE/WARSAW",
+						"Europe/Warsaw",
+						"Europe-Warsaw",
+		})
+		void shouldFailToRegisterAccountWithInvalidTimeZones(String timeZone) {
+			AccountRegisterDto account = InitData.getAccountToRegister();
+			account.setTimeZone(timeZone);
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/register")
+							.then()
+							.statusCode(400)
+							.body("message", equalTo(MessageUtil.MessageKey.ERROR_INVALID_TIME_ZONE));
+		}
+
+		@Order(24)
+		@DisplayName("Should only create one account with same login")
+		@Test
+		void shouldOnlyCreateOneAccountWithSameLogin() throws Exception {
+			// Create 10 threads creating account
+			ExecutorService executorService = Executors.newFixedThreadPool(10);
+			List<Future<Response>> futures = new ArrayList<>();
+			for (int i = 0; i < 10; i++) {
+				futures.add(executorService.submit(() -> {
+					AccountRegisterDto account = InitData.getAccountToRegisterForMultipleThreads();
+					return given()
+									.contentType("application/json")
+									.body(InitData.mapToJsonString(account))
+									.when()
+									.post("/account/register");
+				}));
+			}
+
+			// Wait for 10 threads to stop
+			int successResponses = 0;
+			for (Future<Response> future : futures) {
+				successResponses += future.get().statusCode() == 201 ? 1 : 0;
+			}
+
+			// Check if only one account was created
+			assertThat(successResponses, is(equalTo(1)));
+		}
 	}
 }

@@ -39,7 +39,11 @@ import lombok.experimental.SuperBuilder;
     @NamedQuery(name = Account.FIND_ALL_BY_LAST_NAME,
         query = "SELECT account FROM Account account WHERE account.person.lastName = :lastName"),
     @NamedQuery(name = Account.FIND_ALL_BY_ADDRESS_ID,
-        query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId")
+        query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId"),
+    @NamedQuery(name = Account.FIND_ALL_BY_FULL_NAME_LIKE,
+            query =   "SELECT account FROM Account account "
+                    + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
+                    + "LIKE LOWER(CONCAT('%', :fullName, '%'))"),
 })
 public class Account extends AbstractEntity {
   public static final String FIND_ALL_BY_FIRST_NAME = "Account.findAllByFirstName";
@@ -48,6 +52,7 @@ public class Account extends AbstractEntity {
   public static final String FIND_BY_EMAIL = "Account.findByEmail";
   public static final String FIND_ALL_BY_ADDRESS_ID = "Account.findAllByAddressId";
   public static final String FIND_BY_ACCOUNT_ID = "Account.findByAccountId";
+  public static final String FIND_ALL_BY_FULL_NAME_LIKE = "Account.findAllByFullName";
   @Column(unique = true, updatable = false, nullable = false)
   private String login;
 
@@ -105,6 +110,16 @@ public class Account extends AbstractEntity {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "type", nullable = false)
   private AccountType accountType;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "time_zone", nullable = false)
+  private TimeZone timeZone;
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @Builder.Default
+  @ToString.Exclude
+  @JoinColumn(name = "account_id")
+  private List<PasswordHistory> passwordHistory = new ArrayList<>();
 
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;

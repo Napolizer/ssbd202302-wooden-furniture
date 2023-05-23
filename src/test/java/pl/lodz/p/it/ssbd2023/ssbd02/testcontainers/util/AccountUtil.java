@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util;
 import static io.restassured.RestAssured.given;
 
 import io.restassured.http.Header;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 public class AccountUtil {
   private static final Header acceptLanguageHeader = new Header("Accept-Language", "en-US");
@@ -37,7 +38,8 @@ public class AccountUtil {
                 "streetNumber": "1",
                 "postalCode": "90-000",
                 "locale": "en",
-                "language": "en-US"
+                "language": "en-US",
+                "timeZone": "EUROPE_WARSAW"
             }
             """.formatted(login, login + "@ssbd.com"))
         .when()
@@ -45,5 +47,48 @@ public class AccountUtil {
         .then()
         .statusCode(201);
     return getAccountId(login);
+  }
+
+  public static int createUser(String login) {
+    given()
+        .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+        .contentType("application/json")
+        .body("""
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "%s",
+              "email": "%s",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """.formatted(login, login + "@ssbd.com"))
+        .when()
+        .post("/account/create")
+        .then()
+        .statusCode(201);
+    return getAccountId(login);
+  }
+
+  public static int countAccounts() {
+    return given()
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header(acceptLanguageHeader)
+        .when()
+        .get("/account")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("size()");
   }
 }

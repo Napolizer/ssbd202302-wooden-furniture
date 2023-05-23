@@ -5,6 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 
 import java.util.ArrayList;
@@ -76,6 +84,11 @@ public class InitData {
     return tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
   }
 
+  public static String generateConfirmEmailToken(String login) {
+    Account account = Account.builder().login(login).build();
+    return tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
+  }
+
   public static UserCredentialsDto getUserCredentials(String login, String password) {
     return UserCredentialsDto.builder()
             .login(login)
@@ -100,6 +113,24 @@ public class InitData {
             .locale("pl")
             .login("Register123")
             .email("register123@example.com")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
+            .build();
+  }
+
+  public static AccountRegisterDto getAccountToRegisterForMultipleThreads() {
+    return AccountRegisterDto.builder()
+            .firstName("Thomas")
+            .lastName("Coe")
+            .country("Germany")
+            .city("Berlin")
+            .street("Street")
+            .streetNumber(34)
+            .postalCode("93-540")
+            .password("Password123!")
+            .locale("pl")
+            .login("Register123MT")
+            .email("register123MT@example.com")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
   }
 
@@ -118,6 +149,7 @@ public class InitData {
             .email("company123@example.com")
             .nip("1111111111")
             .companyName("New Company")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
   }
 
@@ -137,6 +169,7 @@ public class InitData {
             .email("active123@example.com")
             .nip("1111111111")
             .companyName("Example Company")
+            .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
   }
 
@@ -152,6 +185,94 @@ public class InitData {
             .hash(retrieveVersion(login))
             .build();
   }
+
+  public static String blockedAccountToActivateJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "blockedThomas",
+              "email": "blockedToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToGetInformationsJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "getInformations",
+              "email": "betInformations@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String notVerifiedAccountToActivateJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "NotVerified",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "notVerifiedThomas",
+              "email": "notVerifiedToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String activeAccountToActivateJson = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Active",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "activeThomas",
+              "email": "activeToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
 
   public static String accountToEditAccessLevelsJson = """
           {
@@ -170,7 +291,270 @@ public class InitData {
                   }
               ],
               "login": "accounttoeditals",
-              "email": "toeditaccesslevel@example.com"
+              "email": "toeditaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
           }
+      """;
+
+
+  public static String accountToEditJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "accounttoedit123",
+              "email": "toedit@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToAddAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "addaccesslevel",
+              "email": "addaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToRemoveAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "removeaccesslevel",
+              "email": "removeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToChangeAccessLevelsJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "changeaccesslevel",
+              "email": "changeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock1Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount1",
+              "email": "blockaccount1@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock2Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount2",
+              "email": "blockaccount2@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToBlock3Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount3",
+              "email": "blockaccount3@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+  public static String accountToBlock4Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount4",
+              "email": "blockaccount4@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+  public static String accountToBlock5Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount5",
+              "email": "blockaccount5@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+  public static String accountToBlock6Json = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "blockaccount6",
+              "email": "blockaccount6@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToLogin = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "loginlogin",
+              "email": "loginlogin@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String editedAccountExampleJson = """
+      {
+        "firstName": "Adam",
+        "lastName": "Doe",
+        "country": "USA",
+        "city": "Warsaw",
+        "street": "Wladyslawa",
+        "postalCode": "95-200",
+        "streetNumber": 20,
+        "hash": "$hash"
+      }
+      """;
+
+  public static String editedAccountAsAdminExampleJson = """
+      {
+        "firstName": "John",
+        "lastName": "Doe",
+        "country": "United States",
+        "city": "New York",
+        "street": "Broadway",
+        "postalCode": "10-001",
+        "streetNumber": 123,
+        "hash": "$hash"
+      }
+      """;
+
+  public static String changePasswordJsonTemplate = """
+      {
+        "currentPassword": "%s",
+        "password": "%s"
+      }
       """;
 }

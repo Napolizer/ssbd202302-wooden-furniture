@@ -250,8 +250,11 @@ public class AccountController {
                         @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
     var json = Json.createObjectBuilder();
     try {
-      String token = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      List<String> tokens = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
       json.add("token", token);
+      json.add("refresh_token", refreshToken);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
       json.add("message", e.getMessage());
@@ -305,7 +308,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response blockAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.blockAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "mok.account.block.successful")
+                    .build()
+    ).build();
   }
 
   @PATCH
@@ -314,7 +321,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response activateAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.activateAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "mok.account.activate.successful")
+            .build()
+    ).build();
   }
 
   @PUT
@@ -357,7 +368,11 @@ public class AccountController {
       throw ApplicationExceptionFactory.createAccountNotActiveException();
     }
     accountEndpoint.sendResetPasswordEmail(emailDto);
-    return Response.ok().build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "reset.password.success")
+            .build()
+    ).build();
   }
 
   @GET
@@ -376,10 +391,17 @@ public class AccountController {
 
   @PUT
   @Path("/reset-password")
-  public Response resetPassword(@QueryParam("token") String token, @NotNull ChangePasswordDto changePasswordDto) {
+  public Response resetPassword(
+      @QueryParam("token") String token,
+      @NotNull @Valid ChangePasswordDto changePasswordDto
+  ) {
     String login = accountEndpoint.validateEmailToken(token, TokenType.PASSWORD_RESET);
     accountEndpoint.resetPassword(login, changePasswordDto);
-    return Response.ok().build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "reset.password.success")
+            .build()
+    ).build();
   }
 
   @PUT

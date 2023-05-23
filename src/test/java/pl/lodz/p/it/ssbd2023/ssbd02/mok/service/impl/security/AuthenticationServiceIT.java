@@ -40,6 +40,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotVerifiedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -89,6 +90,7 @@ public class AuthenticationServiceIT {
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
         .failedLoginCounter(0)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .person(Person.builder()
             .firstName("John")
             .lastName("Doe")
@@ -124,8 +126,12 @@ public class AuthenticationServiceIT {
   @Test
   void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
-      String token = authenticationService.login(account.getLogin(), password, "127.0.0.1", MessageUtil.LOCALE_EN);
+      List<String> tokens = authenticationService.login(account.getLogin(), password,
+          "127.0.0.1", MessageUtil.LOCALE_EN);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
       assertNotNull(token);
+      assertNotNull(refreshToken);
       utx.begin();
       List<AccessLevel> accessLevels = tokenService.getTokenClaims(token).getAccessLevels();
       utx.commit();

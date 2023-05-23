@@ -18,11 +18,11 @@ import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
@@ -186,8 +186,8 @@ public class AccountService extends AbstractService {
 
   @PermitAll
   public void registerAccount(Account account) {
-    account.setAccountState(AccountState.NOT_VERIFIED);
     account.setFailedLoginCounter(0);
+    account.setAccountState(AccountState.NOT_VERIFIED);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.NORMAL);
     Account persistedAccount = accountFacade.create(account);
@@ -204,6 +204,7 @@ public class AccountService extends AbstractService {
 
   @PermitAll
   public void registerGoogleAccount(Account account) {
+    account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.GOOGLE);
@@ -212,6 +213,7 @@ public class AccountService extends AbstractService {
 
   @PermitAll
   public void registerGithubAccount(Account account) {
+    account.setFailedLoginCounter(0);
     account.setAccountState(AccountState.ACTIVE);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.GITHUB);
@@ -240,7 +242,14 @@ public class AccountService extends AbstractService {
       //fixme invalidCredentialsException is checked
     }
 
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(newPassword, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
       return accountFacade.update(account);
     } else {
@@ -260,6 +269,7 @@ public class AccountService extends AbstractService {
     }
 
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
+      account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
       return accountFacade.update(account);
     } else {
@@ -373,6 +383,7 @@ public class AccountService extends AbstractService {
     if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
+    account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
     account.setPassword(hash);
     accountFacade.update(account);
   }

@@ -59,6 +59,9 @@ public class AccountRegisterDto {
   @Company
   private String companyName;
 
+  @NotNull
+  private String timeZone;
+
   @Override
   public String toString() {
     return "AccountRegisterDto{"

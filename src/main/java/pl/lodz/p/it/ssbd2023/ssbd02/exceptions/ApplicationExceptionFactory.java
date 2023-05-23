@@ -109,6 +109,11 @@ public final class ApplicationExceptionFactory {
             Response.Status.FORBIDDEN);
   }
 
+  public static BaseWebApplicationException createInvalidTimeZoneException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_INVALID_TIME_ZONE,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static AccessDeniedException createAccessDeniedException(Throwable cause) {
     return new AccessDeniedException(cause);
   }
@@ -174,5 +179,20 @@ public final class ApplicationExceptionFactory {
 
   public static BaseWebApplicationException createGithubOauthConflictException() {
     return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_GITHUB_CONFLICT, Response.Status.CONFLICT);
+  }
+
+  public static BaseWebApplicationException expiredRefreshTokenException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_EXPIRED_REFRESH_TOKEN, Response.Status.UNAUTHORIZED);
+  }
+
+  public static BaseWebApplicationException invalidRefreshTokenException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_INVALID_REFRESH_TOKEN, Response.Status.UNAUTHORIZED);
+  }
+
+  public static BaseWebApplicationException passwordAlreadyUsedException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_PASSWORD_ALREADY_USED, Response.Status.CONFLICT);
   }
 }
