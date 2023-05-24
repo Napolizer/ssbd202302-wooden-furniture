@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import jakarta.transaction.HeuristicMixedException;
@@ -26,11 +27,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.SalesRepAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.SortBy;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -605,6 +608,28 @@ public class AccountFacadeOperationsIT {
       assertEquals(0, accountFacadeOperations.findByFullNameLike("moe").size());
       assertEquals(0, accountFacadeOperations.findByFullNameLike("  doe").size());
       assertEquals(0, accountFacadeOperations.findByFullNameLike("johndoe").size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void failsToFindByFullNameLikeWithPagination() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+
+      assertEquals(1, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    List<String> invalidNames = Arrays.asList(" j", "john  ", "moe", "  doe", "johndoe");
+    admin.call(() -> {
+      for (String invalidName : invalidNames) {
+        assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(0, 10, invalidName, SortBy.LOGIN, false)).size());
+        assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(0, 10, invalidName, SortBy.EMAIL, true)).size());
+//        assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(0, 3, invalidName, SortBy.ACCESSLEVEL, true)).size());
+      }
     });
     utx.commit();
   }

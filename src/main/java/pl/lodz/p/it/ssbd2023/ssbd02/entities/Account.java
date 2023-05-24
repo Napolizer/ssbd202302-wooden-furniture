@@ -40,10 +40,12 @@ import lombok.experimental.SuperBuilder;
         query = "SELECT account FROM Account account WHERE account.person.lastName = :lastName"),
     @NamedQuery(name = Account.FIND_ALL_BY_ADDRESS_ID,
         query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId"),
-    @NamedQuery(name = Account.FIND_ALL_BY_FULL_NAME_LIKE,
-            query =   "SELECT account FROM Account account "
-                    + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
-                    + "LIKE LOWER(CONCAT('%', :fullName, '%'))"),
+    @NamedQuery(name = Account.FIND_BY_FULL_NAME,
+        query = "SELECT account FROM Account account "
+            + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
+            + "LIKE LOWER(CONCAT('%', :fullName, '%')) "
+            + "ORDER BY CASE WHEN (:sortField = 'LOGIN') THEN account.login "
+            + "WHEN (:sortField = 'EMAIL') THEN account.email ELSE account.accountType END")
 })
 public class Account extends AbstractEntity {
   public static final String FIND_ALL_BY_FIRST_NAME = "Account.findAllByFirstName";
@@ -52,7 +54,7 @@ public class Account extends AbstractEntity {
   public static final String FIND_BY_EMAIL = "Account.findByEmail";
   public static final String FIND_ALL_BY_ADDRESS_ID = "Account.findAllByAddressId";
   public static final String FIND_BY_ACCOUNT_ID = "Account.findByAccountId";
-  public static final String FIND_ALL_BY_FULL_NAME_LIKE = "Account.findAllByFullName";
+  public static final String FIND_BY_FULL_NAME = "Account.findAllByFullName";
   @Column(unique = true, updatable = false, nullable = false)
   private String login;
 
@@ -126,7 +128,7 @@ public class Account extends AbstractEntity {
   private Boolean forcePasswordChange = false;
 
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-  @JoinColumn(name = "account_search_settings_id", nullable = false)
+  @JoinColumn(name = "account_search_settings_id")
   private AccountSearchSettings accountSearchSettings;
 
   public void update(Account account) {
