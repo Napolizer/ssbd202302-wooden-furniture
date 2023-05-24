@@ -9,7 +9,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
-import jakarta.json.stream.JsonCollectors;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -36,8 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
@@ -52,6 +54,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
@@ -498,8 +501,10 @@ public class AccountController {
   @GET
   @Path("find/fullNameWithPagination")
   @RolesAllowed(ADMINISTRATOR)
-  public Response findBuFullNameLikeWithPagination(@Valid  AccountSearchSettings accountSearchSettings) {
-    List<Account> accounts = accountEndpoint.findByFullNameLikeWithPagination(accountSearchSettings);
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response findByFullNameLikeWithPagination(@NotNull @Valid AccountSearchSettingsDto accountSearchSettingsDto) {
+    List<Account> accounts = accountEndpoint.findByFullNameLikeWithPagination(accountSearchSettingsDto);
     List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
         .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
     return Response.ok(mappedAccounts).build();

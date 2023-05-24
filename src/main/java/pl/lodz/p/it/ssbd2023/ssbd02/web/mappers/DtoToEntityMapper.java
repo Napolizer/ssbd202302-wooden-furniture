@@ -7,6 +7,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
@@ -22,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountSearchSettingsDto;
 
 public final class DtoToEntityMapper {
   public static Account mapAccountRegisterDtoToAccount(AccountRegisterDto accountRegisterDto) {
@@ -130,6 +132,17 @@ public final class DtoToEntityMapper {
     return GithubAccountInfoDto.builder()
         .login(account.getLogin())
         .email(account.getEmail())
+        .build();
+  }
+
+  public static AccountSearchSettings mapAccountSearchSettingsDtoToAccountSearchSettings(
+      AccountSearchSettingsDto accountSearchSettingsDto) {
+    return AccountSearchSettings.builder()
+        .searchPage(accountSearchSettingsDto.getSearchPage())
+        .displayedAccounts(accountSearchSettingsDto.getDisplayedAccounts())
+        .searchKeyword(accountSearchSettingsDto.getSearchKeyword())
+        .sortBy(accountSearchSettingsDto.getSortBy())
+        .sortAscending(accountSearchSettingsDto.getSortAscending())
         .build();
   }
 }
