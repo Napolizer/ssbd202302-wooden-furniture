@@ -144,6 +144,7 @@
   "account.changerole.success": "Rola została pomyślnie zmieniona",
   "account.block": "Zablokuj",
   "account.activate": "Odblokuj",
+  "account.timezone": "Strefa czasowa",
 
   "edit.account": "Edytuj konto",
   "edit.account.field.required": "To pole jest wymagane",

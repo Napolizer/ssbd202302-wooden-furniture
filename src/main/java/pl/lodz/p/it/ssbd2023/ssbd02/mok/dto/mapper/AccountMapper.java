@@ -45,6 +45,7 @@ public class AccountMapper {
             .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
             .lastLogin(account.getLastLogin())
             .lastFailedLogin(account.getLastFailedLogin())
+            .timeZone(account.getTimeZone().getDisplayName())
             .build();
   }
 
