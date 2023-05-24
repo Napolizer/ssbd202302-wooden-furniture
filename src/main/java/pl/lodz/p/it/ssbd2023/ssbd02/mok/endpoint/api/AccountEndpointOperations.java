@@ -82,7 +82,7 @@ public interface AccountEndpointOperations {
 
   void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto);
 
-  void changeMode(Long accountId, Mode mode);
+  void changeMode(String login, Mode mode);
 
   String generateTokenFromRefresh(String refreshToken);
 

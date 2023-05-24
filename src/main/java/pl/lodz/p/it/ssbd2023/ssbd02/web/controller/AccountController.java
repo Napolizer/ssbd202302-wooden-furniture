@@ -458,12 +458,16 @@ public class AccountController {
   }
 
   @PUT
-  @Path("/id/{accountId}/change-mode")
+  @Path("/self/change-mode")
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Response changeMode(@PathParam("accountId") Long accountId,
-                             @Valid ChangeModeDto changeModeDto) {
+  public Response changeMode(@Valid ChangeModeDto changeModeDto) {
+    String login = principal.getName();
+    if (login == null || login.equals("ANONYMOUS")) {
+      return Response.status(403).build();
+    }
+
     Mode mode = DtoToEntityMapper.mapChangeModeDtoToMode(changeModeDto);
-    accountEndpoint.changeMode(accountId, mode);
+    accountEndpoint.changeMode(login, mode);
     return Response.ok().build();
 
   }
