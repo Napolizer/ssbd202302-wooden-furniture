@@ -56,7 +56,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @Inject
   private Principal principal;
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }

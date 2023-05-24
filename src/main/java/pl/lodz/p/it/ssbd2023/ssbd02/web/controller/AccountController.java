@@ -94,7 +94,8 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account =
+            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -107,7 +108,8 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account =
+            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -124,7 +126,7 @@ public class AccountController {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     AccountWithoutSensitiveDataDto account =
-        accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+        accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
