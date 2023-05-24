@@ -205,6 +205,7 @@
   "forbidden.button": "Home",
   "exception.mok.account.old.password": "New password cannot be the same as the old one",
   "exception.expired.password.reset.link": "Your password reset link has expired, try again",
+  "exception.expired.password.change.link": "Your password change link has expired, your account has been blocked",
   "exception.invalid.link": "Confirmation link is invalid",
   "exception.mok.account.already.verified": "Your account has already been verified",
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",

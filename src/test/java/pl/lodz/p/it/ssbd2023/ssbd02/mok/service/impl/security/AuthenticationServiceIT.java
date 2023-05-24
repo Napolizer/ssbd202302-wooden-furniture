@@ -129,7 +129,7 @@ public class AuthenticationServiceIT {
   void shouldProperlyLoginTest() throws AuthenticationException, SystemException, NotSupportedException,
           HeuristicRollbackException, HeuristicMixedException, RollbackException {
       List<String> tokens = authenticationService.login(account.getLogin(), password,
-          "127.0.0.1", MessageUtil.LOCALE_EN);
+							MessageUtil.LOCALE_EN);
       String token = tokens.get(0);
       String refreshToken = tokens.get(1);
       assertNotNull(token);
@@ -145,7 +145,7 @@ public class AuthenticationServiceIT {
   @Test
   void shouldFailToLoginIfAccountWithGivenLoginDoesNotExist() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login("nonexistent", "nonexistent", "127.0.0.1", MessageUtil.LOCALE_EN);
+      authenticationService.login("nonexistent", "nonexistent", MessageUtil.LOCALE_EN);
     });
   }
 
@@ -155,7 +155,7 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountIsInactiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1", MessageUtil.LOCALE_EN));
+    assertThrows(AccountIsInactiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), MessageUtil.LOCALE_EN));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountNotVerifiedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1", MessageUtil.LOCALE_EN));
+    assertThrows(AccountNotVerifiedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), MessageUtil.LOCALE_EN));
   }
 
   @Test
@@ -173,7 +173,7 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountBlockedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1", MessageUtil.LOCALE_EN));
+    assertThrows(AccountBlockedException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), MessageUtil.LOCALE_EN));
   }
 
   @Test
@@ -182,27 +182,27 @@ public class AuthenticationServiceIT {
     utx.begin();
     accountFacade.update(account);
     utx.commit();
-    assertThrows(AccountArchiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), "127.0.0.1", MessageUtil.LOCALE_EN));
+    assertThrows(AccountArchiveException.class, () -> authenticationService.login(account.getLogin(), account.getPassword(), MessageUtil.LOCALE_EN));
   }
 
   @Test
   void shouldFailToLoginIfPasswordIsInvalid() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(account.getLogin(), "invalid", "127.0.0.1", MessageUtil.LOCALE_EN);
+      authenticationService.login(account.getLogin(), "invalid", MessageUtil.LOCALE_EN);
     });
   }
 
   @Test
   void shouldFailToLoginIfLoginIsNull() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(null, "invalid", "127.0.0.1", MessageUtil.LOCALE_EN);
+      authenticationService.login(null, "invalid", MessageUtil.LOCALE_EN);
     });
   }
 
   @Test
   void shouldFailToLoginIfPasswordIsNull() {
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(account.getLogin(), null, "127.0.0.1", MessageUtil.LOCALE_EN);
+      authenticationService.login(account.getLogin(), null, MessageUtil.LOCALE_EN);
     });
   }
 
@@ -210,7 +210,7 @@ public class AuthenticationServiceIT {
   void shouldCorrectlyIncrementCounter() throws Exception {
     assertEquals(0, account.getFailedLoginCounter());
     assertThrows(InvalidCredentialsException.class, () -> {
-      authenticationService.login(account.getLogin(), "wrongOne", "127.0.0.1", MessageUtil.LOCALE_EN);
+      authenticationService.login(account.getLogin(), "wrongOne", MessageUtil.LOCALE_EN);
     });
     utx.begin();
     Account refreshedAccount = accountFacade.findById(account.getId())

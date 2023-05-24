@@ -36,7 +36,7 @@ public interface AccountEndpointOperations {
 
   List<Account> getAccountList();
 
-  List<String> login(UserCredentialsDto userCredentialsDto, String ip, String locale)
+  List<String> login(UserCredentialsDto userCredentialsDto, String locale)
           throws AuthenticationException;
 
   void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel);
