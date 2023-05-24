@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,20 +14,12 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder
 @Table(name = "account_search_settings")
-@NamedQueries({
-    @NamedQuery(name = "accountListPreferences.findByAccount",
-                query = "SELECT p FROM AccountSearchSettings p WHERE p.account = :account")
-})
 public class AccountSearchSettings extends AbstractEntity {
-  @NotNull
-  @OneToOne
-  @JoinColumn(name = "account_id")
-  private Account account;
   @Column(name = "search_page", columnDefinition = "integer default 0")
   private Integer searchPage;
   @Column(name = "displayed_accounts", columnDefinition = "integer default 3")
   private Integer displayedAccounts;
-  @Column(name = "search_keyword", columnDefinition = "varchar(3) default ''")
+  @Column(name = "search_keyword", columnDefinition = "varchar(256) default ''")
   private String searchKeyword;
   @Column(name = "sort_by")
   @Enumerated(value = EnumType.STRING)
