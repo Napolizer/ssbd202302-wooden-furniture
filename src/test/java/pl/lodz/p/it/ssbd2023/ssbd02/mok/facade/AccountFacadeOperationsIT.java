@@ -7,7 +7,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -795,6 +794,42 @@ public class AccountFacadeOperationsIT {
   }
 
   @Test
+  void properlyFindsByFullNameLikeAllUsers() throws Exception {
+    List <Account> accounts = List.of(
+        buildAccount("John", "Doe", "email1@ssbd.com", new Administrator()),
+        buildAccount("Johna", "Donovan", "email3@ssbd.com", new Administrator()),
+        buildAccount("Johnb", "Depp", "email2@ssbd.com", new Employee()),
+        buildAccount("Johnc", "Bravo", "email5@ssbd.com", new SalesRep()),
+        buildAccount("Johnd", "Scooby", "email4@ssbd.com", new Client())
+    );
+    for (Account account : accounts) {
+      utx.begin();
+      admin.call(() -> {
+        accountFacadeOperations.create(account);
+      });
+      utx.commit();
+    }
+    utx.begin();
+    List<String> blankKeywords = List.of(
+        "",
+        "  ",
+        "          "
+    );
+    admin.call(() -> {
+      for (String keyword : blankKeywords) {
+        List<Account> response = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, keyword, SortBy.EMAIL, true));
+        assertThat(response.size(), is(equalTo(5)));
+        assertThat(response.get(0).getEmail(), is(equalTo("email1@ssbd.com")));
+        assertThat(response.get(1).getEmail(), is(equalTo("email2@ssbd.com")));
+        assertThat(response.get(2).getEmail(), is(equalTo("email3@ssbd.com")));
+        assertThat(response.get(3).getEmail(), is(equalTo("email4@ssbd.com")));
+        assertThat(response.get(4).getEmail(), is(equalTo("email5@ssbd.com")));
+      }
+    });
+    utx.commit();
+  }
+
+  @Test
   void failsToFindByFullNameLikeWithPagination() throws Exception {
     utx.begin();
     admin.call(() -> {
@@ -802,7 +837,7 @@ public class AccountFacadeOperationsIT {
     });
     utx.commit();
     utx.begin();
-    List<String> invalidNames = Arrays.asList(" j", "john  ", "moe", "  doe", "johndoe");
+    List<String> invalidNames = Arrays.asList("moe", "j  doe", "johndoe");
     admin.call(() -> {
       for (String invalidName : invalidNames) {
         assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, invalidName, SortBy.LOGIN, false)).size());

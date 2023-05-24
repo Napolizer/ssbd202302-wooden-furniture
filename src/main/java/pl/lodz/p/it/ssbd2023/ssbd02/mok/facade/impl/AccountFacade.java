@@ -141,7 +141,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
     TypedQuery<Account> query = em.createNamedQuery(
         settings.getSortAscending() ? Account.FIND_BY_FULL_NAME_ASC : Account.FIND_BY_FULL_NAME_DESC,
         Account.class);
-    query.setParameter("fullName", settings.getSearchKeyword());
+    query.setParameter("fullName", settings.getSearchKeyword().trim());
     query.setParameter("sortField", settings.getSortBy().name().toUpperCase());
     query.setFirstResult((settings.getSearchPage() - 1) * settings.getDisplayedAccounts());
     query.setMaxResults(settings.getDisplayedAccounts());
