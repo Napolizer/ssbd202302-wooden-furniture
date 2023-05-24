@@ -207,6 +207,7 @@
   "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
   "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
   "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie",
+  "exception.expired.password.change.link": "Twój link do zmiany hasła wygasł, twoje konto zostało zablokowane",
   "exception.mok.account.email.does.not.exist" : "Konto z podanym adresem email nie istnieje",
   "exception.mok.account.not.active": "Konto jest nieaktywne",
   "exception.mok.account.access.level": "Wyjatek accesslevel",
