@@ -245,8 +245,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     }
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
-      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
-      //fixme invalidCredentialsException is checked
+      throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();
     }
 
     for (PasswordHistory oldPassword : account.getPasswordHistory()) {
@@ -272,8 +271,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
-      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
-      //fixme invalidCredentialsException is checked
+      throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();
     }
 
     for (PasswordHistory oldPassword : account.getPasswordHistory()) {

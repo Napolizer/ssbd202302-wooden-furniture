@@ -144,7 +144,7 @@ export class ChangePasswordConfirmComponent implements OnInit {
           this.loading = false;
           if (e.status == 400) {
             this.translate
-              .get('exception.mok.account.credentials.password')
+              .get(e.error.message || 'exception.current.password.invalid')
               .pipe(takeUntil(this.destroy))
               .subscribe((msg) => {
                 this.alertService.danger(msg);
