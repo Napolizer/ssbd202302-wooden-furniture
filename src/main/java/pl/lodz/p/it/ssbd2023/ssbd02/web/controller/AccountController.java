@@ -9,7 +9,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
-import jakarta.json.stream.JsonCollectors;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -45,6 +44,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
@@ -507,5 +507,18 @@ public class AccountController {
   public Response autoCompleteFullNames(@NotNull String phrase) {
     List<FullNameDto> fullNameDtos = accountEndpoint.autoCompleteFullNames(phrase);
     return Response.ok(fullNameDtos).build();
+  }
+
+  @POST
+  @Path("/find/fullNameWithPagination")
+  @RolesAllowed(ADMINISTRATOR)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findByFullNameLikeWithPagination(@Valid AccountSearchSettingsDto accountSearchSettingsDto,
+                                                   @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    List<Account> accounts = accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
   }
 }

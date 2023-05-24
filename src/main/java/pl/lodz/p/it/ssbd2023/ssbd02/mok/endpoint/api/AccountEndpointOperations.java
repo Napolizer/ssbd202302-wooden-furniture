@@ -10,6 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
@@ -89,5 +90,7 @@ public interface AccountEndpointOperations {
   List<Account> findByFullNameLike(String fullName);
 
   List<FullNameDto> autoCompleteFullNames(String phrase);
+
+  List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
 
 }

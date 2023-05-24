@@ -80,6 +80,37 @@ public class AccountUtil {
     return getAccountId(login);
   }
 
+  public static int createUserWithSpecifiedLoginFirstNameAndLastName(String login, String firstName, String lastName) {
+    given()
+        .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+        .contentType("application/json")
+        .body("""
+          {
+              "firstName": "%s",
+              "lastName": "%s",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "%s",
+              "email": "%s",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """.formatted(firstName, lastName, login, login + "@ssbd.com"))
+        .when()
+        .post("/account/create")
+        .then()
+        .statusCode(201);
+    return getAccountId(login);
+  }
+
   public static int countAccounts() {
     return given()
         .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
