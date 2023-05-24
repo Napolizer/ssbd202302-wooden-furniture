@@ -27,10 +27,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.EmailSendingRetryServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
 
@@ -41,15 +44,15 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
     LoggerInterceptor.class
 })
 @DenyAll
-public class AccountService extends AbstractService {
+public class AccountService extends AbstractService implements AccountServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject
-  private MailService mailService;
+  private MailServiceOperations mailService;
   @Inject
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
   @Inject
-  private EmailSendingRetryService emailSendingRetryService;
+  private EmailSendingRetryServiceOperations emailSendingRetryService;
   @Inject
   private Principal principal;
 
@@ -334,6 +337,7 @@ public class AccountService extends AbstractService {
     }
 
     account.setAccountState(AccountState.ACTIVE);
+    account.setBlockadeEnd(null);
     accountFacade.update(account);
 
     try {
@@ -510,4 +514,8 @@ public class AccountService extends AbstractService {
     return tokenService.generateToken(account.get());
   }
 
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return accountFacade.findByFullNameLike(fullName);
+  }
 }

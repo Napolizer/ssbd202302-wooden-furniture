@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
@@ -20,7 +21,7 @@ public class AccountMapper {
   private AddressMapper addressMapper;
 
   @Inject
-  private AccountService accountService;
+  private AccountServiceOperations accountService;
 
   public AccountWithoutSensitiveDataDto mapToAccountWithoutSensitiveDataDto(Account account) {
     AccountWithoutSensitiveDataDto mapped = AccountWithoutSensitiveDataDto.builder()

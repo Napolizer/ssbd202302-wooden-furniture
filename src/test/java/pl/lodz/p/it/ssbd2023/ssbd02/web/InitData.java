@@ -236,6 +236,28 @@ public class InitData {
           }
       """;
 
+  public static String blockAccountAfterFailedAttempts  = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "failedAttempts",
+              "email": "failedAttempts@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
   public static String accountToGetInformationsJson = """
           {
               "firstName": "Thomas",

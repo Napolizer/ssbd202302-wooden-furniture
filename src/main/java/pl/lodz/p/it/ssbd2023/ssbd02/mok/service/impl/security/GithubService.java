@@ -26,10 +26,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 
 
 @Stateless
-public class GithubService {
+public class GithubService implements GithubServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   private static final String CLIENT_ID;

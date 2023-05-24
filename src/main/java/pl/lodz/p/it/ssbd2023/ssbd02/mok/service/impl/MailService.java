@@ -17,14 +17,15 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({LoggerInterceptor.class})
 @DenyAll
-public class MailService {
+public class MailService implements MailServiceOperations {
   @Inject
   private EnvironmentConfig environmentConfig;
 

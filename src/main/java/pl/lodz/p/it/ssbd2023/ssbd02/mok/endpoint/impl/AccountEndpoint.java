@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
@@ -22,7 +22,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
@@ -31,27 +30,29 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.AuthenticationService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GoogleService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
 @Interceptors({LoggerInterceptor.class})
 @DenyAll
-public class AccountEndpoint extends AbstractEndpoint {
+public class AccountEndpoint extends AbstractEndpoint implements AccountEndpointOperations {
 
   @Inject
-  private AccountService accountService;
+  private AccountServiceOperations accountService;
   @Inject
-  private GoogleService googleService;
+  private AuthenticationServiceOperations authenticationService;
   @Inject
-  private AuthenticationService authenticationService;
+  private GoogleServiceOperations googleService;
   @Inject
-  private GithubService githubService;
+  private GithubServiceOperations githubService;
 
 
   @PermitAll
@@ -286,5 +287,10 @@ public class AccountEndpoint extends AbstractEndpoint {
   @PermitAll
   public void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto) {
     repeatTransaction(() -> accountService.changeLocale(accountId, changeLocaleDto.getLocale()));
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
   }
 }

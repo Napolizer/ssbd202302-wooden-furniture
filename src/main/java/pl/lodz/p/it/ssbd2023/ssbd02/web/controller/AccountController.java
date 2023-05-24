@@ -9,6 +9,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
+import jakarta.json.stream.JsonCollectors;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -41,7 +42,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -54,15 +54,16 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
 
 @Path("/account")
 @Interceptors({SimpleLoggerInterceptor.class})
 public class AccountController {
   @Inject
-  private AccountEndpoint accountEndpoint;
+  private AccountEndpointOperations accountEndpoint;
   @Inject
   private AccountMapper accountMapper;
   @Inject
@@ -70,7 +71,7 @@ public class AccountController {
   @Inject
   private HttpServletRequest servletRequest;
   @Inject
-  private GithubService githubService;
+  private GithubServiceOperations githubService;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -484,5 +485,15 @@ public class AccountController {
     var json = Json.createObjectBuilder();
     json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));
     return Response.ok(json.build()).build();
+  }
+
+  @GET
+  @Path("/find/fullName/{fullName}")
+  @RolesAllowed(ADMINISTRATOR)
+  public Response findByFullNameLike(@NotNull @PathParam("fullName") String fullName) {
+    List<Account> accounts = accountEndpoint.findByFullNameLike(fullName);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
   }
 }
