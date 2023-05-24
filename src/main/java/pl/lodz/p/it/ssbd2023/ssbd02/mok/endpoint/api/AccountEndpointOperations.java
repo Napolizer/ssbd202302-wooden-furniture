@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -80,6 +81,8 @@ public interface AccountEndpointOperations {
   Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip);
 
   void changeLocale(Long accountId, ChangeLocaleDto changeLocaleDto);
+
+  void changeMode(Long accountId, Mode mode);
 
   String generateTokenFromRefresh(String refreshToken);
 

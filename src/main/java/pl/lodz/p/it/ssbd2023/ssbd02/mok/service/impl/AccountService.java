@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
@@ -487,6 +488,15 @@ public class AccountService extends AbstractService implements AccountServiceOpe
         .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     account.setLocale(locale);
+    accountFacade.update(account);
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public void changeMode(Long accountId, Mode mode) {
+    Account account = accountFacade.findById(accountId)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    account.setMode(mode);
     accountFacade.update(account);
   }
 

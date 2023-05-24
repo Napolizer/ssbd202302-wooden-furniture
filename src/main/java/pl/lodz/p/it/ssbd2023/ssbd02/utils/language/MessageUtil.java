@@ -107,5 +107,6 @@ public class MessageUtil {
     public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
     public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
+    public static final String ERROR_INVALID_MODE = "exception.mok.invalid.mode";
   }
 }

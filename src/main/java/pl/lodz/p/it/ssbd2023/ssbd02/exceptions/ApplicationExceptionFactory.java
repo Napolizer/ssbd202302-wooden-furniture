@@ -195,4 +195,9 @@ public final class ApplicationExceptionFactory {
     return new BaseWebApplicationException(
         MessageUtil.MessageKey.ERROR_PASSWORD_ALREADY_USED, Response.Status.CONFLICT);
   }
+
+  public static BaseWebApplicationException createInvalidModeException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_INVALID_MODE, Response.Status.BAD_REQUEST);
+  }
 }
