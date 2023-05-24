@@ -250,5 +250,8 @@
   "true": "tak",
 
   "block.success": "Pomyślnie zablokowano konto",
-  "activate.success": "Pomyślnie odblokowano konto"
+  "activate.success": "Pomyślnie odblokowano konto",
+
+  "admin.search": "Wyszukaj",
+  "admin.search.placeholder": "Wyszukaj po imieniu i nazwisku"
 }

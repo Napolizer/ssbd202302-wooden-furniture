@@ -251,5 +251,8 @@
   "true": "yes",
 
   "block.success": "Account blocked successfully",
-  "activate.success": "Account activated successfully"
+  "activate.success": "Account activated successfully",
+
+  "admin.search": "Search",
+  "admin.search.placeholder": "Search by full name"
 }
