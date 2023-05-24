@@ -50,6 +50,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ForcePasswordChangeDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -497,5 +498,14 @@ public class AccountController {
     List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
         .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
     return Response.ok(mappedAccounts).build();
+  }
+
+  @POST
+  @Path("/find/autoCompleteFullNames")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(ADMINISTRATOR)
+  public Response autoCompleteFullNames(@NotNull String phrase) {
+    List<FullNameDto> fullNameDtos = accountEndpoint.autoCompleteFullNames(phrase);
+    return Response.ok(fullNameDtos).build();
   }
 }

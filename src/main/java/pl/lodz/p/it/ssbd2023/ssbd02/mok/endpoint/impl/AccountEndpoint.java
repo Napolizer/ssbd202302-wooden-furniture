@@ -16,6 +16,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
@@ -27,6 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -292,5 +294,15 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
     return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<FullNameDto> autoCompleteFullNames(String phrase) {
+    List<Account> accounts = repeatTransaction(() -> accountService.findByFullNameLike(phrase));
+    List<FullNameDto> fullNameDtos = new ArrayList<>();
+    for (Account account : accounts) {
+      fullNameDtos.add(DtoToEntityMapper.mapAccountNameToFullNameDto(account));
+    }
+    return fullNameDtos;
   }
 }
