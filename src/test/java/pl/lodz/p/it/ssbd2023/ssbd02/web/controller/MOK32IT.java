@@ -8,12 +8,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
-import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
@@ -64,6 +61,58 @@ public class MOK32IT {
           .put("/account/self/change-mode")
           .then()
           .statusCode(200);
+    }
+  }
+
+  @Nested
+  @Order(3)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+  class Negative {
+    @Order(1)
+    @DisplayName("Should fail to change mode because of missing header")
+    @Test
+    void shouldFailBecauseOfMissingHeader() {
+      given()
+          .contentType("application/json")
+          .body("""
+                     {
+                         "mode": "dark"
+                     }
+              """)
+          .when()
+          .put("/account/self/change-mode")
+          .then()
+          .statusCode(401);
+    }
+
+    @Order(2)
+    @DisplayName("Should fail to change mode because of invalid mode given")
+    @Test
+    void shouldFailBecauseOfInvalidMode() {
+      given()
+          .header(HttpHeaders.AUTHORIZATION,"Bearer " + AuthUtil.retrieveToken("changeMode", "Password123!"))
+          .contentType("application/json")
+          .body("""
+                     {
+                         "mode": "invalid"
+                     }
+              """)
+          .when()
+          .put("/account/self/change-mode")
+          .then()
+          .statusCode(400);
+    }
+
+    @Order(3)
+    @DisplayName("Should fail to change mode because missing body")
+    @Test
+    void shouldProperlyChangeMode() {
+      given()
+          .header(HttpHeaders.AUTHORIZATION,"Bearer " + AuthUtil.retrieveToken("changeMode", "Password123!"))
+          .when()
+          .put("/account/self/change-mode")
+          .then()
+          .statusCode(500);
     }
   }
 }
