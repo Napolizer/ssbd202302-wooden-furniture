@@ -184,6 +184,7 @@
   "dialog.reset.account.message": "Are you sure you want to discard changes?",
   "dialog.block.account.message":"Are you sure you want to block this account?",
   "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
+  "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",

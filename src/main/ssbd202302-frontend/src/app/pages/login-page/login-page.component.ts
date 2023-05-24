@@ -9,6 +9,8 @@ import {TranslateService} from "@ngx-translate/core";
 import { Location } from '@angular/common';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { AccountType } from 'src/app/enums/account.type';
+import {DialogService} from "../../services/dialog.service";
+import {AccountService} from "../../services/account.service";
 
 @Component({
   selector: 'app-login-page',
@@ -49,7 +51,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private navigationService: NavigationService,
     private tokenService: TokenService,
     private translate: TranslateService,
-    private location: Location
+    private location: Location,
+    private dialogService: DialogService,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
@@ -90,8 +94,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       this.translate.getBrowserLang() as string)
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
-        next: token => {
-          this.tokenService.saveToken(token);
+        next: tokens => {
+          this.tokenService.saveToken(tokens.token);
+          this.tokenService.saveRefreshToken(tokens.refresh_token);
           this.tokenService.saveAccountType(AccountType.NORMAL);
           this.translate.get('login.success')
             .pipe(takeUntil(this.destroy))
@@ -99,6 +104,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
               this.alertService.success(msg);
               this.navigationService.redirectToMainPage();
             });
+          this.tokenService.setTimeout(() => {
+            this.generateNewToken();
+          }, this.tokenService.getRefreshTokenTime()!)
         },
         error: e => {
           combineLatest([
@@ -138,6 +146,40 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         error: () => {
           void this.navigationService.redirectToNotFoundPage();
         }
+      })
+  }
+
+  private displayTokenExpiredWarning(): void {
+    this.alertService.warning(this.translate.instant('auth.token.expired'));
+  }
+
+  private generateNewToken(): void {
+    this.translate
+      .get('dialog.refresh.token')
+      .pipe()
+      .subscribe(msg => {
+        const ref = this.dialogService.openConfirmationDialog(msg, "primary");
+        ref
+          .afterClosed()
+          .pipe(first())
+          .subscribe(result => {
+            if (result === 'action') {
+              if (!this.tokenService.isTokenExpired()) {
+                this.accountService.generateTokenFromRefresh(this.tokenService.getRefreshToken()!)
+                  .pipe(first())
+                  .subscribe(token => {
+                    this.tokenService.saveToken(token);
+                    this.tokenService.setTimeout(() => {
+                      this.generateNewToken();
+                    }, this.tokenService.getRefreshTokenTime()!)
+                  })
+              } else {
+                this.displayTokenExpiredWarning();
+                this.authenticationService.logout();
+                void this.navigationService.redirectToLoginPage();
+              }
+            }
+          })
       })
   }
 }

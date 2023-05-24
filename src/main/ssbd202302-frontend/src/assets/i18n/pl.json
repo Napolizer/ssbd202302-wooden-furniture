@@ -184,6 +184,7 @@
   "dialog.reset.account.message": "Czy na pewno chcesz cofnąć zmiany do początkowych wartości?",
   "dialog.block.account.message":"Czy na pewno chcesz zablokować wybrane konto?",
   "dialog.unblock.account.message":"Czy na pewno chcesz odblokować wybrane konto?",
+  "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",

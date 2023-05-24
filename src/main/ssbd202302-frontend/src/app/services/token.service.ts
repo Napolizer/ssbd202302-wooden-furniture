@@ -4,11 +4,13 @@ import {environment} from '../../environments/environment';
 import jwtDecode from "jwt-decode";
 import {TokenData} from "../interfaces/token.data";
 import { AccountType } from '../enums/account.type';
+import {Constants} from "../utils/constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
+  private timeoutId: any;
 
   constructor(
       private localStorageService: LocalStorageService
@@ -17,19 +19,30 @@ export class TokenService {
 
   public logout(): void {
     this.localStorageService.remove(environment.tokenKey);
+    this.localStorageService.remove(environment.refreshTokenKey);
     this.localStorageService.remove(environment.accountTypeKey);
+    this.clearTimeout()
+
   }
 
   public saveToken(token: string): void {
     this.localStorageService.set(environment.tokenKey, token);
   }
 
-  public saveAccountType(accountType: AccountType): void { 
+  public saveRefreshToken(refreshToken: string): void {
+    this.localStorageService.set(environment.refreshTokenKey, refreshToken);
+  }
+
+  public saveAccountType(accountType: AccountType): void {
     this.localStorageService.set(environment.accountTypeKey, accountType);
   }
 
   public getToken(): string | null {
     return this.localStorageService.get(environment.tokenKey);
+  }
+
+  public getRefreshToken(): string | null {
+    return this.localStorageService.get(environment.refreshTokenKey);
   }
 
   public getAccountType(): string | null {
@@ -46,6 +59,14 @@ export class TokenService {
       return true;
     }
     return expirationTime < Date.now() / 1000;
+  }
+
+  public getRefreshTokenTime(): number | null {
+    const expirationTime = this.getExpirationTime();
+    if (expirationTime !== null) {
+        return expirationTime * 1000 - Date.now() - Constants.REFRESH_TOKEN_TIME;
+      }
+    return null;
   }
 
   public getTokenData(): TokenData | null {
@@ -68,5 +89,13 @@ export class TokenService {
     } catch (e) {
       return null;
     }
+  }
+
+  public setTimeout(callback: () => void, delay: number) {
+    this.timeoutId = setTimeout(callback, delay);
+  }
+
+  public clearTimeout() {
+    clearTimeout(this.timeoutId);
   }
 }
