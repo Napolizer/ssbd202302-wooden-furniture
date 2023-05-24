@@ -144,6 +144,7 @@
   "account.changerole.success": "Role changed successfully",
   "account.block": "Block",
   "account.activate": "Activate",
+  "account.timezone": "Time zone",
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
