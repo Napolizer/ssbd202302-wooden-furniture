@@ -40,12 +40,26 @@ import lombok.experimental.SuperBuilder;
         query = "SELECT account FROM Account account WHERE account.person.lastName = :lastName"),
     @NamedQuery(name = Account.FIND_ALL_BY_ADDRESS_ID,
         query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId"),
-    @NamedQuery(name = Account.FIND_BY_FULL_NAME,
+    @NamedQuery(name = Account.FIND_BY_FULL_NAME_ASC,
         query = "SELECT account FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id "
             + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
             + "LIKE LOWER(CONCAT('%', :fullName, '%')) "
+            + "AND account.id IN (SELECT DISTINCT account.id FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id) "
             + "ORDER BY CASE WHEN (:sortField = 'LOGIN') THEN account.login "
-            + "WHEN (:sortField = 'EMAIL') THEN account.email ELSE account.accountType END")
+            + "WHEN (:sortField = 'EMAIL') THEN account.email "
+            + "ELSE TYPE(al) END ASC"),
+    @NamedQuery(name = Account.FIND_BY_FULL_NAME_DESC,
+        query = "SELECT account FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id "
+            + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
+            + "LIKE LOWER(CONCAT('%', :fullName, '%')) "
+            + "AND account.id IN (SELECT DISTINCT account.id FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id) "
+            + "ORDER BY CASE WHEN (:sortField = 'LOGIN') THEN account.login "
+            + "WHEN (:sortField = 'EMAIL') THEN account.email "
+            + "ELSE TYPE(al) END DESC")
 })
 public class Account extends AbstractEntity {
   public static final String FIND_ALL_BY_FIRST_NAME = "Account.findAllByFirstName";
@@ -54,7 +68,8 @@ public class Account extends AbstractEntity {
   public static final String FIND_BY_EMAIL = "Account.findByEmail";
   public static final String FIND_ALL_BY_ADDRESS_ID = "Account.findAllByAddressId";
   public static final String FIND_BY_ACCOUNT_ID = "Account.findByAccountId";
-  public static final String FIND_BY_FULL_NAME = "Account.findAllByFullName";
+  public static final String FIND_BY_FULL_NAME_ASC = "Account.findAllByFullNameAsc";
+  public static final String FIND_BY_FULL_NAME_DESC = "Account.findAllByFullNameDesc";
   @Column(unique = true, updatable = false, nullable = false)
   private String login;
 

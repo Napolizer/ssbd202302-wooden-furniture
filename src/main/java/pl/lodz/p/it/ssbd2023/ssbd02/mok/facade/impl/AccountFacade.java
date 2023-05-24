@@ -13,7 +13,6 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -130,7 +129,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   @Override
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
-    TypedQuery<Account> query = em.createNamedQuery(Account.FIND_BY_FULL_NAME, Account.class);
+    TypedQuery<Account> query = em.createNamedQuery(Account.FIND_BY_FULL_NAME_ASC, Account.class);
     query.setParameter("fullName", fullName);
     query.setParameter("sortField", SortBy.LOGIN.name().toLowerCase());
     return query.getResultList();
@@ -139,10 +138,12 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   @Override
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLikeWithPagination(AccountSearchSettings settings) {
-    TypedQuery<Account> query = em.createNamedQuery(Account.FIND_BY_FULL_NAME, Account.class);
+    TypedQuery<Account> query = em.createNamedQuery(
+        settings.getSortAscending() ? Account.FIND_BY_FULL_NAME_ASC : Account.FIND_BY_FULL_NAME_DESC,
+        Account.class);
     query.setParameter("fullName", settings.getSearchKeyword());
-    query.setParameter("sortField", settings.getSortBy().name().toLowerCase());
-//    query.setFirstResult((settings.getSearchPage() - 1) * settings.getDisplayedAccounts());
+    query.setParameter("sortField", settings.getSortBy().name().toUpperCase());
+    query.setFirstResult((settings.getSearchPage() - 1) * settings.getDisplayedAccounts());
     query.setMaxResults(settings.getDisplayedAccounts());
     return query.getResultList();
   }
