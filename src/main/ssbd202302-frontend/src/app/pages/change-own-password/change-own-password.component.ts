@@ -125,7 +125,7 @@ export class ChangeOwnPasswordComponent implements OnInit {
         error: (e: HttpErrorResponse) => {
           this.loading = false;
           this.translate
-            .get(e.error.message || 'exception.mok.account.credentials.password')
+            .get(e.error.message || 'exception.current.password.invalid')
             .pipe(takeUntil(this.destroy))
             .subscribe((msg) => {
               this.alertService.danger(msg);
