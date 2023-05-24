@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -86,5 +87,7 @@ public interface AccountEndpointOperations {
   boolean checkIfUserIsForcedToChangePassword(String login);
 
   List<Account> findByFullNameLike(String fullName);
+
+  List<Account> findByFullNameLikeWithPagination(AccountSearchSettings accountSearchSettings);
 
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
@@ -292,5 +293,10 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
     return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLikeWithPagination(AccountSearchSettings accountSearchSettings) {
+    return repeatTransaction(() -> accountService.findByFullNameLikeWithPagination(accountSearchSettings));
   }
 }

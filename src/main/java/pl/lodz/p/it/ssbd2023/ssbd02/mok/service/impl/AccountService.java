@@ -19,12 +19,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -517,5 +513,10 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
     return accountFacade.findByFullNameLike(fullName);
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLikeWithPagination(AccountSearchSettings accountSearchSettings) {
+    return accountFacade.findByFullNameLikeWithPagination(accountSearchSettings);
   }
 }
