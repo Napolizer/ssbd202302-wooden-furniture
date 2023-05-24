@@ -186,6 +186,34 @@ public class InitData {
             .build();
   }
 
+  public static String changePasswordJson = """
+      {
+        "currentPassword": "Student123!",
+        "password": "Password123!"
+      }
+      """;
+
+  public static String accountToChangePasswordJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Student123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "JohnChangePassword",
+              "email": "wantsToChangePassword@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
   public static String blockedAccountToActivateJson = """
           {
               "firstName": "Thomas",
@@ -204,6 +232,28 @@ public class InitData {
               ],
               "login": "blockedThomas",
               "email": "blockedToActivate@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String blockAccountAfterFailedAttempts  = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "failedAttempts",
+              "email": "failedAttempts@example.com",
               "timeZone": "EUROPE_WARSAW"
           }
       """;

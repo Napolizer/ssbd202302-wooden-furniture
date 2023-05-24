@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
@@ -20,10 +21,10 @@ public class AccountMapper {
   private AddressMapper addressMapper;
 
   @Inject
-  private AccountService accountService;
+  private AccountServiceOperations accountService;
 
   public AccountWithoutSensitiveDataDto mapToAccountWithoutSensitiveDataDto(Account account) {
-    AccountWithoutSensitiveDataDto mapped = AccountWithoutSensitiveDataDto.builder()
+    return AccountWithoutSensitiveDataDto.builder()
             .id(account.getId())
             .login(account.getLogin())
             .email(account.getEmail())
@@ -42,14 +43,22 @@ public class AccountMapper {
                     .toList())
             .address(addressMapper.mapToAddressDto(account.getPerson().getAddress()))
             .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
+            .lastLogin(account.getLastLogin())
+            .lastFailedLogin(account.getLastFailedLogin())
             .build();
+  }
 
+  public AccountWithoutSensitiveDataDto
+      mapToAccountWithoutSensitiveDataWithTimezone(Account account) {
+
+    AccountWithoutSensitiveDataDto mapped = mapToAccountWithoutSensitiveDataDto(account);
     String login = CDI.current().select(Principal.class).get().getName();
     Account principal = accountService.getAccountByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     mapped.setLastLogin(mapTimeToNewZone(account.getLastLogin(), principal.getTimeZone().getDisplayName()));
     mapped.setLastFailedLogin(mapTimeToNewZone(account.getLastFailedLogin(), principal.getTimeZone().getDisplayName()));
+    mapped.setBlockadeEnd(mapTimeToNewZone(account.getBlockadeEnd(), principal.getTimeZone().getDisplayName()));
 
     return mapped;
   }

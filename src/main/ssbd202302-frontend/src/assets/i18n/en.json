@@ -42,6 +42,7 @@
   "change.password.validity.matching": "New password cannot be same as the current one",
   "change.password.success": "Your password has been successfully changed",
   "change.password.user.send": "Password change request sent to user's email",
+  "change.password.force.message": "You must change your password to continue",
 
   "register.title": "Create your account",
   "register.checkbox": "Company representative",
@@ -205,6 +206,7 @@
   "forbidden.button": "Home",
   "exception.mok.account.old.password": "New password cannot be the same as the old one",
   "exception.expired.password.reset.link": "Your password reset link has expired, try again",
+  "exception.expired.password.change.link": "Your password change link has expired, your account has been blocked",
   "exception.invalid.link": "Confirmation link is invalid",
   "exception.mok.account.already.verified": "Your account has already been verified",
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",
@@ -251,5 +253,8 @@
   "true": "yes",
 
   "block.success": "Account blocked successfully",
-  "activate.success": "Account activated successfully"
+  "activate.success": "Account activated successfully",
+
+  "admin.search": "Search",
+  "admin.search.placeholder": "Search by full name"
 }

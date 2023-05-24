@@ -62,7 +62,15 @@ export class AccountService {
     })
   }
 
-  public retrieveAccount(id: string): Observable<Account> {
+  public findAccountsByFullName(fullName: string): Observable<Account[]> {
+    return this.httpClient.get<Account[]>(`${environment.apiBaseUrl}/account/find/fullName/` + fullName, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
+    public retrieveAccount(id: string): Observable<Account> {
     return this.httpClient.get<Account>(
       `${environment.apiBaseUrl}/account/id/` + id,
       {

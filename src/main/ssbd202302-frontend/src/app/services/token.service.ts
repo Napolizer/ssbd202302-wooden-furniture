@@ -21,6 +21,7 @@ export class TokenService {
     this.localStorageService.remove(environment.tokenKey);
     this.localStorageService.remove(environment.refreshTokenKey);
     this.localStorageService.remove(environment.accountTypeKey);
+    this.localStorageService.remove(environment.currentRoleKey);
     this.clearTimeout()
 
   }

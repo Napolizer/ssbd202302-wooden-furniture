@@ -27,10 +27,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.GenericServiceExceptionsInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.EmailSendingRetryServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
 
@@ -41,19 +44,19 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
     LoggerInterceptor.class
 })
 @DenyAll
-public class AccountService extends AbstractService {
+public class AccountService extends AbstractService implements AccountServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject
-  private MailService mailService;
+  private MailServiceOperations mailService;
   @Inject
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
   @Inject
-  private EmailSendingRetryService emailSendingRetryService;
+  private EmailSendingRetryServiceOperations emailSendingRetryService;
   @Inject
   private Principal principal;
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }
@@ -229,6 +232,7 @@ public class AccountService extends AbstractService {
     account.setAccountState(AccountState.ACTIVE);
     account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setForcePasswordChange(true);
     return accountFacade.create(account);
   }
 
@@ -254,6 +258,7 @@ public class AccountService extends AbstractService {
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      account.setForcePasswordChange(false);
       return accountFacade.update(account);
     } else {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
@@ -271,9 +276,16 @@ public class AccountService extends AbstractService {
       //fixme invalidCredentialsException is checked
     }
 
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(newPassword, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     if (!CryptHashUtils.verifyPassword(newPassword, account.getPassword())) {
       account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
       account.setPassword(CryptHashUtils.hashPassword(newPassword));
+      account.setForcePasswordChange(false);
       return accountFacade.update(account);
     } else {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
@@ -287,6 +299,8 @@ public class AccountService extends AbstractService {
     String changePasswordToken = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), account.getPassword(),
             TokenType.CHANGE_PASSWORD, changePasswordToken);
+    account.setForcePasswordChange(true);
+    accountFacade.update(account);
     try {
       mailService.sendMailWithPasswordChangeLink(account.getEmail(), account.getLocale(), changePasswordToken);
     } catch (MessagingException e) {
@@ -323,6 +337,7 @@ public class AccountService extends AbstractService {
     }
 
     account.setAccountState(AccountState.ACTIVE);
+    account.setBlockadeEnd(null);
     accountFacade.update(account);
 
     try {
@@ -382,12 +397,22 @@ public class AccountService extends AbstractService {
   public void resetPassword(String login, String password) {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
-    String hash = CryptHashUtils.hashPassword(password);
+
+    final String hash = CryptHashUtils.hashPassword(password);
+
     if (CryptHashUtils.verifyPassword(password, account.getPassword())) {
       throw ApplicationExceptionFactory.createOldPasswordGivenException();
     }
+
+    for (PasswordHistory oldPassword : account.getPasswordHistory()) {
+      if (CryptHashUtils.verifyPassword(password, oldPassword.getHash())) {
+        throw ApplicationExceptionFactory.passwordAlreadyUsedException();
+      }
+    }
+
     account.getPasswordHistory().add(new PasswordHistory(account.getPassword()));
     account.setPassword(hash);
+    account.setForcePasswordChange(false);
     accountFacade.update(account);
   }
 
@@ -466,6 +491,13 @@ public class AccountService extends AbstractService {
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public boolean checkIfUserIsForcedToChangePassword(String login) {
+    Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+    return account.getForcePasswordChange();
+  }
+
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public String generateTokenFromRefresh(String refreshToken) {
     tokenService.validateRefreshToken(refreshToken);
 
@@ -480,5 +512,10 @@ public class AccountService extends AbstractService {
     }
 
     return tokenService.generateToken(account.get());
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLike(String fullName) {
+    return accountFacade.findByFullNameLike(fullName);
   }
 }

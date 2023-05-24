@@ -11,11 +11,33 @@ import {CustomValidators} from "../../utils/custom.validators";
 import {ChangePassword} from "../../interfaces/change.password";
 import {HttpErrorResponse} from "@angular/common/http";
 import {ActivatedRoute, Params} from "@angular/router";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-change-password-confirm',
   templateUrl: './change-password-confirm.component.html',
-  styleUrls: ['./change-password-confirm.component.sass']
+  styleUrls: ['./change-password-confirm.component.sass'],
+  animations: [
+    trigger('loadedUnloadedForm', [
+      state(
+        'loaded',
+        style({
+          opacity: 1,
+          backgroundColor: 'rgba(221, 221, 221, 1)',
+        })
+      ),
+      state(
+        'unloaded',
+        style({
+          opacity: 0,
+          paddingTop: '80px',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+        })
+      ),
+      transition('loaded => unloaded', [animate('0.5s ease-in')]),
+      transition('unloaded => loaded', [animate('0.5s ease-in')]),
+    ]),
+  ],
 })
 export class ChangePasswordConfirmComponent implements OnInit {
 
@@ -99,10 +121,6 @@ export class ChangePasswordConfirmComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  onBackClicked(): void {
-    this.navigationService.redirectToMainPage();
-  }
-
   changePassword(): void {
     this.loading = true;
     const newPassword: ChangePassword = {
@@ -114,6 +132,7 @@ export class ChangePasswordConfirmComponent implements OnInit {
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: () => {
+          this.loading = false;
           this.translate
             .get('change.password.success')
             .pipe(takeUntil(this.destroy))
@@ -130,6 +149,20 @@ export class ChangePasswordConfirmComponent implements OnInit {
               .subscribe((msg) => {
                 this.alertService.danger(msg);
               });
+          } else if (e.status == 410) {
+            this.translate
+              .get('exception.expired.password.change.link')
+              .pipe(takeUntil(this.destroy))
+              .subscribe((msg) => {
+                this.alertService.danger(msg);
+              })
+          } else {
+            this.translate
+              .get('exception.unknown')
+              .pipe(takeUntil(this.destroy))
+              .subscribe((msg) => {
+                this.alertService.danger(msg);
+              })
           }
         }
       })

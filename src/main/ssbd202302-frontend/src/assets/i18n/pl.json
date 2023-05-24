@@ -35,6 +35,7 @@
   "change.email.confirm": "Potwierdź",
   "change.email.link.sent": "Link aktywacyjny został wysłany na nowy adres email",
   "change.email.validity.matching": "Nowy adres email nie może być taki sam jak obecny",
+  "change.password.force.message": "Musisz zmienić hasło aby kontynuować",
 
   "change.password.button": "Zmień hasło",
   "change.password.current": "Aktualne hasło",
@@ -207,6 +208,7 @@
   "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
   "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
   "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie",
+  "exception.expired.password.change.link": "Twój link do zmiany hasła wygasł, twoje konto zostało zablokowane",
   "exception.mok.account.email.does.not.exist" : "Konto z podanym adresem email nie istnieje",
   "exception.mok.account.not.active": "Konto jest nieaktywne",
   "exception.mok.account.access.level": "Wyjatek accesslevel",
@@ -250,5 +252,8 @@
   "true": "tak",
 
   "block.success": "Pomyślnie zablokowano konto",
-  "activate.success": "Pomyślnie odblokowano konto"
+  "activate.success": "Pomyślnie odblokowano konto",
+
+  "admin.search": "Wyszukaj",
+  "admin.search.placeholder": "Wyszukaj po imieniu i nazwisku"
 }
