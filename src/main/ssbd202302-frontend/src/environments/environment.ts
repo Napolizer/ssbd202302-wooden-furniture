@@ -4,5 +4,5 @@ export const environment = {
   tokenKey: 'token',
   accountTypeKey: 'type',
   currentRoleKey: 'role',
-  refreshTokenKey: "refreshToken"
+  refreshTokenKey: 'refreshToken',
 };
