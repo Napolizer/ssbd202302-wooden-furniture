@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountSearchSettingsDto;
 
 @Local
 public interface AccountEndpointOperations {
@@ -89,6 +88,6 @@ public interface AccountEndpointOperations {
 
   List<Account> findByFullNameLike(String fullName);
 
-  List<Account> findByFullNameLikeWithPagination(AccountSearchSettingsDto accountSearchSettingsDto);
+  List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
 
 }

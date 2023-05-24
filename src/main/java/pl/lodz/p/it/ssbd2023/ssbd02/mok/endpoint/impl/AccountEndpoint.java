@@ -25,13 +25,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
@@ -297,9 +297,10 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public List<Account> findByFullNameLikeWithPagination(AccountSearchSettingsDto accountSearchSettingsDto) {
+  public List<Account> findByFullNameLikeWithPagination(String login,
+                                                        AccountSearchSettingsDto accountSearchSettingsDto) {
     AccountSearchSettings accountSearchSettings =
         DtoToEntityMapper.mapAccountSearchSettingsDtoToAccountSearchSettings(accountSearchSettingsDto);
-    return repeatTransaction(() -> accountService.findByFullNameLikeWithPagination(accountSearchSettings));
+    return repeatTransaction(() -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings));
   }
 }
