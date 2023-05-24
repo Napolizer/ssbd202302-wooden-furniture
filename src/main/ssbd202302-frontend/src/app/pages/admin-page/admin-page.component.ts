@@ -6,6 +6,8 @@ import {NavigationService} from "../../services/navigation.service";
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
+import {FullName} from "../../interfaces/fullName";
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-admin-page',
@@ -37,6 +39,7 @@ export class AdminPageComponent implements OnInit {
   loading = true;
   breadcrumbsData: string[] = [];
   fullName: string = '';
+  fullNames: string[] = [];
 
   constructor(
     private accountService: AccountService,
@@ -78,5 +81,16 @@ export class AdminPageComponent implements OnInit {
           this.loading = false;
         });
     }
+  }
+
+  autoCompleteFullNames(event: Event) {
+    const phrase = (event.target as HTMLInputElement).value;
+    this.accountService.autoCompleteFullNames(phrase)
+      .pipe(
+        map((fullNames: FullName[]) => fullNames.map((fullName: FullName) => fullName.fullName))
+      )
+      .subscribe((fullNames: string[]) => {
+        this.fullNames = fullNames;
+      })
   }
 }
