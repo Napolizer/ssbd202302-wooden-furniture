@@ -7,10 +7,10 @@ import java.util.List;
 @Local
 public interface AuthenticationServiceOperations {
 
-  List<String> login(String login, String password, String ip, String locale) throws AuthenticationException;
+  List<String> login(String login, String password, String locale) throws AuthenticationException;
 
-  List<String> loginWithGoogle(String email, String ip, String locale);
+  List<String> loginWithGoogle(String email, String locale);
 
-  List<String> loginWithGithub(String email, String ip, String locale);
+  List<String> loginWithGithub(String email, String locale);
 
 }

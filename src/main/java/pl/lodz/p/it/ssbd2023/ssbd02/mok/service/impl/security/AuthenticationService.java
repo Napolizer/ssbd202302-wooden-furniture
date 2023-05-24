@@ -7,6 +7,7 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,8 +27,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountUnblockerServiceOpera
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountUnblockerService;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
@@ -42,6 +41,8 @@ public class AuthenticationService implements AuthenticationServiceOperations {
   private TokenServiceOperations tokenService;
   @Inject
   private AccountUnblockerServiceOperations unblockerService;
+  @Inject
+  private HttpServletRequest servletRequest;
   private Long blockadeTimeInSeconds;
   private Integer failedAccountAuthenticationAttempts;
 
@@ -62,7 +63,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
   }
 
   @PermitAll
-  public List<String> login(String login, String password, String ip, String locale) throws AuthenticationException {
+  public List<String> login(String login, String password, String locale) throws AuthenticationException {
     if (password == null) {
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
@@ -75,7 +76,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
       throw ApplicationExceptionFactory.createInvalidAccountTypeException();
     }
 
-    validateAccount(account, password, ip);
+    validateAccount(account, password);
     account.setFailedLoginCounter(0);
 
     boolean isAdmin = account.getAccessLevels().stream()
@@ -83,37 +84,37 @@ public class AuthenticationService implements AuthenticationServiceOperations {
 
     if (isAdmin) {
       try {
-        mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), ip);
+        mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), getRemoteAddress());
       } catch (MessagingException e) {
         throw ApplicationExceptionFactory.createMailServiceException(e);
       }
     }
 
-    return setUpAccountAndGenerateToken(ip, locale, account);
+    return setUpAccountAndGenerateToken(locale, account);
   }
 
   @PermitAll
-  public List<String> loginWithGoogle(String email, String ip, String locale) {
+  public List<String> loginWithGoogle(String email, String locale) {
     Account account = accountFacade
             .findByEmail(email)
             .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
 
-    return setUpAccountAndGenerateToken(ip, locale, account);
+    return setUpAccountAndGenerateToken(locale, account);
   }
 
   @PermitAll
-  public List<String> loginWithGithub(String email, String ip, String locale) {
+  public List<String> loginWithGithub(String email, String locale) {
     Account account = accountFacade
         .findByEmail(email)
         .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
 
-    return setUpAccountAndGenerateToken(ip, locale, account);
+    return setUpAccountAndGenerateToken(locale, account);
   }
 
   @PermitAll
-  private List<String> setUpAccountAndGenerateToken(String ip, String locale, Account account) {
+  private List<String> setUpAccountAndGenerateToken(String locale, Account account) {
     account.setLastLogin(LocalDateTime.now());
-    account.setLastLoginIpAddress(ip);
+    account.setLastLoginIpAddress(getRemoteAddress());
     if (locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN)) {
       account.setLocale(locale);
     }
@@ -123,7 +124,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
   }
 
   @PermitAll
-  private void validateAccount(Account account, String password, String ip) throws AuthenticationException {
+  private void validateAccount(Account account, String password) throws AuthenticationException {
     if (account.getArchive()) {
       throw ApplicationExceptionFactory.createAccountArchiveException();
     }
@@ -143,7 +144,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
     if (!CryptHashUtils.verifyPassword(password, account.getPassword())) {
       account.setFailedLoginCounter(account.getFailedLoginCounter() + 1);
       account.setLastFailedLogin(LocalDateTime.now());
-      account.setLastFailedLoginIpAddress(ip);
+      account.setLastFailedLoginIpAddress(getRemoteAddress());
       tryBlockAccount(account);
       throw ApplicationExceptionFactory.createInvalidCredentialsException();
     }
@@ -177,6 +178,14 @@ public class AuthenticationService implements AuthenticationServiceOperations {
   private Date convertToDate(LocalDateTime localDateTime) {
     Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
+  }
+
+  private String getRemoteAddress() {
+    String forwarded = servletRequest.getHeader("X-FORWARDED-FOR");
+    if (forwarded != null) {
+      return forwarded.contains(",") ? forwarded.split(",")[0] : forwarded;
+    }
+    return servletRequest.getRemoteAddr();
   }
 
 }
