@@ -12,6 +12,7 @@ import {Accesslevel} from "../interfaces/accesslevel";
 import {ChangePassword} from "../interfaces/change.password";
 import { AccountCreate } from '../interfaces/account.create';
 import {ChangeLocale} from "../interfaces/change.locale";
+import { AccountSearchPreferences } from '../interfaces/account.search.preferences';
 
 @Injectable({
   providedIn: 'root',
@@ -265,5 +266,16 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
         }
       }
     )
+  }
+
+  public retrieveOwnAccountSearchPreferences(page: number): Observable<AccountSearchPreferences> {
+    return this.httpClient.get<AccountSearchPreferences>(
+      `${environment.apiBaseUrl}/account/self/searchPreferences?page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
   }
 }
