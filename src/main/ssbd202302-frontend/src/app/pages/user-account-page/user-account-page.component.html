@@ -71,15 +71,15 @@
                 <p class="title">{{'account.archive' | translate}}</p>
                 <p class="content">{{account.archive.toString() | translate}}</p>
                 <div class="border"></div>
-              </div>  
+              </div>
             </div>
             <div class="row">
               <div class="entry">
                 <p class="title">{{'account.accountState' | translate}}</p>
                 <p class="content">{{getAccountState() | translate}}</p>
                 <mat-card-actions>
-              <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}} 
-                <mat-icon>lock</mat-icon> 
+              <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}}
+                <mat-icon>lock</mat-icon>
               </button>
               <button mat-raised-button color="success" (click)="confirmUnblock()" [disabled]="isBlocked()">{{'account.activate' | translate}}
                 <mat-icon>lock_open</mat-icon>
@@ -134,6 +134,13 @@
                 <p class="content">{{account.lastFailedLoginIpAddress ?? '-'}}</p>
                 <div class="border"></div>
               </div>
+              <div class="entry" *ngIf="account.timeZone">
+                <p class="title">{{'account.timezone' | translate}}</p>
+                <p class="content">{{account.timeZone}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
               <div class="entry" *ngIf="account.blockadeEnd">
                 <p class="title">{{'account.blockadeEnd' | translate}}</p>
                 <p class="content">{{account.blockadeEnd}}</p>

@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
 
@@ -133,6 +134,10 @@ public final class DtoToEntityMapper {
         .login(account.getLogin())
         .email(account.getEmail())
         .build();
+  }
+
+  public static FullNameDto mapAccountNameToFullNameDto(Account account) {
+    return new FullNameDto(account.getPerson().getFirstName() + " " + account.getPerson().getLastName());
   }
 
   public static AccountSearchSettings mapAccountSearchSettingsDtoToAccountSearchSettings(

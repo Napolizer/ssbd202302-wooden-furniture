@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {first, map, Observable} from 'rxjs';
 import { Account } from '../interfaces/account';
 import { environment } from '../../environments/environment';
 import { TokenService } from './token.service';
@@ -62,7 +62,15 @@ export class AccountService {
     })
   }
 
-  public retrieveAccount(id: string): Observable<Account> {
+  public findAccountsByFullName(fullName: string): Observable<Account[]> {
+    return this.httpClient.get<Account[]>(`${environment.apiBaseUrl}/account/find/fullName/` + fullName, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
+    public retrieveAccount(id: string): Observable<Account> {
     return this.httpClient.get<Account>(
       `${environment.apiBaseUrl}/account/id/` + id,
       {
@@ -265,5 +273,16 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
         }
       }
     )
+  }
+
+  public generateTokenFromRefresh(refreshToken: string) : Observable<string> {
+    return this.httpClient.get(
+      `${environment.apiBaseUrl}/account/token/refresh/` + refreshToken,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    ).pipe(first(), map((response: any) => response.token))
   }
 }

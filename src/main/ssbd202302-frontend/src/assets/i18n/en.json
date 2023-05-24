@@ -144,6 +144,7 @@
   "account.changerole.success": "Role changed successfully",
   "account.block": "Block",
   "account.activate": "Activate",
+  "account.timezone": "Time zone",
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
@@ -185,6 +186,7 @@
   "dialog.reset.account.message": "Are you sure you want to discard changes?",
   "dialog.block.account.message":"Are you sure you want to block this account?",
   "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
+  "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -205,6 +207,7 @@
   "forbidden.button": "Home",
   "exception.mok.account.old.password": "New password cannot be the same as the old one",
   "exception.expired.password.reset.link": "Your password reset link has expired, try again",
+  "exception.expired.password.change.link": "Your password change link has expired",
   "exception.invalid.link": "Confirmation link is invalid",
   "exception.mok.account.already.verified": "Your account has already been verified",
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",
@@ -223,6 +226,7 @@
   "exception.invalid.account.type": "You are not allowed to perform this action because this account was registered with an external service",
   "exception.invalid.time.zone": "Invalid timezone",
   "exception.password.already.used": "Password has already been used",
+  "exception.current.password.invalid": "Current password is invalid",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",
@@ -251,5 +255,8 @@
   "true": "yes",
 
   "block.success": "Account blocked successfully",
-  "activate.success": "Account activated successfully"
+  "activate.success": "Account activated successfully",
+
+  "admin.search": "Search",
+  "admin.search.placeholder": "Search by full name"
 }

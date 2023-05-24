@@ -52,4 +52,5 @@ public class AccountWithoutSensitiveDataDto {
   private AddressDto address;
   @NotNull
   private String hash;
+  private String timeZone;
 }

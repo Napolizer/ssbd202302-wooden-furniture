@@ -16,6 +16,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
@@ -29,6 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -101,9 +103,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @PermitAll
-  public List<String> login(UserCredentialsDto userCredentialsDto, String ip, String locale)
+  public List<String> login(UserCredentialsDto userCredentialsDto, String locale)
       throws AuthenticationException {
-    return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), ip, locale);
+    return authenticationService.login(userCredentialsDto.getLogin(), userCredentialsDto.getPassword(), locale);
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -197,7 +199,7 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
     Account account = googleService.getRegisteredAccountOrCreateNew(code, state);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
-      List<String> tokens = authenticationService.loginWithGoogle(account.getEmail(), ip, locale);
+      List<String> tokens = authenticationService.loginWithGoogle(account.getEmail(), locale);
       String token = tokens.get(0);
       String refreshToken = tokens.get(1);
       return Response.ok()
@@ -221,7 +223,7 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
     googleService.validateIdToken(googleAccountRegisterDto.getIdToken());
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(googleAccountRegisterDto);
     repeatTransaction(() -> accountService.registerGoogleAccount(account));
-    List<String> tokens = authenticationService.loginWithGoogle(account.getEmail(), ip, account.getLocale());
+    List<String> tokens = authenticationService.loginWithGoogle(account.getEmail(), account.getLocale());
     String token = tokens.get(0);
     String refreshToken = tokens.get(1);
     return Response.ok()
@@ -237,7 +239,7 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
     Account account = githubService.getRegisteredAccountOrCreateNew(githubCode);
 
     if (accountService.getAccountByEmail(account.getEmail()).isPresent()) {
-      List<String> tokens = authenticationService.loginWithGithub(account.getEmail(), ip, locale);
+      List<String> tokens = authenticationService.loginWithGithub(account.getEmail(), locale);
       String token = tokens.get(0);
       String refreshToken = tokens.get(0);
       return Response.ok()
@@ -265,7 +267,7 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   public Response registerGithubAccount(AccountRegisterDto githubAccountRegisterDto, String ip) {
     Account account = DtoToEntityMapper.mapAccountRegisterDtoToAccount(githubAccountRegisterDto);
     repeatTransaction(() -> accountService.registerGithubAccount(account));
-    List<String> tokens = authenticationService.loginWithGithub(account.getEmail(), ip, account.getLocale());
+    List<String> tokens = authenticationService.loginWithGithub(account.getEmail(), account.getLocale());
     String token = tokens.get(0);
     String refreshToken = tokens.get(1);
     return Response.ok()
@@ -294,6 +296,16 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
     return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<FullNameDto> autoCompleteFullNames(String phrase) {
+    List<Account> accounts = repeatTransaction(() -> accountService.findByFullNameLike(phrase));
+    List<FullNameDto> fullNameDtos = new ArrayList<>();
+    for (Account account : accounts) {
+      fullNameDtos.add(DtoToEntityMapper.mapAccountNameToFullNameDto(account));
+    }
+    return fullNameDtos;
   }
 
   @RolesAllowed(ADMINISTRATOR)

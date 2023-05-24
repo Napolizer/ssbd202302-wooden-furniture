@@ -24,7 +24,7 @@ public class AccountMapper {
   private AccountServiceOperations accountService;
 
   public AccountWithoutSensitiveDataDto mapToAccountWithoutSensitiveDataDto(Account account) {
-    AccountWithoutSensitiveDataDto mapped = AccountWithoutSensitiveDataDto.builder()
+    return AccountWithoutSensitiveDataDto.builder()
             .id(account.getId())
             .login(account.getLogin())
             .email(account.getEmail())
@@ -43,14 +43,23 @@ public class AccountMapper {
                     .toList())
             .address(addressMapper.mapToAddressDto(account.getPerson().getAddress()))
             .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
+            .lastLogin(account.getLastLogin())
+            .lastFailedLogin(account.getLastFailedLogin())
+            .timeZone(account.getTimeZone().getDisplayName())
             .build();
+  }
 
+  public AccountWithoutSensitiveDataDto
+      mapToAccountWithoutSensitiveDataWithTimezone(Account account) {
+
+    AccountWithoutSensitiveDataDto mapped = mapToAccountWithoutSensitiveDataDto(account);
     String login = CDI.current().select(Principal.class).get().getName();
     Account principal = accountService.getAccountByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     mapped.setLastLogin(mapTimeToNewZone(account.getLastLogin(), principal.getTimeZone().getDisplayName()));
     mapped.setLastFailedLogin(mapTimeToNewZone(account.getLastFailedLogin(), principal.getTimeZone().getDisplayName()));
+    mapped.setBlockadeEnd(mapTimeToNewZone(account.getBlockadeEnd(), principal.getTimeZone().getDisplayName()));
 
     return mapped;
   }

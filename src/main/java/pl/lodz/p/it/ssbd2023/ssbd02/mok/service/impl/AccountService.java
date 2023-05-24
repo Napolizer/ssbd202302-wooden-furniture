@@ -57,7 +57,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @Inject
   private Principal principal;
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }
@@ -246,8 +246,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     }
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
-      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
-      //fixme invalidCredentialsException is checked
+      throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();
     }
 
     for (PasswordHistory oldPassword : account.getPasswordHistory()) {
@@ -273,8 +272,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
-      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
-      //fixme invalidCredentialsException is checked
+      throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();
     }
 
     for (PasswordHistory oldPassword : account.getPasswordHistory()) {

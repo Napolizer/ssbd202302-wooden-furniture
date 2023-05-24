@@ -50,6 +50,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ForcePasswordChangeDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -94,7 +95,8 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account =
+            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -107,7 +109,8 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account =
+            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -124,7 +127,7 @@ public class AccountController {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     AccountWithoutSensitiveDataDto account =
-        accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+        accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -264,7 +267,7 @@ public class AccountController {
                         @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
     var json = Json.createObjectBuilder();
     try {
-      List<String> tokens = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      List<String> tokens = accountEndpoint.login(userCredentialsDto, locale);
       String token = tokens.get(0);
       String refreshToken = tokens.get(1);
       json.add("token", token);
@@ -495,6 +498,15 @@ public class AccountController {
     List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
         .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
     return Response.ok(mappedAccounts).build();
+  }
+
+  @POST
+  @Path("/find/autoCompleteFullNames")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(ADMINISTRATOR)
+  public Response autoCompleteFullNames(@NotNull String phrase) {
+    List<FullNameDto> fullNameDtos = accountEndpoint.autoCompleteFullNames(phrase);
+    return Response.ok(fullNameDtos).build();
   }
 
   @POST

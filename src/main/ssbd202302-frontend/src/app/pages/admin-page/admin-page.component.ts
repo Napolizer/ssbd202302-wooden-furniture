@@ -33,8 +33,10 @@ import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 })
 export class AdminPageComponent implements OnInit {
   allAccounts: Account[] = [];
+  accounts: Account[] = [];
   loading = true;
   breadcrumbsData: string[] = [];
+  fullName: string = '';
 
   constructor(
     private accountService: AccountService,
@@ -47,6 +49,7 @@ export class AdminPageComponent implements OnInit {
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
         this.allAccounts = accounts;
+        this.accounts = this.allAccounts;
         this.loading = false;
       });
   }
@@ -61,5 +64,19 @@ export class AdminPageComponent implements OnInit {
 
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
+  }
+
+  onSearchClicked(): void {
+    this.loading = true;
+    if (this.fullName === '') {
+      this.accounts = this.allAccounts
+      this.loading = false
+    } else {
+      this.accountService.findAccountsByFullName(this.fullName)
+        .subscribe(accounts => {
+          this.accounts = accounts;
+          this.loading = false;
+        });
+    }
   }
 }
