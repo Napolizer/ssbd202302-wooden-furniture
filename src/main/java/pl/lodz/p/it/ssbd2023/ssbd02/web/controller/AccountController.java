@@ -35,11 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
@@ -199,7 +196,6 @@ public class AccountController {
         accountEndpoint.getAccountByAccountId(accountId).get());
     return Response.ok(account).build();
   }
-
 
   @POST
   @Path("/register")
@@ -537,5 +533,16 @@ public class AccountController {
     List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
         .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
     return Response.ok(mappedAccounts).build();
+  }
+
+  @GET
+  @Path("/ownSearchSettings")
+  @RolesAllowed(ADMINISTRATOR)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getOwnSearchSettings(@Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    AccountSearchSettings accountSearchSettings = accountEndpoint.getAccountSearchSettings(login);
+    AccountSearchSettingsDto accountSearchSettingsDto = DtoToEntityMapper.mapAccountSearchSettingsToAccountSearchSettingsDto(accountSearchSettings);
+    return Response.ok(accountSearchSettingsDto).build();
   }
 }

@@ -212,6 +212,7 @@
   "exception.expired.password.change.link": "Twój link do zmiany hasła wygasł",
   "exception.mok.account.email.does.not.exist" : "Konto z podanym adresem email nie istnieje",
   "exception.mok.account.not.active": "Konto jest nieaktywne",
+  "exception.mok.account.not.found": "Nie znaleziono konta",
   "exception.mok.account.access.level": "Wyjatek accesslevel",
   "exception.mok.account.access.level.already.assigned": "Wybrana rola jest juz przypisana do użytkownika",
   "exception.mok.account.access.level.not.assigned": "Nie można usunąć roli, która nie jest przypisana do użytkownika",

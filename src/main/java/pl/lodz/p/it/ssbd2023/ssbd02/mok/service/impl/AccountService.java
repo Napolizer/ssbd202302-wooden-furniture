@@ -198,6 +198,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.NORMAL);
+    account.setAccountSearchSettings(new AccountSearchSettings());
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
     emailSendingRetryService.sendEmailTokenAfterHalfExpirationTime(account.getLogin(), null,
@@ -234,6 +235,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     account.setAccountState(AccountState.ACTIVE);
     account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
+    account.setAccountSearchSettings(new AccountSearchSettings());
     account.setForcePasswordChange(true);
     return accountFacade.create(account);
   }
@@ -542,5 +544,10 @@ public class AccountService extends AbstractService implements AccountServiceOpe
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     return accountFacade.findByFullNameLikeWithPagination(accountSearchSettings);
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public AccountSearchSettings getAccountSearchSettings(String login) {
+    return accountFacade.findByLogin(login).get().getAccountSearchSettings();
   }
 }
