@@ -6,6 +6,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 
 @Local
 public interface AccountServiceOperations {
@@ -65,6 +66,8 @@ public interface AccountServiceOperations {
   void changeEmail(String newEmail, Long accountId, String principal, String version);
 
   void changeLocale(Long accountId, String locale);
+
+  void changeMode(String login, Mode mode);
 
   boolean checkIfUserIsForcedToChangePassword(String login);
 

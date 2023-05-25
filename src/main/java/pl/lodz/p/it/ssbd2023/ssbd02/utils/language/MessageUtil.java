@@ -108,5 +108,6 @@ public class MessageUtil {
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
     public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
     public static final String ERROR_INVALID_CURRENT_PASSWORD = "exception.current.password.invalid";
+    public static final String ERROR_INVALID_MODE = "exception.mok.invalid.mode";
   }
 }

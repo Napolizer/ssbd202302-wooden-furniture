@@ -132,6 +132,11 @@ public class Account extends AbstractEntity {
   @Column(name = "time_zone", nullable = false)
   private TimeZone timeZone;
 
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "mode")
+  @Builder.Default
+  private Mode mode = Mode.LIGHT;
+
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @Builder.Default
   @ToString.Exclude

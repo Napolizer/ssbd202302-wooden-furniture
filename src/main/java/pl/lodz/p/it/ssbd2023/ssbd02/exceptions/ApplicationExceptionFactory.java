@@ -201,4 +201,9 @@ public final class ApplicationExceptionFactory {
     return new InvalidCurrentPasswordException(MessageUtil.MessageKey.ERROR_INVALID_CURRENT_PASSWORD,
             Response.Status.BAD_REQUEST);
   }
+
+  public static BaseWebApplicationException createInvalidModeException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_INVALID_MODE, Response.Status.BAD_REQUEST);
+  }
 }

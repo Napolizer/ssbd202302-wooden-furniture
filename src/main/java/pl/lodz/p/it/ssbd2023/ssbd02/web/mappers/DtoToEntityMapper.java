@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
@@ -21,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeModeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
@@ -149,5 +151,17 @@ public final class DtoToEntityMapper {
         .sortBy(accountSearchSettingsDto.getSortBy())
         .sortAscending(accountSearchSettingsDto.getSortAscending())
         .build();
+  }
+
+  public static Mode mapChangeModeDtoToMode(ChangeModeDto changeModeDto) {
+    switch (changeModeDto.getMode().toLowerCase()) {
+      case "light" -> {
+        return Mode.LIGHT;
+      }
+      case "dark" -> {
+        return Mode.DARK;
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidModeException();
+    }
   }
 }
