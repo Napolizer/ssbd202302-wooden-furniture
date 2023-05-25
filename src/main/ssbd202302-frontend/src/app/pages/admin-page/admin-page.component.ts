@@ -183,12 +183,21 @@ export class AdminPageComponent implements OnInit {
   }
 
   changeUsersPerPage(selectedValue: string){
-    this.accountSearchSettings.displayedAccounts=parseInt(selectedValue)  
+    this.accountSearchSettings.displayedAccounts=parseInt(selectedValue)
+    if(this.fullName===''){
+      this.accountService.retrieveAllAccounts()
+      .subscribe(maxAccountList => {
+        this.accountsByPhraseSize = maxAccountList.length;
+        this.maxPage = Math.ceil(this.accountsByPhraseSize/this.accountSearchSettings.displayedAccounts)
+      })
+    }
+    else { 
     this.accountService.findAccountsByFullName(this.fullName)
       .subscribe(accountList => {
         this.accountsByPhraseSize = accountList.length
         this.maxPage = Math.ceil(this.accountsByPhraseSize/this.accountSearchSettings.displayedAccounts)
       });
+    }
     this.requestAccountsByFullNameWithPagination()
   }
 

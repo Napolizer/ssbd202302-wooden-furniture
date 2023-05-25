@@ -95,4 +95,6 @@ public interface AccountEndpointOperations {
   List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
 
   AccountSearchSettings getAccountSearchSettings(String login);
+
+  Mode getAccountMode(String login);
 }

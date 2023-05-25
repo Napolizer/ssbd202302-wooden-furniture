@@ -174,4 +174,20 @@ public final class DtoToEntityMapper {
       default -> throw ApplicationExceptionFactory.createInvalidModeException();
     }
   }
+
+  public static ChangeModeDto mapChangeModeToChangeModeDto(Mode mode) {
+    switch(mode) {
+      case LIGHT -> {
+        return ChangeModeDto.builder()
+                .mode("LIGHT")
+                .build();
+      }
+      case DARK -> {
+        return ChangeModeDto.builder()
+                .mode("DARK")
+                .build();
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidModeException();
+    }
+  }
 }

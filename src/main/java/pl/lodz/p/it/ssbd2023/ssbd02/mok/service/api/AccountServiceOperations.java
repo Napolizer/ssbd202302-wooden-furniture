@@ -78,4 +78,6 @@ public interface AccountServiceOperations {
   List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettings accountSearchSettings);
 
   AccountSearchSettings getAccountSearchSettings(String login);
+
+  Mode getAccountMode(String login);
 }

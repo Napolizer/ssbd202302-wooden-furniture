@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostBinding, OnDestroy, OnInit, Inject} from '@angular/core';
 import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
 import {AlertService} from "@full-fledged/alerts";
@@ -13,6 +13,9 @@ import { AccountType } from 'src/app/enums/account.type';
 import {Router} from "@angular/router";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {environment} from "../../../environments/environment";
+import { FormControl } from '@angular/forms';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ThemeSwitcherComponentComponent } from '../theme-switcher-component/theme-switcher-component.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,11 +24,11 @@ import {environment} from "../../../environments/environment";
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
-
   public currentRole: Role;
   private id: number;
   private locale: string;
   private changeLocale: ChangeLocale;
+  isDarkThemeActive = false
   constructor(
     private alertService: AlertService,
     private navigationService: NavigationService,
@@ -35,7 +38,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private dialogService: DialogService,
     private router: Router,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private overlay: OverlayContainer
   ) {
   }
 
@@ -250,4 +254,5 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         return false;
     }
   }
+
 }

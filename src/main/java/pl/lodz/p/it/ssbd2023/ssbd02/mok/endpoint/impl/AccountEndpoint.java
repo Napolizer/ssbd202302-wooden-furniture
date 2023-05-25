@@ -326,4 +326,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   public AccountSearchSettings getAccountSearchSettings(String login) {
     return repeatTransaction(()-> accountService.getAccountSearchSettings(login));
   }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Mode getAccountMode(String login) {
+    return repeatTransaction(()->accountService.getAccountMode(login));
+  }
 }

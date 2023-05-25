@@ -1,5 +1,6 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div class="container">
+  <mat-card class="profile-card">
   <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
   <ul class="breadcrumb-list">
     <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
@@ -64,3 +65,4 @@
     <button class="button" (click)="increment()">-></button>
     <div>{{counter}} - {{maxPage}}</div>
 </div>
+</mat-card>

@@ -468,7 +468,19 @@ public class AccountController {
     Mode mode = DtoToEntityMapper.mapChangeModeDtoToMode(changeModeDto);
     accountEndpoint.changeMode(login, mode);
     return Response.ok().build();
+  }
 
+  @GET
+  @Path("/self/mode")
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response getMode(@Valid @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    if (login == null || login.equals("ANONYMOUS")) {
+      return Response.status(403).build();
+    }
+    Mode mode = accountEndpoint.getAccountMode(login);
+    ChangeModeDto changeModeDto = DtoToEntityMapper.mapChangeModeToChangeModeDto(mode);
+    return Response.ok(changeModeDto).build();
   }
 
   @GET

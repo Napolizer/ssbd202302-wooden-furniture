@@ -55,6 +55,7 @@ import { ChangePasswordConfirmComponent } from './pages/change-password-confirm/
 import { GithubRedirectComponent } from './pages/github-redirect/github-redirect.component';
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { ThemeSwitcherComponentComponent } from './components/theme-switcher-component/theme-switcher-component.component';
 
 
 @NgModule({
@@ -90,7 +91,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     GithubRedirectComponent,
     CreateAccountComponent,
     ChangePasswordConfirmComponent,
-    GoogleRedirectComponent
+    GoogleRedirectComponent,
+    ThemeSwitcherComponentComponent
   ],
     imports: [
         BrowserModule,
@@ -128,7 +130,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
         MatAutocompleteModule
     ],
   providers: [
-    DatePipe
+    DatePipe,
+    ThemeSwitcherComponentComponent
   ],
   bootstrap: [AppComponent]
 })

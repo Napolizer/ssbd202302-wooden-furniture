@@ -2,10 +2,8 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
     <form class="form-container" *ngIf="!loading" [formGroup]="editAccountForm" (ngSubmit)="onSaveClicked()">
+      <mat-card class="profile-card">
       <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
-      <ul class="breadcrumb-list">
-        <li *ngFor="let breadcrumb of breadcrumbData">{{ breadcrumb }}</li>
-      </ul>
       <p class="form-title">{{'edit.account' | translate}}</p>
       <div class="form">
         <div class="row">
@@ -71,6 +69,7 @@
           </div>
         </div>
       </div>
+      </mat-card>
     </form>
   </div>
 </div>
