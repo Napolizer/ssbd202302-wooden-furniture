@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
@@ -34,6 +36,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class GoogleService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;

@@ -32,13 +32,17 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
-@Interceptors({LoggerInterceptor.class})
+@Interceptors({
+    GenericEndpointExceptionsInterceptor.class,
+    LoggerInterceptor.class
+})
 @DenyAll
 public class AccountEndpoint extends AbstractEndpoint implements AccountEndpointOperations {
 
