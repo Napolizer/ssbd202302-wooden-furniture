@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

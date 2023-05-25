@@ -21,15 +21,15 @@ public interface AccountServiceOperations {
 
   List<Account> getAccountList();
 
-  void addAccessLevelToAccount(Long accountId, AccessLevel accessLevel);
+  Account addAccessLevelToAccount(Long accountId, AccessLevel accessLevel);
 
-  void removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel);
+  Account removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel);
 
   Account changeAccessLevel(Long accountId, AccessLevel accessLevel);
 
-  void editAccountInfo(String login, Account accountWithChanges, String hash);
+  Account editAccountInfo(String login, Account accountWithChanges, String hash);
 
-  void editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash);
+  Account editAccountInfoAsAdmin(String login, Account accountWithChanges, String hash);
 
   void registerAccount(Account account);
 
@@ -45,9 +45,9 @@ public interface AccountServiceOperations {
 
   void changePasswordAsAdmin(String login);
 
-  void blockAccount(Long id);
+  Account blockAccount(Long id);
 
-  void activateAccount(Long id);
+  Account activateAccount(Long id);
 
   void confirmAccount(String token);
 
@@ -57,11 +57,11 @@ public interface AccountServiceOperations {
 
   String validateChangeEmailToken(String token);
 
-  void resetPassword(String login, String password);
+  void resetPassword(String token, String password);
 
   void sendResetPasswordEmail(String email);
 
-  Account updateEmailAfterConfirmation(String login);
+  Account updateEmailAfterConfirmation(String token);
 
   void changeEmail(String newEmail, Long accountId, String principal, String version);
 

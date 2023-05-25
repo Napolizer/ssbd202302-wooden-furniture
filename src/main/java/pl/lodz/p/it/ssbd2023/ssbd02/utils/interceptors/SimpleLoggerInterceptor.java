@@ -19,7 +19,11 @@ public class SimpleLoggerInterceptor {
         Object[] methodParameters = context.getParameters();
         if (methodParameters != null) {
           for (Object param : methodParameters) {
-            message.append(param).append(" ");
+            if (param instanceof String) {
+              message.append(maskString((String) param)).append(" ");
+            } else {
+              message.append(param).append(" ");
+            }
           }
         }
         message.append(" ]\n");
@@ -34,8 +38,19 @@ public class SimpleLoggerInterceptor {
       logger.log(Level.SEVERE, message.toString(), e);
       throw e;
     }
-    message.append("Return value: ").append(result).append(" ");
+    if (result instanceof String) {
+      message.append(maskString((String) result)).append(" ");
+    } else {
+      message.append("Return value: ").append(result).append(" ");
+    }
+
     logger.info(message.toString());
     return result;
   }
+
+  private String maskString(String password) {
+    // Replace each character of the password with a question mark
+    return password.replaceAll(".", "?");
+  }
 }
+

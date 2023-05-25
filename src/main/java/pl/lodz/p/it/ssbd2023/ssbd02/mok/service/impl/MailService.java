@@ -17,6 +17,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
@@ -31,133 +32,179 @@ public class MailService implements MailServiceOperations {
 
   private final String appUrl = "http://localhost:4200";
 
+  @Override
   @PermitAll
-  public void sendMailWithInfoAboutBlockingAccount(String to, String locale)
-      throws MessagingException {
-    sendMail(to,
-        MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT),
-        MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_MESSAGE)
-    );
+  public void sendEmailWithInfoAboutBlockingAccount(String to, String locale) {
+    try {
+      sendEmail(to,
+          MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_SUBJECT),
+          MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_BLOCKED_MESSAGE)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendMailWithInfoAboutActivatingAccount(String to, String locale)
-          throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_MESSAGE)
-    );
+  public void sendEmailWithInfoAboutActivatingAccount(String to, String locale) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACTIVATED_MESSAGE)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendMailWithInfoAboutConfirmingAccount(String to, String locale)
-          throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_MESSAGE)
-    );
+  public void sendEmailWithInfoAboutConfirmingAccount(String to, String locale) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_VERIFIED_MESSAGE)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login)
-          throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC1)
-                    + (" " + login + ",\n")
-                    + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC2)
-                    + ("\n" + appUrl + "/confirm?token=" + token)
-                    + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
+  public void sendEmailWithAccountConfirmationLink(String to, String locale, String token, String login) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC1)
+                      + (" " + login + ",\n")
+                      + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC2)
+                      + ("\n" + appUrl + "/confirm?token=" + token)
+                      + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CONFIRMATION_TOPIC3));
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendResetPasswordMail(String to, String locale, String resetPasswordToken) throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
-            + " " + appUrl + "/reset-password?token=" + resetPasswordToken + " "
-            + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
+  public void sendResetPasswordEmail(String to, String locale, String resetPasswordToken) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE1)
+              + " " + appUrl + "/reset-password?token=" + resetPasswordToken + " "
+              + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_RESET_PASSWORD_MESSAGE2));
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendMailWithEmailChangeConfirmLink(String to, String locale, String token)
-      throws MessagingException {
-    sendMail(to,
-        MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
-        MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
-        + ("\n" + appUrl + "/change-email/confirm?token=" + token)
-    );
+  public void sendEmailWithEmailChangeConfirmLink(String to, String locale, String token) {
+    try {
+      sendEmail(to,
+          MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_SUBJECT),
+          MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_EMAIL_CHANGE_TOPIC)
+          + ("\n" + appUrl + "/change-email/confirm?token=" + token)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE1)
-            + " " + groupName
-            + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE2)
-    );
+  public void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE1)
+              + " " + groupName
+              + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_ADDED_MESSAGE2)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendMailWithPasswordChangeLink(String to, String locale, String token)
-          throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
-                    + ("\n" + appUrl + "/change-password/confirm?token=" + token)
-    );
+  public void sendEmailWithPasswordChangeLink(String to, String locale, String token) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_CHANGE_PASSWORD_TOPIC)
+                      + ("\n" + appUrl + "/change-password/confirm?token=" + token)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE1)
-            + " " + groupName
-            + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE2)
-    );
+  public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE1)
+              + " " + groupName
+              + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_REMOVED_MESSAGE2)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup)
-          throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE1)
-            + " " + oldGroup
-            + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE2)
-            + " " + newGroup + "."
-    );
+  public void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE1)
+              + " " + oldGroup
+              + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_ACCESS_LEVEL_CHANGED_MESSAGE2)
+              + " " + newGroup + "."
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_MESSAGE)
-    );
+  public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_MESSAGE)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
+  @Override
   @PermitAll
-  public void sendEmailAboutAdminSession(String to, String locale, String ip) throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_MESSAGE)
-            + ip + "."
-    );
+  public void sendEmailAboutAdminSession(String to, String locale, String ip) {
+    try {
+      sendEmail(to,
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_SUBJECT),
+              MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ADMIN_LOGIN_SESSION_MESSAGE)
+              + ip + "."
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
   }
 
-  @PermitAll
-  public void sendEmailRemindingToConfirmAccount(String to, String locale) throws MessagingException {
-    sendMail(to,
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT),
-            MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ACCOUNT_REMOVED_REMINDER_MESSAGE)
-    );
-  }
 
   @PermitAll
-  public void sendMail(String to, String subject, String message) throws MessagingException {
+  public void sendEmail(String to, String subject, String message) throws MessagingException {
     if (environmentConfig.isTest()) {
       return;
     }

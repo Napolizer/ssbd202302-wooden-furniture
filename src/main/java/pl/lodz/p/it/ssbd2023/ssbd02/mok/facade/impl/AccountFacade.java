@@ -20,10 +20,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SortBy;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.AccountFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -132,7 +132,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
     TypedQuery<Account> query = em.createNamedQuery(Account.FIND_BY_FULL_NAME_ASC, Account.class);
     query.setParameter("fullName", fullName);
     query.setParameter("sortField", SortBy.LOGIN.name().toLowerCase());
-    return query.getResultList();
+    return query.getResultList().stream().distinct().toList();
   }
 
   @Override
@@ -145,7 +145,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
     query.setParameter("sortField", settings.getSortBy().name().toUpperCase());
     query.setFirstResult((settings.getSearchPage() - 1) * settings.getDisplayedAccounts());
     query.setMaxResults(settings.getDisplayedAccounts());
-    return query.getResultList();
+    return query.getResultList().stream().distinct().toList();
   }
 
   @Override

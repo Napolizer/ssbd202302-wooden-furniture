@@ -7,9 +7,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)

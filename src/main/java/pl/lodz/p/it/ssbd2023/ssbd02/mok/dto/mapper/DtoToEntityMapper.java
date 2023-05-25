@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.web.mappers;
+package pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 public final class DtoToEntityMapper {
   public static Account mapAccountRegisterDtoToAccount(AccountRegisterDto accountRegisterDto) {
@@ -102,6 +103,22 @@ public final class DtoToEntityMapper {
         .build();
   }
 
+  public static EditPersonInfoDto mapAccountToEditPersonInfoDto(Account account) {
+    Person person = account.getPerson();
+    Address address = person.getAddress();
+
+    return EditPersonInfoDto.builder()
+            .firstName(person.getFirstName())
+            .lastName(person.getLastName())
+            .country(address.getCountry())
+            .city(address.getCity())
+            .street(address.getStreet())
+            .postalCode(address.getPostalCode())
+            .streetNumber(address.getStreetNumber())
+            .hash(CryptHashUtils.hashVersion(account.getSumOfVersions()))
+            .build();
+  }
+
   public static AccessLevel mapAccessLevelDtoToAccessLevel(AccessLevelDto accessLevelDto) {
     switch (accessLevelDto.getName().toLowerCase()) {
       case CLIENT -> {
@@ -153,7 +170,7 @@ public final class DtoToEntityMapper {
         .build();
   }
 
-  public static AccountSearchSettingsDto mapAccountSearchSettingsToAccountSearchSettingsDto(AccountSearchSettings accountSearchSettings) {
+  public static AccountSearchSettingsDto mapToAccountSearchSettingsDto(AccountSearchSettings accountSearchSettings) {
     return AccountSearchSettingsDto.builder()
             .searchPage(accountSearchSettings.getSearchPage())
             .displayedAccounts(accountSearchSettings.getDisplayedAccounts())
@@ -176,7 +193,7 @@ public final class DtoToEntityMapper {
   }
 
   public static ChangeModeDto mapChangeModeToChangeModeDto(Mode mode) {
-    switch(mode) {
+    switch (mode) {
       case LIGHT -> {
         return ChangeModeDto.builder()
                 .mode("LIGHT")

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.web.authentication;
+package pl.lodz.p.it.ssbd2023.ssbd02.config.authentication;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;

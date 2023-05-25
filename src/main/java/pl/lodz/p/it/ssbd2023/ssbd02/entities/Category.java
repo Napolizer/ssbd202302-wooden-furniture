@@ -18,6 +18,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 
 @Data
 @SuperBuilder

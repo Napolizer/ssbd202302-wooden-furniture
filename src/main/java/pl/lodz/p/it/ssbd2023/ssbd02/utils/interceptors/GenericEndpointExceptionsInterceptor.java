@@ -4,19 +4,16 @@ import jakarta.ejb.AccessLocalException;
 import jakarta.ejb.EJBAccessException;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
-import jakarta.persistence.OptimisticLockException;
+import jakarta.security.enterprise.AuthenticationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
 
-public class GenericServiceExceptionsInterceptor {
+public class GenericEndpointExceptionsInterceptor {
   @AroundInvoke
-  public Object intercept(InvocationContext ictx) {
+  public Object intercept(InvocationContext ictx) throws Exception {
     try {
       return ictx.proceed();
-    } catch (ApplicationOptimisticLockException | OptimisticLockException ole) {
-      throw ApplicationExceptionFactory.createApplicationOptimisticLockException();
-    } catch (BaseWebApplicationException be) {
+    } catch (AuthenticationException | BaseWebApplicationException be) {
       throw be;
     } catch (EJBAccessException | AccessLocalException ae) {
       throw ApplicationExceptionFactory.createAccessDeniedException(ae);

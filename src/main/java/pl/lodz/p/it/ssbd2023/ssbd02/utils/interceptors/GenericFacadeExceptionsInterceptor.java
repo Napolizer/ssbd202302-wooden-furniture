@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors;
 
+import jakarta.ejb.AccessLocalException;
+import jakarta.ejb.EJBAccessException;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.OptimisticLockException;
@@ -19,6 +21,8 @@ public class GenericFacadeExceptionsInterceptor {
       throw ApplicationExceptionFactory.createGeneralPersistenceException(pe);
     } catch (BaseWebApplicationException be) {
       throw be;
+    } catch (EJBAccessException | AccessLocalException ae) {
+      throw ApplicationExceptionFactory.createAccessDeniedException(ae);
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createUnknownErrorException(e);
     }

@@ -29,8 +29,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.SalesRepAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
@@ -40,6 +38,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SortBy;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
@@ -84,34 +84,40 @@ public class AccountFacadeOperationsIT {
     return buildAccount(firstName, lastName, email, new Client());
   }
 
-    public static Account buildAccount(String firstName, String lastName, String email, AccessLevel accessLevel) {
-      Address address = Address.builder()
-          .country("England")
-          .city("London")
-          .street("Fakestreet")
-          .postalCode("40-200")
-          .streetNumber(30)
-          .build();
+  public static Account buildAccount(String firstName, String lastName, String email, AccessLevel accessLevel) {
+    return buildAccount(firstName, lastName, email, List.of(accessLevel));
+  }
 
-      Person person = Person.builder()
-          .firstName(firstName)
-          .lastName(lastName)
-          .address(address)
-          .build();
-      Account account = Account.builder()
-          .login(firstName)
-          .password(firstName)
-          .email(email)
-          .person(person)
-          .locale("pl")
-          .accountState(AccountState.ACTIVE)
-          .accountType(AccountType.NORMAL)
-          .accessLevels(List.of(accessLevel))
-          .timeZone(TimeZone.EUROPE_WARSAW)
-          .build();
+  public static Account buildAccount(String firstName, String lastName, String email, List<AccessLevel> accessLevelList) {
+    Address address = Address.builder()
+        .country("England")
+        .city("London")
+        .street("Fakestreet")
+        .postalCode("40-200")
+        .streetNumber(30)
+        .build();
+
+    Person person = Person.builder()
+        .firstName(firstName)
+        .lastName(lastName)
+        .address(address)
+        .build();
+    Account account = Account.builder()
+        .login(firstName)
+        .password(firstName)
+        .email(email)
+        .person(person)
+        .locale("pl")
+        .accountState(AccountState.ACTIVE)
+        .accountType(AccountType.NORMAL)
+        .accessLevels(accessLevelList)
+        .timeZone(TimeZone.EUROPE_WARSAW)
+        .build();
+    for (AccessLevel accessLevel : accessLevelList) {
       accessLevel.setAccount(account);
-      return account;
     }
+    return account;
+  }
 
   @BeforeEach
   public void setup() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
@@ -844,6 +850,29 @@ public class AccountFacadeOperationsIT {
         assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, invalidName, SortBy.EMAIL, true)).size());
         assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, invalidName, SortBy.ACCESSLEVEL, true)).size());
       }
+    });
+    utx.commit();
+  }
+
+  @Test
+  void shouldFindByFullNameLikeWithPaginationDisplayONceUserWithMultipleAccessLevels() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      accountFacadeOperations.create(buildAccount("John", "Doe", "john@ssbd.com", List.of(
+          new Client(),
+          new SalesRep()
+      )));
+      accountFacadeOperations.create(buildAccount("Steve", "Jobs", "john@ssbd.com", List.of(
+          new SalesRep()
+      )));
+      accountFacadeOperations.create(buildAccount("Peter", "Parker", "john@ssbd.com", List.of(
+          new Client()
+      )));
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(3, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, "jo", SortBy.LOGIN, true)).size());
     });
     utx.commit();
   }

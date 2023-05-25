@@ -6,39 +6,29 @@ import jakarta.mail.MessagingException;
 @Local
 public interface MailServiceOperations {
 
-  void sendMailWithInfoAboutBlockingAccount(String to, String locale)
-          throws MessagingException;
+  void sendEmailWithInfoAboutBlockingAccount(String to, String locale);
 
-  void sendMailWithInfoAboutActivatingAccount(String to, String locale)
-          throws MessagingException;
+  void sendEmailWithInfoAboutActivatingAccount(String to, String locale);
 
+  void sendEmailWithInfoAboutConfirmingAccount(String to, String locale);
 
-  void sendMailWithInfoAboutConfirmingAccount(String to, String locale)
-          throws MessagingException;
+  void sendEmailWithAccountConfirmationLink(String to, String locale, String token, String login);
 
-  void sendMailWithAccountConfirmationLink(String to, String locale, String token, String login)
-          throws MessagingException;
+  void sendResetPasswordEmail(String to, String locale, String resetPasswordToken);
 
-  void sendResetPasswordMail(String to, String locale, String resetPasswordToken) throws MessagingException;
+  void sendEmailWithEmailChangeConfirmLink(String to, String locale, String token);
 
-  void sendMailWithEmailChangeConfirmLink(String to, String locale, String token)
-          throws MessagingException;
+  void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName);
 
-  void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) throws MessagingException;
+  void sendEmailWithPasswordChangeLink(String to, String locale, String token);
 
-  void sendMailWithPasswordChangeLink(String to, String locale, String token)
-          throws MessagingException;
+  void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName);
 
-  void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) throws MessagingException;
+  void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup);
 
-  void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup)
-          throws MessagingException;
+  void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale);
 
-  void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) throws MessagingException;
+  void sendEmailAboutAdminSession(String to, String locale, String ip);
 
-  void sendEmailAboutAdminSession(String to, String locale, String ip) throws MessagingException;
-
-  void sendEmailRemindingToConfirmAccount(String to, String locale) throws MessagingException;
-
-  void sendMail(String to, String subject, String message) throws MessagingException;
+  void sendEmail(String to, String subject, String message) throws MessagingException;
 }

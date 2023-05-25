@@ -4,7 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType.PASSWORD_RESET;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType.PASSWORD_RESET;
+
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

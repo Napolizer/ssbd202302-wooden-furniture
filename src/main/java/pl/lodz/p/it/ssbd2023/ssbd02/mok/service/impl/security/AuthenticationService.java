@@ -4,7 +4,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +21,8 @@ import java.util.Objects;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.Role;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
@@ -27,10 +30,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountUnblockerServiceOpera
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({ LoggerInterceptor.class })
 @DenyAll
 public class AuthenticationService implements AuthenticationServiceOperations {
   @Inject
@@ -83,11 +89,8 @@ public class AuthenticationService implements AuthenticationServiceOperations {
             .anyMatch(a -> a.getRoleName().equals(Role.ADMINISTRATOR));
 
     if (isAdmin) {
-      try {
-        mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), getRemoteAddress());
-      } catch (MessagingException e) {
-        throw ApplicationExceptionFactory.createMailServiceException(e);
-      }
+      mailService.sendEmailAboutAdminSession(account.getEmail(), account.getLocale(), getRemoteAddress());
+
     }
 
     return setUpAccountAndGenerateToken(locale, account);
@@ -157,7 +160,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
     if (Objects.equals(account.getFailedLoginCounter(), failedAccountAuthenticationAttempts)) {
       account.setAccountState(AccountState.BLOCKED);
 
-      mailService.sendMailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
+      mailService.sendEmailWithInfoAboutBlockingAccount(account.getEmail(), account.getLocale());
       account.setFailedLoginCounter(0);
       LocalDateTime blockadeEnd = LocalDateTime.now().plusSeconds(blockadeTimeInSeconds);
       account.setBlockadeEnd(blockadeEnd);
@@ -175,6 +178,7 @@ public class AuthenticationService implements AuthenticationServiceOperations {
     }
   }
 
+  @PermitAll
   private Date convertToDate(LocalDateTime localDateTime) {
     Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
