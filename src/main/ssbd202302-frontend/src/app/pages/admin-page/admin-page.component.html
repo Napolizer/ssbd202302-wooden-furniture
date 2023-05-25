@@ -1,9 +1,6 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div class="container">
   <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
-  <ul class="breadcrumb-list">
-    <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
-  </ul>
   <mat-autocomplete #auto='matAutocomplete'>
     <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
       {{fullName}}
@@ -24,50 +21,43 @@
     <button type="submit" mat-raised-button color="primary" class="searchButton">
       {{ "admin.search" | translate}}
     </button>
+    <mat-form-field appearance="fill">
+      <mat-label>Sortuj po</mat-label>
+      <mat-select [(ngModel)]="sortBy" (selectionChange)="changeSortBy($event.value)">
+        <mat-option value="login">login</mat-option>
+        <mat-option value="role">role</mat-option>
+        <mat-option value="email">email</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>ASC/DES</mat-label>
+      <mat-select [(ngModel)]="orderBy" (selectionChange)="changeOrderBy($event.value)">
+        <mat-option value="asc">ASC</mat-option>
+        <mat-option value="dec">DEC</mat-option>
+      </mat-select>
+    </mat-form-field>
   </form>
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
     <mat-action-list *ngIf="!loading" class="list-container">
       <mat-list-item *ngFor="let account of accounts" (click)="redirectToAccountPage(account.id.toString())">
         <div mat-line>{{ account.login }}</div>
         <div mat-line>{{ account.firstName }} {{ account.lastName }}, {{account.email}}</div>
-  <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
-    <mat-action-list *ngIf="!loading" class="list-container" #accounts>
-      <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
-      <mat-form-field appearance="fill">
-        <mat-label>Sortuj po</mat-label>
-        <mat-select [(ngModel)]="sortBy" (selectionChange)="changeSortBy($event.value)">
-          <mat-option value="login">login</mat-option>
-          <mat-option value="role">role</mat-option>
-          <mat-option value="email">email</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>ASC/DES</mat-label>
-        <mat-select [(ngModel)]="orderBy" (selectionChange)="changeOrderBy($event.value)">
-          <mat-option value="asc">ASC</mat-option>
-          <mat-option value="dec">DEC</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-divider></mat-divider>
-      <mat-list-item *ngFor="let account of allAccounts" (click)="redirectToAccountPage(account.id.toString())">
-        <div mat-line>{{account.login}}</div>
-        <div mat-line>{{account.email}}</div>
         <mat-divider></mat-divider>
       </mat-list-item>
-      <mat-form-field appearance="fill">
-        <mat-label>Liczba użytkowników na stronie</mat-label>
-        <mat-select [(ngModel)]="usersPerPage" (selectionChange)="changeUsersPerPage($event.value)">
-          <mat-option value='3'>3</mat-option>
-          <mat-option value='5'>5</mat-option>
-          <mat-option value='7'>7</mat-option>
-          <mat-option value='10'>10</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div class="input-container">
-          <button class="arrow-button" (click)="decrementValue()">&#9664;</button>
-          <input type="text" [(ngModel)]="inputValue" class="input-field circle" />
-          <button class="arrow-button" (click)="incrementValue()">&#9654;</button>
-      </div>
     </mat-action-list>
+  </div>
+  <mat-form-field appearance="fill">
+    <mat-label>Liczba użytkowników na stronie</mat-label>
+    <mat-select [(ngModel)]="usersPerPage" (selectionChange)="changeUsersPerPage($event.value)">
+      <mat-option value='3'>3</mat-option>
+      <mat-option value='5'>5</mat-option>
+      <mat-option value='7'>7</mat-option>
+      <mat-option value='10'>10</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="input-container">
+      <button class="arrow-button" (click)="decrementValue()">&#9664;</button>
+      <input type="text" [(ngModel)]="inputValue" class="input-field circle" />
+      <button class="arrow-button" (click)="incrementValue()">&#9654;</button>
   </div>
 </div>

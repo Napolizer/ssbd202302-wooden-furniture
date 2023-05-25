@@ -9,7 +9,7 @@ import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {FullName} from "../../interfaces/fullName";
 import {map} from "rxjs";
 
-import { AccountSearchPreferences } from 'src/app/interfaces/account.search.preferences';
+import { AccountSearchSettings } from 'src/app/interfaces/account.search.settings';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 @Component({
   selector: 'app-admin-page',
@@ -49,11 +49,12 @@ export class AdminPageComponent implements OnInit {
   orderBy:string;
   inputValue: 23;
 
-  accountSearchPreferences: AccountSearchPreferences = {
-    page: 0,
-    recordsPerPage: 3,
-    sortBy: 'login',
-    orderBy: true
+  accountSearchSettings: AccountSearchSettings = {
+    searchPage: 1,
+    displayedAccounts: 10,
+    searchKeyword: '',
+    sortBy: 'Login',
+    sortAscending: true
   };
 
   constructor(
@@ -64,15 +65,14 @@ export class AdminPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbsData = this.breadcrumbsService.getAdminBreadcrumb();
-    // this.accountService.retrieveOwnAccountSearchPreferences(0)
+    // this.accountService.retrieveListOfAccountsWithGivenSearchSettings(string: str)
     // .subscribe(accountSearchPreferences => {
     //   this.accountSearchPreferences = accountSearchPreferences;
     // })
-    console.log(this.accountSearchPreferences)
-    this.sortBy = this.accountSearchPreferences.sortBy;
+    console.log(this.accountSearchSettings)
+    this.sortBy = this.accountSearchSettings.sortBy;
     this.initOrderBy();
-    this.usersPerPage = this.accountSearchPreferences.recordsPerPage.toString();
+    this.usersPerPage = this.accountSearchSettings.displayedAccounts.toString();
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
         console.log(accounts)
@@ -122,34 +122,34 @@ export class AdminPageComponent implements OnInit {
 
 
   initOrderBy(): void {
-    if(this.accountSearchPreferences.orderBy===true) {
+    if(this.accountSearchSettings.sortAscending===true) {
       this.orderBy='asc'
     }
-    else if(this.accountSearchPreferences.orderBy===false) {
+    else if(this.accountSearchSettings.sortAscending===false) {
       this.orderBy='dec'
       }
   }
 
   changeUsersPerPage(selectedValue: string){
-    this.accountSearchPreferences.recordsPerPage=parseInt(selectedValue)
-    console.log(this.accountSearchPreferences)
+    this.accountSearchSettings.displayedAccounts=parseInt(selectedValue)
+    console.log(this.accountSearchSettings)
   }
 
   changeSortBy(selectedValue: string){
-    this.accountSearchPreferences.sortBy = selectedValue
+    this.accountSearchSettings.sortBy = selectedValue
     console.log('selectedValue = ' + selectedValue)
-    console.log(this.accountSearchPreferences)
+    console.log(this.accountSearchSettings)
   }
 
   changeOrderBy(selectedValue: string) {
     if(selectedValue==='asc') {
-      this.accountSearchPreferences.orderBy = true;
+      this.accountSearchSettings.sortAscending = true;
     }
     else if (selectedValue==='dec') {
-      this.accountSearchPreferences.orderBy = false;
+      this.accountSearchSettings.sortAscending = false;
     }
     console.log('selectedValue = ' + selectedValue)
-    console.log(this.accountSearchPreferences)
+    console.log(this.accountSearchSettings)
   }
 
   incrementValue() {
