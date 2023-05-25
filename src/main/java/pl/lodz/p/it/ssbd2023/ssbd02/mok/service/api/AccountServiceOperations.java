@@ -67,7 +67,7 @@ public interface AccountServiceOperations {
 
   void changeLocale(Long accountId, String locale);
 
-  void changeMode(Long accountId, Mode mode);
+  void changeMode(String login, Mode mode);
 
   boolean checkIfUserIsForcedToChangePassword(String login);
 

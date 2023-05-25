@@ -295,8 +295,8 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void changeMode(Long accountId, Mode mode) {
-    repeatTransaction(() -> accountService.changeMode(accountId, mode));
+  public void changeMode(String login, Mode mode) {
+    repeatTransaction(() -> accountService.changeMode(login, mode));
   }
 
   @RolesAllowed(ADMINISTRATOR)

@@ -491,8 +491,8 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void changeMode(Long accountId, Mode mode) {
-    Account account = accountFacade.findById(accountId)
+  public void changeMode(String login, Mode mode) {
+    Account account = accountFacade.findByLogin(login)
         .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     account.setMode(mode);
