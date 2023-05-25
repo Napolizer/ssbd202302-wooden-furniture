@@ -7,54 +7,45 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 
 @Local
 public interface AccountEndpointOperations {
 
   void registerAccount(AccountRegisterDto accountRegisterDto);
 
-  Account createAccount(AccountCreateDto accountCreateDto);
+  AccountWithoutSensitiveDataDto createAccount(AccountCreateDto accountCreateDto);
 
   Account blockAccount(Long id);
 
   Account activateAccount(Long id);
 
-  Optional<Account> getAccountByAccountId(Long accountId);
+  AccountWithoutSensitiveDataDto getAccountByAccountId(Long accountId);
 
-  Optional<Account> getAccountByLogin(String login);
+  AccountWithoutSensitiveDataDto getAccountByLogin(String login);
 
-  Optional<Account> getAccountByEmail(SetEmailToSendPasswordDto emailDto);
+  Account getAccountByEmail(SetEmailToSendPasswordDto emailDto);
 
-  List<Account> getAccountList();
+  List<AccountWithoutSensitiveDataDto> getAccountList();
 
   List<String> login(UserCredentialsDto userCredentialsDto, String locale)
           throws AuthenticationException;
 
-  Account addAccessLevelToAccount(Long accountId, AccessLevel accessLevel);
+  AccountWithoutSensitiveDataDto addAccessLevelToAccount(Long accountId, String accessLevel);
 
-  Account removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel);
+  AccountWithoutSensitiveDataDto removeAccessLevelFromAccount(Long accountId, String accessLevel);
 
-  Account changePassword(String login, String newPassword, String currentPassword);
+  AccountWithoutSensitiveDataDto changePassword(String login, String newPassword, String currentPassword);
 
   void changePasswordAsAdmin(String login);
 
-  Account changePasswordFromLink(String token, String password, String currentPassword);
+  AccountWithoutSensitiveDataDto changePasswordFromLink(String token, String password, String currentPassword);
 
-  Account editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto);
+  AccountWithoutSensitiveDataDto editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto);
 
-  Account editAccountInfoAsAdmin(String login, EditPersonInfoDto editPersonInfoDto);
+  AccountWithoutSensitiveDataDto editAccountInfoAsAdmin(String login, EditPersonInfoDto editPersonInfoDto);
 
-  Account changeAccessLevel(Long accountId, AccessLevel accessLevel);
+  AccountWithoutSensitiveDataDto changeAccessLevel(Long accountId, AccessLevelDto accessLevel);
 
   void confirmAccount(String token);
 
@@ -88,11 +79,11 @@ public interface AccountEndpointOperations {
 
   boolean checkIfUserIsForcedToChangePassword(String login);
 
-  List<Account> findByFullNameLike(String fullName);
+  List<AccountWithoutSensitiveDataDto> findByFullNameLike(String fullName);
 
   List<FullNameDto> autoCompleteFullNames(String phrase);
 
-  List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
+  List<AccountWithoutSensitiveDataDto> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
 
-  AccountSearchSettings getAccountSearchSettings(String login);
+  AccountSearchSettingsDto getAccountSearchSettings(String login);
 }

@@ -18,31 +18,22 @@ import jakarta.security.enterprise.AuthenticationException;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.endpoint.AbstractEndpoint;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Stateful
@@ -60,6 +51,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   @Inject
   private GithubServiceOperations githubService;
 
+  @Inject
+  private AccountMapper accountMapper;
+
 
   @PermitAll
   public void registerAccount(AccountRegisterDto accountRegisterDto) {
@@ -68,9 +62,10 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public Account createAccount(AccountCreateDto accountCreateDto) {
+  public AccountWithoutSensitiveDataDto createAccount(AccountCreateDto accountCreateDto) {
     Account account = DtoToEntityMapper.mapAccountCreateDtoToAccount(accountCreateDto);
-    return repeatTransaction(() -> accountService.createAccount(account));
+    Account created = repeatTransaction(() -> accountService.createAccount(account));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(created);
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -84,23 +79,30 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public Optional<Account> getAccountByAccountId(Long accountId) {
-    return repeatTransaction(() -> accountService.getAccountById(accountId));
+  public AccountWithoutSensitiveDataDto getAccountByAccountId(Long accountId) {
+    return repeatTransaction(() -> accountService.getAccountById(accountId))
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Optional<Account> getAccountByLogin(String login) {
-    return repeatTransaction(() -> accountService.getAccountByLogin(login));
+  public AccountWithoutSensitiveDataDto getAccountByLogin(String login) {
+    return repeatTransaction(() -> accountService.getAccountByLogin(login))
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
   }
 
   @PermitAll
-  public Optional<Account> getAccountByEmail(SetEmailToSendPasswordDto emailDto) {
-    return repeatTransaction(() -> accountService.getAccountByEmail(emailDto.getEmail()));
+  public Account getAccountByEmail(SetEmailToSendPasswordDto emailDto) {
+    return repeatTransaction(() -> accountService.getAccountByEmail(emailDto.getEmail()))
+            .orElseThrow(ApplicationExceptionFactory::createEmailNotFoundException);
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public List<Account> getAccountList() {
-    return repeatTransaction(() -> accountService.getAccountList());
+  public List<AccountWithoutSensitiveDataDto> getAccountList() {
+    return repeatTransaction(() -> accountService.getAccountList()).stream()
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .collect(Collectors.toList());
   }
 
   @PermitAll
@@ -110,18 +112,25 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public Account addAccessLevelToAccount(Long accountId, AccessLevel accessLevel) {
-     return repeatTransaction(() -> accountService.addAccessLevelToAccount(accountId, accessLevel));
+  public AccountWithoutSensitiveDataDto addAccessLevelToAccount(Long accountId, String accessLevel) {
+    AccessLevel newAccessLevel = DtoToEntityMapper
+            .mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
+    Account account = repeatTransaction(() -> accountService.addAccessLevelToAccount(accountId, newAccessLevel));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public Account removeAccessLevelFromAccount(Long accountId, AccessLevel accessLevel) {
-    return repeatTransaction(() -> accountService.removeAccessLevelFromAccount(accountId, accessLevel));
+  public AccountWithoutSensitiveDataDto removeAccessLevelFromAccount(Long accountId, String accessLevel) {
+    AccessLevel newAccessLevel = DtoToEntityMapper
+            .mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
+    Account account = repeatTransaction(() -> accountService.removeAccessLevelFromAccount(accountId, newAccessLevel));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Account changePassword(String login, String newPassword, String currentPassword) {
-    return repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
+  public AccountWithoutSensitiveDataDto changePassword(String login, String newPassword, String currentPassword) {
+    Account account = repeatTransaction(() -> accountService.changePassword(login, newPassword, currentPassword));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -130,26 +139,32 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @PermitAll
-  public Account changePasswordFromLink(String token, String password, String currentPassword) {
-    return repeatTransaction(() -> accountService.changePasswordFromLink(token, password, currentPassword));
+  public AccountWithoutSensitiveDataDto changePasswordFromLink(String token, String password, String currentPassword) {
+    Account account = repeatTransaction(() -> accountService.changePasswordFromLink(token, password, currentPassword));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Account editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
-    return repeatTransaction(() -> accountService.editAccountInfo(login,
+  public AccountWithoutSensitiveDataDto editAccountInfo(String login, EditPersonInfoDto editPersonInfoDto) {
+    Account account = repeatTransaction(() -> accountService.editAccountInfo(login,
             DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public Account editAccountInfoAsAdmin(String login,
+  public AccountWithoutSensitiveDataDto editAccountInfoAsAdmin(String login,
                                      EditPersonInfoDto editPersonInfoDto) {
-    return repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
+    Account account = repeatTransaction(() -> accountService.editAccountInfoAsAdmin(login,
             DtoToEntityMapper.mapEditPersonInfoDtoToAccount(editPersonInfoDto), editPersonInfoDto.getHash()));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public Account changeAccessLevel(Long accountId, AccessLevel accessLevel) {
-    return repeatTransaction(() -> accountService.changeAccessLevel(accountId, accessLevel));
+  public AccountWithoutSensitiveDataDto changeAccessLevel(Long accountId, AccessLevelDto accessLevel) {
+    AccessLevel newAccessLevel = DtoToEntityMapper
+            .mapAccessLevelDtoToAccessLevel(accessLevel);
+    Account updatedAccount = repeatTransaction(() -> accountService.changeAccessLevel(accountId, newAccessLevel));
+    return accountMapper.mapToAccountWithoutSensitiveDataDto(updatedAccount);
   }
 
   @PermitAll
@@ -298,8 +313,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public List<Account> findByFullNameLike(String fullName) {
-    return repeatTransaction(() -> accountService.findByFullNameLike(fullName));
+  public List<AccountWithoutSensitiveDataDto> findByFullNameLike(String fullName) {
+    return repeatTransaction(() -> accountService.findByFullNameLike(fullName)).stream()
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
   }
 
   @RolesAllowed(ADMINISTRATOR)
@@ -313,15 +329,18 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public List<Account> findByFullNameLikeWithPagination(String login,
+  public List<AccountWithoutSensitiveDataDto> findByFullNameLikeWithPagination(String login,
                                                         AccountSearchSettingsDto accountSearchSettingsDto) {
     AccountSearchSettings accountSearchSettings =
         DtoToEntityMapper.mapAccountSearchSettingsDtoToAccountSearchSettings(accountSearchSettingsDto);
-    return repeatTransaction(() -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings));
+    return repeatTransaction(() -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings)).stream()
+            .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public AccountSearchSettings getAccountSearchSettings(String login) {
-    return repeatTransaction(()-> accountService.getAccountSearchSettings(login));
+  public AccountSearchSettingsDto getAccountSearchSettings(String login) {
+    AccountSearchSettings accountSearchSettings =
+            repeatTransaction(() -> accountService.getAccountSearchSettings(login));
+    return DtoToEntityMapper.mapAccountSearchSettingsToAccountSearchSettingsDto(accountSearchSettings);
   }
 }

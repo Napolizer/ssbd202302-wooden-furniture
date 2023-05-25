@@ -36,7 +36,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.service.AbstractService;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -267,6 +267,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_PASSWORD);
 
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_PASSWORD, account.getPassword());
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
       throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();

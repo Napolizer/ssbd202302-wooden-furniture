@@ -4,7 +4,7 @@ import jakarta.ejb.Local;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.Facade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.Facade;
 
 @Local
 public interface OrderFacadeOperations extends Facade<Order> {

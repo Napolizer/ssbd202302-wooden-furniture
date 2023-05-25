@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.Facade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.Facade;
 
 @Local
 public interface AccountFacadeOperations extends Facade<Account> {
