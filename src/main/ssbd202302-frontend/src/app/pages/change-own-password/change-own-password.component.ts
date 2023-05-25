@@ -11,7 +11,6 @@ import {AlertService} from "@full-fledged/alerts";
 import {CustomValidators} from "../../utils/custom.validators";
 import {ChangePassword} from "../../interfaces/change.password";
 import {HttpErrorResponse} from "@angular/common/http";
-import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-change-own-password',
@@ -54,12 +53,10 @@ export class ChangeOwnPasswordComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private alertService: AlertService,
-    private breadcrumbService: BreadcrumbsService
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
-    this.breadcrumbData = this.breadcrumbService.getChangeOwnPasswordBreadcrumb();
     this.changePasswordForm = new FormGroup({
       currentPassword: new FormControl(
         '',

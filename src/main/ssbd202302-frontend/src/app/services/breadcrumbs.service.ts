@@ -1,156 +1,80 @@
 import { Injectable } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { NavigationService } from "./navigation.service";
+import { Subject } from "rxjs/internal/Subject";
 
 @Injectable({
     providedIn: 'root'
   })
   export class BreadcrumbsService {
+    breadcrumbs: string[];
+    currentUrl: string = window.location.href;
+    constructor(private navigationService: NavigationService) {}
 
-    constructor(
-        private translate: TranslateService
-      ) { }
-
-    
-    breadcrumbsData: string[] = [];
-
-    getHomeBreadcrumb(): void{
-        this.translate.get('toolbar.home')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
+    initBreadcrumbs(): string[] {
+        if(this.currentUrl.includes("/admin")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel']
+          }
+          else if(this.currentUrl.includes("/create-account")) {
+            this.breadcrumbs=['toolbar.home', 'create.account.title']
+          }
+          else if(this.currentUrl.includes("/self")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.myAccount']
+          }
+          else if(this.currentUrl.includes("/admin")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel']
+          }
+          else if(this.currentUrl.includes("/account/") && this.currentUrl.includes("/edit")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account' , 'account.edit']
+          }
+          else if(this.currentUrl.includes("/account")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account']
+          }
+          else if(this.currentUrl.includes("/edit-own-account")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'account.edit']
+          }
+          else if(this.currentUrl.includes("/change-password")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'account.change.password']
+          }
+          else if(this.currentUrl.includes("/account-role-add")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account' , 'account.addrole']
+          }
+          else if(this.currentUrl.includes("/account-role-remove")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account', 'account.removerole']
+          }
+          else if(this.currentUrl.includes("/account-role-change")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account', 'account.changerole']
+          }
+          else if(this.currentUrl.includes("/register")) {
+            this.breadcrumbs=['toolbar.home', 'register.title']
+          }
+          else if(this.currentUrl.includes("/home")) {
+            this.breadcrumbs=['toolbar.home']
+          }
+          else if(this.currentUrl.includes("/login")) {
+            this.breadcrumbs=['toolbar.home', 'register.label.login']
+          }
+          return this.breadcrumbs;
     }
 
-    //ADMIN
-    // ADMIN PANEL
-
-    getAdminBreadcrumb(): string[] {
-        this.emptyList();
-        this.getHomeBreadcrumb();
-        this.translate.get('toolbar.adminPanel')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-        return this.breadcrumbsData;
+    navigate(breadcrumb: string): void {
+        switch(breadcrumb) {
+            case 'toolbar.home': 
+                void this.navigationService.redirectToMainPage();
+                break;
+            case 'toolbar.adminPanel':
+                void this.navigationService.redirectToAdminPage();
+                break;
+        }
     }
 
-    getUserAccountBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getAdminBreadcrumb();
-        this.translate.get('toolbar.account')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
+    private refreshSubject = new Subject<void>();
 
-          return this.breadcrumbsData;
-    }
+  refreshToolbar() {
+    this.refreshSubject.next();
+  }
 
-    getBlockAccountBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getUserAccountBreadcrumb();
-        this.translate.get('account.block')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    getUnblockAccountBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getUserAccountBreadcrumb();
-        this.translate.get('account.unblock')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    //TODO breadcrumbs dla zmian ról
-    //  
-    //
-
-
-    getEditAccountBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getUserAccountBreadcrumb();
-        this.translate.get('account.edit')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    getChangeEmailBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getUserAccountBreadcrumb();
-        this.translate.get('change.email.button')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    // CREATE ACCOUNT
-    getCreateAccountBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getAdminBreadcrumb();
-        this.translate.get('toolbar.createAccount')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-
-    //USER ACCOUNT
-    getSelfBreadcrumb(): string[] {
-        this.emptyList();
-        this.getHomeBreadcrumb();
-        this.translate.get('toolbar.myAccount')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-        return this.breadcrumbsData;
-    }
-
-    getChangeOwnMailBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getSelfBreadcrumb();
-        this.translate.get('change.email.button')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    getChangeOwnPasswordBreadcrumb(): string[] {
-        this.emptyList();
-        this.getHomeBreadcrumb();
-        this.translate.get('change.password.button')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    getEditOwnAccountBreadcrumb(): string[] {
-        this.emptyList();
-        this.breadcrumbsData=this.getSelfBreadcrumb();
-        this.translate.get('edit.account')
-            .subscribe((translation: string) => {
-            this.breadcrumbsData.push(translation);
-          });
-
-          return this.breadcrumbsData;
-    }
-
-    emptyList(): void {
-        this.breadcrumbsData=[];
-    }
-}
+  getRefreshObservable() {
+    return this.refreshSubject.asObservable();
+  }
+  
+  }

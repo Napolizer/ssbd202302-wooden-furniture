@@ -3,9 +3,6 @@
     <form class="form-container" [formGroup]="createAccountForm">
       <mat-card>
       <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
-      <ul class="breadcrumb-list">
-        <li *ngFor="let breadcrumb of breadcrumbData">{{ breadcrumb }}</li>
-      </ul>
       <p class="form-title">{{ "create.account.title" | translate }}</p>
       <div class="form">
         <app-spinner [loading]="loading"></app-spinner>

@@ -15,7 +15,6 @@ import { Subject, combineLatest, first, map, takeUntil } from 'rxjs';
 import { Email } from 'src/app/interfaces/email';
 import { AccountService } from 'src/app/services/account.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { CustomValidators } from 'src/app/utils/custom.validators';
@@ -62,8 +61,7 @@ export class ChangeEmailComponent implements OnInit {
     private dialogService: DialogService,
     private navigationService: NavigationService,
     private alertService: AlertService,
-    private route: ActivatedRoute,
-    private breadcrumbsService: BreadcrumbsService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +77,6 @@ export class ChangeEmailComponent implements OnInit {
     });
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.breadcrumbData = this.breadcrumbsService.getChangeEmailBreadcrumb();
       this.id = id;
       this.accountService
         .retrieveAccount(this.id)
@@ -121,7 +118,6 @@ export class ChangeEmailComponent implements OnInit {
           },
         });
     } else {
-      this.breadcrumbData = this.breadcrumbsService.getChangeOwnMailBreadcrumb();
       this.accountService
         .retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
         .pipe(first(), takeUntil(this.destroy))
