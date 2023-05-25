@@ -35,17 +35,14 @@ export class AdminPageComponent implements OnInit {
   allAccounts: Account[] = [];
   accounts: Account[] = [];
   loading = true;
-  breadcrumbsData: string[] = [];
   fullName: string = '';
 
   constructor(
     private accountService: AccountService,
-    private navigationService: NavigationService,
-    private breadcrumbsService: BreadcrumbsService
+    private navigationService: NavigationService
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbsData = this.breadcrumbsService.getAdminBreadcrumb();
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
         this.allAccounts = accounts;

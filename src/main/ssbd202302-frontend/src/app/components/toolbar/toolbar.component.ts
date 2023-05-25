@@ -3,16 +3,17 @@ import {NavigationService} from "../../services/navigation.service";
 import {AuthenticationService} from "../../services/authentication.service";
 import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
-import {first, Subject, takeUntil} from "rxjs";
+import {filter, first, map, Subject, Subscription, takeUntil} from "rxjs";
 import { Role } from 'src/app/enums/role';
 import {AccountService} from "../../services/account.service";
 import {ChangeLocale} from "../../interfaces/change.locale";
 import {DialogService} from "../../services/dialog.service";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
-import {Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Params, Router, RouterEvent} from "@angular/router";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {environment} from "../../../environments/environment";
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,6 +22,8 @@ import {environment} from "../../../environments/environment";
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
+  breadcrumbs: string[] = ['Home'];
+  private refreshSubscription: Subscription;
 
   public currentRole: Role;
   private id: number;
@@ -35,15 +38,19 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private dialogService: DialogService,
     private router: Router,
-    private localStorageService: LocalStorageService
-  ) {
-  }
+    private localStorageService: LocalStorageService,
+    private route: ActivatedRoute,
+    private breadcrumbsService: BreadcrumbsService) 
+    {
+    }
 
   ngOnInit(): void {
+    this.breadcrumbs = this.breadcrumbsService.initBreadcrumbs(); 
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
   }
 
   ngOnDestroy(): void {
+    this.refreshSubscription.unsubscribe();
     this.destroy.next(true);
     this.destroy.unsubscribe();
   }
@@ -249,5 +256,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       default:
         return false;
     }
+  }
+  navigateBreadcrumb(breadcrumb: string): void {
+    void this.breadcrumbsService.navigate(breadcrumb);
   }
 }

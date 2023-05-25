@@ -1,9 +1,6 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div class="container">
-  <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
-  <ul class="breadcrumb-list">
-    <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
-  </ul>
+  <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>>
   <form (ngSubmit)="onSearchClicked()" class="searchForm">
     <mat-form-field appearance="fill" class="fullNameInput">
       <mat-label>{{ "admin.search.placeholder" | translate }}</mat-label>

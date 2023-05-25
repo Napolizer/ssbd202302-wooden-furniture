@@ -1,9 +1,6 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedForm]="{ value: getFormAnimationState() }">
     <form class="form-container" [formGroup]="changeEmailForm">
-      <ul class="breadcrumb-list">
-        <li *ngFor="let breadcrumb of breadcrumbData">{{ breadcrumb }}</li>
-      </ul>
       <p class="form-title">{{ "change.email.button" | translate }}</p>
       <div class="form">
         <app-spinner [loading]="loading"></app-spinner>
