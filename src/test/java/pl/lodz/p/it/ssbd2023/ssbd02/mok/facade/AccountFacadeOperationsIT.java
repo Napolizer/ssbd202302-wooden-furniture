@@ -862,11 +862,17 @@ public class AccountFacadeOperationsIT {
           new Client(),
           new SalesRep()
       )));
+      accountFacadeOperations.create(buildAccount("Steve", "Jobs", "john@ssbd.com", List.of(
+          new SalesRep()
+      )));
+      accountFacadeOperations.create(buildAccount("Peter", "Parker", "john@ssbd.com", List.of(
+          new Client()
+      )));
     });
     utx.commit();
     utx.begin();
     admin.call(() -> {
-      assertEquals(1, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, "jo", SortBy.LOGIN, true)).size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, "jo", SortBy.LOGIN, true)).size());
     });
     utx.commit();
   }

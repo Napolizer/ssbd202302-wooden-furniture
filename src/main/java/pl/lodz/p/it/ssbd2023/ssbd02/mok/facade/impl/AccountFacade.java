@@ -132,7 +132,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
     TypedQuery<Account> query = em.createNamedQuery(Account.FIND_BY_FULL_NAME_ASC, Account.class);
     query.setParameter("fullName", fullName);
     query.setParameter("sortField", SortBy.LOGIN.name().toLowerCase());
-    return query.getResultList();
+    return query.getResultList().stream().distinct().toList();
   }
 
   @Override
