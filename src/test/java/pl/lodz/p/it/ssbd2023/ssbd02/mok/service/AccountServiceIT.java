@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.annotation.Resource;
+import jakarta.ejb.EJBAccessException;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -736,5 +738,20 @@ public class AccountServiceIT {
       String refreshToken = tokenService.generateRefreshToken(account);
       assertThrows(BaseWebApplicationException.class, () -> accountService.generateTokenFromRefresh(refreshToken));
     });
+  }
+
+  @Test
+  void properlyChangesMode() {
+    admin.call(() -> {
+      accountService.changeMode(account.getLogin(), Mode.DARK);
+      assertEquals(Mode.DARK, accountService.getAccountById(account.getId()).get().getMode());
+      accountService.changeMode(account.getLogin(), Mode.LIGHT);
+      assertEquals(Mode.LIGHT, accountService.getAccountById(account.getId()).get().getMode());
+    });
+  }
+
+  @Test
+  void shouldFailToChangeModeWithoutAuthentication() {
+    assertThrows(EJBAccessException.class, () -> accountService.changeMode(account.getLogin(), Mode.DARK));
   }
 }

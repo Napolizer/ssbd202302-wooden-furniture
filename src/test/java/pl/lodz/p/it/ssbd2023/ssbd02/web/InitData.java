@@ -236,6 +236,28 @@ public class InitData {
           }
       """;
 
+  public static String blockAccountAfterFailedAttempts  = """
+          {
+              "firstName": "Thomas",
+              "lastName": "Blocked",
+              "country": "Germany",
+              "city": "Berlin",
+              "street": "Street",
+              "streetNumber": 34,
+              "postalCode": "93-540",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel": [
+                  {
+                      "name": "Client"
+                  }
+              ],
+              "login": "failedAttempts",
+              "email": "failedAttempts@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
   public static String accountToGetInformationsJson = """
           {
               "firstName": "Thomas",
@@ -405,6 +427,27 @@ public class InitData {
                 },
               "login": "changeaccesslevel",
               "email": "changeaccesslevel@example.com",
+              "timeZone": "EUROPE_WARSAW"
+          }
+      """;
+
+  public static String accountToChangeModeJson = """
+          {
+              "firstName": "John",
+              "lastName": "Boe",
+              "country": "Poland",
+              "city": "Lodz",
+              "street": "Karpacka",
+              "streetNumber": 55,
+              "postalCode": "93-539",
+              "password": "Password123!",
+              "locale": "pl",
+              "accessLevel":
+                {
+                  "name": "Employee"
+                },
+              "login": "changeMode",
+              "email": "changeMode@example.com",
               "timeZone": "EUROPE_WARSAW"
           }
       """;

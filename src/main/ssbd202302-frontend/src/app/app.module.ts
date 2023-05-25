@@ -54,6 +54,7 @@ import { CreateAccountComponent } from './pages/create-account/create-account.co
 import { ChangePasswordConfirmComponent } from './pages/change-password-confirm/change-password-confirm.component';
 import { GithubRedirectComponent } from './pages/github-redirect/github-redirect.component';
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 @NgModule({
@@ -123,7 +124,8 @@ import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect
             }
         }),
         MatProgressSpinnerModule,
-        MatDialogModule
+        MatDialogModule,
+        MatAutocompleteModule
     ],
   providers: [
     DatePipe

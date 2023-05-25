@@ -21,8 +21,10 @@ import java.util.Objects;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
@@ -56,7 +58,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @Inject
   private Principal principal;
 
-  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  @PermitAll
   public Optional<Account> getAccountByLogin(String login) {
     return accountFacade.findByLogin(login);
   }
@@ -245,8 +247,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     }
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
-      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
-      //fixme invalidCredentialsException is checked
+      throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();
     }
 
     for (PasswordHistory oldPassword : account.getPasswordHistory()) {
@@ -272,8 +273,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
 
     if (!CryptHashUtils.verifyPassword(currentPassword, account.getPassword())) {
-      throw ApplicationExceptionFactory.createAccountNotVerifiedException();
-      //fixme invalidCredentialsException is checked
+      throw ApplicationExceptionFactory.createInvalidCurrentPasswordException();
     }
 
     for (PasswordHistory oldPassword : account.getPasswordHistory()) {
@@ -337,6 +337,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     }
 
     account.setAccountState(AccountState.ACTIVE);
+    account.setBlockadeEnd(null);
     accountFacade.update(account);
 
     try {
@@ -490,6 +491,15 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public void changeMode(String login, Mode mode) {
+    Account account = accountFacade.findByLogin(login)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    account.setMode(mode);
+    accountFacade.update(account);
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public boolean checkIfUserIsForcedToChangePassword(String login) {
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
     return account.getForcePasswordChange();
@@ -516,5 +526,21 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
     return accountFacade.findByFullNameLike(fullName);
+  }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettings accountSearchSettings) {
+    if (accountFacade.findByLogin(login).isPresent()) {
+      Account account = accountFacade.findByLogin(login).get();
+      if (accountSearchSettings == null) {
+        accountSearchSettings = account.getAccountSearchSettings();
+      } else {
+        account.setAccountSearchSettings(accountSearchSettings);
+        accountFacade.update(account);
+      }
+    } else {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
+    }
+    return accountFacade.findByFullNameLikeWithPagination(accountSearchSettings);
   }
 }

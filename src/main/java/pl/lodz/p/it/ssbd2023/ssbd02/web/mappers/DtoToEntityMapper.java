@@ -7,11 +7,13 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
@@ -19,7 +21,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeModeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
 
@@ -131,5 +136,32 @@ public final class DtoToEntityMapper {
         .login(account.getLogin())
         .email(account.getEmail())
         .build();
+  }
+
+  public static FullNameDto mapAccountNameToFullNameDto(Account account) {
+    return new FullNameDto(account.getPerson().getFirstName() + " " + account.getPerson().getLastName());
+  }
+
+  public static AccountSearchSettings mapAccountSearchSettingsDtoToAccountSearchSettings(
+      AccountSearchSettingsDto accountSearchSettingsDto) {
+    return AccountSearchSettings.builder()
+        .searchPage(accountSearchSettingsDto.getSearchPage())
+        .displayedAccounts(accountSearchSettingsDto.getDisplayedAccounts())
+        .searchKeyword(accountSearchSettingsDto.getSearchKeyword())
+        .sortBy(accountSearchSettingsDto.getSortBy())
+        .sortAscending(accountSearchSettingsDto.getSortAscending())
+        .build();
+  }
+
+  public static Mode mapChangeModeDtoToMode(ChangeModeDto changeModeDto) {
+    switch (changeModeDto.getMode().toLowerCase()) {
+      case "light" -> {
+        return Mode.LIGHT;
+      }
+      case "dark" -> {
+        return Mode.DARK;
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidModeException();
+    }
   }
 }

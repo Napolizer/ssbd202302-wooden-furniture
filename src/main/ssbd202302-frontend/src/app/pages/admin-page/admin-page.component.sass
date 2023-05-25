@@ -19,31 +19,41 @@ $border-radius: 10px
   .icon-back:hover
         cursor: pointer
 
-  .panel
+  .searchForm
     display: flex
-    flex-direction: row
+    text-align: center
+    justify-content: center
+
+    .fullNameInput
+      width: 40%
+
+    .searchButton
+      margin-left: 10px
+      width: fit-content
+      height: 50px
+
+  .panel
     justify-content: space-evenly
     border-radius: $border-radius
     padding: 3px
 
     .list-container
       padding-top: 0
-      flex-grow: 1
       background-color: #f8f8f8
       border-radius: $border-radius
 
-ul 
+ul
   list-style: none
   display: inline
   margin: 0
   padding: 0
 
 
-li 
+li
   display: inline
 
 
-li:not(:last-child)::after 
+li:not(:last-child)::after
   content: " > "
 
 li:last-child

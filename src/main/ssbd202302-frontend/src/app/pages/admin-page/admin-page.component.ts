@@ -6,6 +6,9 @@ import {NavigationService} from "../../services/navigation.service";
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
+import {FullName} from "../../interfaces/fullName";
+import {map} from "rxjs";
+
 import { AccountSearchPreferences } from 'src/app/interfaces/account.search.preferences';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 @Component({
@@ -34,9 +37,12 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 })
 export class AdminPageComponent implements OnInit {
   allAccounts: Account[] = [];
+  accounts: Account[] = [];
   ownAccount: Account;
   loading = true;
   breadcrumbsData: string[] = [];
+  fullName: string = '';
+  fullNames: string[] = [];
   login: String = '';
   usersPerPage:string;
   sortBy:string;
@@ -71,6 +77,7 @@ export class AdminPageComponent implements OnInit {
       .subscribe(accounts => {
         console.log(accounts)
         this.allAccounts = accounts;
+        this.accounts = this.allAccounts;
         this.loading = false;
       });
 
@@ -86,6 +93,31 @@ export class AdminPageComponent implements OnInit {
 
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
+  }
+
+  onSearchClicked(): void {
+    this.loading = true;
+    if (this.fullName === '') {
+      this.accounts = this.allAccounts
+      this.loading = false
+    } else {
+      this.accountService.findAccountsByFullName(this.fullName)
+        .subscribe(accounts => {
+          this.accounts = accounts;
+          this.loading = false;
+        });
+    }
+  }
+
+  autoCompleteFullNames(event: Event) {
+    const phrase = (event.target as HTMLInputElement).value;
+    this.accountService.autoCompleteFullNames(phrase)
+      .pipe(
+        map((fullNames: FullName[]) => fullNames.map((fullName: FullName) => fullName.fullName))
+      )
+      .subscribe((fullNames: string[]) => {
+        this.fullNames = fullNames;
+      })
   }
 
 

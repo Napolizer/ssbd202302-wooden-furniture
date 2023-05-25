@@ -9,7 +9,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
-import jakarta.json.stream.JsonCollectors;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -39,17 +38,21 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeModeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ForcePasswordChangeDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
@@ -94,7 +97,8 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account =
+            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -107,7 +111,8 @@ public class AccountController {
     if (accountOptional.isEmpty()) {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+    AccountWithoutSensitiveDataDto account =
+            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -124,7 +129,7 @@ public class AccountController {
       throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
     AccountWithoutSensitiveDataDto account =
-        accountMapper.mapToAccountWithoutSensitiveDataDto(accountOptional.get());
+        accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
     return Response.ok(account).build();
   }
 
@@ -264,7 +269,7 @@ public class AccountController {
                         @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
     var json = Json.createObjectBuilder();
     try {
-      List<String> tokens = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      List<String> tokens = accountEndpoint.login(userCredentialsDto, locale);
       String token = tokens.get(0);
       String refreshToken = tokens.get(1);
       json.add("token", token);
@@ -455,6 +460,21 @@ public class AccountController {
     }
   }
 
+  @PUT
+  @Path("/self/change-mode")
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response changeMode(@Valid ChangeModeDto changeModeDto) {
+    String login = principal.getName();
+    if (login == null || login.equals("ANONYMOUS")) {
+      return Response.status(403).build();
+    }
+
+    Mode mode = DtoToEntityMapper.mapChangeModeDtoToMode(changeModeDto);
+    accountEndpoint.changeMode(login, mode);
+    return Response.ok().build();
+
+  }
+
   @GET
   @Path("/google/login")
   public Response getGoogleOauthLink() {
@@ -492,6 +512,28 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response findByFullNameLike(@NotNull @PathParam("fullName") String fullName) {
     List<Account> accounts = accountEndpoint.findByFullNameLike(fullName);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
+  }
+
+  @POST
+  @Path("/find/autoCompleteFullNames")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(ADMINISTRATOR)
+  public Response autoCompleteFullNames(@NotNull String phrase) {
+    List<FullNameDto> fullNameDtos = accountEndpoint.autoCompleteFullNames(phrase);
+    return Response.ok(fullNameDtos).build();
+  }
+
+  @POST
+  @Path("/find/fullNameWithPagination")
+  @RolesAllowed(ADMINISTRATOR)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findByFullNameLikeWithPagination(@Valid AccountSearchSettingsDto accountSearchSettingsDto,
+                                                   @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    List<Account> accounts = accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
     List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
         .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
     return Response.ok(mappedAccounts).build();
