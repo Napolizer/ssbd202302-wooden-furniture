@@ -78,13 +78,19 @@ public class EmailSendingRetryService implements EmailSendingRetryServiceOperati
   private void createAccountConfirmationTimer(String login, String hashOrEmail, TokenType tokenType, String token) {
     timerService.createSingleActionTimer(
             expirationAccountConfirmation / 2,
-            new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
-                    expirationAccountConfirmation / 2 }, false)
+            new TimerConfig(
+                    new Object[] {
+                      login, hashOrEmail, tokenType, token,
+                      expirationAccountConfirmation / 2
+                    }, false)
     );
     timerService.createSingleActionTimer(
             expirationAccountConfirmation,
-            new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
-                    expirationAccountConfirmation }, false)
+            new TimerConfig(
+                    new Object[] {
+                      login, hashOrEmail, tokenType, token,
+                      expirationAccountConfirmation
+                    }, false)
     );
   }
 

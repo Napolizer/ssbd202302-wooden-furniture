@@ -8,6 +8,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -28,15 +29,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({ LoggerInterceptor.class })
 public class GoogleService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;

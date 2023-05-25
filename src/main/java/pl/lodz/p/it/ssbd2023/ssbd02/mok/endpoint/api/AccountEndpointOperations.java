@@ -11,14 +11,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 
 @Local
 public interface AccountEndpointOperations {
@@ -94,7 +94,10 @@ public interface AccountEndpointOperations {
 
   List<FullNameDto> autoCompleteFullNames(String phrase);
 
-  List<AccountWithoutSensitiveDataDto> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
+  List<AccountWithoutSensitiveDataDto> findByFullNameLikeWithPagination(
+          String login, AccountSearchSettingsDto accountSearchSettingsDto);
 
   AccountSearchSettingsDto getAccountSearchSettings(String login);
+
+  Mode getAccountMode(String login);
 }

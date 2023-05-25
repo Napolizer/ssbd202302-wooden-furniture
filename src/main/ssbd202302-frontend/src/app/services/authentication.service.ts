@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {catchError, first, map, Observable, of} from 'rxjs';
 import {environment} from '../../environments/environment';

@@ -2,6 +2,7 @@
 <div class="container">
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
     <mat-action-list *ngIf="!loading" class="list-container" #accounts>
+      <mat-card class="profile-card">
       <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
       <ul class="button-list">
         <li>
@@ -29,6 +30,7 @@
           </button>
         </li>
       </ul>
+    </mat-card>
     </mat-action-list>
   </div>
 </div>

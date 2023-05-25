@@ -18,6 +18,7 @@
     <div class="title-text" (click)="redirectToMainPage()">{{'shop.title' | translate}}</div>
   </span>
   <span class="toolbar-item-spacer"></span>
+  <app-theme-switcher-component></app-theme-switcher-component>
   <button *ngIf="!isUserLoggedIn()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
   <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
   <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">

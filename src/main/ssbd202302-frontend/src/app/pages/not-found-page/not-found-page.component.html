@@ -1,7 +1,9 @@
 <div class="container" [@loadedUnloaded]="{value: getAnimationState()}">
+  <mat-card class="profile-card">
   <p class="not-found">404</p>
   <div class="title"><div class="red">{{'notfound.oops' | translate}}</div> <div class="text">{{'notfound.title' | translate}}</div></div>
   <p class="description">{{'notfound.description' | translate}}</p>
   <button mat-raised-button (click)="redirectToHomePage()"><mat-icon>home</mat-icon> <div class="text">{{'notfound.button' | translate}}</div></button>
+</mat-card>
 </div>
 

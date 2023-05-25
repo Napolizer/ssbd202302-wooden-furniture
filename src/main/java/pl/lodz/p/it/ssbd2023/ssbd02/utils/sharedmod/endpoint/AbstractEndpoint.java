@@ -52,6 +52,28 @@ public abstract class AbstractEndpoint {
     return result;
   }
 
+  protected void repeatTransactionWithoutOptimistic(VoidTransactionMethod method) {
+    int retryCounter = retryCounterValue;
+    boolean isRollback = true;
+
+    while (isRollback) {
+      try {
+        logger.log(Level.INFO, "Transaction number " + (retryCounterValue - retryCounter + 1));
+        method.run();
+        isRollback = isLastTransactionRollback();
+
+      } catch (EJBTransactionRolledbackException ex) {
+        logger.log(Level.WARNING, "Transaction number "
+                + (retryCounterValue - retryCounter + 1) + " failed");
+        retryCounter--;
+
+        if (retryCounter == 0) {
+          throw ApplicationExceptionFactory.createApplicationTransactionRollbackException();
+        }
+      }
+    }
+  }
+
   protected <T> T repeatTransactionWithOptimistic(TransactionMethod<T> method) {
     int retryCounter = retryCounterValue;
     boolean isRollback = true;
@@ -75,28 +97,6 @@ public abstract class AbstractEndpoint {
     }
 
     return result;
-  }
-
-  protected void repeatTransactionWithoutOptimistic(VoidTransactionMethod method) {
-    int retryCounter = retryCounterValue;
-    boolean isRollback = true;
-
-    while (isRollback) {
-      try {
-        logger.log(Level.INFO, "Transaction number " + (retryCounterValue - retryCounter + 1));
-        method.run();
-        isRollback = isLastTransactionRollback();
-
-      } catch (EJBTransactionRolledbackException ex) {
-        logger.log(Level.WARNING, "Transaction number "
-                + (retryCounterValue - retryCounter + 1) + " failed");
-        retryCounter--;
-
-        if (retryCounter == 0) {
-          throw ApplicationExceptionFactory.createApplicationTransactionRollbackException();
-        }
-      }
-    }
   }
 
   protected void repeatTransactionWithOptimistic(VoidTransactionMethod method) {

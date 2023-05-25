@@ -14,6 +14,7 @@ import { AccountCreate } from '../interfaces/account.create';
 import {ChangeLocale} from "../interfaces/change.locale";
 import {FullName} from "../interfaces/fullName";
 import { AccountSearchSettings } from '../interfaces/account.search.settings';
+import { Mode } from '../interfaces/mode';
 
 @Injectable({
   providedIn: 'root',
@@ -322,5 +323,28 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
       }
     );
   }
+  
+  public retrieveOwnMode(): Observable<Mode> {
+    return this.httpClient.get<Mode>(
+      `${environment.apiBaseUrl}/account/self/mode`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
+  }
 
+  public changeMode(mode: Mode): Observable<HttpResponse<any>> {
+    return this.httpClient.put(
+      `${environment.apiBaseUrl}/account/self/change-mode`,
+      mode,
+      {
+        observe: 'response',
+        headers: {
+          Authorization: `Bearer ${ this.tokenService.getToken() }`
+        },
+      }
+    )
+  }
 }

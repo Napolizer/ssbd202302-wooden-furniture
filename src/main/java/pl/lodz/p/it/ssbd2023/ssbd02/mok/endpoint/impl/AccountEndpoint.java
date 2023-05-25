@@ -25,8 +25,20 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
@@ -35,7 +47,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -358,6 +369,11 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   public AccountSearchSettingsDto getAccountSearchSettings(String login) {
     AccountSearchSettings accountSearchSettings =
             repeatTransactionWithoutOptimistic(() -> accountService.getAccountSearchSettings(login));
-    return DtoToEntityMapper.mapAccountSearchSettingsToAccountSearchSettingsDto(accountSearchSettings);
+    return DtoToEntityMapper.mapToAccountSearchSettingsDto(accountSearchSettings);
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Mode getAccountMode(String login) {
+    return repeatTransactionWithoutOptimistic(() -> accountService.getAccountMode(login));
   }
 }

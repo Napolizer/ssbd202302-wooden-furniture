@@ -170,8 +170,7 @@ public final class DtoToEntityMapper {
         .build();
   }
 
-  public static AccountSearchSettingsDto mapAccountSearchSettingsToAccountSearchSettingsDto
-          (AccountSearchSettings accountSearchSettings) {
+  public static AccountSearchSettingsDto mapToAccountSearchSettingsDto(AccountSearchSettings accountSearchSettings) {
     return AccountSearchSettingsDto.builder()
             .searchPage(accountSearchSettings.getSearchPage())
             .displayedAccounts(accountSearchSettings.getDisplayedAccounts())
@@ -188,6 +187,22 @@ public final class DtoToEntityMapper {
       }
       case "dark" -> {
         return Mode.DARK;
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidModeException();
+    }
+  }
+
+  public static ChangeModeDto mapChangeModeToChangeModeDto(Mode mode) {
+    switch (mode) {
+      case LIGHT -> {
+        return ChangeModeDto.builder()
+                .mode("LIGHT")
+                .build();
+      }
+      case DARK -> {
+        return ChangeModeDto.builder()
+                .mode("DARK")
+                .build();
       }
       default -> throw ApplicationExceptionFactory.createInvalidModeException();
     }

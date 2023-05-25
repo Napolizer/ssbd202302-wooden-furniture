@@ -15,26 +15,30 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.validation.ValidationException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
-import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@Interceptors({ LoggerInterceptor.class })
 @DenyAll
 public class TokenService implements TokenServiceOperations {
   private static final String SECRET_KEY;

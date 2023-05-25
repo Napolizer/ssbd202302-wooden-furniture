@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -25,10 +26,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({ LoggerInterceptor.class })
 public class GithubService implements GithubServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;

@@ -1,0 +1,7 @@
+<button class="account" mat-icon-button matTooltip="Change Theme" [matMenuTriggerFor]="switchTheme">
+    <mat-icon>accessible_forward</mat-icon>
+  </button>
+  <mat-menu class = "menu" #switchTheme [overlapTrigger]="false" yPosition="below">
+<button class = "theme-button" (click)="onThemeClick('LIGHT')"><span class="theme-circle white"></span></button>
+<button class = "theme-button" (click)="onThemeClick('DARK')"><span class="theme-circle black"></span></button>
+</mat-menu>

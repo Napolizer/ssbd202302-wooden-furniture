@@ -7,6 +7,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.mail.MessagingException;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,11 +30,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountUnblockerServiceOpera
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AuthenticationServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({ LoggerInterceptor.class })
 @DenyAll
 public class AuthenticationService implements AuthenticationServiceOperations {
   @Inject
