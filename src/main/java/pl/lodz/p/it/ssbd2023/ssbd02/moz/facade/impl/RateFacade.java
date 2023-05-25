@@ -1,11 +1,11 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.RateFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.RateFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
 @Stateless
@@ -27,6 +27,11 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
   public Rate create(Rate entity) {
     em.persist(entity.getPerson());
     return super.create(entity);
+  }
+
+  @Override
+  public void delete(Long id) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

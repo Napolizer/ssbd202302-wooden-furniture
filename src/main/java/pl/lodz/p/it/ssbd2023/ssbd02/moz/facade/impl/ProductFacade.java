@@ -1,16 +1,19 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.ProductFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class ProductFacade extends AbstractFacade<Product> implements ProductFacadeOperations {
 
   @PersistenceContext(unitName = "ssbd02mozPU")
