@@ -312,4 +312,15 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
     );
   }
 
+  public retrieveOwnSearchSettings(): Observable<AccountSearchSettings> {
+    return this.httpClient.get<AccountSearchSettings>(
+      `${environment.apiBaseUrl}/account/ownSearchSettings`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
+  }
+
 }
