@@ -153,6 +153,16 @@ public final class DtoToEntityMapper {
         .build();
   }
 
+  public static AccountSearchSettingsDto mapAccountSearchSettingsToAccountSearchSettingsDto(AccountSearchSettings accountSearchSettings) {
+    return AccountSearchSettingsDto.builder()
+            .searchPage(accountSearchSettings.getSearchPage())
+            .displayedAccounts(accountSearchSettings.getDisplayedAccounts())
+            .searchKeyword(accountSearchSettings.getSearchKeyword())
+            .sortBy(accountSearchSettings.getSortBy())
+            .sortAscending(accountSearchSettings.getSortAscending())
+            .build();
+  }
+
   public static Mode mapChangeModeDtoToMode(ChangeModeDto changeModeDto) {
     switch (changeModeDto.getMode().toLowerCase()) {
       case "light" -> {

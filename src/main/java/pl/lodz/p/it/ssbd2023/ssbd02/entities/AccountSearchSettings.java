@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Table(name = "account_search_settings")
 public class AccountSearchSettings extends AbstractEntity {
-  @Column(name = "search_page", columnDefinition = "integer default 0")
+  @Column(name = "search_page", columnDefinition = "integer default 1")
   private Integer searchPage;
   @Column(name = "displayed_accounts", columnDefinition = "integer default 3")
   private Integer displayedAccounts;
@@ -32,7 +32,7 @@ public class AccountSearchSettings extends AbstractEntity {
   private Boolean sortAscending;
 
   public AccountSearchSettings() {
-    searchPage = 0;
+    searchPage = 1;
     displayedAccounts = 10;
     searchKeyword = "";
     sortBy = SortBy.LOGIN;
