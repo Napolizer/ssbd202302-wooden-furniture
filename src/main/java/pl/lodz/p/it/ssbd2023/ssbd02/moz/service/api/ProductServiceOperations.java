@@ -1,11 +1,12 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api;
 
 import jakarta.ejb.Local;
+import java.util.List;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
-import java.util.List;
-import java.util.Optional;
+
 
 @Local
 public interface ProductServiceOperations {

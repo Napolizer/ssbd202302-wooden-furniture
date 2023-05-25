@@ -1,11 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api;
 
 import jakarta.ejb.Local;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderState;
-
 import java.util.List;
 import java.util.Optional;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderState;
 
 @Local
 public interface OrderServiceOperations {

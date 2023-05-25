@@ -3,10 +3,9 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.RateEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.RateServiceOperations;
