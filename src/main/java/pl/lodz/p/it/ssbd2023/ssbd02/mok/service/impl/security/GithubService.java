@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -26,6 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class GithubService implements GithubServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
