@@ -5,10 +5,8 @@ import jakarta.security.enterprise.AuthenticationException;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
@@ -96,4 +94,5 @@ public interface AccountEndpointOperations {
 
   List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettingsDto accountSearchSettingsDto);
 
+  AccountSearchSettings getAccountSearchSettings(String login);
 }

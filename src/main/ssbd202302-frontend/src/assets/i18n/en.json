@@ -213,6 +213,7 @@
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",
   "exception.mok.account.email.does.not.exist" : "Account with given email address does not exist",
   "exception.mok.account.not.active": "Account is not active",
+  "exception.mok.account.not.found": "Account not found",
   "exception.mok.account.access.level": "AccessLevel exception",
   "exception.mok.account.access.level.already.assigned": "Chosen role is already assigned to user",
   "exception.mok.account.access.level.not.assigned": "Chosen role is not assigned to user",
@@ -258,5 +259,10 @@
   "activate.success": "Account activated successfully",
 
   "admin.search": "Search",
-  "admin.search.placeholder": "Search by full name"
+  "admin.search.placeholder": "Search by full name",
+  "admin.search.ascending": "Ascending",
+  "admin.search.descending": "Descending",
+  "admin.search.sortBy": "Sort by",
+  "admin.search.recordsPerPage": "Records per page",
+  "admin.search.orderBy": "Ascending/Descending"
 }

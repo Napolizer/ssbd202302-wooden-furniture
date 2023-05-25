@@ -13,6 +13,7 @@ import {ChangePassword} from "../interfaces/change.password";
 import { AccountCreate } from '../interfaces/account.create';
 import {ChangeLocale} from "../interfaces/change.locale";
 import {FullName} from "../interfaces/fullName";
+import { AccountSearchSettings } from '../interfaces/account.search.settings';
 
 @Injectable({
   providedIn: 'root',
@@ -298,4 +299,28 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
       }
     ).pipe(first(), map((response: any) => response.token))
   }
+
+  public findAccountsByFullNameWithPagination(accountSearchSettings: AccountSearchSettings): Observable<Account[]> {
+    return this.httpClient.post<Account[]>(
+      `${environment.apiBaseUrl}/account/find/fullNameWithPagination`,
+      accountSearchSettings,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public retrieveOwnSearchSettings(): Observable<AccountSearchSettings> {
+    return this.httpClient.get<AccountSearchSettings>(
+      `${environment.apiBaseUrl}/account/ownSearchSettings`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
+  }
+
 }

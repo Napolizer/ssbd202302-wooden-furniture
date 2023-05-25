@@ -7,8 +7,12 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {FullName} from "../../interfaces/fullName";
-import {map} from "rxjs";
+import {concatMap, map} from "rxjs";
 
+import { AccountSearchSettings } from 'src/app/interfaces/account.search.settings';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { SortBy } from 'src/app/interfaces/sort.by';
+import { Form, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-admin-page',
   templateUrl: './admin-page.component.html',
@@ -36,26 +40,79 @@ import {map} from "rxjs";
 export class AdminPageComponent implements OnInit {
   allAccounts: Account[] = [];
   accounts: Account[] = [];
+  ownAccount: Account;
   loading = true;
   breadcrumbsData: string[] = [];
   fullName: string = '';
   fullNames: string[] = [];
+  login: String = '';
+  usersPerPage:string;
+  placeholderSort: string;
+  sortBy: string;
+  orderBy:string;
+  inputValue: 23;
+  counter: number = 1;
+  maxPage: number;
+  allAccountsSize: number;
+  sortControl: FormControl;
+  orderControl: FormControl;
+  accountsByPhraseSize: number;
+  maxAccountsSize: number;
+
+  accountSearchSettings: AccountSearchSettings = {
+    searchPage: 1,
+    displayedAccounts: 10,
+    searchKeyword: "",
+    sortBy: "LOGIN",
+    sortAscending: true,
+  };
 
   constructor(
     private accountService: AccountService,
-    private navigationService: NavigationService,
-    private breadcrumbsService: BreadcrumbsService
-  ) {}
+    private navigationService: NavigationService
+  ) {
+  }
 
   ngOnInit(): void {
-    this.breadcrumbsData = this.breadcrumbsService.getAdminBreadcrumb();
+    this.accountService.retrieveOwnSearchSettings()
+    .subscribe(searchSettings => {
+      this.accountSearchSettings = searchSettings;
+      this.initSearchSettings();
+    });
+
+    if(this.fullName==='') {
     this.accountService.retrieveAllAccounts()
-      .subscribe(accounts => {
-        this.allAccounts = accounts;
-        this.accounts = this.allAccounts;
-        this.loading = false;
-      });
+    .subscribe(allAccountsList => {
+      this.maxAccountsSize = allAccountsList.length;
+  
+      // this.accountService.findAccountsByFullName(this.accountSearchSettings.searchKeyword)
+      // .subscribe(accountList => {
+      //   this.accountsByPhraseSize = accountList.length
+          this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
+            .subscribe(accounts => {
+              this.allAccountsSize = accounts.length;
+              this.allAccounts = accounts;
+              this.accounts = this.allAccounts;
+              this.maxPage = Math.ceil(this.maxAccountsSize/this.accountSearchSettings.displayedAccounts);
+              this.loading = false;
+            });
+          });
+        }
+  else {
+      this.accountService.findAccountsByFullName(this.accountSearchSettings.searchKeyword)
+      .subscribe(accountList => {
+        this.accountsByPhraseSize = accountList.length
+          this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
+            .subscribe(accounts => {
+              this.allAccountsSize = accounts.length;
+              this.allAccounts = accounts;
+              this.accounts = this.allAccounts;
+              this.maxPage = Math.ceil(this.accountsByPhraseSize/this.accountSearchSettings.displayedAccounts);
+              this.loading = false;
+            });
+    });
   }
+}
 
   getListAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
@@ -70,18 +127,33 @@ export class AdminPageComponent implements OnInit {
   }
 
   onSearchClicked(): void {
-    this.loading = true;
-    if (this.fullName === '') {
-      this.accounts = this.allAccounts
-      this.loading = false
-    } else {
-      this.accountService.findAccountsByFullName(this.fullName)
+      this.loading = true;
+      this.accountSearchSettings.searchKeyword=this.fullName;
+      this.accountSearchSettings.searchPage = 1;
+      this.counter = 1;
+      if(this.fullName==='') {
+        this.accountsByPhraseSize = this.maxAccountsSize;
+        this.maxPage = Math.ceil(this.accountsByPhraseSize/this.accountSearchSettings.displayedAccounts)
+      this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
         .subscribe(accounts => {
           this.accounts = accounts;
           this.loading = false;
         });
+      }
+      else {
+        this.accountService.findAccountsByFullName(this.accountSearchSettings.searchKeyword)
+      .subscribe(accountList => {
+        console.log(accountList)
+        this.accountsByPhraseSize = accountList.length
+        this.maxPage = Math.ceil(this.accountsByPhraseSize/this.accountSearchSettings.displayedAccounts)
+      this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
+        .subscribe(accounts => {
+          this.accounts = accounts;
+          this.loading = false;
+        });
+      });
     }
-  }
+   }
 
   autoCompleteFullNames(event: Event) {
     const phrase = (event.target as HTMLInputElement).value;
@@ -92,5 +164,71 @@ export class AdminPageComponent implements OnInit {
       .subscribe((fullNames: string[]) => {
         this.fullNames = fullNames;
       })
+  }
+
+
+  initSearchSettings(): void {
+    this.sortControl = new FormControl(this.accountSearchSettings.sortBy)
+    this.usersPerPage = this.accountSearchSettings.displayedAccounts.toString();
+    this.counter = this.accountSearchSettings.searchPage;
+    this.fullName = this.accountSearchSettings.searchKeyword;
+    if(this.accountSearchSettings.sortAscending===true) {
+      this.orderBy='asc'
+      this.orderControl = new FormControl('asc')
+    }
+    else if(this.accountSearchSettings.sortAscending===false) {
+      this.orderBy='dec'
+      this.orderControl = new FormControl('dec')
+      }
+  }
+
+  changeUsersPerPage(selectedValue: string){
+    this.accountSearchSettings.displayedAccounts=parseInt(selectedValue)  
+    this.accountService.findAccountsByFullName(this.fullName)
+      .subscribe(accountList => {
+        this.accountsByPhraseSize = accountList.length
+        this.maxPage = Math.ceil(this.accountsByPhraseSize/this.accountSearchSettings.displayedAccounts)
+      });
+    this.requestAccountsByFullNameWithPagination()
+  }
+
+  changeSortBy(selectedValue: string){
+    this.accountSearchSettings.sortBy = selectedValue
+    this.requestAccountsByFullNameWithPagination()
+  }
+
+  changeOrderBy(selectedValue: string) {
+    if(selectedValue==='asc') {
+      this.accountSearchSettings.sortAscending = true;
+    }
+    else if (selectedValue==='dec') {
+      this.accountSearchSettings.sortAscending = false;
+    }
+    this.requestAccountsByFullNameWithPagination()
+  }
+
+  requestAccountsByFullNameWithPagination() {
+    this.loading = true;
+    this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
+        .subscribe(accounts => {
+          this.accounts = accounts;
+          this.loading = false;
+        });
+  }
+
+  increment() {
+    if (this.counter < this.maxPage) {
+      this.counter++;
+      this.accountSearchSettings.searchPage=this.counter;
+      this.requestAccountsByFullNameWithPagination()
+    }
+  }
+
+  decrement() {
+    if (this.counter > 1) { // Minimum value is 1
+      this.counter--;
+      this.accountSearchSettings.searchPage=this.counter;
+      this.requestAccountsByFullNameWithPagination()
+    }
   }
 }

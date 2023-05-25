@@ -321,4 +321,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
         DtoToEntityMapper.mapAccountSearchSettingsDtoToAccountSearchSettings(accountSearchSettingsDto);
     return repeatTransaction(() -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings));
   }
+
+  @RolesAllowed(ADMINISTRATOR)
+  public AccountSearchSettings getAccountSearchSettings(String login) {
+    return repeatTransaction(()-> accountService.getAccountSearchSettings(login));
+  }
 }
