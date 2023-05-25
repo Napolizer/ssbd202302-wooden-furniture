@@ -22,18 +22,18 @@
       {{ "admin.search" | translate}}
     </button>
     <mat-form-field appearance="fill">
-      <mat-label>Sortuj po</mat-label>
+      <mat-label>{{"admin.search.sortBy" | translate}}</mat-label>
       <mat-select [(ngModel)]="sortBy" (selectionChange)="changeSortBy($event.value)">
-        <mat-option value="login">login</mat-option>
-        <mat-option value="role">role</mat-option>
-        <mat-option value="email">email</mat-option>
+        <mat-option value="LOGIN">Login</mat-option>
+        <mat-option value="ACCESSLEVEL">{{"account.roles" | translate}}</mat-option>
+        <mat-option value="EMAIL">{{"account.email" | translate}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>ASC/DES</mat-label>
+      <mat-label>{{"admin.search.orderBy" | translate}}</mat-label>
       <mat-select [(ngModel)]="orderBy" (selectionChange)="changeOrderBy($event.value)">
-        <mat-option value="asc">ASC</mat-option>
-        <mat-option value="dec">DEC</mat-option>
+        <mat-option value='asc'>{{"admin.search.ascending" | translate}}</mat-option>
+        <mat-option value='dec'>{{"admin.search.descending" | translate}}</mat-option>
       </mat-select>
     </mat-form-field>
   </form>
@@ -47,7 +47,7 @@
     </mat-action-list>
   </div>
   <mat-form-field appearance="fill">
-    <mat-label>Liczba użytkowników na stronie</mat-label>
+    <mat-label>{{"admin.search.recordsPerPage" | translate}}</mat-label>
     <mat-select [(ngModel)]="usersPerPage" (selectionChange)="changeUsersPerPage($event.value)">
       <mat-option value='3'>3</mat-option>
       <mat-option value='5'>5</mat-option>
@@ -55,9 +55,9 @@
       <mat-option value='10'>10</mat-option>
     </mat-select>
   </mat-form-field>
-  <div class="input-container">
-      <button class="arrow-button" (click)="decrementValue()">&#9664;</button>
-      <input type="text" [(ngModel)]="inputValue" class="input-field circle" />
-      <button class="arrow-button" (click)="incrementValue()">&#9654;</button>
+  <div>
+    <button class="button"(click)="decrement()"><-</button>
+    <input class="input" type="number" [(ngModel)]="counter" min="1" [max]="maxPage" />
+    <button class="button" (click)="increment()">-></button>
   </div>
 </div>

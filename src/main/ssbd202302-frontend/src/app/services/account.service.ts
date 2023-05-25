@@ -300,7 +300,7 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
     ).pipe(first(), map((response: any) => response.token))
   }
 
-  public retrieveListOfAccountsWithGivenSearchSettings(accountSearchSettings: AccountSearchSettings): Observable<Account[]> {
+  public findAccountsByFullNameWithPagination(accountSearchSettings: AccountSearchSettings): Observable<Account[]> {
     return this.httpClient.post<Account[]>(
       `${environment.apiBaseUrl}/account/find/fullNameWithPagination`,
       accountSearchSettings,

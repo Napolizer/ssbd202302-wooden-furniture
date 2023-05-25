@@ -257,5 +257,10 @@
   "activate.success": "Pomyślnie odblokowano konto",
 
   "admin.search": "Wyszukaj",
-  "admin.search.placeholder": "Wyszukaj po imieniu i nazwisku"
+  "admin.search.placeholder": "Wyszukaj po imieniu i nazwisku",
+  "admin.search.ascending": "Rosnąco",
+  "admin.search.descending": "Malejąco",
+  "admin.search.sortBy": "Sortuj po",
+  "admin.search.recordsPerPage: ": "Liczba użytkowników na stronie",
+  "admin.search.orderBy": "Rosnąco/Malejąco"
 }

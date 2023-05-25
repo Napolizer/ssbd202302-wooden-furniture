@@ -11,6 +11,7 @@ import {map} from "rxjs";
 
 import { AccountSearchSettings } from 'src/app/interfaces/account.search.settings';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { SortBy } from 'src/app/interfaces/sort.by';
 @Component({
   selector: 'app-admin-page',
   templateUrl: './admin-page.component.html',
@@ -48,39 +49,41 @@ export class AdminPageComponent implements OnInit {
   sortBy:string;
   orderBy:string;
   inputValue: 23;
+  counter: number = 1;
+  maxPage: number;
+  allAccountsSize: number;
 
   accountSearchSettings: AccountSearchSettings = {
     searchPage: 1,
-    displayedAccounts: 10,
-    searchKeyword: '',
-    sortBy: 'Login',
-    sortAscending: true
+    displayedAccounts: 5,
+    searchKeyword: "",
+    sortBy: "EMAIL",
+    sortAscending: false,
   };
 
   constructor(
     private accountService: AccountService,
-    private navigationService: NavigationService,
-    private breadcrumbsService: BreadcrumbsService,
-    private authenticationService: AuthenticationService
+    private navigationService: NavigationService
   ) {}
 
   ngOnInit(): void {
-    // this.accountService.retrieveListOfAccountsWithGivenSearchSettings(string: str)
-    // .subscribe(accountSearchPreferences => {
-    //   this.accountSearchPreferences = accountSearchPreferences;
-    // })
     console.log(this.accountSearchSettings)
     this.sortBy = this.accountSearchSettings.sortBy;
     this.initOrderBy();
-    this.usersPerPage = this.accountSearchSettings.displayedAccounts.toString();
+
     this.accountService.retrieveAllAccounts()
+    .subscribe(accounts=> {
+      this.allAccountsSize = accounts.length
+      this.maxPage = Math.ceil(accounts.length/this.accountSearchSettings.displayedAccounts)
+    })
+
+    this.usersPerPage = this.accountSearchSettings.displayedAccounts.toString();
+      this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
       .subscribe(accounts => {
-        console.log(accounts)
         this.allAccounts = accounts;
         this.accounts = this.allAccounts;
         this.loading = false;
       });
-
   }
 
   getListAnimationState(): string {
@@ -97,17 +100,13 @@ export class AdminPageComponent implements OnInit {
 
   onSearchClicked(): void {
     this.loading = true;
-    if (this.fullName === '') {
-      this.accounts = this.allAccounts
-      this.loading = false
-    } else {
-      this.accountService.findAccountsByFullName(this.fullName)
+      this.accountSearchSettings.searchKeyword=this.fullName;
+      this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
         .subscribe(accounts => {
           this.accounts = accounts;
           this.loading = false;
         });
     }
-  }
 
   autoCompleteFullNames(event: Event) {
     const phrase = (event.target as HTMLInputElement).value;
@@ -132,13 +131,15 @@ export class AdminPageComponent implements OnInit {
 
   changeUsersPerPage(selectedValue: string){
     this.accountSearchSettings.displayedAccounts=parseInt(selectedValue)
-    console.log(this.accountSearchSettings)
+    this.maxPage = Math.ceil(this.allAccountsSize/this.accountSearchSettings.displayedAccounts)
+    this.requestAccountsByFullNameWithPagination()
   }
 
   changeSortBy(selectedValue: string){
     this.accountSearchSettings.sortBy = selectedValue
     console.log('selectedValue = ' + selectedValue)
     console.log(this.accountSearchSettings)
+    this.requestAccountsByFullNameWithPagination()
   }
 
   changeOrderBy(selectedValue: string) {
@@ -148,15 +149,31 @@ export class AdminPageComponent implements OnInit {
     else if (selectedValue==='dec') {
       this.accountSearchSettings.sortAscending = false;
     }
-    console.log('selectedValue = ' + selectedValue)
-    console.log(this.accountSearchSettings)
+    this.requestAccountsByFullNameWithPagination()
   }
 
-  incrementValue() {
-
+  requestAccountsByFullNameWithPagination() {
+    this.loading = true;
+    this.accountService.findAccountsByFullNameWithPagination(this.accountSearchSettings)
+        .subscribe(accounts => {
+          this.accounts = accounts;
+          this.loading = false;
+        });
   }
 
-  decrementValue() {
+  increment() {
+    if (this.counter < this.maxPage) {
+      this.counter++;
+      this.accountSearchSettings.searchPage=this.counter;
+      this.requestAccountsByFullNameWithPagination()
+    }
+  }
 
+  decrement() {
+    if (this.counter > 1) { // Minimum value is 1
+      this.counter--;
+      this.accountSearchSettings.searchPage=this.counter;
+      this.requestAccountsByFullNameWithPagination()
+    }
   }
 }
