@@ -12,6 +12,7 @@ import {Accesslevel} from "../interfaces/accesslevel";
 import {ChangePassword} from "../interfaces/change.password";
 import { AccountCreate } from '../interfaces/account.create';
 import {ChangeLocale} from "../interfaces/change.locale";
+import {FullName} from "../interfaces/fullName";
 
 @Injectable({
   providedIn: 'root',
@@ -69,6 +70,18 @@ export class AccountService {
       }
     })
   }
+
+  public autoCompleteFullNames(phrase: string): Observable<FullName[]> {
+    return this.httpClient.post<FullName[]>(
+      `${environment.apiBaseUrl}/account/find/autoCompleteFullNames`,
+      phrase, {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
+  }
+
 
     public retrieveAccount(id: string): Observable<Account> {
     return this.httpClient.get<Account>(
