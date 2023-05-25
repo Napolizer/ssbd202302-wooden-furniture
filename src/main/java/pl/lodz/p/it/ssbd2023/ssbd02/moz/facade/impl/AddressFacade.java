@@ -59,4 +59,22 @@ public class AddressFacade extends AbstractFacade<Address> implements AddressFac
         .setParameter("streetNumber", streetNumber)
         .getResultList();
   }
+
+  @Override
+  public Address create(Address entity) {
+    //Operation will be not supported for this facade
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Address archive(Address entity) {
+    //Operation will be not supported for this facade
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Address update(Address entity) {
+    //Operation will be not supported for this facade
+    throw new UnsupportedOperationException();
+  }
 }

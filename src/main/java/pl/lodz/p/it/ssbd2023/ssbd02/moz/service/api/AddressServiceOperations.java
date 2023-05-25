@@ -1,10 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api;
 
+import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 
-public interface AddressFacadeOperations {
+@Local
+public interface AddressServiceOperations {
 
   Optional<Address> find(Long id);
 
@@ -23,5 +25,4 @@ public interface AddressFacadeOperations {
   List<Address> findAllByPostalCode(String postalCode);
 
   List<Address> findAllByStreetNumber(Integer streetNumber);
-
 }
