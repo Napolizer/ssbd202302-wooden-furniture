@@ -145,7 +145,7 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
     query.setParameter("sortField", settings.getSortBy().name().toUpperCase());
     query.setFirstResult((settings.getSearchPage() - 1) * settings.getDisplayedAccounts());
     query.setMaxResults(settings.getDisplayedAccounts());
-    return query.getResultList();
+    return query.getResultList().stream().distinct().toList();
   }
 
   @Override
