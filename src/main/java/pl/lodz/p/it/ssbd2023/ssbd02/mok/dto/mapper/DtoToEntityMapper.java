@@ -170,7 +170,8 @@ public final class DtoToEntityMapper {
         .build();
   }
 
-  public static AccountSearchSettingsDto mapAccountSearchSettingsToAccountSearchSettingsDto(AccountSearchSettings accountSearchSettings) {
+  public static AccountSearchSettingsDto mapAccountSearchSettingsToAccountSearchSettingsDto
+          (AccountSearchSettings accountSearchSettings) {
     return AccountSearchSettingsDto.builder()
             .searchPage(accountSearchSettings.getSearchPage())
             .displayedAccounts(accountSearchSettings.getDisplayedAccounts())
