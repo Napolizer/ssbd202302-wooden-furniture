@@ -14,6 +14,8 @@ import {DatePipe} from "@angular/common";
 import { Location } from '@angular/common';
 import {HttpErrorResponse} from "@angular/common/http";
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
+import {TokenService} from "../../services/token.service";
+import {AccountType} from "../../enums/account.type";
 
 @Component({
   selector: 'app-user-account-page',
@@ -59,7 +61,8 @@ export class UserAccountPageComponent implements OnInit {
     private navigationService: NavigationService,
     private datePipe: DatePipe,
     private location: Location,
-    private breadcrumbsService: BreadcrumbsService
+    private breadcrumbsService: BreadcrumbsService,
+    private tokenService: TokenService
   ) { }
 
   ngOnInit(): void {
@@ -291,5 +294,9 @@ export class UserAccountPageComponent implements OnInit {
 
   onBackClicked(): void {
     void this.navigationService.redirectToAdminPage();
+  }
+
+  isUserNormalType(): boolean {
+    return this.tokenService.getAccountType() === AccountType.NORMAL;
   }
 }
