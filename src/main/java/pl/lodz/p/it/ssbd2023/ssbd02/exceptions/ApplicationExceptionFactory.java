@@ -16,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ExpiredLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidCurrentPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
@@ -194,6 +195,11 @@ public final class ApplicationExceptionFactory {
   public static BaseWebApplicationException passwordAlreadyUsedException() {
     return new BaseWebApplicationException(
         MessageUtil.MessageKey.ERROR_PASSWORD_ALREADY_USED, Response.Status.CONFLICT);
+  }
+
+  public static InvalidCurrentPasswordException createInvalidCurrentPasswordException() {
+    return new InvalidCurrentPasswordException(MessageUtil.MessageKey.ERROR_INVALID_CURRENT_PASSWORD,
+            Response.Status.BAD_REQUEST);
   }
 
   public static BaseWebApplicationException createInvalidModeException() {

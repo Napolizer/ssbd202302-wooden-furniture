@@ -3,5 +3,6 @@ export const environment = {
   apiBaseUrl: 'http://localhost:8080/api/v1',
   tokenKey: 'token',
   accountTypeKey: 'type',
-  currentRoleKey: 'role'
+  currentRoleKey: 'role',
+  refreshTokenKey: 'refreshToken',
 };

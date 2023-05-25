@@ -144,6 +144,7 @@
   "account.changerole.success": "Rola została pomyślnie zmieniona",
   "account.block": "Zablokuj",
   "account.activate": "Odblokuj",
+  "account.timezone": "Strefa czasowa",
 
   "edit.account": "Edytuj konto",
   "edit.account.field.required": "To pole jest wymagane",
@@ -185,6 +186,7 @@
   "dialog.reset.account.message": "Czy na pewno chcesz cofnąć zmiany do początkowych wartości?",
   "dialog.block.account.message":"Czy na pewno chcesz zablokować wybrane konto?",
   "dialog.unblock.account.message":"Czy na pewno chcesz odblokować wybrane konto?",
+  "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -207,6 +209,7 @@
   "exception.invalid.link": "Link weryfikacyjny jest niepoprawny",
   "exception.mok.account.already.verified": "Twoje konto zostało już zweryfikowane",
   "exception.expired.password.reset.link": "Twój link do resetowania hasła wygasł, spróbój ponownie",
+  "exception.expired.password.change.link": "Twój link do zmiany hasła wygasł",
   "exception.mok.account.email.does.not.exist" : "Konto z podanym adresem email nie istnieje",
   "exception.mok.account.not.active": "Konto jest nieaktywne",
   "exception.mok.account.access.level": "Wyjatek accesslevel",
@@ -222,6 +225,7 @@
   "exception.invalid.account.type": "Nie możesz wykonać tej akcji, ponieważ to konto zostało zarejestrowane za pomocą zewnętrznego serwisu",
   "exception.invalid.time.zone": "Niepoprawna strefa czasowa",
   "exception.password.already.used": "Hasło było już używane przez użytkownika",
+  "exception.current.password.invalid": "Obecne hasło jest nieprawidłowe",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

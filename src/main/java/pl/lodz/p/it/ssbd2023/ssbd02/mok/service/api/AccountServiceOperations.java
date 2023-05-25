@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 
 @Local
@@ -73,4 +74,6 @@ public interface AccountServiceOperations {
   String generateTokenFromRefresh(String refreshToken);
 
   List<Account> findByFullNameLike(String fullName);
+
+  List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettings accountSearchSettings);
 }

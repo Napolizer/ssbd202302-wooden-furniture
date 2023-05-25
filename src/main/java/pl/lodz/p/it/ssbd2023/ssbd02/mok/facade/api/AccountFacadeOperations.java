@@ -4,6 +4,8 @@ import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.SortBy;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.Facade;
 
 @Local
@@ -21,6 +23,8 @@ public interface AccountFacadeOperations extends Facade<Account> {
   Optional<Account> findById(Long accountId);
 
   List<Account> findByFullNameLike(String fullName);
+
+  List<Account> findByFullNameLikeWithPagination(AccountSearchSettings settings);
 
   void delete(Account account);
 }

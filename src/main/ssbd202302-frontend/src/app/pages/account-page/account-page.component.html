@@ -115,6 +115,13 @@
                 <p class="content">{{account.lastFailedLoginIpAddress ?? '-'}}</p>
                 <div class="border"></div>
               </div>
+              <div class="entry" *ngIf="account.timeZone">
+                <p class="title">{{'account.timezone' | translate}}</p>
+                <p class="content">{{account.timeZone}}</p>
+                <div class="border"></div>
+              </div>
+            </div>
+            <div class="row">
               <div class="entry" *ngIf="account.blockadeEnd">
                 <p class="title">{{'account.blockadeEnd' | translate}}</p>
                 <p class="content">{{account.blockadeEnd}}</p>

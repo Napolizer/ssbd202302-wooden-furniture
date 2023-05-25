@@ -8,6 +8,7 @@ import { AccountGoogleRegister } from '../interfaces/google.register';
 import {AccountRegister} from "../interfaces/account.register";
 import {LocalStorageService} from "./local-storage.service";
 import { ForcePasswordChange } from '../interfaces/force.password.change';
+import {Tokens} from "../interfaces/tokens";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class AuthenticationService {
     private localStorageService: LocalStorageService
   ) {}
 
-  public login(login: string, password: string, locale : string): Observable<string> {
-    return this.httpClient.post(`${environment.apiBaseUrl}/account/login`, {
+  public login(login: string, password: string, locale : string): Observable<Tokens> {
+    return this.httpClient.post<Tokens>(`${environment.apiBaseUrl}/account/login`, {
       login: login,
       password: password
     },
@@ -29,7 +30,7 @@ export class AuthenticationService {
     headers: {
       'Accept-Language': locale
       }
-    }).pipe(first(), map((response: any) => response.token));
+    }).pipe(first());
   }
 
   public registerGoogleAccount(account: AccountGoogleRegister): Observable<string> {
