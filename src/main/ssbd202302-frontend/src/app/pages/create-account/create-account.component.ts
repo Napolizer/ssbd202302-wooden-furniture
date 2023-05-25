@@ -20,6 +20,7 @@ import { NavigationService } from 'src/app/services/navigation.service';
 import { Constants } from 'src/app/utils/constants';
 import { CustomValidators } from 'src/app/utils/custom.validators';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
+import { TimeZone } from 'src/app/utils/time.zone';
 
 @Component({
   selector: 'app-create-account',
@@ -52,7 +53,7 @@ export class CreateAccountComponent implements OnInit {
   loading = true;
   createAccountForm: FormGroup;
   hide = true;
-  languages: SelectItem[] = [];
+  timeZones: SelectItem[] = [];
   roles: SelectItem[] = [];
   checked = false;
   breadcrumbData: string[];
@@ -128,7 +129,7 @@ export class CreateAccountComponent implements OnInit {
             Validators.pattern(Constants.POSTAL_CODE_PATTERN),
           ])
         ),
-        locale: new FormControl(''),
+        timeZone: new FormControl(''),
         accessLevel: new FormControl(''),
         nip: new FormControl(''),
         companyName: new FormControl(''),
@@ -169,19 +170,18 @@ export class CreateAccountComponent implements OnInit {
           viewValue: msg['role.client'] as string,
         });
       });
-    this.translate
-      .get(['register.label.language.pl', 'register.label.language.en'])
-      .pipe(takeUntil(this.destroy))
-      .subscribe((msg) => {
-        this.languages.push({
-          value: 'pl',
-          viewValue: msg['register.label.language.pl'] as string,
-        });
-        this.languages.push({
-          value: 'en',
-          viewValue: msg['register.label.language.en'] as string,
-        });
-      });
+      for (const key of Object.keys(TimeZone)) {
+        const timeZone: TimeZone = TimeZone[key as keyof typeof TimeZone];
+        this.translate
+          .get(timeZone.displayName || 'exception.unknown')
+          .pipe(takeUntil(this.destroy))
+          .subscribe((displayName) => {
+            this.timeZones.push({
+              value: timeZone.value,
+              viewValue: this.translate.instant(displayName),
+            });
+          });
+      }
     this.loading = false;
   }
 
@@ -207,7 +207,7 @@ export class CreateAccountComponent implements OnInit {
       street: this.createAccountForm.value['street']!,
       streetNumber: parseInt(this.createAccountForm.value['streetNumber']!),
       postalCode: this.createAccountForm.value['postalCode']!,
-      locale: this.createAccountForm.value['locale']!,
+      locale: this.translate.getBrowserLang() as string,
       nip: this.checked ? this.createAccountForm.value['nip']! : null,
       companyName: this.checked
         ? this.createAccountForm.value['companyName']!
@@ -215,6 +215,7 @@ export class CreateAccountComponent implements OnInit {
       accessLevel: {
         name: this.createAccountForm.value['accessLevel']!,
       } as Accesslevel,
+      timeZone: this.createAccountForm.value['timeZone']!
     };
     this.accountService
       .create(accountCreate)

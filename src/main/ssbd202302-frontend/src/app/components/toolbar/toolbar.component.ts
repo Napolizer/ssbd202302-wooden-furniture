@@ -11,6 +11,8 @@ import {DialogService} from "../../services/dialog.service";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
 import {Router} from "@angular/router";
+import {LocalStorageService} from "../../services/local-storage.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-toolbar',
@@ -32,7 +34,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private tokenService: TokenService,
     private accountService: AccountService,
     private dialogService: DialogService,
-    private router: Router
+    private router: Router,
+    private localStorageService: LocalStorageService
   ) {
   }
 
@@ -78,7 +81,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   isUserAdmin(): boolean {
-    return this.authenticationService.isUserInRole(Role.ADMINISTRATOR);
+    return this.authenticationService.isCurrentRole(Role.ADMINISTRATOR);
   }
 
   isCurrentlyOnLoginPage(): boolean {
@@ -92,24 +95,16 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   switchRole(role: string): void {
     switch(role) {
       case 'ADMINISTRATOR':
-        this.currentRole = Role.ADMINISTRATOR;
-        console.log(this.currentRole);
+        this.localStorageService.set(environment.currentRoleKey, Role.ADMINISTRATOR);
         break;
       case 'EMPLOYEE':
-        this.currentRole = Role.EMPLOYEE;
-        console.log(this.currentRole);
+        this.localStorageService.set(environment.currentRoleKey, Role.EMPLOYEE);
         break;
       case 'SALES_REP':
-        this.currentRole = Role.SALES_REP;
-        console.log(this.currentRole);
+        this.localStorageService.set(environment.currentRoleKey, Role.SALES_REP);
         break;
       case 'CLIENT':
-        this.currentRole = Role.CLIENT;
-        console.log(this.currentRole);
-        break;
-      case 'GUEST':
-        this.currentRole = Role.GUEST;
-        console.log(this.currentRole);
+        this.localStorageService.set(environment.currentRoleKey, Role.CLIENT);
         break;
       default:
         console.log('default')
@@ -239,5 +234,20 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             }
           })
       })
+  }
+
+  isCurrentGroup(group: string) : boolean{
+    switch(group) {
+      case 'ADMINISTRATOR':
+        return this.authenticationService.isCurrentRole(Role.ADMINISTRATOR);
+      case 'EMPLOYEE':
+        return this.authenticationService.isCurrentRole(Role.EMPLOYEE);
+      case 'SALES_REP':
+        return this.authenticationService.isCurrentRole(Role.SALES_REP);
+      case 'CLIENT':
+        return this.authenticationService.isCurrentRole(Role.CLIENT);
+      default:
+        return false;
+    }
   }
 }

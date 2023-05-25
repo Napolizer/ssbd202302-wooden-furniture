@@ -42,6 +42,7 @@
   "change.password.validity.matching": "New password cannot be same as the current one",
   "change.password.success": "Your password has been successfully changed",
   "change.password.user.send": "Password change request sent to user's email",
+  "change.password.force.message": "You must change your password to continue",
 
   "register.title": "Create your account",
   "register.checkbox": "Company representative",
@@ -74,9 +75,7 @@
   "register.label.city": "City",
   "register.label.postalCode": "Postal code",
   "register.label.country": "Country",
-  "register.label.language": "Language",
-  "register.label.language.pl": "Polish",
-  "register.label.language.en": "English",
+  "register.label.time.zone": "Time zone",
   "register.label.nip": "NIP",
   "register.label.company.name": "Company name",
   "register.confirm.title": "Congratulations!",
@@ -84,6 +83,17 @@
   "register.confirm.second": "We hope you find what you're looking for and enjoy shopping with us!",
   "register.confirm.third": "If you have already verified your account, ",
   "register.confirm.fourth": "you can now log in.",
+
+  "time.zone.europe.warsaw": "Europe/Warsaw",
+  "time.zone.america.new_york": "America/New York",
+  "time.zone.america.los_angeles": "America/Los Angeles",
+  "time.zone.asia.tokyo": "Asia/Tokyo",
+  "time.zone.australia.sydney": "Australia/Sydney",
+  "time.zone.europe.london": "Europe/London",
+  "time.zone.europe.berlin": "Europe/Berlin",
+  "time.zone.america.chicago": "America/Chicago",
+  "time.zone.asia.shanghai": "Asia/Shanghai",
+  "time.zone.america.sao_paulo": "America/Sao Paolo",
 
   "google.register.title": "Complete registration process",
   "google.register.button": "Confirm",
@@ -134,6 +144,7 @@
   "account.changerole.success": "Role changed successfully",
   "account.block": "Block",
   "account.activate": "Activate",
+  "account.timezone": "Time zone",
 
   "edit.account": "Edit account",
   "edit.account.field.required": "This field is required",
@@ -175,6 +186,7 @@
   "dialog.reset.account.message": "Are you sure you want to discard changes?",
   "dialog.block.account.message":"Are you sure you want to block this account?",
   "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
+  "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -195,11 +207,13 @@
   "forbidden.button": "Home",
   "exception.mok.account.old.password": "New password cannot be the same as the old one",
   "exception.expired.password.reset.link": "Your password reset link has expired, try again",
+  "exception.expired.password.change.link": "Your password change link has expired",
   "exception.invalid.link": "Confirmation link is invalid",
   "exception.mok.account.already.verified": "Your account has already been verified",
   "exception.expired.account.confirmation.link": "Confirmation link has expired and your account has been deleted",
   "exception.mok.account.email.does.not.exist" : "Account with given email address does not exist",
   "exception.mok.account.not.active": "Account is not active",
+  "exception.mok.account.not.found": "Account not found",
   "exception.mok.account.access.level": "AccessLevel exception",
   "exception.mok.account.access.level.already.assigned": "Chosen role is already assigned to user",
   "exception.mok.account.access.level.not.assigned": "Chosen role is not assigned to user",
@@ -211,6 +225,9 @@
   "exception.mok.account.change.state": "The requested account state change cannot be performed due to restrictions or the account is already active",
   "exception.google.conflict": "Account already exists, please log in using your regular credentials",
   "exception.invalid.account.type": "You are not allowed to perform this action because this account was registered with an external service",
+  "exception.invalid.time.zone": "Invalid timezone",
+  "exception.password.already.used": "Password has already been used",
+  "exception.current.password.invalid": "Current password is invalid",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",
@@ -239,5 +256,13 @@
   "true": "yes",
 
   "block.success": "Account blocked successfully",
-  "activate.success": "Account activated successfully"
+  "activate.success": "Account activated successfully",
+
+  "admin.search": "Search",
+  "admin.search.placeholder": "Search by full name",
+  "admin.search.ascending": "Ascending",
+  "admin.search.descending": "Descending",
+  "admin.search.sortBy": "Sort by",
+  "admin.search.recordsPerPage": "Records per page",
+  "admin.search.orderBy": "Ascending/Descending"
 }

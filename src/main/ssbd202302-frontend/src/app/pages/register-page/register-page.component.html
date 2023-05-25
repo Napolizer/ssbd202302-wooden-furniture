@@ -395,14 +395,14 @@
             <div class="form-person">
               <mat-form-field appearance="fill" class="input">
                 <mat-label>{{
-                  "register.label.language" | translate
+                  "register.label.time.zone" | translate
                 }}</mat-label>
-                <mat-select required formControlName="locale">
+                <mat-select required formControlName="timeZone">
                   <mat-option
-                    *ngFor="let language of languages"
-                    [value]="language.value"
+                    *ngFor="let timeZone of timeZones"
+                    [value]="timeZone.value"
                   >
-                    {{ language.viewValue }}
+                    {{ timeZone.viewValue }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

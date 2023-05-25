@@ -11,6 +11,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -29,12 +30,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @DenyAll
-public class TokenService {
+public class TokenService implements TokenServiceOperations {
   private static final String SECRET_KEY;
   private static final String SECRET_KEY_REFRESH;
   private static final Long EXPIRATION_AUTHORIZATION;
@@ -89,12 +91,22 @@ public class TokenService {
     return builder.compact();
   }
 
-  @PermitAll
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void validateRefreshToken(String refreshToken) {
     try {
       Jwts.parser().setSigningKey(SECRET_KEY_REFRESH).parseClaimsJws(refreshToken);
     } catch (ExpiredJwtException e) {
       throw ApplicationExceptionFactory.expiredRefreshTokenException();
+    } catch (RuntimeException e) {
+      throw ApplicationExceptionFactory.invalidRefreshTokenException();
+    }
+  }
+
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public String getLoginFromRefreshToken(String refreshToken) {
+    try {
+      Claims claims = Jwts.parser().setSigningKey(SECRET_KEY_REFRESH).parseClaimsJws(refreshToken).getBody();
+      return claims.getSubject();
     } catch (RuntimeException e) {
       throw ApplicationExceptionFactory.invalidRefreshTokenException();
     }

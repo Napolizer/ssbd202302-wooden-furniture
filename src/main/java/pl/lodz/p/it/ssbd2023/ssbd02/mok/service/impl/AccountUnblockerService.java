@@ -12,24 +12,24 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-
 import java.util.Date;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountUnblockerServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SimpleLoggerInterceptor.class)
 @DenyAll
-public class AccountUnblockerService {
+public class AccountUnblockerService implements AccountUnblockerServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject
-  private MailService mailService;
+  private MailServiceOperations mailService;
   @Resource
   private TimerService timerService;
 

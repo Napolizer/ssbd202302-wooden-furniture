@@ -41,7 +41,27 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
     @NamedQuery(name = Account.FIND_ALL_BY_LAST_NAME,
         query = "SELECT account FROM Account account WHERE account.person.lastName = :lastName"),
     @NamedQuery(name = Account.FIND_ALL_BY_ADDRESS_ID,
-        query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId")
+        query = "SELECT account FROM Account account WHERE account.person.address.id = :addressId"),
+    @NamedQuery(name = Account.FIND_BY_FULL_NAME_ASC,
+        query = "SELECT account FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id "
+            + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
+            + "LIKE LOWER(CONCAT('%', :fullName, '%')) "
+            + "AND account.id IN (SELECT DISTINCT account.id FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id) "
+            + "ORDER BY CASE WHEN (:sortField = 'LOGIN') THEN account.login "
+            + "WHEN (:sortField = 'EMAIL') THEN account.email "
+            + "ELSE TYPE(al) END ASC"),
+    @NamedQuery(name = Account.FIND_BY_FULL_NAME_DESC,
+        query = "SELECT account FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id "
+            + "WHERE LOWER(CONCAT(account.person.firstName, ' ', account.person.lastName)) "
+            + "LIKE LOWER(CONCAT('%', :fullName, '%')) "
+            + "AND account.id IN (SELECT DISTINCT account.id FROM Account account "
+            + "INNER JOIN access_level al ON al.account.id = account.id) "
+            + "ORDER BY CASE WHEN (:sortField = 'LOGIN') THEN account.login "
+            + "WHEN (:sortField = 'EMAIL') THEN account.email "
+            + "ELSE TYPE(al) END DESC")
 })
 public class Account extends AbstractEntity {
   public static final String FIND_ALL_BY_FIRST_NAME = "Account.findAllByFirstName";
@@ -50,6 +70,8 @@ public class Account extends AbstractEntity {
   public static final String FIND_BY_EMAIL = "Account.findByEmail";
   public static final String FIND_ALL_BY_ADDRESS_ID = "Account.findAllByAddressId";
   public static final String FIND_BY_ACCOUNT_ID = "Account.findByAccountId";
+  public static final String FIND_BY_FULL_NAME_ASC = "Account.findAllByFullNameAsc";
+  public static final String FIND_BY_FULL_NAME_DESC = "Account.findAllByFullNameDesc";
   @Column(unique = true, updatable = false, nullable = false)
   private String login;
 
@@ -107,6 +129,29 @@ public class Account extends AbstractEntity {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "type", nullable = false)
   private AccountType accountType;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "time_zone", nullable = false)
+  private TimeZone timeZone;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "mode")
+  @Builder.Default
+  private Mode mode = Mode.LIGHT;
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @Builder.Default
+  @ToString.Exclude
+  @JoinColumn(name = "account_id")
+  private List<PasswordHistory> passwordHistory = new ArrayList<>();
+
+  @Column(name = "force_password_change", columnDefinition = "boolean default false not null")
+  @Builder.Default
+  private Boolean forcePasswordChange = false;
+
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+  @JoinColumn(name = "account_search_settings_id")
+  private AccountSearchSettings accountSearchSettings;
 
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;

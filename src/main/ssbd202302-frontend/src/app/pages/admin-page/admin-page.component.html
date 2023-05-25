@@ -1,17 +1,66 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div class="container">
+  <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
+  <ul class="breadcrumb-list">
+    <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
+  </ul>
+  <mat-autocomplete #auto='matAutocomplete'>
+    <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
+      {{fullName}}
+    </mat-option>
+  </mat-autocomplete>
+
+  <form (ngSubmit)="onSearchClicked()" class="searchForm">
+    <mat-form-field appearance="fill" class="fullNameInput">
+
+      <mat-label>{{ "admin.search.placeholder" | translate }}</mat-label>
+      <input name="fullName"
+             (input)="autoCompleteFullNames($event)"
+             [(ngModel)]="fullName"
+             matInput type="text"
+             [matAutocomplete]="auto"
+      >
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary" class="searchButton">
+      {{ "admin.search" | translate}}
+    </button>
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'admin.search.sortBy' | translate }}</mat-label>
+      <mat-select [formControl]="sortControl" (selectionChange)="changeSortBy($event.value)">
+        <mat-option value="LOGIN">Login</mat-option>
+        <mat-option value="ACCESSLEVEL">{{ 'account.roles' | translate }}</mat-option>
+        <mat-option value="EMAIL">{{ 'account.email' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>{{"admin.search.orderBy" | translate}}</mat-label>
+      <mat-select [formControl]="orderControl" (selectionChange)="changeOrderBy($event.value)">
+        <mat-option value='asc'>{{"admin.search.ascending" | translate}}</mat-option>
+        <mat-option value='dec'>{{"admin.search.descending" | translate}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
   <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
-    <mat-action-list *ngIf="!loading" class="list-container" #accounts>
-      <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
-      <ul class="breadcrumb-list">
-        <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
-      </ul>
-      <mat-divider></mat-divider>
-      <mat-list-item *ngFor="let account of allAccounts" (click)="redirectToAccountPage(account.id.toString())">
-        <div mat-line>{{account.login}}</div>
-        <div mat-line>{{account.email}}</div>
+    <mat-action-list *ngIf="!loading" class="list-container">
+      <mat-list-item *ngFor="let account of accounts" (click)="redirectToAccountPage(account.id.toString())">
+        <div mat-line>{{ account.login }}</div>
+        <div mat-line>{{ account.firstName }} {{ account.lastName }}, {{account.email}}</div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-action-list>
   </div>
+  <mat-form-field appearance="fill">
+    <mat-label>{{"admin.search.recordsPerPage" | translate}}</mat-label>
+    <mat-select [(ngModel)]="usersPerPage" (selectionChange)="changeUsersPerPage($event.value)">
+      <mat-option value='3'>3</mat-option>
+      <mat-option value='5'>5</mat-option>
+      <mat-option value='7'>7</mat-option>
+      <mat-option value='10'>10</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div>
+    <button class="button"(click)="decrement()"><-</button>
+    <input class="input" type="number" [(ngModel)]="counter" min="1" [max]="maxPage" />
+    <button class="button" (click)="increment()">-></button>
+    <div>{{counter}} - {{maxPage}}</div>
 </div>

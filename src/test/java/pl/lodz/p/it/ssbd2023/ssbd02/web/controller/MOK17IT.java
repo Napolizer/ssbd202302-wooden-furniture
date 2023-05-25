@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
@@ -26,32 +27,28 @@ public class MOK17IT {
         @Order(1)
         @DisplayName("Should properly get account by id")
         void shouldProperlyGetAccountByAccountIdTest() {
+
             given()
                     .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
                     .when()
-                    .get("/account/id/" + InitData.retrieveAccountId("client"))
+                    .get("/account/id/" + AccountUtil.registerUser("accountToGetById"))
                     .then()
                     .statusCode(200)
                     .contentType("application/json")
-                    .body("firstName", is(equalTo("Adam")))
-                    .body("lastName", is(equalTo("Mickiewicz")))
+                    .body("firstName", is(equalTo("John")))
+                    .body("lastName", is(equalTo("Doe")))
                     .body("archive", is(equalTo(false)))
-                    .body("lastLogin", is(notNullValue()))
-                    .body("lastFailedLogin", is(nullValue()))
-                    .body("lastLoginIpAddress", is(notNullValue()))
-                    .body("lastFailedLoginIpAddress", is(nullValue()))
-                    .body("locale", is(equalTo("pl")))
+                    .body("locale", is(equalTo("en")))
                     .body("failedLoginCounter", is(equalTo(0)))
                     .body("blockadeEnd", is(nullValue()))
-                    .body("accountState", is(equalTo("ACTIVE")))
+                    .body("accountState", is(equalTo("NOT_VERIFIED")))
                     .body("roles.size()", is(equalTo(1)))
-                    .body("roles[0]", is(equalTo("client")))
                     .body("address", is(notNullValue()))
                     .body("address.country", is(equalTo("Poland")))
                     .body("address.city", is(equalTo("Lodz")))
-                    .body("address.street", is(equalTo("Przybyszewskiego")))
-                    .body("address.postalCode", is(equalTo("93-116")))
-                    .body("address.streetNumber", is(equalTo(13)));
+                    .body("address.street", is(equalTo("Piotrkowska")))
+                    .body("address.postalCode", is(equalTo("90-000")))
+                    .body("address.streetNumber", is(equalTo(1)));
         }
     }
     @Nested

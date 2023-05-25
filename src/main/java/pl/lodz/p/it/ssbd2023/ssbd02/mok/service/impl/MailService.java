@@ -18,19 +18,21 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({LoggerInterceptor.class})
 @DenyAll
-public class MailService {
+public class MailService implements MailServiceOperations {
   @Inject
   private EnvironmentConfig environmentConfig;
 
   private final String appUrl = "http://localhost:4200";
 
+  @Override
   @PermitAll
   public void sendEmailWithInfoAboutBlockingAccount(String to, String locale) {
     try {
@@ -43,6 +45,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailWithInfoAboutActivatingAccount(String to, String locale) {
     try {
@@ -55,6 +58,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailWithInfoAboutConfirmingAccount(String to, String locale) {
     try {
@@ -67,6 +71,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailWithAccountConfirmationLink(String to, String locale, String token, String login) {
     try {
@@ -82,6 +87,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendResetPasswordEmail(String to, String locale, String resetPasswordToken) {
     try {
@@ -95,6 +101,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailWithEmailChangeConfirmLink(String to, String locale, String token) {
     try {
@@ -108,6 +115,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailAboutAddingAccessLevel(String to, String locale, String groupName) {
     try {
@@ -122,6 +130,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailWithPasswordChangeLink(String to, String locale, String token) {
     try {
@@ -135,6 +144,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailAboutRemovingAccessLevel(String to, String locale, String groupName) {
     try {
@@ -149,6 +159,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailAboutChangingAccessLevel(String to, String locale, String oldGroup, String newGroup) {
     try {
@@ -164,6 +175,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale) {
     try {
@@ -176,6 +188,7 @@ public class MailService {
     }
   }
 
+  @Override
   @PermitAll
   public void sendEmailAboutAdminSession(String to, String locale, String ip) {
     try {
@@ -188,6 +201,7 @@ public class MailService {
       throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
+
 
   @PermitAll
   public void sendEmail(String to, String subject, String message) throws MessagingException {

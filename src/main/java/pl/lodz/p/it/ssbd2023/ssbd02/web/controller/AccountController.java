@@ -25,42 +25,46 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
-
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeModeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ForcePasswordChangeDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.AccountEndpoint;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.GithubService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Path("/account")
 @Interceptors({SimpleLoggerInterceptor.class})
 public class AccountController {
   @Inject
-  private AccountEndpoint accountEndpoint;
+  private AccountEndpointOperations accountEndpoint;
   @Inject
   private AccountMapper accountMapper;
   @Inject
@@ -68,7 +72,7 @@ public class AccountController {
   @Inject
   private HttpServletRequest servletRequest;
   @Inject
-  private GithubService githubService;
+  private GithubServiceOperations githubService;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -121,6 +125,18 @@ public class AccountController {
     return Response.ok(account).build();
   }
 
+  @GET
+  @Path("/self/force-password-change")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response checkIfUserIsForcedToChangePassword() {
+    if (principal.getName() == null) {
+      return Response.status(403).build();
+    }
+    boolean result = accountEndpoint.checkIfUserIsForcedToChangePassword(principal.getName());
+    return Response.ok(new ForcePasswordChangeDto(result)).build();
+  }
+
   @PUT
   @Path("/id/{accountId}/accessLevel/{accessLevel}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -163,7 +179,6 @@ public class AccountController {
     AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(updatedAccount);
     return Response.ok(account).build();
   }
-
 
   @POST
   @Path("/register")
@@ -228,8 +243,11 @@ public class AccountController {
                         @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
     var json = Json.createObjectBuilder();
     try {
-      String token = accountEndpoint.login(userCredentialsDto, servletRequest.getRemoteAddr(), locale);
+      List<String> tokens = accountEndpoint.login(userCredentialsDto, locale);
+      String token = tokens.get(0);
+      String refreshToken = tokens.get(1);
       json.add("token", token);
+      json.add("refresh_token", refreshToken);
       return Response.ok(json.build()).build();
     } catch (AuthenticationException e) {
       json.add("message", e.getMessage());
@@ -267,11 +285,14 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response editAccountAsAdmin(@PathParam("login") String login,
-                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
+                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
+                                     @Context SecurityContext securityContext) {
+    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
+    }
 
-    Account account = accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto);
-    EditPersonInfoDto person = DtoToEntityMapper.mapAccountToEditPersonInfoDto(account);
-    return Response.ok(person).build();
+    accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto);
+    return Response.ok(editPersonInfoDto).build();
   }
 
   @PATCH
@@ -280,7 +301,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response blockAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.blockAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "mok.account.block.successful")
+                    .build()
+    ).build();
   }
 
   @PATCH
@@ -289,7 +314,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response activateAccount(@PathParam("accountId") Long accountId) {
     accountEndpoint.activateAccount(accountId);
-    return Response.status(Response.Status.OK).build();
+    return Response.ok(
+        Json.createObjectBuilder()
+            .add("message", "mok.account.activate.successful")
+            .build()
+    ).build();
   }
 
   @PUT
@@ -298,14 +327,18 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response editOwnAccount(@PathParam("login") String login,
-                                 @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
-    if (principal.getName() == null) {
-      return Response.status(403).build();
+                                 @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
+                                 @Context SecurityContext securityContext) {
+    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
+      throw ApplicationExceptionFactory.createAccountNotFoundException();
     }
 
-    Account account = accountEndpoint.editAccountInfo(login, editPersonInfoDto);
-    EditPersonInfoDto accountAfterUpdate = DtoToEntityMapper.mapAccountToEditPersonInfoDto(account);
-    return Response.ok(accountAfterUpdate).build();
+    if (Objects.equals(securityContext.getUserPrincipal().getName(), login)) {
+      accountEndpoint.editAccountInfo(login, editPersonInfoDto);
+      return Response.ok(editPersonInfoDto).build();
+    } else {
+      throw ApplicationExceptionFactory.createForbiddenException();
+    }
   }
 
   @PATCH
@@ -400,6 +433,21 @@ public class AccountController {
     }
   }
 
+  @PUT
+  @Path("/self/change-mode")
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response changeMode(@Valid ChangeModeDto changeModeDto) {
+    String login = principal.getName();
+    if (login == null || login.equals("ANONYMOUS")) {
+      return Response.status(403).build();
+    }
+
+    Mode mode = DtoToEntityMapper.mapChangeModeDtoToMode(changeModeDto);
+    accountEndpoint.changeMode(login, mode);
+    return Response.ok().build();
+
+  }
+
   @GET
   @Path("/google/login")
   public Response getGoogleOauthLink() {
@@ -421,5 +469,57 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response registerGoogleAccount(@NotNull @Valid GoogleAccountRegisterDto googleAccountRegisterDto) {
     return accountEndpoint.registerGoogleAccount(googleAccountRegisterDto, servletRequest.getRemoteAddr());
+  }
+
+  @GET
+  @Path("/token/refresh/{refreshToken}")
+  @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
+  public Response generateTokenFromRefresh(@NotNull @PathParam("refreshToken") String refreshToken) {
+    var json = Json.createObjectBuilder();
+    json.add("token", accountEndpoint.generateTokenFromRefresh(refreshToken));
+    return Response.ok(json.build()).build();
+  }
+
+  @GET
+  @Path("/find/fullName/{fullName}")
+  @RolesAllowed(ADMINISTRATOR)
+  public Response findByFullNameLike(@NotNull @PathParam("fullName") String fullName) {
+    List<Account> accounts = accountEndpoint.findByFullNameLike(fullName);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
+  }
+
+  @POST
+  @Path("/find/autoCompleteFullNames")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(ADMINISTRATOR)
+  public Response autoCompleteFullNames(@NotNull String phrase) {
+    List<FullNameDto> fullNameDtos = accountEndpoint.autoCompleteFullNames(phrase);
+    return Response.ok(fullNameDtos).build();
+  }
+
+  @POST
+  @Path("/find/fullNameWithPagination")
+  @RolesAllowed(ADMINISTRATOR)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findByFullNameLikeWithPagination(@Valid AccountSearchSettingsDto accountSearchSettingsDto,
+                                                   @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    List<Account> accounts = accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
+        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    return Response.ok(mappedAccounts).build();
+  }
+
+  @GET
+  @Path("/ownSearchSettings")
+  @RolesAllowed(ADMINISTRATOR)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getOwnSearchSettings(@Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    AccountSearchSettings accountSearchSettings = accountEndpoint.getAccountSearchSettings(login);
+    AccountSearchSettingsDto accountSearchSettingsDto = DtoToEntityMapper.mapAccountSearchSettingsToAccountSearchSettingsDto(accountSearchSettings);
+    return Response.ok(accountSearchSettingsDto).build();
   }
 }

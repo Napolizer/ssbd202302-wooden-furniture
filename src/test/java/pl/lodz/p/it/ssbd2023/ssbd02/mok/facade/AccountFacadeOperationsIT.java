@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import jakarta.transaction.HeuristicMixedException;
@@ -25,14 +26,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.SalesRepAuth;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.SortBy;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ArquillianExtension.class)
@@ -63,6 +76,43 @@ public class AccountFacadeOperationsIT {
         .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }
 
+  public static Account buildAccount(String firstName, String lastName) {
+    return buildAccount(firstName, lastName, firstName, new Client());
+  }
+
+  public static Account buildAccount(String firstName, String lastName, String email) {
+    return buildAccount(firstName, lastName, email, new Client());
+  }
+
+    public static Account buildAccount(String firstName, String lastName, String email, AccessLevel accessLevel) {
+      Address address = Address.builder()
+          .country("England")
+          .city("London")
+          .street("Fakestreet")
+          .postalCode("40-200")
+          .streetNumber(30)
+          .build();
+
+      Person person = Person.builder()
+          .firstName(firstName)
+          .lastName(lastName)
+          .address(address)
+          .build();
+      Account account = Account.builder()
+          .login(firstName)
+          .password(firstName)
+          .email(email)
+          .person(person)
+          .locale("pl")
+          .accountState(AccountState.ACTIVE)
+          .accountType(AccountType.NORMAL)
+          .accessLevels(List.of(accessLevel))
+          .timeZone(TimeZone.EUROPE_WARSAW)
+          .build();
+      accessLevel.setAccount(account);
+      return account;
+    }
+
   @BeforeEach
   public void setup() throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
     address = Address.builder()
@@ -87,6 +137,7 @@ public class AccountFacadeOperationsIT {
               .locale("pl")
               .accountState(AccountState.ACTIVE)
               .accountType(AccountType.NORMAL)
+              .timeZone(TimeZone.EUROPE_WARSAW)
               .build();
     em.createQuery("DELETE FROM access_level").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
@@ -99,7 +150,8 @@ public class AccountFacadeOperationsIT {
   @AfterEach
   public void teardown() throws Exception {
     utx.begin();
-    em.createQuery("DELETE FROM access_level").executeUpdate();
+    em.createQuery("DELETE FROM access_level ").executeUpdate();
+    em.createQuery("DELETE FROM PasswordHistory ").executeUpdate();
     em.createQuery("DELETE FROM Account").executeUpdate();
     em.createQuery("DELETE FROM Person").executeUpdate();
     em.createQuery("DELETE FROM Address").executeUpdate();
@@ -130,6 +182,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertEquals(0, accountFacadeOperations.findAll().size());
@@ -168,6 +221,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -182,6 +236,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -196,6 +251,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -210,6 +266,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -224,6 +281,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -238,6 +296,7 @@ public class AccountFacadeOperationsIT {
         .person(person)
         .locale("pl")
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     assertThrows(EJBException.class, () -> accountFacadeOperations.create(accountWithoutLogin));
@@ -259,6 +318,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -308,6 +368,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     Address address3 = Address.builder()
@@ -332,6 +393,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -383,6 +445,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     Address address3 = Address.builder()
@@ -407,6 +470,7 @@ public class AccountFacadeOperationsIT {
         .locale("pl")
         .accountState(AccountState.ACTIVE)
         .accountType(AccountType.NORMAL)
+        .timeZone(TimeZone.EUROPE_WARSAW)
         .build();
 
     utx.begin();
@@ -498,6 +562,288 @@ public class AccountFacadeOperationsIT {
       assertEquals(1, accountFacadeOperations.findAll().size());
       accountFacadeOperations.delete(account);
       assertEquals(0, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyAddsNewHashToPasswordHistory() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      account.getPasswordHistory().add(PasswordHistory.builder().hash("password").build());
+      accountFacadeOperations.create(account);
+      assertEquals(1, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+
+    utx.begin();
+    admin.call(() -> {
+      Account created = accountFacadeOperations.findByLogin(account.getLogin()).orElseThrow();
+      assertEquals(1, created.getPasswordHistory().size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLike() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+      accountFacadeOperations.create(buildAccount("Johny", "Donovan"));
+      accountFacadeOperations.create(buildAccount("Joe", "Davis"));
+
+      assertEquals(3, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("joHN DOE").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("DOE").size());
+      assertEquals(2, accountFacadeOperations.findByFullNameLike("JOHN").size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLike("jo").size());
+      assertEquals(3, accountFacadeOperations.findByFullNameLike("JO").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike("john ").size());
+      assertEquals(1, accountFacadeOperations.findByFullNameLike(" donovan").size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void failsToFindByFullNameLike() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findAll().size());
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+
+      assertEquals(1, accountFacadeOperations.findAll().size());
+    });
+    utx.commit();
+    utx.begin();
+    admin.call(() -> {
+      assertEquals(0, accountFacadeOperations.findByFullNameLike(" j").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("john  ").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("moe").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("  doe").size());
+      assertEquals(0, accountFacadeOperations.findByFullNameLike("johndoe").size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsMultipleUsersByFullName() throws Exception {
+    List <Account> accounts = List.of(
+        buildAccount("John", "Doe"),
+        buildAccount("Johny", "Donovan"),
+        buildAccount("Joe", "Davis")
+    );
+    for (Account account : accounts) {
+      utx.begin();
+      admin.call(() -> {
+        accountFacadeOperations.create(account);
+      });
+      utx.commit();
+    }
+    utx.begin();
+    admin.call(() -> {
+        assertEquals(2, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, "John", SortBy.LOGIN, false)).size());
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLikeWithPaginationOnDifferentPages() throws Exception {
+    List <Account> accounts = List.of(
+        buildAccount("John", "Doe"),
+        buildAccount("Johna", "Donovan"),
+        buildAccount("Johnb", "Depp"),
+        buildAccount("Johnc", "Bravo"),
+        buildAccount("Johnd", "Scooby")
+    );
+    for (Account account : accounts) {
+      utx.begin();
+      admin.call(() -> {
+        accountFacadeOperations.create(account);
+      });
+      utx.commit();
+    }
+    utx.begin();
+    admin.call(() -> {
+      List<Account> firstPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, "JOHN", SortBy.LOGIN, true));
+      assertThat(firstPageResponse.size(), is(equalTo(3)));
+      assertThat(firstPageResponse.get(0).getLogin(), is(equalTo("John")));
+      assertThat(firstPageResponse.get(1).getLogin(), is(equalTo("Johna")));
+      assertThat(firstPageResponse.get(2).getLogin(), is(equalTo("Johnb")));
+
+      List<Account> secondPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(2, 3, "john", SortBy.LOGIN, true));
+      assertThat(secondPageResponse.size(), is(equalTo(2)));
+      assertThat(secondPageResponse.get(0).getLogin(), is(equalTo("Johnc")));
+      assertThat(secondPageResponse.get(1).getLogin(), is(equalTo("Johnd")));
+    });
+    utx.commit();
+
+    utx.begin();
+    admin.call(() -> {
+      List<Account> firstPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, "JOHN", SortBy.LOGIN, false));
+      assertThat(firstPageResponse.size(), is(equalTo(3)));
+      assertThat(firstPageResponse.get(0).getLogin(), is(equalTo("Johnd")));
+      assertThat(firstPageResponse.get(1).getLogin(), is(equalTo("Johnc")));
+      assertThat(firstPageResponse.get(2).getLogin(), is(equalTo("Johnb")));
+
+      List<Account> secondPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(2, 3, "john", SortBy.LOGIN, false));
+      assertThat(secondPageResponse.size(), is(equalTo(2)));
+      assertThat(secondPageResponse.get(0).getLogin(), is(equalTo("Johna")));
+      assertThat(secondPageResponse.get(1).getLogin(), is(equalTo("John")));
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLikeSortsByEmail() throws Exception {
+    List <Account> accounts = List.of(
+        buildAccount("John", "Doe", "email1@ssbd.com"),
+        buildAccount("Johna", "Donovan", "email3@ssbd.com"),
+        buildAccount("Johnb", "Depp", "email2@ssbd.com"),
+        buildAccount("Johnc", "Bravo", "email5@ssbd.com"),
+        buildAccount("Johnd", "Scooby", "email4@ssbd.com")
+    );
+    for (Account account : accounts) {
+      utx.begin();
+      admin.call(() -> {
+        accountFacadeOperations.create(account);
+      });
+      utx.commit();
+    }
+    utx.begin();
+    admin.call(() -> {
+      List<Account> firstPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, "JOHN", SortBy.EMAIL, true));
+      assertThat(firstPageResponse.size(), is(equalTo(3)));
+      assertThat(firstPageResponse.get(0).getEmail(), is(equalTo("email1@ssbd.com")));
+      assertThat(firstPageResponse.get(1).getEmail(), is(equalTo("email2@ssbd.com")));
+      assertThat(firstPageResponse.get(2).getEmail(), is(equalTo("email3@ssbd.com")));
+
+      List<Account> secondPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(2, 3, "john", SortBy.EMAIL, true));
+      assertThat(secondPageResponse.size(), is(equalTo(2)));
+      assertThat(secondPageResponse.get(0).getEmail(), is(equalTo("email4@ssbd.com")));
+      assertThat(secondPageResponse.get(1).getEmail(), is(equalTo("email5@ssbd.com")));
+    });
+    utx.commit();
+
+    utx.begin();
+    admin.call(() -> {
+      List<Account> firstPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, "JOHN", SortBy.EMAIL, false));
+      assertThat(firstPageResponse.size(), is(equalTo(3)));
+      assertThat(firstPageResponse.get(0).getEmail(), is(equalTo("email5@ssbd.com")));
+      assertThat(firstPageResponse.get(1).getEmail(), is(equalTo("email4@ssbd.com")));
+      assertThat(firstPageResponse.get(2).getEmail(), is(equalTo("email3@ssbd.com")));
+
+      List<Account> secondPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(2, 3, "john", SortBy.EMAIL, false));
+      assertThat(secondPageResponse.size(), is(equalTo(2)));
+      assertThat(secondPageResponse.get(0).getEmail(), is(equalTo("email2@ssbd.com")));
+      assertThat(secondPageResponse.get(1).getEmail(), is(equalTo("email1@ssbd.com")));
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLikeSortsAccessLevel() throws Exception {
+    List <Account> accounts = List.of(
+        buildAccount("John", "Doe", "email1@ssbd.com", new Administrator()),
+        buildAccount("Johna", "Donovan", "email3@ssbd.com", new Administrator()),
+        buildAccount("Johnb", "Depp", "email2@ssbd.com", new Employee()),
+        buildAccount("Johnc", "Bravo", "email5@ssbd.com", new SalesRep()),
+        buildAccount("Johnd", "Scooby", "email4@ssbd.com", new Client())
+    );
+    for (Account account : accounts) {
+      utx.begin();
+      admin.call(() -> {
+        accountFacadeOperations.create(account);
+      });
+      utx.commit();
+    }
+    utx.begin();
+    admin.call(() -> {
+      List<Account> firstPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, "JOHN", SortBy.ACCESSLEVEL, true));
+      assertThat(firstPageResponse.size(), is(equalTo(3)));
+      assertThat(firstPageResponse.get(0).getLogin(), is(equalTo("John")));
+      assertThat(firstPageResponse.get(1).getLogin(), is(equalTo("Johna")));
+      assertThat(firstPageResponse.get(2).getLogin(), is(equalTo("Johnd")));
+
+      List<Account> secondPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(2, 3, "john", SortBy.ACCESSLEVEL, true));
+      assertThat(secondPageResponse.size(), is(equalTo(2)));
+      assertThat(secondPageResponse.get(0).getLogin(), is(equalTo("Johnb")));
+      assertThat(secondPageResponse.get(1).getLogin(), is(equalTo("Johnc")));
+    });
+    utx.commit();
+
+    utx.begin();
+    admin.call(() -> {
+      List<Account> firstPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, "JOHN", SortBy.ACCESSLEVEL, false));
+      assertThat(firstPageResponse.size(), is(equalTo(3)));
+      assertThat(firstPageResponse.get(0).getLogin(), is(equalTo("Johnc")));
+      assertThat(firstPageResponse.get(1).getLogin(), is(equalTo("Johnb")));
+      assertThat(firstPageResponse.get(2).getLogin(), is(equalTo("Johnd")));
+
+      List<Account> secondPageResponse = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(2, 3, "john", SortBy.ACCESSLEVEL, false));
+      assertThat(secondPageResponse.size(), is(equalTo(2)));
+      assertThat(secondPageResponse.get(0).getLogin(), is(equalTo("John")));
+      assertThat(secondPageResponse.get(1).getLogin(), is(equalTo("Johna")));
+    });
+    utx.commit();
+  }
+
+  @Test
+  void properlyFindsByFullNameLikeAllUsers() throws Exception {
+    List <Account> accounts = List.of(
+        buildAccount("John", "Doe", "email1@ssbd.com", new Administrator()),
+        buildAccount("Johna", "Donovan", "email3@ssbd.com", new Administrator()),
+        buildAccount("Johnb", "Depp", "email2@ssbd.com", new Employee()),
+        buildAccount("Johnc", "Bravo", "email5@ssbd.com", new SalesRep()),
+        buildAccount("Johnd", "Scooby", "email4@ssbd.com", new Client())
+    );
+    for (Account account : accounts) {
+      utx.begin();
+      admin.call(() -> {
+        accountFacadeOperations.create(account);
+      });
+      utx.commit();
+    }
+    utx.begin();
+    List<String> blankKeywords = List.of(
+        "",
+        "  ",
+        "          "
+    );
+    admin.call(() -> {
+      for (String keyword : blankKeywords) {
+        List<Account> response = accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, keyword, SortBy.EMAIL, true));
+        assertThat(response.size(), is(equalTo(5)));
+        assertThat(response.get(0).getEmail(), is(equalTo("email1@ssbd.com")));
+        assertThat(response.get(1).getEmail(), is(equalTo("email2@ssbd.com")));
+        assertThat(response.get(2).getEmail(), is(equalTo("email3@ssbd.com")));
+        assertThat(response.get(3).getEmail(), is(equalTo("email4@ssbd.com")));
+        assertThat(response.get(4).getEmail(), is(equalTo("email5@ssbd.com")));
+      }
+    });
+    utx.commit();
+  }
+
+  @Test
+  void failsToFindByFullNameLikeWithPagination() throws Exception {
+    utx.begin();
+    admin.call(() -> {
+      accountFacadeOperations.create(buildAccount("John", "Doe"));
+    });
+    utx.commit();
+    utx.begin();
+    List<String> invalidNames = Arrays.asList("moe", "j  doe", "johndoe");
+    admin.call(() -> {
+      for (String invalidName : invalidNames) {
+        assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, invalidName, SortBy.LOGIN, false)).size());
+        assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 10, invalidName, SortBy.EMAIL, true)).size());
+        assertEquals(0, accountFacadeOperations.findByFullNameLikeWithPagination(new AccountSearchSettings(1, 3, invalidName, SortBy.ACCESSLEVEL, true)).size());
+      }
     });
     utx.commit();
   }

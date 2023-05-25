@@ -23,9 +23,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 
 class TokenServiceTest {
-  private TokenService tokenService;
+  private TokenServiceOperations tokenService;
   private Account accountAllRoles;
   private Account accountNoRoles;
   private Account administrator;
@@ -237,5 +238,22 @@ class TokenServiceTest {
   void failsToValidateRefreshToken() {
     String token = tokenService.generateToken(accountAllRoles);
     assertThrows(RuntimeException.class, () -> tokenService.validateRefreshToken(token));
+  }
+
+  @Test
+  void properlyGetsLoginFromRefreshToken() {
+    String refreshToken = tokenService.generateRefreshToken(accountAllRoles);
+    assertThat(refreshToken, is(notNullValue()));
+    String token = tokenService.generateToken(accountAllRoles);
+    assertThat(token, is(notNullValue()));
+    assertThat(token, is(not(equalTo(refreshToken))));
+    assertDoesNotThrow(() -> tokenService.getLoginFromRefreshToken(refreshToken));
+    assertThat(tokenService.getLoginFromRefreshToken(refreshToken), is(accountAllRoles.getLogin()));
+  }
+
+  @Test
+  void failsToGetLoginFromRefreshToken() {
+    String token = tokenService.generateToken(accountAllRoles);
+    assertThrows(RuntimeException.class, () -> tokenService.getLoginFromRefreshToken(token));
   }
 }

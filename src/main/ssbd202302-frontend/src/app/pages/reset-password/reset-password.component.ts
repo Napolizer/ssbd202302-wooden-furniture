@@ -128,6 +128,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   resetPassword(): void {
     this.loading = true;
     const resetPassword: ResetPassword = {
+      currentPassword: this.resetPasswordForm.value['password']!,
       password: this.resetPasswordForm.value['password']!,
     };
     this.accountService

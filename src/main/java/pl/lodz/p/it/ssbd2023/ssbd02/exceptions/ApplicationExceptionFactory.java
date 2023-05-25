@@ -16,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.EmailNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ExpiredLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidAccessLevelException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidCurrentPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.InvalidLinkException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.LoginAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
@@ -109,6 +110,11 @@ public final class ApplicationExceptionFactory {
             Response.Status.FORBIDDEN);
   }
 
+  public static BaseWebApplicationException createInvalidTimeZoneException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_INVALID_TIME_ZONE,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static AccessDeniedException createAccessDeniedException(Throwable cause) {
     return new AccessDeniedException(cause);
   }
@@ -184,5 +190,20 @@ public final class ApplicationExceptionFactory {
   public static BaseWebApplicationException invalidRefreshTokenException() {
     return new BaseWebApplicationException(
         MessageUtil.MessageKey.ERROR_INVALID_REFRESH_TOKEN, Response.Status.UNAUTHORIZED);
+  }
+
+  public static BaseWebApplicationException passwordAlreadyUsedException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_PASSWORD_ALREADY_USED, Response.Status.CONFLICT);
+  }
+
+  public static InvalidCurrentPasswordException createInvalidCurrentPasswordException() {
+    return new InvalidCurrentPasswordException(MessageUtil.MessageKey.ERROR_INVALID_CURRENT_PASSWORD,
+            Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createInvalidModeException() {
+    return new BaseWebApplicationException(
+        MessageUtil.MessageKey.ERROR_INVALID_MODE, Response.Status.BAD_REQUEST);
   }
 }
