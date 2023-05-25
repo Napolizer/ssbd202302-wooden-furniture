@@ -189,8 +189,8 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @PermitAll
-  public void resetPassword(String login, ChangePasswordDto changePasswordDto) {
-    repeatTransaction(() -> accountService.resetPassword(login, changePasswordDto.getPassword()));
+  public void resetPassword(String token, ChangePasswordDto changePasswordDto) {
+    repeatTransaction(() -> accountService.resetPassword(token, changePasswordDto.getPassword()));
   }
 
   @PermitAll
@@ -199,8 +199,8 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public void updateEmailAfterConfirmation(String login) {
-    repeatTransaction(() -> accountService.updateEmailAfterConfirmation(login));
+  public void updateEmailAfterConfirmation(String token) {
+    repeatTransaction(() -> accountService.updateEmailAfterConfirmation(token));
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})

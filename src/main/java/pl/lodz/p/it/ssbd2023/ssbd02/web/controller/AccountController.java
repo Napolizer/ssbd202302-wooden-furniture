@@ -326,11 +326,7 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {
-    Account foundAccount = accountEndpoint.getAccountByEmail(emailDto);
 
-    if (foundAccount.getAccountState() != AccountState.ACTIVE) {
-      throw ApplicationExceptionFactory.createAccountNotActiveException();
-    }
     accountEndpoint.sendResetPasswordEmail(emailDto);
     return Response.ok(
         Json.createObjectBuilder()
@@ -359,12 +355,12 @@ public class AccountController {
       @QueryParam("token") String token,
       @NotNull @Valid ChangePasswordDto changePasswordDto
   ) {
-    String login = accountEndpoint.validateEmailToken(token, TokenType.PASSWORD_RESET);
-    accountEndpoint.resetPassword(login, changePasswordDto);
+
+    accountEndpoint.resetPassword(token, changePasswordDto);
     return Response.ok(
-        Json.createObjectBuilder()
-            .add("message", "reset.password.success")
-            .build()
+            Json.createObjectBuilder()
+                    .add("message", "reset.password.success")
+                    .build()
     ).build();
   }
 
@@ -386,8 +382,8 @@ public class AccountController {
   @Path("/change-email")
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response submitEmail(@QueryParam("token") String token) {
-    String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
-    accountEndpoint.updateEmailAfterConfirmation(login);
+
+    accountEndpoint.updateEmailAfterConfirmation(token);
     return Response.ok().build();
   }
 
@@ -476,7 +472,8 @@ public class AccountController {
   public Response findByFullNameLikeWithPagination(@Valid AccountSearchSettingsDto accountSearchSettingsDto,
                                                    @Context SecurityContext securityContext) {
     String login = securityContext.getUserPrincipal().getName();
-    List<AccountWithoutSensitiveDataDto> mappedAccounts = accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
+    List<AccountWithoutSensitiveDataDto> mappedAccounts =
+            accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
     return Response.ok(mappedAccounts).build();
   }
 

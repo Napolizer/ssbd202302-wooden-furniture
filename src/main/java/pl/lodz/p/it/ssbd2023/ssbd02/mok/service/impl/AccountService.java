@@ -378,9 +378,13 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   }
 
   @PermitAll
-  public void resetPassword(String login, String password) {
+  public void resetPassword(String token, String password) {
+    String login = tokenService.getLoginFromTokenWithoutValidating(token, TokenType.PASSWORD_RESET);
+
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createPasswordResetExpiredLinkException);
+
+    tokenService.validateEmailToken(token, TokenType.PASSWORD_RESET, account.getPassword());
 
     final String hash = CryptHashUtils.hashPassword(password);
 
@@ -402,7 +406,13 @@ public class AccountService extends AbstractService implements AccountServiceOpe
 
   @PermitAll
   public void sendResetPasswordEmail(String email) {
-    Account account = getAccountByEmail(email).get();
+    Account account = accountFacade.findByEmail(email)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    if (account.getAccountState() != AccountState.ACTIVE) {
+      throw ApplicationExceptionFactory.createAccountNotActiveException();
+    }
+
     if (!account.getAccountType().equals(AccountType.NORMAL)) {
       throw ApplicationExceptionFactory.createInvalidAccountTypeException();
     }
@@ -415,8 +425,13 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Account updateEmailAfterConfirmation(String login) {
+  public Account updateEmailAfterConfirmation(String token) {
+    String login = tokenService
+            .getLoginFromTokenWithoutValidating(token, TokenType.CHANGE_EMAIL);
+
     Account account = accountFacade.findByLogin(login).orElseThrow(AccountNotFoundException::new);
+    tokenService.validateEmailToken(token, TokenType.CHANGE_EMAIL, account.getNewEmail());
+
     account.setEmail(account.getNewEmail());
     account.setNewEmail(null);
     return accountFacade.update(account);

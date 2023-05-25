@@ -57,11 +57,11 @@ public interface AccountServiceOperations {
 
   String validateChangeEmailToken(String token);
 
-  void resetPassword(String login, String password);
+  void resetPassword(String token, String password);
 
   void sendResetPasswordEmail(String email);
 
-  Account updateEmailAfterConfirmation(String login);
+  Account updateEmailAfterConfirmation(String token);
 
   void changeEmail(String newEmail, Long accountId, String principal, String version);
 

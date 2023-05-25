@@ -51,7 +51,7 @@ public interface AccountEndpointOperations {
 
   String validateEmailToken(String token, TokenType tokenType);
 
-  void resetPassword(String login, ChangePasswordDto changePasswordDto);
+  void resetPassword(String token, ChangePasswordDto changePasswordDto);
 
   void sendResetPasswordEmail(SetEmailToSendPasswordDto emailDto);
 
