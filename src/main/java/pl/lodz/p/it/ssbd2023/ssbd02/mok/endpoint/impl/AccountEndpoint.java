@@ -119,7 +119,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   public AccountWithoutSensitiveDataDto addAccessLevelToAccount(Long accountId, String accessLevel) {
     AccessLevel newAccessLevel = DtoToEntityMapper
             .mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
-    Account account = repeatTransactionWithOptimistic(() -> accountService.addAccessLevelToAccount(accountId, newAccessLevel));
+    Account account = repeatTransactionWithOptimistic(
+            () -> accountService.addAccessLevelToAccount(accountId, newAccessLevel)
+    );
     return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
@@ -127,13 +129,17 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   public AccountWithoutSensitiveDataDto removeAccessLevelFromAccount(Long accountId, String accessLevel) {
     AccessLevel newAccessLevel = DtoToEntityMapper
             .mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
-    Account account = repeatTransactionWithOptimistic(() -> accountService.removeAccessLevelFromAccount(accountId, newAccessLevel));
+    Account account = repeatTransactionWithOptimistic(
+            () -> accountService.removeAccessLevelFromAccount(accountId, newAccessLevel)
+    );
     return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public AccountWithoutSensitiveDataDto changePassword(String login, String newPassword, String currentPassword) {
-    Account account = repeatTransactionWithOptimistic(() -> accountService.changePassword(login, newPassword, currentPassword));
+    Account account = repeatTransactionWithOptimistic(
+            () -> accountService.changePassword(login, newPassword, currentPassword)
+    );
     return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
@@ -144,7 +150,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
 
   @PermitAll
   public AccountWithoutSensitiveDataDto changePasswordFromLink(String token, String password, String currentPassword) {
-    Account account = repeatTransactionWithOptimistic(() -> accountService.changePasswordFromLink(token, password, currentPassword));
+    Account account = repeatTransactionWithOptimistic(
+            () -> accountService.changePasswordFromLink(token, password, currentPassword)
+    );
     return accountMapper.mapToAccountWithoutSensitiveDataDto(account);
   }
 
@@ -167,7 +175,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   public AccountWithoutSensitiveDataDto changeAccessLevel(Long accountId, AccessLevelDto accessLevel) {
     AccessLevel newAccessLevel = DtoToEntityMapper
             .mapAccessLevelDtoToAccessLevel(accessLevel);
-    Account updatedAccount = repeatTransactionWithOptimistic(() -> accountService.changeAccessLevel(accountId, newAccessLevel));
+    Account updatedAccount = repeatTransactionWithOptimistic(
+            () -> accountService.changeAccessLevel(accountId, newAccessLevel)
+    );
     return accountMapper.mapToAccountWithoutSensitiveDataDto(updatedAccount);
   }
 
@@ -209,7 +219,9 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public void changeEmail(SetEmailToSendPasswordDto emailDto, Long accountId, String login, String version) {
-    repeatTransactionWithoutOptimistic(() -> accountService.changeEmail(emailDto.getEmail(), accountId, login, version));
+    repeatTransactionWithoutOptimistic(
+            () -> accountService.changeEmail(emailDto.getEmail(), accountId, login, version)
+    );
   }
 
   @PermitAll
@@ -337,7 +349,8 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
                                                         AccountSearchSettingsDto accountSearchSettingsDto) {
     AccountSearchSettings accountSearchSettings =
         DtoToEntityMapper.mapAccountSearchSettingsDtoToAccountSearchSettings(accountSearchSettingsDto);
-    return repeatTransactionWithoutOptimistic(() -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings)).stream()
+    return repeatTransactionWithoutOptimistic(
+            () -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings)).stream()
             .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
   }
 
