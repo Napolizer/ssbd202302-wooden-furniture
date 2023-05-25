@@ -13,14 +13,12 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import jakarta.mail.MessagingException;
 import java.io.InputStream;
 import java.util.Properties;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
@@ -68,32 +66,50 @@ public class EmailSendingRetryService implements EmailSendingRetryServiceOperati
   public void sendEmailTokenAfterHalfExpirationTime(String login, String hashOrEmail,
                                                     TokenType tokenType, String token) {
     switch (tokenType) {
-      case ACCOUNT_CONFIRMATION -> {
-        timerService.createSingleActionTimer(
-                expirationAccountConfirmation / 2,
-                new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
-                  expirationAccountConfirmation / 2 }, false)
-        );
-        timerService.createSingleActionTimer(
-                expirationAccountConfirmation,
-                new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
-                  expirationAccountConfirmation }, false)
-        );
-      }
-      case CHANGE_EMAIL -> timerService.createSingleActionTimer(
-              expirationChangeEmail / 2,
-              new TimerConfig(new Object[] { login, hashOrEmail, tokenType,  token }, false)
-      );
-      case PASSWORD_RESET -> timerService.createSingleActionTimer(
-              expirationPasswordReset / 2,
-              new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token }, false)
-      );
-      case CHANGE_PASSWORD -> timerService.createSingleActionTimer(
-              expirationChangePassword,
-              new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token }, false)
-      );
+      case ACCOUNT_CONFIRMATION -> createAccountConfirmationTimer(login, hashOrEmail, tokenType, token);
+      case CHANGE_EMAIL -> createChangeEmailTimer(login, hashOrEmail, tokenType, token);
+      case PASSWORD_RESET -> createResetPasswordTimer(login, hashOrEmail, tokenType, token);
+      case CHANGE_PASSWORD -> createChangePasswordTimer(login, hashOrEmail, tokenType, token);
       default -> throw new RuntimeException();
     }
+  }
+
+  @PermitAll
+  private void createAccountConfirmationTimer(String login, String hashOrEmail, TokenType tokenType, String token) {
+    timerService.createSingleActionTimer(
+            expirationAccountConfirmation / 2,
+            new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
+                    expirationAccountConfirmation / 2 }, false)
+    );
+    timerService.createSingleActionTimer(
+            expirationAccountConfirmation,
+            new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token,
+                    expirationAccountConfirmation }, false)
+    );
+  }
+
+  @PermitAll
+  private void createChangeEmailTimer(String login, String hashOrEmail, TokenType tokenType, String token) {
+    timerService.createSingleActionTimer(
+            expirationChangeEmail / 2,
+            new TimerConfig(new Object[] { login, hashOrEmail, tokenType,  token }, false)
+    );
+  }
+
+  @PermitAll
+  private void createResetPasswordTimer(String login, String hashOrEmail, TokenType tokenType, String token) {
+    timerService.createSingleActionTimer(
+            expirationPasswordReset / 2,
+            new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token }, false)
+    );
+  }
+
+  @PermitAll
+  private void createChangePasswordTimer(String login, String hashOrEmail, TokenType tokenType, String token) {
+    timerService.createSingleActionTimer(
+            expirationChangePassword,
+            new TimerConfig(new Object[] { login, hashOrEmail, tokenType, token }, false)
+    );
   }
 
   @Timeout
@@ -110,12 +126,12 @@ public class EmailSendingRetryService implements EmailSendingRetryServiceOperati
     switch (tokenType) {
       case CHANGE_EMAIL -> {
         if (!account.getEmail().equals(hashOrEmail)) {
-          sendMailWithEmailChangeConfirmLink(hashOrEmail, account.getLocale(), token);
+          mailService.sendEmailWithEmailChangeConfirmLink(hashOrEmail, account.getLocale(), token);
         }
       }
       case PASSWORD_RESET -> {
         if (account.getPassword().equals(hashOrEmail)) {
-          sendResetPasswordMail(account.getEmail(), account.getLocale(), token);
+          mailService.sendResetPasswordEmail(account.getEmail(), account.getLocale(), token);
         }
       }
       case ACCOUNT_CONFIRMATION -> {
@@ -137,51 +153,16 @@ public class EmailSendingRetryService implements EmailSendingRetryServiceOperati
   private void checkTimer(Account account, String token, long time) {
     long timeout = this.expirationAccountConfirmation;
     if (time < timeout) {
-      sendAccountConfirmationLink(account, token);
+      mailService.sendEmailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
+              token, account.getLogin());
       return;
     }
 
     if (time == timeout) {
       accountFacade.delete(account);
-      sendAccountRemovedMail(account);
-    }
-  }
-
-  @PermitAll
-  private void sendMailWithEmailChangeConfirmLink(String email, String locale, String token) {
-    try {
-      mailService.sendMailWithEmailChangeConfirmLink(email, locale, token);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
-  }
-
-  @PermitAll
-  private void sendResetPasswordMail(String email, String locale, String token) {
-    try {
-      mailService.sendResetPasswordMail(email, locale, token);
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
-  }
-
-  @PermitAll
-  private void sendAccountConfirmationLink(Account account, String token) {
-    try {
-      mailService.sendMailWithAccountConfirmationLink(account.getEmail(), account.getLocale(),
-              token, account.getLogin());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
-    }
-  }
-
-  @PermitAll
-  private void sendAccountRemovedMail(Account account) {
-    try {
       mailService.sendEmailAboutRemovingNotVerifiedAccount(account.getEmail(), account.getLocale());
-    } catch (MessagingException e) {
-      throw ApplicationExceptionFactory.createMailServiceException(e);
     }
   }
+
 
 }

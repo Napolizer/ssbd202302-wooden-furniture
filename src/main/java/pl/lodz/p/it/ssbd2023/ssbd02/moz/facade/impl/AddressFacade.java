@@ -8,7 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.AddressFacadeOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)

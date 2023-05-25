@@ -26,7 +26,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountType;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;

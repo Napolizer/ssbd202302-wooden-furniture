@@ -31,14 +31,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccountNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -57,15 +58,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 
 @Path("/account")
 @Interceptors({SimpleLoggerInterceptor.class})
 public class AccountController {
   @Inject
   private AccountEndpointOperations accountEndpoint;
-  @Inject
-  private AccountMapper accountMapper;
   @Inject
   private Principal principal;
   @Inject
@@ -77,12 +76,8 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response getAllAccounts() {
-    List<Account> accounts = accountEndpoint.getAccountList();
-    List<AccountWithoutSensitiveDataDto> accountsDto = new ArrayList<>();
-    for (Account account : accounts) {
-      accountsDto.add(accountMapper.mapToAccountWithoutSensitiveDataDto(account));
-    }
-    return Response.ok(accountsDto).build();
+
+    return Response.ok(accountEndpoint.getAccountList()).build();
   }
 
   @GET
@@ -90,12 +85,8 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response getAccountByAccountId(@PathParam("accountId") Long accountId) {
-    Optional<Account> accountOptional = accountEndpoint.getAccountByAccountId(accountId);
-    if (accountOptional.isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    AccountWithoutSensitiveDataDto account =
-            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
+    AccountWithoutSensitiveDataDto account = accountEndpoint.getAccountByAccountId(accountId);
+
     return Response.ok(account).build();
   }
 
@@ -104,12 +95,8 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response getAccountByLogin(@PathParam("login") String login) {
-    Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(login);
-    if (accountOptional.isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    AccountWithoutSensitiveDataDto account =
-            accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
+    AccountWithoutSensitiveDataDto account = accountEndpoint.getAccountByLogin(login);
+
     return Response.ok(account).build();
   }
 
@@ -121,12 +108,9 @@ public class AccountController {
     if (principal.getName() == null) {
       return Response.status(403).build();
     }
-    Optional<Account> accountOptional = accountEndpoint.getAccountByLogin(principal.getName());
-    if (accountOptional.isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    AccountWithoutSensitiveDataDto account =
-        accountMapper.mapToAccountWithoutSensitiveDataWithTimezone(accountOptional.get());
+
+    AccountWithoutSensitiveDataDto account = accountEndpoint.getAccountByLogin(principal.getName());
+
     return Response.ok(account).build();
   }
 
@@ -148,20 +132,10 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response addAccessLevelToAccount(@PathParam("accountId") Long accountId,
                                           @PathParam("accessLevel") String accessLevel) {
-    if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
 
-    if (!accountEndpoint.getAccountByAccountId(accountId).get().getAccountState()
-        .equals(AccountState.ACTIVE)) {
-      throw ApplicationExceptionFactory.createAccountNotActiveException();
-    }
 
-    AccessLevel newAccessLevel =
-        DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
-    accountEndpoint.addAccessLevelToAccount(accountId, newAccessLevel);
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(
-        accountEndpoint.getAccountByAccountId(accountId).get());
+    AccountWithoutSensitiveDataDto account = accountEndpoint.addAccessLevelToAccount(accountId, accessLevel);
+
     return Response.ok(account).build();
   }
 
@@ -171,12 +145,8 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response changeAccessLevel(@PathParam("accountId") Long accountId,
                                     @NotNull @Valid AccessLevelDto accessLevel) {
-    AccessLevel newAccessLevel =
-            DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(accessLevel);
-    Account upadatedAccount = accountEndpoint.changeAccessLevel(accountId, newAccessLevel);
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(upadatedAccount);
 
-    return Response.ok(account).build();
+    return Response.ok(accountEndpoint.changeAccessLevel(accountId, accessLevel)).build();
   }
 
   @DELETE
@@ -185,16 +155,11 @@ public class AccountController {
   @RolesAllowed(ADMINISTRATOR)
   public Response removeAccessLevelFromAccount(@PathParam("accountId") Long accountId,
                                                @PathParam("accessLevel") String accessLevel) {
-    if (accountEndpoint.getAccountByAccountId(accountId).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
 
-    AccessLevel newAccessLevel =
-        DtoToEntityMapper.mapAccessLevelDtoToAccessLevel(new AccessLevelDto(accessLevel));
-    accountEndpoint.removeAccessLevelFromAccount(accountId, newAccessLevel);
-    AccountWithoutSensitiveDataDto account = accountMapper.mapToAccountWithoutSensitiveDataDto(
-        accountEndpoint.getAccountByAccountId(accountId).get());
-    return Response.ok(account).build();
+    AccountWithoutSensitiveDataDto updatedAccount =
+            accountEndpoint.removeAccessLevelFromAccount(accountId, accessLevel);
+
+    return Response.ok(updatedAccount).build();
   }
 
   @POST
@@ -210,39 +175,32 @@ public class AccountController {
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response createAccount(@NotNull @Valid AccountCreateDto accountCreateDto) {
-    Account account = accountEndpoint.createAccount(accountCreateDto);
     return Response.status(Response.Status.CREATED)
-            .entity(accountMapper.mapToAccountWithoutSensitiveDataDto(account)).build();
+            .entity(accountEndpoint.createAccount(accountCreateDto)).build();
   }
 
   @PUT
   @Path("/self/changePassword")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
-  public Response changePassword(@NotNull @Valid ChangePasswordDto changePasswordDto)
-      throws AccountNotFoundException {
-
-    String login = principal.getName();
-    if (login == null || login.equals("ANONYMOUS")) {
-      return Response.status(403).build();
-    }
-    Account account = accountEndpoint.changePassword(login, changePasswordDto.getPassword(),
+  public Response changePassword(@NotNull @Valid ChangePasswordDto changePasswordDto) {
+    AccountWithoutSensitiveDataDto account =
+            accountEndpoint.changePassword(principal.getName(), changePasswordDto.getPassword(),
             changePasswordDto.getCurrentPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
 
-    return Response.ok(changedAccount).build();
+
+    return Response.ok(account).build();
   }
 
   @PUT
   @Path("/self/changePassword/link")
   @Produces(MediaType.APPLICATION_JSON)
   public Response changePasswordFromLink(@NotNull @Valid ChangePasswordDto changePasswordDto,
-                                         @QueryParam("token") String token)
-          throws AccountNotFoundException {
+                                         @QueryParam("token") String token) {
 
-    Account account = accountEndpoint.changePasswordFromLink(token, changePasswordDto.getPassword(),
+    AccountWithoutSensitiveDataDto changedAccount =
+            accountEndpoint.changePasswordFromLink(token, changePasswordDto.getPassword(),
             changePasswordDto.getCurrentPassword());
-    AccountWithoutSensitiveDataDto changedAccount = accountMapper.mapToAccountWithoutSensitiveDataDto(account);
 
     return Response.ok(changedAccount).build();
   }
@@ -309,12 +267,9 @@ public class AccountController {
   public Response editAccountAsAdmin(@PathParam("login") String login,
                                      @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
                                      @Context SecurityContext securityContext) {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
 
-    accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto);
-    return Response.ok(editPersonInfoDto).build();
+
+    return Response.ok(accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto)).build();
   }
 
   @PATCH
@@ -351,13 +306,9 @@ public class AccountController {
   public Response editOwnAccount(@PathParam("login") String login,
                                  @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
                                  @Context SecurityContext securityContext) {
-    if (accountEndpoint.getAccountByLogin(login).isEmpty()) {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
 
     if (Objects.equals(securityContext.getUserPrincipal().getName(), login)) {
-      accountEndpoint.editAccountInfo(login, editPersonInfoDto);
-      return Response.ok(editPersonInfoDto).build();
+      return Response.ok(accountEndpoint.editAccountInfo(login, editPersonInfoDto)).build();
     } else {
       throw ApplicationExceptionFactory.createForbiddenException();
     }
@@ -375,13 +326,7 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response sendResetPasswordMail(@NotNull @Valid SetEmailToSendPasswordDto emailDto) {
-    Optional<Account> foundAccount = accountEndpoint.getAccountByEmail(emailDto);
-    if (foundAccount.isEmpty()) {
-      throw ApplicationExceptionFactory.createEmailNotFoundException();
-    }
-    if (foundAccount.get().getAccountState() != AccountState.ACTIVE) {
-      throw ApplicationExceptionFactory.createAccountNotActiveException();
-    }
+
     accountEndpoint.sendResetPasswordEmail(emailDto);
     return Response.ok(
         Json.createObjectBuilder()
@@ -410,12 +355,12 @@ public class AccountController {
       @QueryParam("token") String token,
       @NotNull @Valid ChangePasswordDto changePasswordDto
   ) {
-    String login = accountEndpoint.validateEmailToken(token, TokenType.PASSWORD_RESET);
-    accountEndpoint.resetPassword(login, changePasswordDto);
+
+    accountEndpoint.resetPassword(token, changePasswordDto);
     return Response.ok(
-        Json.createObjectBuilder()
-            .add("message", "reset.password.success")
-            .build()
+            Json.createObjectBuilder()
+                    .add("message", "reset.password.success")
+                    .build()
     ).build();
   }
 
@@ -437,8 +382,8 @@ public class AccountController {
   @Path("/change-email")
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public Response submitEmail(@QueryParam("token") String token) {
-    String login = accountEndpoint.validateEmailToken(token, TokenType.CHANGE_EMAIL);
-    accountEndpoint.updateEmailAfterConfirmation(login);
+
+    accountEndpoint.updateEmailAfterConfirmation(token);
     return Response.ok().build();
   }
 
@@ -507,10 +452,8 @@ public class AccountController {
   @Path("/find/fullName/{fullName}")
   @RolesAllowed(ADMINISTRATOR)
   public Response findByFullNameLike(@NotNull @PathParam("fullName") String fullName) {
-    List<Account> accounts = accountEndpoint.findByFullNameLike(fullName);
-    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
-        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
-    return Response.ok(mappedAccounts).build();
+
+    return Response.ok(accountEndpoint.findByFullNameLike(fullName)).build();
   }
 
   @POST
@@ -529,9 +472,8 @@ public class AccountController {
   public Response findByFullNameLikeWithPagination(@Valid AccountSearchSettingsDto accountSearchSettingsDto,
                                                    @Context SecurityContext securityContext) {
     String login = securityContext.getUserPrincipal().getName();
-    List<Account> accounts = accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
-    List<AccountWithoutSensitiveDataDto> mappedAccounts = accounts.stream()
-        .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
+    List<AccountWithoutSensitiveDataDto> mappedAccounts =
+            accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
     return Response.ok(mappedAccounts).build();
   }
 
@@ -541,8 +483,8 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getOwnSearchSettings(@Context SecurityContext securityContext) {
     String login = securityContext.getUserPrincipal().getName();
-    AccountSearchSettings accountSearchSettings = accountEndpoint.getAccountSearchSettings(login);
-    AccountSearchSettingsDto accountSearchSettingsDto = DtoToEntityMapper.mapAccountSearchSettingsToAccountSearchSettingsDto(accountSearchSettings);
-    return Response.ok(accountSearchSettingsDto).build();
+    AccountSearchSettingsDto accountSearchSettings = accountEndpoint.getAccountSearchSettings(login);
+
+    return Response.ok(accountSearchSettings).build();
   }
 }

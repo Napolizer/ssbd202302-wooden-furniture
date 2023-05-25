@@ -20,10 +20,10 @@
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.extension.ExtendWith;
-//import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
+//import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 //import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 //import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
-//import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
+//import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 //import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.ProductFacadeOperations;
 //
 //@ExtendWith(ArquillianExtension.class)

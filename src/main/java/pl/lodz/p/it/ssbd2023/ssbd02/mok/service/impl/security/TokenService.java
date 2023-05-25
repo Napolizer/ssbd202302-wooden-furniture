@@ -27,7 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.TokenType;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
