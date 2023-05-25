@@ -1,12 +1,13 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api;
 
 import jakarta.ejb.Local;
-import java.util.List;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 
+import java.util.List;
+import java.util.Optional;
+
 @Local
-public interface CategoryFacadeOperations {
+public interface CategoryEndpointOperations {
 
   List<Category> findAllByParentCategory(Category parentCategory);
 

@@ -2,8 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api;
 
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 
+@Local
 public interface AddressFacadeOperations {
 
   Optional<Address> find(Long id);

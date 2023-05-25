@@ -30,6 +30,11 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
   }
 
   @Override
+  public void delete(Long id) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public List<Rate> findAllByValue(Integer value) {
     return em.createNamedQuery(Rate.FIND_ALL_BY_VALUE, Rate.class)
         .setParameter("value", value)

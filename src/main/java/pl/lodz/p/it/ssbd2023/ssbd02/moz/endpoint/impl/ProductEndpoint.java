@@ -5,7 +5,6 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import java.util.List;
 import java.util.Optional;
-
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.WoodType;
