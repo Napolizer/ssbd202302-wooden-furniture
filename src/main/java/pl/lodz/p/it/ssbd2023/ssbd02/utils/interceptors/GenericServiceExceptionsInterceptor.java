@@ -7,13 +7,14 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.OptimisticLockException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
 
 public class GenericServiceExceptionsInterceptor {
   @AroundInvoke
   public Object intercept(InvocationContext ictx) {
     try {
       return ictx.proceed();
-    } catch (OptimisticLockException ole) {
+    } catch (ApplicationOptimisticLockException | OptimisticLockException ole) {
       throw ApplicationExceptionFactory.createApplicationOptimisticLockException();
     } catch (BaseWebApplicationException be) {
       throw be;

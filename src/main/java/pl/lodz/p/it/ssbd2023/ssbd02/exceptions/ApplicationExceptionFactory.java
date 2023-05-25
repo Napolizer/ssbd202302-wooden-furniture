@@ -206,4 +206,8 @@ public final class ApplicationExceptionFactory {
     return new BaseWebApplicationException(
         MessageUtil.MessageKey.ERROR_INVALID_MODE, Response.Status.BAD_REQUEST);
   }
+
+  public static ApplicationTransactionRollbackException createApplicationTransactionRollbackException() {
+    return new ApplicationTransactionRollbackException();
+  }
 }

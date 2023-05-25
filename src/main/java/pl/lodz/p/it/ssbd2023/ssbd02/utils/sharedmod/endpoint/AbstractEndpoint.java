@@ -2,12 +2,12 @@ package pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJBTransactionRolledbackException;
-import jakarta.ws.rs.WebApplicationException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ApplicationOptimisticLockException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 
@@ -27,7 +27,7 @@ public abstract class AbstractEndpoint {
     }
   }
 
-  protected <T> T repeatTransaction(TransactionMethod<T> method) {
+  protected <T> T repeatTransactionWithoutOptimistic(TransactionMethod<T> method) {
     int retryCounter = retryCounterValue;
     boolean isRollback = true;
     T result = null;
@@ -38,13 +38,13 @@ public abstract class AbstractEndpoint {
         result = method.run();
         isRollback = isLastTransactionRollback();
 
-      } catch (BaseWebApplicationException | EJBTransactionRolledbackException ex) {
+      } catch (EJBTransactionRolledbackException ex) {
         logger.log(Level.WARNING, "Transaction number "
                 + (retryCounterValue - retryCounter + 1) + " failed");
         retryCounter--;
 
         if (retryCounter == 0) {
-          throw ex;
+          throw ApplicationExceptionFactory.createApplicationTransactionRollbackException();
         }
       }
     }
@@ -52,7 +52,32 @@ public abstract class AbstractEndpoint {
     return result;
   }
 
-  protected void repeatTransaction(VoidTransactionMethod method) {
+  protected <T> T repeatTransactionWithOptimistic(TransactionMethod<T> method) {
+    int retryCounter = retryCounterValue;
+    boolean isRollback = true;
+    T result = null;
+
+    while (isRollback) {
+      try {
+        logger.log(Level.INFO, "Transaction number " + (retryCounterValue - retryCounter + 1));
+        result = method.run();
+        isRollback = isLastTransactionRollback();
+
+      } catch (ApplicationOptimisticLockException | EJBTransactionRolledbackException ex) {
+        logger.log(Level.WARNING, "Transaction number "
+                + (retryCounterValue - retryCounter + 1) + " failed");
+        retryCounter--;
+
+        if (retryCounter == 0) {
+          throw ApplicationExceptionFactory.createApplicationTransactionRollbackException();
+        }
+      }
+    }
+
+    return result;
+  }
+
+  protected void repeatTransactionWithoutOptimistic(VoidTransactionMethod method) {
     int retryCounter = retryCounterValue;
     boolean isRollback = true;
 
@@ -62,13 +87,35 @@ public abstract class AbstractEndpoint {
         method.run();
         isRollback = isLastTransactionRollback();
 
-      } catch (WebApplicationException | EJBTransactionRolledbackException ex) {
+      } catch (EJBTransactionRolledbackException ex) {
         logger.log(Level.WARNING, "Transaction number "
                 + (retryCounterValue - retryCounter + 1) + " failed");
         retryCounter--;
 
         if (retryCounter == 0) {
-          throw ex;
+          throw ApplicationExceptionFactory.createApplicationTransactionRollbackException();
+        }
+      }
+    }
+  }
+
+  protected void repeatTransactionWithOptimistic(VoidTransactionMethod method) {
+    int retryCounter = retryCounterValue;
+    boolean isRollback = true;
+
+    while (isRollback) {
+      try {
+        logger.log(Level.INFO, "Transaction number " + (retryCounterValue - retryCounter + 1));
+        method.run();
+        isRollback = isLastTransactionRollback();
+
+      } catch (ApplicationOptimisticLockException | EJBTransactionRolledbackException ex) {
+        logger.log(Level.WARNING, "Transaction number "
+                + (retryCounterValue - retryCounter + 1) + " failed");
+        retryCounter--;
+
+        if (retryCounter == 0) {
+          throw ApplicationExceptionFactory.createApplicationTransactionRollbackException();
         }
       }
     }
