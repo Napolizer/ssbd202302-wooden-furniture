@@ -12,9 +12,9 @@ public interface RateEndpointOperations {
 
   RateDto create(RateDto entity);
 
-  RateDto archive(RateDto entity);
+  RateDto archive(Long id, RateDto entity);
 
-  RateDto update(RateDto entity);
+  RateDto update(Long id, RateDto entity);
 
   Optional<RateDto> find(Long id);
 

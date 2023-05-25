@@ -25,12 +25,14 @@ public class ProductController {
   }
 
   @PUT
-  public Response archive(UpdateProductDto entity) {
+  @Path("/archive/id/{id}")
+  public Response archive(@PathParam("id") Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
   }
 
   @PUT
-  public Response update(UpdateProductDto entity) {
+  @Path("/id/{id}")
+  public Response update(@PathParam("id") Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
   }
 

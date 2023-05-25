@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface ProductServiceOperations {
   Product create(Product entity);
 
-  Product archive(Product entity);
+  Product archive(Long id, Product entity);
 
-  Product update(Product entity);
+  Product update(Long id, Product entity);
 
   Optional<Product> find(Long id);
 

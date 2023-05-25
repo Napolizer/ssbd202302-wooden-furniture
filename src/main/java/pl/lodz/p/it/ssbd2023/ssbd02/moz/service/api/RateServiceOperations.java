@@ -12,9 +12,9 @@ public interface RateServiceOperations {
 
   Rate create(Rate entity);
 
-  Rate archive(Rate entity);
+  Rate archive(Long id, Rate entity);
 
-  Rate update(Rate entity);
+  Rate update(Long id, Rate entity);
 
   Optional<Rate> find(Long id);
 

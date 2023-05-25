@@ -33,7 +33,8 @@ public class RateController {
   }
 
   @PUT
-  public Response update(RateDto entity) {
+  @Path("/id/{id}")
+  public Response update(@PathParam("id") Long id, RateDto entity) {
     throw new UnsupportedOperationException();
   }
 

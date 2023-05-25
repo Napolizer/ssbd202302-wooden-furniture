@@ -26,12 +26,12 @@ public class ProductService implements ProductServiceOperations {
   }
 
   @Override
-  public Product archive(Product entity) {
+  public Product archive(Long id, Product entity) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Product update(Product entity) {
+  public Product update(Long id, Product entity) {
     throw new UnsupportedOperationException();
   }
 

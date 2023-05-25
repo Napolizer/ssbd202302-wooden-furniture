@@ -31,12 +31,12 @@ public class ProductEndpoint implements ProductEndpointOperations {
   }
 
   @Override
-  public ProductDto archive(UpdateProductDto entity) {
+  public ProductDto archive(Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public ProductDto update(UpdateProductDto entity) {
+  public ProductDto update(Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
   }
 

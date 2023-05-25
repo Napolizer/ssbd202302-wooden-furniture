@@ -28,12 +28,12 @@ public class RateService implements RateServiceOperations {
   }
 
   @Override
-  public Rate archive(Rate entity) {
+  public Rate archive(Long id, Rate entity) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Rate update(Rate entity) {
+  public Rate update(Long id, Rate entity) {
     throw new UnsupportedOperationException();
   }
 

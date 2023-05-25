@@ -15,9 +15,9 @@ import java.util.Optional;
 public interface ProductEndpointOperations {
   ProductDto create(CreateProductDto entity);
 
-  ProductDto archive(UpdateProductDto entity);
+  ProductDto archive(Long id, UpdateProductDto entity);
 
-  ProductDto update(UpdateProductDto entity);
+  ProductDto update(Long id, UpdateProductDto entity);
 
   Optional<ProductDto> find(Long id);
 
