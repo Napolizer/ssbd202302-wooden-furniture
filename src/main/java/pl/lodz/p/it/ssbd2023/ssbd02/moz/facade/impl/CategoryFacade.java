@@ -1,11 +1,11 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.CategoryFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
 @Stateless

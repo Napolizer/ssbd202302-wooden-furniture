@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.impl;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -8,7 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.api.CompanyFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CompanyFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.facade.AbstractFacade;
 
 @Stateless

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.api;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api;
 
 import java.util.List;
 import java.util.Optional;
