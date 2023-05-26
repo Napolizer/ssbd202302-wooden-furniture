@@ -1,6 +1,5 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div class="container">
-  <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
   <mat-autocomplete #auto='matAutocomplete'>
     <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
       {{fullName}}
@@ -19,6 +18,9 @@
              style="color: gray;"
       >
     </mat-form-field>
+    <button type="button" mat-raised-button color="primary" class="resetButton" (click)="onResetClicked()">
+      {{ "reset" | translate}}
+    </button>
     <button type="submit" mat-raised-button color="primary" class="searchButton">
       {{ "admin.search" | translate}}
     </button>

@@ -2,7 +2,6 @@
   <div class="panel" [@loadedUnloadedForm]="{ value: getFormAnimationState() }">
     <form class="form-container" [formGroup]="createAccountForm">
       <mat-card>
-      <mat-icon class="icon-back" (click)="onBackClicked()">home</mat-icon>
       <p class="form-title">{{ "create.account.title" | translate }}</p>
       <div class="form">
         <app-spinner [loading]="loading"></app-spinner>
