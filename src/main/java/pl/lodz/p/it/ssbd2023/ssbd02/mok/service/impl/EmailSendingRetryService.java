@@ -26,12 +26,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.EmailSendingRetryServiceOper
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SimpleLoggerInterceptor.class)
 @DenyAll
-public class EmailSendingRetryService implements EmailSendingRetryServiceOperations {
+public class EmailSendingRetryService extends AbstractService implements EmailSendingRetryServiceOperations {
   private Long expirationAccountConfirmation;
   private Long expirationPasswordReset;
   private Long expirationChangeEmail;

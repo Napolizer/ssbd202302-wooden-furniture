@@ -36,11 +36,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({ LoggerInterceptor.class })
-public class GoogleService implements GoogleServiceOperations {
+public class GoogleService extends AbstractService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   private static final String BASE_URI;

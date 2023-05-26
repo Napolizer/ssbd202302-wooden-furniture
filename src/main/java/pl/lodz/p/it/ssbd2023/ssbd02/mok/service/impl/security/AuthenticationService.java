@@ -33,12 +33,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({ LoggerInterceptor.class })
 @DenyAll
-public class AuthenticationService implements AuthenticationServiceOperations {
+public class AuthenticationService extends AbstractService implements AuthenticationServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject

@@ -35,12 +35,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors({ LoggerInterceptor.class })
 @DenyAll
-public class TokenService implements TokenServiceOperations {
+public class TokenService extends AbstractService implements TokenServiceOperations {
   private static final String SECRET_KEY;
   private static final String SECRET_KEY_REFRESH;
   private static final Long EXPIRATION_AUTHORIZATION;

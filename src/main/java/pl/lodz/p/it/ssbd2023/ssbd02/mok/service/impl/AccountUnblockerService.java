@@ -20,12 +20,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountUnblockerServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors(SimpleLoggerInterceptor.class)
 @DenyAll
-public class AccountUnblockerService implements AccountUnblockerServiceOperations {
+public class AccountUnblockerService extends AbstractService implements AccountUnblockerServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
   @Inject
