@@ -1,17 +1,22 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.*;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.*;
-import static pl.lodz.p.it.ssbd2023.ssbd02.web.InitData.retrieveAdminToken;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

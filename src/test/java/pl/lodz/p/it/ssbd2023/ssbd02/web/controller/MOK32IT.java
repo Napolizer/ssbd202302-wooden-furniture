@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static io.restassured.RestAssured.given;
+
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -14,8 +16,6 @@ import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
-import static io.restassured.RestAssured.given;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

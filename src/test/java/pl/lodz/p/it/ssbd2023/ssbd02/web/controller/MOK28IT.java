@@ -17,7 +17,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 

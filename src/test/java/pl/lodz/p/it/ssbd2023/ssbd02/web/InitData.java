@@ -1,24 +1,20 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web;
 
+import static io.restassured.RestAssured.given;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
 
 public class InitData {
 

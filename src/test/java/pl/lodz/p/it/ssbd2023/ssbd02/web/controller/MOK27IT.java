@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import jakarta.ws.rs.core.HttpHeaders;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +18,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

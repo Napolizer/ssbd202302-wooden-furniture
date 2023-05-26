@@ -1,6 +1,20 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.*;
+import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.ACCEPT_LANGUAGE;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
@@ -9,11 +23,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
-import static io.restassured.RestAssured.given;
-import static jakarta.ws.rs.core.HttpHeaders.ACCEPT_LANGUAGE;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.*;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

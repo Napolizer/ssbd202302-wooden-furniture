@@ -1,5 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +28,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasSize;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

@@ -1,21 +1,24 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.facade;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import jakarta.annotation.Resource;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import java.io.File;
+import java.util.List;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -28,25 +31,15 @@ import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.SalesRepAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.SortBy;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ArquillianExtension.class)
 public class AccountFacadeOperationsIT {
