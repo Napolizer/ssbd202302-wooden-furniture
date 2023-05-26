@@ -75,8 +75,6 @@ public interface AccountServiceOperations {
 
   List<Account> findByFullNameLike(String fullName);
 
-  List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettings accountSearchSettings);
-
   AccountSearchSettings getAccountSearchSettings(String login);
 
   Mode getAccountMode(String login);

@@ -356,16 +356,6 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public List<AccountWithoutSensitiveDataDto> findByFullNameLikeWithPagination(String login,
-                                                        AccountSearchSettingsDto accountSearchSettingsDto) {
-    AccountSearchSettings accountSearchSettings =
-        DtoToEntityMapper.mapAccountSearchSettingsDtoToAccountSearchSettings(accountSearchSettingsDto);
-    return repeatTransactionWithoutOptimistic(
-            () -> accountService.findByFullNameLikeWithPagination(login, accountSearchSettings)).stream()
-            .map(accountMapper::mapToAccountWithoutSensitiveDataDto).toList();
-  }
-
-  @RolesAllowed(ADMINISTRATOR)
   public AccountSearchSettingsDto getAccountSearchSettings(String login) {
     AccountSearchSettings accountSearchSettings =
             repeatTransactionWithoutOptimistic(() -> accountService.getAccountSearchSettings(login));
