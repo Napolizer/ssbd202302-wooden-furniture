@@ -96,14 +96,14 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
   @RolesAllowed(ADMINISTRATOR)
   public AccountWithoutSensitiveDataDto getAccountByAccountId(Long accountId) {
     return repeatTransactionWithoutOptimistic(() -> accountService.getAccountById(accountId))
-            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .map(accountMapper::mapToAccountWithoutSensitiveDataWithTimezone)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
   public AccountWithoutSensitiveDataDto getAccountByLogin(String login) {
     return repeatTransactionWithoutOptimistic(() -> accountService.getAccountByLogin(login))
-            .map(accountMapper::mapToAccountWithoutSensitiveDataDto)
+            .map(accountMapper::mapToAccountWithoutSensitiveDataWithTimezone)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
   }
 
