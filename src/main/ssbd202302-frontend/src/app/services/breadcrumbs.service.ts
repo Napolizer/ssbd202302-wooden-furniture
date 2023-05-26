@@ -33,7 +33,7 @@ import { Subject } from "rxjs/internal/Subject";
             this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'account.edit']
           }
           else if(this.currentUrl.includes("/change-password")) {
-            this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'account.change.password']
+            this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'change.password.button']
           }
           else if(this.currentUrl.includes("/account-role-add")) {
             this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account' , 'account.addrole']
@@ -51,7 +51,7 @@ import { Subject } from "rxjs/internal/Subject";
             this.breadcrumbs=['toolbar.home']
           }
           else if(this.currentUrl.includes("/login")) {
-            this.breadcrumbs=['toolbar.home', 'register.label.login']
+            this.breadcrumbs=['toolbar.home']
           }
           return this.breadcrumbs;
     }

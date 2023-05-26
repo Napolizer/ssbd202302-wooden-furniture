@@ -16,6 +16,7 @@ import {environment} from "../../../environments/environment";
 import { FormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ThemeSwitcherComponentComponent } from '../theme-switcher-component/theme-switcher-component.component';
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -29,6 +30,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   private locale: string;
   private changeLocale: ChangeLocale;
   isDarkThemeActive = false
+  breadcrumbs: string[];
   constructor(
     private alertService: AlertService,
     private navigationService: NavigationService,
@@ -39,11 +41,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private overlay: OverlayContainer
+    private overlay: OverlayContainer,
+    private breadcrumbService: BreadcrumbsService
   ) {
   }
 
   ngOnInit(): void {
+    this.breadcrumbs = this.breadcrumbService.initBreadcrumbs();
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
   }
 
@@ -53,30 +57,37 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   redirectToMainPage(): void {
+    this.breadcrumbs=['toolbar.home']
     void this.navigationService.redirectToMainPage();
   }
 
   redirectToAdminPage(): void {
+    this.breadcrumbs=['toolbar.home','toolbar.adminPanel']
     void this.navigationService.redirectToAdminPage();
   }
 
   redirectToAccountPage(): void {
+    this.breadcrumbs=['toolbar.home','toolbar.myAccount']
     void this.navigationService.redirectToOwnAccountPage();
   }
 
   redirectToLoginPage(): void {
+    this.breadcrumbs=['toolbar.home']
     void this.navigationService.redirectToLoginPage();
   }
 
   redirectToRegisterPage(): void {
+    this.breadcrumbs=['toolbar.home','register.title']
     void this.navigationService.redirectToRegisterPage();
   }
 
   redirectToChangeOwnPasswordPage(): void {
+    this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'change.password.button']
     void this.navigationService.redirectToChangeOwnPasswordPage();
   }
 
   redirectToCreateAccountPage(): void {
+    this.breadcrumbs=['toolbar.home', 'create.account.title']
     void this.navigationService.redirectToCreateAccountPage();
   }
 
@@ -114,6 +125,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         console.log('default')
         break;
       }
+      this.breadcrumbs=['toolbar.home']
     void this.navigationService.redirectToMainPage();
   }
 
@@ -141,6 +153,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       .subscribe(message => {
         this.alertService.success(message);
         this.redirectToMainPage();
+        this.breadcrumbs=['toolbar.home']
       });
   }
 
@@ -252,6 +265,49 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         return this.authenticationService.isCurrentRole(Role.CLIENT);
       default:
         return false;
+    }
+  }
+
+  navigateBreadcrumb(breadcrumb: string) {
+    console.log(breadcrumb)
+    switch(breadcrumb) {
+      case 'toolbar.home': {
+        this.breadcrumbs=['toolbar.home']
+        this.navigationService.redirectToMainPage();
+        break;
+      }
+      case 'toolbar.adminPanel': {
+        this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel']
+        this.navigationService.redirectToAdminPage();
+        break;
+      }
+      case 'toolbar.account': {
+        this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel','toolbar.account']
+        //this.navigationService
+        break;
+      }
+      case 'toolbar.myAccount': {
+        this.breadcrumbs=['toolbar.home','toolbar.myAccount'];
+        this.navigationService.redirectToOwnAccountPage();
+        break;
+      }
+      case 'toolbar.account': {
+        this.breadcrumbs=['toolbar.home', 'toolbar.adminPanel', 'toolbar.account']
+        //this.navigationService.redirectToAccountPage();
+        break;
+      }
+      case 'register.title': {
+        this.breadcrumbs=['toolbar.home','register.title']
+        this.redirectToRegisterPage();
+        break;
+      }
+      case 'toolbar.login': {
+        this.breadcrumbs=['toolbar.home']
+        this.redirectToLoginPage();
+        break;
+      }
+      default: 
+        break;
     }
   }
 

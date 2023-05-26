@@ -240,6 +240,7 @@
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
+  "toolbar.login": "Login",
   "toolbar.settings": "Settings",
   "toolbar.createAccount": "Create Account",
   "toolbar.account": "Account",

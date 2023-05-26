@@ -15,7 +15,6 @@ export class NavigationService {
   }
 
   public redirectToCurrentPage(): Promise<boolean> {
-
     return this.router.navigateByUrl(this.router.url);
   }
 
