@@ -12,7 +12,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
