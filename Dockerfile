@@ -1,2 +1,2 @@
 FROM payara/server-full:6.2023.2-jdk17
-ADD target/ssbd02-0.1.0.war /opt/payara/deployments
+ADD target/ssbd02Sv0.1.2.war /opt/payara/deployments
