@@ -524,22 +524,6 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   }
 
   @RolesAllowed(ADMINISTRATOR)
-  public List<Account> findByFullNameLikeWithPagination(String login, AccountSearchSettings accountSearchSettings) {
-    if (accountFacade.findByLogin(login).isPresent()) {
-      Account account = accountFacade.findByLogin(login).get();
-      if (accountSearchSettings == null) {
-        accountSearchSettings = account.getAccountSearchSettings();
-      } else {
-        account.setAccountSearchSettings(accountSearchSettings);
-        accountFacade.update(account);
-      }
-    } else {
-      throw ApplicationExceptionFactory.createAccountNotFoundException();
-    }
-    return accountFacade.findByFullNameLikeWithPagination(accountSearchSettings);
-  }
-
-  @RolesAllowed(ADMINISTRATOR)
   public AccountSearchSettings getAccountSearchSettings(String login) {
     return accountFacade.findByLogin(login).get().getAccountSearchSettings();
   }

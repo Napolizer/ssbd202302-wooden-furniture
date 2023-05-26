@@ -23,7 +23,5 @@ public interface AccountFacadeOperations extends Facade<Account> {
 
   List<Account> findByFullNameLike(String fullName);
 
-  List<Account> findByFullNameLikeWithPagination(AccountSearchSettings settings);
-
   void delete(Account account);
 }

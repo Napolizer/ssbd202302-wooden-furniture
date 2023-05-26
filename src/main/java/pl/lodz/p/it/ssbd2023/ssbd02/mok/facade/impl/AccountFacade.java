@@ -129,23 +129,11 @@ public class AccountFacade extends AbstractFacade<Account> implements AccountFac
   @Override
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
-    TypedQuery<Account> query = em.createNamedQuery(Account.FIND_BY_FULL_NAME_ASC, Account.class);
-    query.setParameter("fullName", fullName);
-    query.setParameter("sortField", SortBy.LOGIN.name().toLowerCase());
-    return query.getResultList().stream().distinct().toList();
+    return em.createNamedQuery(Account.FIND_ALL_BY_FULL_NAME_LIKE, Account.class)
+        .setParameter("fullName", fullName)
+        .getResultList();
   }
 
-  @Override
-  @RolesAllowed(ADMINISTRATOR)
-  public List<Account> findByFullNameLikeWithPagination(AccountSearchSettings settings) {
-    TypedQuery<Account> query = em.createNamedQuery(
-        settings.getSortAscending() ? Account.FIND_BY_FULL_NAME_ASC : Account.FIND_BY_FULL_NAME_DESC,
-        Account.class);
-    query.setParameter("fullName", settings.getSearchKeyword().trim());
-    query.setParameter("sortField", settings.getSortBy().name().toUpperCase());
-    query.setFirstResult((settings.getSearchPage() - 1) * settings.getDisplayedAccounts());
-    return query.getResultList().stream().distinct().limit(settings.getDisplayedAccounts()).toList();
-  }
 
   @Override
   @PermitAll

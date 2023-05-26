@@ -472,18 +472,6 @@ public class AccountController {
     return Response.ok(fullNameDtos).build();
   }
 
-  @POST
-  @Path("/find/fullNameWithPagination")
-  @RolesAllowed(ADMINISTRATOR)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response findByFullNameLikeWithPagination(@Valid AccountSearchSettingsDto accountSearchSettingsDto,
-                                                   @Context SecurityContext securityContext) {
-    String login = securityContext.getUserPrincipal().getName();
-    List<AccountWithoutSensitiveDataDto> mappedAccounts =
-            accountEndpoint.findByFullNameLikeWithPagination(login, accountSearchSettingsDto);
-    return Response.ok(mappedAccounts).build();
-  }
-
   @GET
   @Path("/ownSearchSettings")
   @RolesAllowed(ADMINISTRATOR)
