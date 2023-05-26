@@ -34,7 +34,6 @@ import {map} from "rxjs";
   ]
 })
 export class AdminPageComponent implements OnInit {
-  allAccounts: Account[] = [];
   accounts: Account[] = [];
   loading = true;
   breadcrumbsData: string[] = [];
@@ -50,8 +49,7 @@ export class AdminPageComponent implements OnInit {
   ngOnInit(): void {
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
-        this.allAccounts = accounts;
-        this.accounts = this.allAccounts;
+        this.accounts = accounts;
         this.loading = false;
       });
   }
@@ -71,8 +69,11 @@ export class AdminPageComponent implements OnInit {
   onSearchClicked(): void {
     this.loading = true;
     if (this.fullName === '') {
-      this.accounts = this.allAccounts
-      this.loading = false
+      this.accountService.retrieveAllAccounts()
+        .subscribe(accounts => {
+          this.accounts = accounts;
+          this.loading = false
+        })
     } else {
       this.accountService.findAccountsByFullName(this.fullName)
         .subscribe(accounts => {
@@ -80,6 +81,15 @@ export class AdminPageComponent implements OnInit {
           this.loading = false;
         });
     }
+  }
+
+  onResetClicked(): void {
+    this.loading = true;
+    this.accountService.retrieveAllAccounts()
+      .subscribe(accounts => {
+        this.accounts = accounts;
+        this.loading = false;
+      });
   }
 
   autoCompleteFullNames(event: Event) {

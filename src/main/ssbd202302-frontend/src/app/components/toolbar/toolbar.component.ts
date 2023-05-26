@@ -82,7 +82,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   redirectToChangeOwnPasswordPage(): void {
-    this.breadcrumbs=['toolbar.home', 'toolbar.myAccount', 'change.password.button']
+    this.breadcrumbs=['toolbar.home', 'toolbar.myAccount']
     void this.navigationService.redirectToChangeOwnPasswordPage();
   }
 
@@ -306,7 +306,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.redirectToLoginPage();
         break;
       }
-      default: 
+      default:
         break;
     }
   }
