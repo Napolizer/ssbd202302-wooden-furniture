@@ -32,7 +32,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;

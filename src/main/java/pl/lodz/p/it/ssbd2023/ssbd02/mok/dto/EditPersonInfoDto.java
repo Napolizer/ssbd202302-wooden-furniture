@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.PostalCode;
