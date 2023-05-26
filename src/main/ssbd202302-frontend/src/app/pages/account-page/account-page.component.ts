@@ -12,7 +12,6 @@ import {AuthenticationService} from "../../services/authentication.service";
 import {DatePipe, Location } from "@angular/common";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
-import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 
 @Component({
   selector: 'app-account-page',
@@ -55,12 +54,10 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private navigationService: NavigationService,
     private location: Location,
-    private tokenService: TokenService,
-    private breadcrumbService: BreadcrumbsService
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbData = this.breadcrumbService.getSelfBreadcrumb();
     this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({

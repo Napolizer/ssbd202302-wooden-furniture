@@ -6,6 +6,16 @@
   <button *ngIf="isUserLoggedIn()" mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>
+  <span class= "breadcrumb" *ngFor="let breadcrumb of breadcrumbs; let last = last">
+    <ng-container *ngIf="!last">
+      <a (click)="navigateBreadcrumb(breadcrumb)">
+      {{ breadcrumb | translate}} /
+      </a>
+    </ng-container>
+    <ng-container *ngIf="last">
+      <strong>{{ breadcrumb | translate }}</strong>
+    </ng-container>
+  </span>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" *ngIf="isUserAdmin()" (click)="redirectToAdminPage()">
       <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>

@@ -239,6 +239,7 @@
   "toolbar.myAccount": "Moje konto",
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
+  "toolbar.login": "Zaloguj",
   "toolbar.settings": "Ustawienia",
   "toolbar.createAccount": "Utwórz Konto",
   "toolbar.account": "Konto Użytkownika",

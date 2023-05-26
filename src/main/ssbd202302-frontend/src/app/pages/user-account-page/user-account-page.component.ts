@@ -66,7 +66,6 @@ export class UserAccountPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.breadcrumbsData = this.breadcrumbsService.getUserAccountBreadcrumb();
     this.id = this.activatedRoute.snapshot.paramMap.get('id') || ''
     this.accountService.retrieveAccount(this.id)
       .pipe(first(), takeUntil(this.destroy))
