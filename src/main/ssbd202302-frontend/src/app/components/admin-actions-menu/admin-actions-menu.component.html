@@ -1,0 +1,44 @@
+<div class="action" [matMenuTriggerFor]="actionMenu">
+  Action
+  <mat-menu #actionMenu="matMenu">
+    <button mat-menu-item *ngIf="account.accountState !== 'BLOCKED'">
+      <mat-icon>lock_outline</mat-icon>
+      <span>Block Account</span>
+    </button>
+    <button mat-menu-item *ngIf="account.accountState === 'BLOCKED'">
+      <mat-icon>lock_open</mat-icon>
+      <span>Block Account</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>edit</mat-icon>
+      <span>Edit</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>email</mat-icon>
+      <span>Change Email</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>password</mat-icon>
+      <span>Change Password</span>
+    </button>
+    <button mat-menu-item [mat-menu-trigger-for]="rolesMenu">
+      <mat-icon>person</mat-icon>
+      <span>Roles</span>
+    </button>
+    <mat-menu #rolesMenu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>person_add_alt_1</mat-icon>
+        <span>Add Role</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>person_remove</mat-icon>
+        <span>Remove Role</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>person_search</mat-icon>
+        <span>Change Role</span>
+      </button>
+    </mat-menu>
+  </mat-menu>
+</div>
+

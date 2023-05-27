@@ -1,37 +1,63 @@
 <app-spinner [loading]="loading"></app-spinner>
-<div class="container">
-  <mat-autocomplete #auto='matAutocomplete'>
-    <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
-      {{fullName}}
-    </mat-option>
-  </mat-autocomplete>
-
-  <form (ngSubmit)="onSearchClicked()" class="searchForm">
-    <mat-form-field appearance="fill" class="fullNameInput">
-
-      <mat-label>{{ "admin.search.placeholder" | translate }}</mat-label>
-      <input name="fullName"
-             (input)="autoCompleteFullNames($event)"
-             [(ngModel)]="fullName"
-             matInput type="text"
-             [matAutocomplete]="auto"
-             style="color: gray;"
-      >
-    </mat-form-field>
-    <button type="button" mat-raised-button color="primary" class="resetButton" (click)="onResetClicked()">
-      {{ "reset" | translate}}
-    </button>
-    <button type="submit" mat-raised-button color="primary" class="searchButton">
-      {{ "admin.search" | translate}}
-    </button>
-  </form>
-  <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
-    <mat-action-list *ngIf="!loading" class="list-container">
-      <mat-list-item *ngFor="let account of accounts" (click)="redirectToAccountPage(account.id.toString())">
-        <div mat-line>{{ account.login }}</div>
-        <div mat-line>{{ account.firstName }} {{ account.lastName }}, {{account.email}}</div>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-action-list>
+<div>
+  <br>
+  <div class="container top-container">
+    <div class="container">
+      <div fxLayout="column" fxLayoutGap="20px" fxLayout.gt-md="row"  fxLayoutAlign="space-around center" class="content">
+        <div class="blocks" [@loadedUnloadedList]="{value: getListAnimationState()}">
+          <button button="submit" mat-raised-button color="primary">
+            <mat-icon>add</mat-icon> Create Account
+          </button>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="container">
+      <div fxLayout="row" fxLayoutAlign="center center" class="content" [@loadedUnloadedList]="{value: getListAnimationState()}">
+        <mat-card class="card" >
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+            <h3>Accounts</h3>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="example-container mat-elevation-z8">
+              <mat-table #table [dataSource]="accounts" *ngIf="shouldDisplayTable()">
+                <ng-container matColumnDef="login">
+                  <mat-header-cell *matHeaderCellDef>Login</mat-header-cell>
+                  <mat-cell *matCellDef="let account"> {{account.login}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                  <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{account.email}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="firstName">
+                  <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{account.firstName}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="lastName">
+                  <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{account.lastName}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="roles">
+                  <mat-header-cell *matHeaderCellDef>Roles</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{getRoles(account)}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="state">
+                  <mat-header-cell *matHeaderCellDef>State</mat-header-cell>
+                  <mat-cell *matCellDef="let account"> {{account.accountState}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="delete">
+                  <mat-header-cell *matHeaderCellDef>Perform Action</mat-header-cell>
+                  <mat-cell *matCellDef="let account">
+                    <app-admin-actions-menu [account]="account"></app-admin-actions-menu>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple (click)="redirectToAccountPage(row.id)"></mat-row>
+              </mat-table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
 </div>

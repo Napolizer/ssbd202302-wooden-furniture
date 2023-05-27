@@ -56,6 +56,9 @@ import { GithubRedirectComponent } from './pages/github-redirect/github-redirect
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { ThemeSwitcherComponentComponent } from './components/theme-switcher-component/theme-switcher-component.component';
+import {MatTableModule} from "@angular/material/table";
+import { AdminActionsMenuComponent } from './components/admin-actions-menu/admin-actions-menu.component';
+import {MatRippleModule} from "@angular/material/core";
 
 
 @NgModule({
@@ -92,7 +95,8 @@ import { ThemeSwitcherComponentComponent } from './components/theme-switcher-com
     CreateAccountComponent,
     ChangePasswordConfirmComponent,
     GoogleRedirectComponent,
-    ThemeSwitcherComponentComponent
+    ThemeSwitcherComponentComponent,
+    AdminActionsMenuComponent
   ],
     imports: [
         BrowserModule,
@@ -127,7 +131,9 @@ import { ThemeSwitcherComponentComponent } from './components/theme-switcher-com
         }),
         MatProgressSpinnerModule,
         MatDialogModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatTableModule,
+        MatRippleModule
     ],
   providers: [
     DatePipe,

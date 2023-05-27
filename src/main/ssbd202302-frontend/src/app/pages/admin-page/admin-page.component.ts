@@ -3,11 +3,11 @@ import {AccountService} from "../../services/account.service";
 import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {NavigationService} from "../../services/navigation.service";
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {FullName} from "../../interfaces/fullName";
-import {map} from "rxjs";
+import {map, Subject, takeUntil, tap} from "rxjs";
 
 @Component({
   selector: 'app-admin-page',
@@ -17,12 +17,10 @@ import {map} from "rxjs";
     trigger('loadedUnloadedList', [
       state('loaded', style({
         opacity: 1,
-        backgroundColor: "rgba(221, 221, 221, 1)"
       })),
       state('unloaded', style({
         opacity: 0,
-        paddingTop: "80px",
-        backgroundColor: "rgba(0, 0, 0, 0)"
+        paddingTop: "20px",
       })),
       transition('loaded => unloaded', [
         animate('0.5s ease-in')
@@ -33,25 +31,43 @@ import {map} from "rxjs";
     ]),
   ]
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent implements OnInit, OnDestroy {
   accounts: Account[] = [];
   loading = true;
   breadcrumbsData: string[] = [];
   fullName: string = '';
   fullNames: string[] = [];
+  displayedColumns = ['login', 'email', 'firstName', 'lastName', 'roles', 'state', 'delete'];
+  destroy = new Subject<boolean>();
 
   constructor(
     private accountService: AccountService,
     private navigationService: NavigationService,
-    private breadcrumbsService: BreadcrumbsService
+    private breadcrumbsService: BreadcrumbsService,
+    private translate: TranslateService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
+        this.router.events
+          .pipe(takeUntil(this.destroy))
+          .subscribe((val) => {
+            if (val instanceof NavigationEnd) {
+              this.loading = true;
+            }
+          });
     this.accountService.retrieveAllAccounts()
+      .pipe(tap(() => this.loading = true), takeUntil(this.destroy))
       .subscribe(accounts => {
         this.accounts = accounts;
+        console.log(this.accounts);
         this.loading = false;
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next(true);
+    this.destroy.unsubscribe();
   }
 
   getListAnimationState(): string {
@@ -101,5 +117,13 @@ export class AdminPageComponent implements OnInit {
       .subscribe((fullNames: string[]) => {
         this.fullNames = fullNames;
       })
+  }
+
+  shouldDisplayTable(): boolean {
+    return this.accounts.length > 0;
+  }
+
+  getRoles(account: Account): string {
+    return account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 }
