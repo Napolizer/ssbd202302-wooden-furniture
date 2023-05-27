@@ -228,6 +228,7 @@
   "exception.invalid.time.zone": "Invalid timezone",
   "exception.password.already.used": "Password has already been used",
   "exception.current.password.invalid": "Current password is invalid",
+  "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",

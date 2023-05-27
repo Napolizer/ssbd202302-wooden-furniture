@@ -227,6 +227,7 @@
   "exception.invalid.time.zone": "Niepoprawna strefa czasowa",
   "exception.password.already.used": "Hasło było już używane przez użytkownika",
   "exception.current.password.invalid": "Obecne hasło jest nieprawidłowe",
+  "exception.mok.account.external.invalid.state": "Twoje konto jest zablokowane bądź nieaktywne",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
