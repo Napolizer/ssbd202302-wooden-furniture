@@ -59,6 +59,7 @@ import { ThemeSwitcherComponentComponent } from './components/theme-switcher-com
 import {MatTableModule} from "@angular/material/table";
 import { AdminActionsMenuComponent } from './components/admin-actions-menu/admin-actions-menu.component';
 import {MatRippleModule} from "@angular/material/core";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -98,43 +99,44 @@ import {MatRippleModule} from "@angular/material/core";
     ThemeSwitcherComponentComponent,
     AdminActionsMenuComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        MatInputModule,
-        MatSlideToggleModule,
-        MatFormFieldModule,
-        MatStepperModule,
-        MatIconModule,
-        MatButtonModule,
-        MatSelectModule,
-        FormsModule,
-        AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-        ReactiveFormsModule,
-        MatListModule,
-        MatSidenavModule,
-        MatExpansionModule,
-        MatToolbarModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatCardModule,
-        MatCheckboxModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        MatProgressSpinnerModule,
-        MatDialogModule,
-        MatAutocompleteModule,
-        MatTableModule,
-        MatRippleModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatStepperModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    FormsModule,
+    AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
+    ReactiveFormsModule,
+    MatListModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatCardModule,
+    MatCheckboxModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatRippleModule,
+    MatPaginatorModule
+  ],
   providers: [
     DatePipe,
     ThemeSwitcherComponentComponent

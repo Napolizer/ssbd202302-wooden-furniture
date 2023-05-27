@@ -1,13 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {AccountService} from "../../services/account.service";
 import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {NavigationService} from "../../services/navigation.service";
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {FullName} from "../../interfaces/fullName";
 import {map, Subject, takeUntil, tap} from "rxjs";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-admin-page',
@@ -37,8 +39,12 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   breadcrumbsData: string[] = [];
   fullName: string = '';
   fullNames: string[] = [];
-  displayedColumns = ['login', 'email', 'firstName', 'lastName', 'roles', 'state', 'delete'];
+  displayedColumns = ['login', 'email', 'firstName', 'lastName', 'roles', 'state', 'show', 'delete'];
+  dataSource = new MatTableDataSource<Account>(this.accounts);
   destroy = new Subject<boolean>();
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
 
   constructor(
     private accountService: AccountService,
@@ -60,8 +66,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
       .pipe(tap(() => this.loading = true), takeUntil(this.destroy))
       .subscribe(accounts => {
         this.accounts = accounts;
-        console.log(this.accounts);
         this.loading = false;
+        this.dataSource = new MatTableDataSource<Account>(this.accounts);
+        this.dataSource.paginator = this.paginator;
       });
   }
 

@@ -20,7 +20,7 @@
           </mat-card-title>
           <mat-card-content>
             <div class="example-container mat-elevation-z8">
-              <mat-table #table [dataSource]="accounts" *ngIf="shouldDisplayTable()">
+              <mat-table #table [dataSource]="dataSource" *ngIf="shouldDisplayTable()">
                 <ng-container matColumnDef="login">
                   <mat-header-cell *matHeaderCellDef>Login</mat-header-cell>
                   <mat-cell *matCellDef="let account"> {{account.login}}</mat-cell>
@@ -43,7 +43,13 @@
                 </ng-container>
                 <ng-container matColumnDef="state">
                   <mat-header-cell *matHeaderCellDef>State</mat-header-cell>
-                  <mat-cell *matCellDef="let account"> {{account.accountState}}</mat-cell>
+                  <mat-cell *matCellDef="let account">{{account.accountState}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="show">
+                  <mat-header-cell *matHeaderCellDef>Show Account</mat-header-cell>
+                  <mat-cell *matCellDef="let account">
+                    <mat-icon class="show" (click)="redirectToAccountPage(account.id)">remove_red_eye</mat-icon>
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="delete">
                   <mat-header-cell *matHeaderCellDef>Perform Action</mat-header-cell>
@@ -52,8 +58,12 @@
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple (click)="redirectToAccountPage(row.id)"></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple></mat-row>
               </mat-table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+               showFirstLastButtons
+               aria-label="Select page of periodic elements">
+              </mat-paginator>
             </div>
           </mat-card-content>
         </mat-card>
