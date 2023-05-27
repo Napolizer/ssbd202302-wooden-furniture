@@ -1,4 +1,4 @@
-<app-spinner [loading]="listLoading || loading"></app-spinner>
+<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
 <div>
   <br>
   <div class="container top-container">
@@ -67,7 +67,7 @@
                 <ng-container matColumnDef="action">
                   <mat-header-cell *matHeaderCellDef>Perform Action</mat-header-cell>
                   <mat-cell *matCellDef="let account">
-                    <app-admin-actions-menu [account]="account"></app-admin-actions-menu>
+                    <app-admin-actions-menu [account]="account" (loadingChanged)="listLoading = $event.valueOf()"></app-admin-actions-menu>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

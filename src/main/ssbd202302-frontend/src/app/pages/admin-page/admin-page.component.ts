@@ -13,6 +13,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {MatRipple, RippleRef} from "@angular/material/core";
+import {AdminActionsMenuComponent} from "../../components/admin-actions-menu/admin-actions-menu.component";
 
 @Component({
   selector: 'app-admin-page',
@@ -183,5 +184,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       rippleRef.fadeOut();
     }, 150);
+  }
+
+  shouldDisplaySpinner(): boolean {
+    return this.loading || this.listLoading;
   }
 }

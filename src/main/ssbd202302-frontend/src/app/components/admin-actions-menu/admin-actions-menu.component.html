@@ -1,13 +1,13 @@
 <div class="action" [matMenuTriggerFor]="actionMenu">
   Action
   <mat-menu #actionMenu="matMenu">
-    <button mat-menu-item *ngIf="account.accountState !== 'BLOCKED'">
+    <button mat-menu-item *ngIf="account.accountState !== 'BLOCKED'" (click)="confirmBlock(account)">
       <mat-icon>lock_outline</mat-icon>
       <span>Block Account</span>
     </button>
-    <button mat-menu-item *ngIf="account.accountState === 'BLOCKED'">
+    <button mat-menu-item *ngIf="account.accountState === 'BLOCKED'" (click)="confirmUnblock(account)">
       <mat-icon>lock_open</mat-icon>
-      <span>Block Account</span>
+      <span>Unblock Account</span>
     </button>
     <button mat-menu-item>
       <mat-icon>edit</mat-icon>
