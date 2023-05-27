@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import {AccountService} from "../../services/account.service";
 import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
@@ -11,6 +11,7 @@ import {map, Subject, takeUntil, tap} from "rxjs";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
+import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-admin-page',
@@ -37,7 +38,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 export class AdminPageComponent implements OnInit, OnDestroy {
   accounts: Account[] = [];
   loading = true;
-  breadcrumbsData: string[] = [];
+  listLoading = false;
   fullName: string = '';
   fullNames: string[] = [];
   displayedColumns = ['login', 'email', 'firstName', 'lastName', 'roles', 'state', 'show', 'delete'];
@@ -50,6 +51,11 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort)
   sort: MatSort;
 
+  @ViewChild(ElementRef)
+  searchInput: ElementRef;
+
+  @ViewChild(MatAutocompleteTrigger)
+  autocomplete: MatAutocompleteTrigger;
 
   constructor(
     private accountService: AccountService,
@@ -108,28 +114,35 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   onSearchClicked(): void {
-    this.loading = true;
+    this.listLoading = true;
+    this.autocomplete.closePanel();
+    this.autocomplete.setDisabledState(true);
     if (this.fullName === '') {
       this.accountService.retrieveAllAccounts()
         .subscribe(accounts => {
           this.accounts = accounts;
-          this.loading = false
+          this.dataSource.data = this.accounts;
+          this.listLoading = false
+          this.autocomplete.setDisabledState(false);
         })
     } else {
       this.accountService.findAccountsByFullName(this.fullName)
         .subscribe(accounts => {
           this.accounts = accounts;
-          this.loading = false;
+          this.dataSource.data = this.accounts;
+          this.listLoading = false;
+          this.autocomplete.setDisabledState(false);
         });
     }
   }
 
   onResetClicked(): void {
-    this.loading = true;
+    this.listLoading = true;
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
         this.accounts = accounts;
-        this.loading = false;
+        this.dataSource.data = this.accounts;
+        this.listLoading = false;
       });
   }
 
@@ -137,6 +150,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     const phrase = (event.target as HTMLInputElement).value;
     this.accountService.autoCompleteFullNames(phrase)
       .pipe(
+        takeUntil(this.destroy),
         map((fullNames: FullName[]) => fullNames.map((fullName: FullName) => fullName.fullName))
       )
       .subscribe((fullNames: string[]) => {

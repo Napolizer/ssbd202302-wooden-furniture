@@ -1,22 +1,35 @@
-<app-spinner [loading]="loading"></app-spinner>
+<app-spinner [loading]="listLoading || loading"></app-spinner>
 <div>
   <br>
   <div class="container top-container">
-    <div class="container">
-      <div fxLayout="column" fxLayoutGap="20px" fxLayout.gt-md="row"  fxLayoutAlign="space-around center" class="content">
-        <div class="blocks" [@loadedUnloadedList]="{value: getListAnimationState()}">
-          <button button="submit" mat-raised-button color="primary">
-            <mat-icon>add</mat-icon> Create Account
-          </button>
-        </div>
-      </div>
-    </div>
     <br>
     <div class="container">
       <div fxLayout="row" fxLayoutAlign="center center" class="content" [@loadedUnloadedList]="{value: getListAnimationState()}">
         <mat-card class="card" >
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
             <h3>Accounts</h3>
+            <button button="submit" mat-stroked-button color="primary" class="add-account">
+              <mat-icon style="margin-bottom: 3px;">add</mat-icon> Create Account
+            </button>
+            <mat-form-field class="filter">
+              <mat-autocomplete #auto='matAutocomplete'>
+                <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
+                  {{fullName}}
+                </mat-option>
+              </mat-autocomplete>
+              <input matInput class="search-input"
+                     placeholder="Search"
+                     (input)="autoCompleteFullNames($event)"
+                     [matAutocomplete]="auto"
+                     [(ngModel)]="fullName"
+              >
+              <button mat-raised-button color="primary" class="searchButton" (click)="onSearchClicked()">
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+            <button mat-button color="primary" class="resetButton" (click)="onResetClicked()">
+              <mat-icon>refresh</mat-icon>
+            </button>
           </mat-card-title>
           <mat-card-content>
             <div class="example-container mat-elevation-z8">
