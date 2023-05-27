@@ -61,6 +61,7 @@ import { AdminActionsMenuComponent } from './components/admin-actions-menu/admin
 import {MatRippleModule} from "@angular/material/core";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import { AddRoleComponent } from './components/add-role/add-role.component';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import {MatSortModule} from "@angular/material/sort";
     ChangePasswordConfirmComponent,
     GoogleRedirectComponent,
     ThemeSwitcherComponentComponent,
-    AdminActionsMenuComponent
+    AdminActionsMenuComponent,
+    AddRoleComponent
   ],
   imports: [
     BrowserModule,

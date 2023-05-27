@@ -1,0 +1,22 @@
+<app-spinner [loading]="loading"></app-spinner>
+<div mat-dialog-title>
+  <h1 class="dialog-title">Add Role</h1>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <h4>Select Role</h4>
+  <mat-form-field>
+    <mat-label>Role</mat-label>
+    <mat-select [(ngModel)]="chosenRole">
+      <mat-option *ngFor="let role of getAllRoles()" [value]="role">{{role}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onCancelClick()">
+    {{ "dialog.confirmation.close" | translate }}
+  </button>
+  <button mat-raised-button (click)="confirmAdd(chosenRole)">
+    {{ "dialog.confirmation.action" | translate }}
+  </button>
+</div>

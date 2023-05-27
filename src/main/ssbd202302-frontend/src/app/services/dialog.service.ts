@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ErrorDialogComponent} from "../components/error-dialog/error-dialog.component";
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
+import {Account} from "../interfaces/account";
+import {AddRoleComponent} from "../components/add-role/add-role.component";
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,12 @@ export class DialogService {
         message: message,
         color: color
       }
+    });
+  }
+
+  openAddRoleDialog(account: Account): MatDialogRef<AddRoleComponent> {
+    return this.matDialog.open(AddRoleComponent, {
+      data: {account}
     });
   }
 }
