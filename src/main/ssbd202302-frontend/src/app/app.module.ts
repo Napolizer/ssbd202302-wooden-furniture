@@ -60,6 +60,7 @@ import {MatTableModule} from "@angular/material/table";
 import { AdminActionsMenuComponent } from './components/admin-actions-menu/admin-actions-menu.component';
 import {MatRippleModule} from "@angular/material/core";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
 
 
 @NgModule({
@@ -135,7 +136,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     MatAutocompleteModule,
     MatTableModule,
     MatRippleModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule
   ],
   providers: [
     DatePipe,

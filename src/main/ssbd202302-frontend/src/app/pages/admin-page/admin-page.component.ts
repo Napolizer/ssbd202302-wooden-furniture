@@ -10,6 +10,7 @@ import {FullName} from "../../interfaces/fullName";
 import {map, Subject, takeUntil, tap} from "rxjs";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatSort, Sort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-admin-page',
@@ -46,6 +47,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
 
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+
   constructor(
     private accountService: AccountService,
     private navigationService: NavigationService,
@@ -69,12 +74,25 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.dataSource = new MatTableDataSource<Account>(this.accounts);
         this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       });
   }
 
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
+  }
+
+  compare(a: string | number | boolean, b: string | number | boolean, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  onSortClicked(event: Sort) {
+    this.dataSource.data = this.dataSource.data.sort((a: Account, b: Account) => {
+      const isAsc = event.direction === 'asc';
+      const field = event.active;
+      return this.compare(a[field], b[field], isAsc);
+    });
   }
 
   getListAnimationState(): string {
