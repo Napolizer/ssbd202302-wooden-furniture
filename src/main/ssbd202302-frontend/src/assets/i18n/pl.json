@@ -32,7 +32,7 @@
   "change.email.current": "Aktualny adres email",
   "change.email.new": "Nowy adres email",
   "change.email.back": "Powrót",
-  "change.email.confirm": "Potwierdź",
+  "change.email.confirm": "Zmień",
   "change.email.link.sent": "Link aktywacyjny został wysłany na nowy adres email",
   "change.email.validity.matching": "Nowy adres email nie może być taki sam jak obecny",
   "change.password.force.message": "Musisz zmienić hasło aby kontynuować",

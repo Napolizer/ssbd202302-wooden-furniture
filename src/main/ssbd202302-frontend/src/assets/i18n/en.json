@@ -31,7 +31,7 @@
   "change.email.current": "Current email address",
   "change.email.new": "New email address",
   "change.email.back": "Back",
-  "change.email.confirm": "Confirm",
+  "change.email.confirm": "Change",
   "change.email.link.sent": "Activation link has been sent to the new email address",
   "change.email.validity.matching": "New email address cannot be same as the current one",
 
