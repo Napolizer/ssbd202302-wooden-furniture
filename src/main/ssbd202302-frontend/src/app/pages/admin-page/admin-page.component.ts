@@ -12,6 +12,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
+import {MatRipple, RippleRef} from "@angular/material/core";
 
 @Component({
   selector: 'app-admin-page',
@@ -41,7 +42,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   listLoading = false;
   fullName: string = '';
   fullNames: string[] = [];
-  displayedColumns = ['login', 'email', 'firstName', 'lastName', 'roles', 'state', 'show', 'delete'];
+  displayedColumns = ['login', 'email', 'firstName', 'lastName', 'roles', 'state', 'show', 'action'];
   dataSource = new MatTableDataSource<Account>(this.accounts);
   destroy = new Subject<boolean>();
 
@@ -56,6 +57,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatAutocompleteTrigger)
   autocomplete: MatAutocompleteTrigger;
+
+  @ViewChild(MatRipple)
+  ripple: MatRipple;
 
   constructor(
     private accountService: AccountService,
@@ -138,6 +142,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   onResetClicked(): void {
     this.listLoading = true;
+    this.fullName = '';
     this.accountService.retrieveAllAccounts()
       .subscribe(accounts => {
         this.accounts = accounts;
@@ -164,5 +169,19 @@ export class AdminPageComponent implements OnInit, OnDestroy {
 
   getRoles(account: Account): string {
     return account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
+  }
+
+  showRippleAnimation(event: any): void {
+    if ((event.target as HTMLElement).tagName === 'DIV') {
+      return;
+    }
+
+    const rippleRef = this.ripple.launch(event.clientX, event.clientY, {
+      persistent: true,
+    });
+
+    setTimeout(() => {
+      rippleRef.fadeOut();
+    }, 150);
   }
 }

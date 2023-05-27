@@ -64,14 +64,14 @@
                     <mat-icon class="show" (click)="redirectToAccountPage(account.id)">remove_red_eye</mat-icon>
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="delete">
+                <ng-container matColumnDef="action">
                   <mat-header-cell *matHeaderCellDef>Perform Action</mat-header-cell>
                   <mat-cell *matCellDef="let account">
                     <app-admin-actions-menu [account]="account"></app-admin-actions-menu>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple [matRippleDisabled]="true" (click)="showRippleAnimation($event)"></mat-row>
               </mat-table>
               <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                showFirstLastButtons
