@@ -172,20 +172,6 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
-  showRippleAnimation(event: any): void {
-    if ((event.target as HTMLElement).tagName === 'DIV') {
-      return;
-    }
-
-    const rippleRef = this.ripple.launch(event.clientX, event.clientY, {
-      persistent: true,
-    });
-
-    setTimeout(() => {
-      rippleRef.fadeOut();
-    }, 150);
-  }
-
   shouldDisplaySpinner(): boolean {
     return this.loading || this.listLoading;
   }

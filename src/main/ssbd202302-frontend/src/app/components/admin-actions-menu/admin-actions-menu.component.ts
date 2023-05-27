@@ -133,4 +133,8 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
   openAddRoleDialog(account: Account): void {
     this.dialogService.openAddRoleDialog(account);
   }
+
+  openChangeRoleDialog(account: Account): void {
+    this.dialogService.openChangeRoleDialog(account);
+  }
 }

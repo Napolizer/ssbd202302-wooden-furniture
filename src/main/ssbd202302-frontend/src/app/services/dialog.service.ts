@@ -4,6 +4,7 @@ import {ErrorDialogComponent} from "../components/error-dialog/error-dialog.comp
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import {Account} from "../interfaces/account";
 import {AddRoleComponent} from "../components/add-role/add-role.component";
+import {ChangeRoleComponent} from "../components/change-role/change-role.component";
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,12 @@ export class DialogService {
 
   openAddRoleDialog(account: Account): MatDialogRef<AddRoleComponent> {
     return this.matDialog.open(AddRoleComponent, {
+      data: {account}
+    });
+  }
+
+  openChangeRoleDialog(account: Account): MatDialogRef<ChangeRoleComponent> {
+    return this.matDialog.open(ChangeRoleComponent, {
       data: {account}
     });
   }

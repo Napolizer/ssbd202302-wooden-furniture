@@ -1,6 +1,6 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div mat-dialog-title>
-  <h1 class="dialog-title">Add Role</h1>
+  <h1 class="dialog-title">Change Role</h1>
 </div>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
@@ -17,7 +17,8 @@
   <button mat-raised-button (click)="onCancelClick()">
     {{ "dialog.confirmation.close" | translate }}
   </button>
-  <button mat-raised-button (click)="confirmAdd(chosenRole)">
+  <button mat-raised-button (click)="confirmChange(chosenRole)">
     {{ "dialog.confirmation.action" | translate }}
   </button>
 </div>
+

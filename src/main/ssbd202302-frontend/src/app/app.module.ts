@@ -62,6 +62,7 @@ import {MatRippleModule} from "@angular/material/core";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import { AddRoleComponent } from './components/add-role/add-role.component';
+import { ChangeRoleComponent } from './components/change-role/change-role.component';
 
 
 @NgModule({
@@ -100,7 +101,8 @@ import { AddRoleComponent } from './components/add-role/add-role.component';
     GoogleRedirectComponent,
     ThemeSwitcherComponentComponent,
     AdminActionsMenuComponent,
-    AddRoleComponent
+    AddRoleComponent,
+    ChangeRoleComponent
   ],
   imports: [
     BrowserModule,
