@@ -101,6 +101,11 @@ public final class ApplicationExceptionFactory {
             cause, Response.Status.INTERNAL_SERVER_ERROR);
   }
 
+  public static BaseWebApplicationException createInvalidExternalAccountStateException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.ACCOUNT_EXTERNAL_INVALID_STATE,
+            Response.Status.CONFLICT);
+  }
+
   public static BaseWebApplicationException createGoogleOauthConflictException() {
     return new BaseWebApplicationException(MessageUtil.MessageKey.ERROR_GOOGLE_CONFLICT, Response.Status.CONFLICT);
   }
