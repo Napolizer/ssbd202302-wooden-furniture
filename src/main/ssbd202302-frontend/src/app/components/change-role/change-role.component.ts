@@ -45,8 +45,8 @@ export class ChangeRoleComponent implements OnInit {
     this.dialogRef.close('cancel');
   }
 
-  getAllRoles(): string[] {
-    return Object.keys(Role).filter(role => role !== 'GUEST');
+  getPossibleChangeRoles(): string[] {
+    return Object.keys(Role).filter(role => role !== 'GUEST' && role !== this.getAccount().roles[0].toUpperCase());
   }
 
   changeRoleName(role: string): string {

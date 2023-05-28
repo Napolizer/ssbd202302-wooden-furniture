@@ -26,18 +26,42 @@
       <span>Roles</span>
     </button>
     <mat-menu #rolesMenu="matMenu">
-      <button mat-menu-item (click)="openAddRoleDialog(account)">
+      <div
+        [matTooltipDisabled]="canAddRole(account)"
+        [matTooltip]="'Account has too many roles'"
+        matTooltipPosition="above"
+        matTooltipShowDelay="500">
+      <button mat-menu-item
+              (click)="openAddRoleDialog(account)"
+              [disabled]="!canAddRole(account)">
         <mat-icon>person_add_alt_1</mat-icon>
         <span>Add Role</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>person_remove</mat-icon>
-        <span>Remove Role</span>
-      </button>
-      <button mat-menu-item (click)="openChangeRoleDialog(account)">
-        <mat-icon>person_search</mat-icon>
-        <span>Change Role</span>
-      </button>
+        </button>
+      </div>
+      <div
+        [matTooltipDisabled]="canRemoveRole(account)"
+        [matTooltip]="'Account has only one role'"
+        matTooltipPosition="left"
+        matTooltipShowDelay="500">
+        <button mat-menu-item
+                (click)="openRemoveRoleDialog(account)"
+                [disabled]="!canRemoveRole(account)">
+          <mat-icon>person_remove</mat-icon>
+          <span>Remove Role</span>
+        </button>
+      </div>
+      <div
+        [matTooltipDisabled]="canChangeRole(account)"
+        [matTooltip]="'Account has too many roles'"
+        matTooltipPosition="left"
+        matTooltipShowDelay="500">
+        <button mat-menu-item
+                (click)="openChangeRoleDialog(account)"
+                [disabled]="!canChangeRole(account)">
+          <mat-icon>person_search</mat-icon>
+          <span>Change Role</span>
+        </button>
+      </div>
     </mat-menu>
   </mat-menu>
 </div>

@@ -9,7 +9,7 @@
   <mat-form-field>
     <mat-label>Select Role</mat-label>
     <mat-select [(ngModel)]="chosenRole">
-      <mat-option *ngFor="let role of getAllRoles()" [value]="role">{{role}}</mat-option>
+      <mat-option *ngFor="let role of getPossibleChangeRoles()" [value]="role">{{role}}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
@@ -17,7 +17,7 @@
   <button mat-raised-button (click)="onCancelClick()">
     {{ "dialog.confirmation.close" | translate }}
   </button>
-  <button mat-raised-button (click)="confirmChange(chosenRole)">
+  <button mat-raised-button (click)="confirmChange(chosenRole)" color="primary">
     {{ "dialog.confirmation.action" | translate }}
   </button>
 </div>

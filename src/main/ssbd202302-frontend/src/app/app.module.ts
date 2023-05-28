@@ -63,6 +63,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import { AddRoleComponent } from './components/add-role/add-role.component';
 import { ChangeRoleComponent } from './components/change-role/change-role.component';
+import { RemoveRoleComponent } from './components/remove-role/remove-role.component';
 
 
 @NgModule({
@@ -102,7 +103,8 @@ import { ChangeRoleComponent } from './components/change-role/change-role.compon
     ThemeSwitcherComponentComponent,
     AdminActionsMenuComponent,
     AddRoleComponent,
-    ChangeRoleComponent
+    ChangeRoleComponent,
+    RemoveRoleComponent
   ],
   imports: [
     BrowserModule,

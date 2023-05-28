@@ -1,6 +1,6 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div mat-dialog-title>
-  <h1 class="dialog-title">Add Role</h1>
+  <h1 class="dialog-title">Remove Role</h1>
 </div>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
@@ -9,7 +9,7 @@
   <mat-form-field>
     <mat-label>Select Role</mat-label>
     <mat-select [(ngModel)]="chosenRole">
-      <mat-option *ngFor="let role of getPossibleAddRoles()" [value]="role">{{role}}</mat-option>
+      <mat-option *ngFor="let role of getPossibleRemoveRoles()" [value]="role">{{role}}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
@@ -17,7 +17,8 @@
   <button mat-raised-button (click)="onCancelClick()">
     {{ "dialog.confirmation.close" | translate }}
   </button>
-  <button mat-raised-button (click)="confirmAdd(chosenRole)" color="primary">
+  <button mat-raised-button (click)="confirmRemove(chosenRole)" color="primary">
     {{ "dialog.confirmation.action" | translate }}
   </button>
 </div>
+

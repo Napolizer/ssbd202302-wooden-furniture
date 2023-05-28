@@ -137,4 +137,20 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
   openChangeRoleDialog(account: Account): void {
     this.dialogService.openChangeRoleDialog(account);
   }
+
+  openRemoveRoleDialog(account: Account): void {
+    this.dialogService.openRemoveRoleDialog(account);
+  }
+
+  canAddRole(account: Account): boolean {
+    return account.roles.length < 2;
+  }
+
+  canChangeRole(account: Account): boolean {
+    return account.roles.length < 2;
+  }
+
+  canRemoveRole(account: Account): boolean {
+    return account.roles.length > 1;
+  }
 }
