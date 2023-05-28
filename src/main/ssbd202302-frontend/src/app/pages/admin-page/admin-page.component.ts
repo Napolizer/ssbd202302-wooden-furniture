@@ -12,8 +12,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {MatRipple, RippleRef} from "@angular/material/core";
-import {AdminActionsMenuComponent} from "../../components/admin-actions-menu/admin-actions-menu.component";
+import {MatRipple} from "@angular/material/core";
 
 @Component({
   selector: 'app-admin-page',
@@ -47,7 +46,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<Account>(this.accounts);
   destroy = new Subject<boolean>();
 
-  @ViewChild(MatPaginator)
+  @ViewChild(MatPaginator, {static: true})
   paginator: MatPaginator;
 
   @ViewChild(MatSort)
@@ -71,13 +70,13 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-        this.router.events
-          .pipe(takeUntil(this.destroy))
-          .subscribe((val) => {
-            if (val instanceof NavigationEnd) {
-              this.loading = true;
-            }
-          });
+    this.router.events
+      .pipe(takeUntil(this.destroy))
+      .subscribe((val) => {
+        if (val instanceof NavigationEnd) {
+          this.loading = true;
+        }
+      });
     this.accountService.retrieveAllAccounts()
       .pipe(tap(() => this.loading = true), takeUntil(this.destroy))
       .subscribe(accounts => {
@@ -87,6 +86,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+    this.paginator._intl.itemsPerPageLabel = this.translate.instant('paginator.itemsPerPage');
   }
 
   ngOnDestroy(): void {
@@ -168,6 +168,10 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.accounts.length > 0;
   }
 
+  getState(account: Account): string {
+    return this.translate.instant(`account.state.${account.accountState.toLowerCase()}`);
+  }
+
   getRoles(account: Account): string {
     return account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
@@ -177,6 +181,6 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   }
 
   redirectToCreateAccountPage(): void {
-    this.navigationService.redirectToCreateAccountPage();
+    void this.navigationService.redirectToCreateAccountPage();
   }
 }

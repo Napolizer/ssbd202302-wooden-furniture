@@ -45,10 +45,11 @@ export class RemoveRoleComponent implements OnInit, OnDestroy {
   }
 
   getPossibleRemoveRoles(): string[] {
-    return this.getAccount().roles;
+    return this.getAccount().roles.map(role => this.translate.instant(`role.${role}`));
   }
 
   confirmRemove(accountRole: string): void {
+    accountRole = this.getAccount().roles.find(role => this.translate.instant(`role.${role}`) === accountRole) ?? '';
     this.translate
       .get('dialog.remove.role.message')
       .pipe(takeUntil(this.destroy))

@@ -6,10 +6,10 @@
     <div class="container">
       <div fxLayout="row" fxLayoutAlign="center center" class="content" [@loadedUnloadedList]="{value: getListAnimationState()}">
         <mat-card class="card" >
+          <h3 class="accounts">{{'accounts' | translate}}</h3>
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
-            <h3>Accounts</h3>
             <button button="submit" mat-stroked-button color="primary" class="add-account" (click)="redirectToCreateAccountPage()">
-              <mat-icon style="margin-bottom: 3px;">add</mat-icon> Create Account
+              <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'admin.create.account' | translate}}
             </button>
             <mat-form-field class="filter">
               <mat-autocomplete #auto='matAutocomplete'>
@@ -18,7 +18,7 @@
                 </mat-option>
               </mat-autocomplete>
               <input matInput class="search-input"
-                     placeholder="Search"
+                     placeholder="{{'search' | translate}}"
                      (input)="autoCompleteFullNames($event)"
                      [matAutocomplete]="auto"
                      [(ngModel)]="fullName"
@@ -35,43 +35,43 @@
             <div class="example-container mat-elevation-z8">
               <mat-table #table [dataSource]="dataSource" matSort *ngIf="shouldDisplayTable()" (matSortChange)="onSortClicked($event)">
                 <ng-container matColumnDef="login">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Login</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'login' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account"> {{account.login}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="email">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'email' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account">{{account.email}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="firstName">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'first.name' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account">{{account.firstName}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="lastName">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'last.name' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account">{{account.lastName}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="roles">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Roles</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'roles' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account">{{getRoles(account)}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="state">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>State</mat-header-cell>
-                  <mat-cell *matCellDef="let account">{{account.accountState}}</mat-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'state' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{getState(account)}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="show">
-                  <mat-header-cell *matHeaderCellDef>Show Account</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef>{{'account.show' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account">
                     <mat-icon class="show" (click)="redirectToAccountPage(account.id)">remove_red_eye</mat-icon>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="action">
-                  <mat-header-cell *matHeaderCellDef>Perform Action</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef>{{'perform.action' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let account">
                     <app-admin-actions-menu [account]="account" (loadingChanged)="listLoading = $event.valueOf()"></app-admin-actions-menu>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
               </mat-table>
               <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                showFirstLastButtons

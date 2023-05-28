@@ -257,6 +257,22 @@
   "false": "nie",
   "true": "tak",
 
+  "action": "Akcja",
+  "accounts": "Konta",
+  "search": "Szukaj",
+  "login": "Login",
+  "email": "Email",
+  "first.name": "Imię",
+  "last.name": "Nazwisko",
+  "roles": "Role",
+  "state": "Stan",
+  "account.show": "Wyświetl konto",
+  "perform.action": "Wykonaj akcję",
+
+  "select.role": "Wybierz Rolę",
+  "current.role": "Obecna Rola",
+  "current.roles": "Obecne Role",
+
   "block.success": "Pomyślnie zablokowano konto",
   "activate.success": "Pomyślnie odblokowano konto",
 
@@ -266,5 +282,8 @@
   "admin.search.descending": "Malejąco",
   "admin.search.sortBy": "Sortuj po",
   "admin.search.recordsPerPage: ": "Liczba użytkowników na stronie",
-  "admin.search.orderBy": "Rosnąco/Malejąco"
+  "admin.search.orderBy": "Rosnąco/Malejąco",
+  "admin.create.account": "Utwórz konto",
+
+  "paginator.itemsPerPage": "Liczba użytkowników na stronie"
 }

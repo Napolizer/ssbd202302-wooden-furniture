@@ -1,13 +1,13 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div mat-dialog-title>
-  <h1 class="dialog-title">Remove Role</h1>
+  <h1 class="dialog-title">{{'account.removerole' | translate}}</h1>
 </div>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
-  <h4 *ngIf="getAccount().roles.length <= 1">Current role: {{getAccountRoles()}}</h4>
-  <h4 *ngIf="getAccount().roles.length > 1">Current roles: {{getAccountRoles()}}</h4>
+  <h4 *ngIf="getAccount().roles.length <= 1">{{'current.role' | translate}}: {{getAccountRoles()}}</h4>
+  <h4 *ngIf="getAccount().roles.length > 1">{{'current.roles' | translate}}: {{getAccountRoles()}}</h4>
   <mat-form-field>
-    <mat-label>Select Role</mat-label>
+    <mat-label>{{'select.role' | translate}}</mat-label>
     <mat-select [(ngModel)]="chosenRole">
       <mat-option *ngFor="let role of getPossibleRemoveRoles()" [value]="role">{{role}}</mat-option>
     </mat-select>

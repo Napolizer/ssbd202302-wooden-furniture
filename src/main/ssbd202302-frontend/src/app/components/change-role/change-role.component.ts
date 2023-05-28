@@ -46,7 +46,9 @@ export class ChangeRoleComponent implements OnInit {
   }
 
   getPossibleChangeRoles(): string[] {
-    return Object.keys(Role).filter(role => role !== 'GUEST' && role !== this.getAccount().roles[0].toUpperCase());
+    return Object.keys(Role)
+      .filter(role => role !== 'GUEST' && role !== this.getAccount().roles[0].toUpperCase())
+      .map(role => role.toLowerCase());
   }
 
   changeRoleName(role: string): string {

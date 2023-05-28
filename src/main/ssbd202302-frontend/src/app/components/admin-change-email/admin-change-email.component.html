@@ -1,6 +1,6 @@
 <app-spinner [loading]="loading"></app-spinner>
 <div mat-dialog-title>
-  <h1 class="dialog-title">Change Email</h1>
+  <h1 class="dialog-title">{{'email.change' | translate}}</h1>
 </div>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
@@ -60,7 +60,7 @@
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button (click)="onCancelClick()">
-    {{ "change.email.confirm" | translate }}
+    {{ "dialog.confirmation.close" | translate }}
   </button>
   <button mat-raised-button (click)="onEmailChangeClicked()" color="primary">
     {{ "change.email.confirm" | translate }}

@@ -1,29 +1,29 @@
 <div class="action" [matMenuTriggerFor]="actionMenu">
-  Action
+  {{'action' | translate}}
   <mat-menu #actionMenu="matMenu">
     <button mat-menu-item *ngIf="account.accountState !== 'BLOCKED'" (click)="confirmBlock(account)">
       <mat-icon>lock_outline</mat-icon>
-      <span>Block Account</span>
+      <span>{{'account.block' | translate}}</span>
     </button>
     <button mat-menu-item *ngIf="account.accountState === 'BLOCKED'" (click)="confirmUnblock(account)">
       <mat-icon>lock_open</mat-icon>
-      <span>Unblock Account</span>
+      <span>{{'account.unblock' | translate}}</span>
     </button>
     <button mat-menu-item (click)="openAdminEditAccountDialog(account)">
       <mat-icon>edit</mat-icon>
-      <span>Edit</span>
+      <span>{{'account.edit' | translate}}</span>
     </button>
     <button mat-menu-item (click)="openAdminChangeEmailDialog(account)">
       <mat-icon>email</mat-icon>
-      <span>Change Email</span>
+      <span>{{'change.email.button' | translate}}</span>
     </button>
     <button mat-menu-item (click)="confirmChangePassword(account)">
       <mat-icon>password</mat-icon>
-      <span>Change Password</span>
+      <span>{{'change.password.button' | translate}}</span>
     </button>
     <button mat-menu-item [mat-menu-trigger-for]="rolesMenu">
       <mat-icon>person</mat-icon>
-      <span>Roles</span>
+      <span>{{'account.roles' | translate}}</span>
     </button>
     <mat-menu #rolesMenu="matMenu">
       <div
@@ -35,7 +35,7 @@
               (click)="openAddRoleDialog(account)"
               [disabled]="!canAddRole(account)">
         <mat-icon>person_add_alt_1</mat-icon>
-        <span>Add Role</span>
+        <span>{{'account.addrole' | translate}}</span>
         </button>
       </div>
       <div
@@ -47,7 +47,7 @@
                 (click)="openRemoveRoleDialog(account)"
                 [disabled]="!canRemoveRole(account)">
           <mat-icon>person_remove</mat-icon>
-          <span>Remove Role</span>
+          <span>{{'account.removerole' | translate}}</span>
         </button>
       </div>
       <div
@@ -59,7 +59,7 @@
                 (click)="openChangeRoleDialog(account)"
                 [disabled]="!canChangeRole(account)">
           <mat-icon>person_search</mat-icon>
-          <span>Change Role</span>
+          <span>{{'account.changerole' | translate}}</span>
         </button>
       </div>
     </mat-menu>
