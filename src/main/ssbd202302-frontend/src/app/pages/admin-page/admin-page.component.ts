@@ -175,4 +175,8 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   shouldDisplaySpinner(): boolean {
     return this.loading || this.listLoading;
   }
+
+  redirectToCreateAccountPage(): void {
+    this.navigationService.redirectToCreateAccountPage();
+  }
 }

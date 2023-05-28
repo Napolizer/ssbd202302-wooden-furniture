@@ -8,7 +8,7 @@
         <mat-card class="card" >
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
             <h3>Accounts</h3>
-            <button button="submit" mat-stroked-button color="primary" class="add-account">
+            <button button="submit" mat-stroked-button color="primary" class="add-account" (click)="redirectToCreateAccountPage()">
               <mat-icon style="margin-bottom: 3px;">add</mat-icon> Create Account
             </button>
             <mat-form-field class="filter">
