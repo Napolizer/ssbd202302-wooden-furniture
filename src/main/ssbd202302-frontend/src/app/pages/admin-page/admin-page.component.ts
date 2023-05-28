@@ -86,12 +86,20 @@ export class AdminPageComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-    this.paginator._intl.itemsPerPageLabel = this.translate.instant('paginator.itemsPerPage');
+    this.initPaginator();
   }
 
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
+  }
+
+  initPaginator(): void {
+    this.paginator._intl.itemsPerPageLabel = this.translate.instant('paginator.itemsPerPage');
+    this.paginator._intl.firstPageLabel = this.translate.instant('paginator.firstPageLabel');
+    this.paginator._intl.lastPageLabel = this.translate.instant('paginator.lastPageLabel');
+    this.paginator._intl.nextPageLabel = this.translate.instant('paginator.nextPageLabel');
+    this.paginator._intl.previousPageLabel = this.translate.instant('paginator.previousPageLabel');
   }
 
   compare(a: string | number | boolean, b: string | number | boolean, isAsc: boolean) {

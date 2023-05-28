@@ -287,5 +287,9 @@
   "admin.search.orderBy": "Ascending/Descending",
   "admin.create.account": "Create account",
 
-  "paginator.itemsPerPage": "Items per page"
+  "paginator.itemsPerPage": "Items per page",
+  "paginator.firstPageLabel": "First page",
+  "paginator.lastPageLabel": "Last page",
+  "paginator.nextPageLabel": "Next page",
+  "paginator.previousPageLabel": "Previous page"
 }

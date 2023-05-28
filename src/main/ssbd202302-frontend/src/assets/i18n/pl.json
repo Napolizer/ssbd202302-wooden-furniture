@@ -285,5 +285,9 @@
   "admin.search.orderBy": "Rosnąco/Malejąco",
   "admin.create.account": "Utwórz konto",
 
-  "paginator.itemsPerPage": "Liczba użytkowników na stronie"
+  "paginator.itemsPerPage": "Liczba użytkowników na stronie",
+  "paginator.firstPageLabel": "Pierwsza strona",
+  "paginator.lastPageLabel": "Ostatnia strona",
+  "paginator.nextPageLabel": "Następna strona",
+  "paginator.previousPageLabel": "Poprzednia strona"
 }
