@@ -5,6 +5,7 @@ import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
 import {TranslateService} from "@ngx-translate/core";
 import {AlertService} from "@full-fledged/alerts";
 import {DialogService} from "../../services/dialog.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-admin-actions-menu',
@@ -156,5 +157,48 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
 
   canRemoveRole(account: Account): boolean {
     return account.roles.length > 1;
+  }
+
+  confirmChangePassword(account: Account): void {
+    this.translate
+      .get('dialog.change.password.message')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.changePassword(account);
+            }
+          });
+      });
+  }
+
+  changePassword(account: Account): void {
+    this.loadingChanged.emit(true);
+    this.accountService.changeUserPassword(account.login)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.loadingChanged.emit(false);
+          this.translate
+            .get('change.password.user.send')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.success(msg);
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loadingChanged.emit(false);
+          this.translate
+            .get('exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
+        }
+      })
   }
 }
