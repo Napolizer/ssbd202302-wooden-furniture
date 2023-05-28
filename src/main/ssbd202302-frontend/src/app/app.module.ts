@@ -65,6 +65,7 @@ import { AddRoleComponent } from './components/add-role/add-role.component';
 import { ChangeRoleComponent } from './components/change-role/change-role.component';
 import { RemoveRoleComponent } from './components/remove-role/remove-role.component';
 import { AdminChangeEmailComponent } from './components/admin-change-email/admin-change-email.component';
+import { AdminEditAccountComponent } from './components/admin-edit-account/admin-edit-account.component';
 
 
 @NgModule({
@@ -106,7 +107,8 @@ import { AdminChangeEmailComponent } from './components/admin-change-email/admin
     AddRoleComponent,
     ChangeRoleComponent,
     RemoveRoleComponent,
-    AdminChangeEmailComponent
+    AdminChangeEmailComponent,
+    AdminEditAccountComponent
   ],
   imports: [
     BrowserModule,

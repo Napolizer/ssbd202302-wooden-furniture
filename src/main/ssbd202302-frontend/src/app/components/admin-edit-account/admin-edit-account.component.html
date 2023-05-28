@@ -1,0 +1,74 @@
+<app-spinner [loading]="loading"></app-spinner>
+<div class="container">
+  <div class="panel">
+    <form class="form-container" [formGroup]="editAccountForm" (ngSubmit)="confirmSave()">
+      <mat-card class="profile-card">
+      <p class="form-title">{{'edit.account' | translate}}</p>
+      <div class="form">
+        <div class="row">
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewFirstName' | translate}}</mat-label>
+              <input matInput #firstName value="{{editableAccount.firstName}}" type="text" formControlName="firstName" required pattern="[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]*$">
+              <mat-error *ngIf="firstName.validity.patternMismatch">{{'edit.firstName.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewLastName' | translate}}</mat-label>
+              <input matInput #lastName value="{{editableAccount.lastName}}" type="text" formControlName="lastName" required pattern="[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]*$">
+              <mat-error *ngIf="lastName.validity.patternMismatch">{{'edit.lastName.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewCountry' | translate}}</mat-label>
+              <input matInput #country value="{{editableAccount.country}}" type="text" formControlName="country" required pattern="[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]*$">
+              <mat-error *ngIf="country.validity.patternMismatch">{{'edit.country.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewCity' | translate}}</mat-label>
+              <input matInput #city value="{{editableAccount.city}}" type="text" formControlName="city" required pattern="[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]*$">
+              <mat-error *ngIf="city.validity.patternMismatch">{{'edit.city.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewStreet' | translate}}</mat-label>
+              <input matInput #street value="{{editableAccount.street}}" type="text" formControlName="street" required pattern="[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]*$">
+              <mat-error *ngIf="street.validity.patternMismatch">{{'edit.street.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewPostalCode' | translate}}</mat-label>
+              <input matInput #postalCode value="{{editableAccount.postalCode}}" type="text" formControlName="postalCode" required pattern="^[0-9]{2}-[0-9]{3}$">
+              <mat-error *ngIf="postalCode.validity.patternMismatch">{{'edit.postalCode.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="input-container">
+            <mat-form-field appearance="fill" class="input">
+              <mat-label>{{'edit.enterNewStreetNumber' | translate}}</mat-label>
+              <input matInput #streetNumber value="{{editableAccount.streetNumber}}" type="number" formControlName="streetNumber" required min="1">
+              <mat-error *ngIf="streetNumber.validity.patternMismatch">{{'edit.streetNumber.validity.patternMismatch' | translate}}</mat-error>
+              <mat-error *ngIf="firstName.validity.valueMissing">{{'edit.account.field.required' | translate}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="button-container">
+            <button type="button" mat-button color="primary" class="reset-button" (click)="onResetClicked()">{{'reset' | translate}}</button>
+            <button type="submit" mat-raised-button color="primary" class="save-button" [disabled]="!editAccountForm.valid">{{'save' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+    </form>
+  </div>
+</div>

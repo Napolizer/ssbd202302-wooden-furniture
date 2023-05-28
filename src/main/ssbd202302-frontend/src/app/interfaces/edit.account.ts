@@ -7,4 +7,5 @@ export interface EditAccount {
   postalCode: string,
   streetNumber: number,
   hash: string
+  [key: string]: any;
 }

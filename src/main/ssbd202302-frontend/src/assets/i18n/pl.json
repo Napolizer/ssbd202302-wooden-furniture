@@ -176,6 +176,7 @@
   "dialog.change.password.message": "Czy na pewno chcesz zmienić hasło?",
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
+  "dialog.admin.edit.account.message": "Czy na pewno chcesz zmienić dane tego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
   "dialog.edit.locale": "Czy na pewno chcesz zmienić język?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",

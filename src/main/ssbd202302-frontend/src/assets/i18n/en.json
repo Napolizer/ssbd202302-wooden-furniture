@@ -176,6 +176,7 @@
   "dialog.change.email.message": "Are you sure you want to change email address?",
   "dialog.change.password.message": "Are you sure you want to change password?",
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
+  "dialog.admin.edit.account.message": "Are you sure you want to edit this account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
   "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
