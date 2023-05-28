@@ -1,0 +1,68 @@
+<app-spinner [loading]="loading"></app-spinner>
+<div mat-dialog-title>
+  <h1 class="dialog-title">Change Email</h1>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <form class="form-container" [formGroup]="changeEmailForm">
+    <div class="form">
+      <app-spinner [loading]="loading"></app-spinner>
+      <div class="email-container">
+        <mat-form-field appearance="fill" class="input">
+          <mat-label>{{ "change.email.current" | translate }}</mat-label>
+          <input
+            matInput
+            #currentEmail
+            type="text"
+            formControlName="currentEmail"
+            maxlength="32"
+            placeholder="jdoe@example.com"
+          />
+        </mat-form-field>
+      </div>
+      <div class="email-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.32' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "change.email.new" | translate }}</mat-label>
+          <input
+            matInput
+            #newEmail
+            type="text"
+            formControlName="newEmail"
+            maxlength="32"
+            placeholder="jdoe@example.com"
+            required
+          />
+          <mat-error
+            *ngIf="changeEmailForm.get('newEmail')?.hasError('required')"
+          >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+            changeEmailForm.get('newEmail')?.hasError('matching')
+          "
+          >{{
+            "change.email.validity.matching" | translate
+            }}</mat-error
+          >
+          <mat-error
+            *ngIf="changeEmailForm.get('newEmail')?.hasError('email')"
+          >{{ "register.validity.format" | translate }}</mat-error
+          >
+          <mat-hint align="end">{{ newEmail.value.length }}/32</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onCancelClick()">
+    {{ "change.email.confirm" | translate }}
+  </button>
+  <button mat-raised-button (click)="onEmailChangeClicked()" color="primary">
+    {{ "change.email.confirm" | translate }}
+  </button>
+</div>
