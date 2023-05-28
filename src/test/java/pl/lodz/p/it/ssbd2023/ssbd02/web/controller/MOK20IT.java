@@ -1,10 +1,12 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.HttpHeaders.IF_MATCH;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
 
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
@@ -31,15 +34,83 @@ class MOK20IT {
   @Order(1)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
   class Positive {
+
+
+    @Order(1)
+    @DisplayName("Should properly create account to edit")
+    @ParameterizedTest(name = "login: {0}")
+    @CsvSource({
+            "bednaro",
+            "bednaroo",
+            "bednarooo",
+            "bednaroooo",
+            "bednarooooo"
+    })
+    void shouldProperlyCreateAccountsToEmails(String login) {
+      int id = AccountUtil.registerUser(login);
+      given()
+              .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+              .when()
+              .patch("/account/activate/" + id)
+              .then()
+              .statusCode(200);
+      switch (login) {
+        case "bednaroo" -> {
+          AccessLevelDto accessLevelDto = new AccessLevelDto(ADMINISTRATOR);
+          given()
+                  .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+                  .contentType("application/json")
+                  .when()
+                  .body(InitData.mapToJsonString(accessLevelDto))
+                  .put("/account/id/" + id + "/accessLevel/change")
+                  .then()
+                  .statusCode(200);
+        }
+        case "bednarooo" -> {
+          AccessLevelDto accessLevelDto = new AccessLevelDto(EMPLOYEE);
+          given()
+                  .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+                  .contentType("application/json")
+                  .when()
+                  .body(InitData.mapToJsonString(accessLevelDto))
+                  .put("/account/id/" + id + "/accessLevel/change")
+                  .then()
+                  .statusCode(200);
+        }
+        case "bednaroooo" -> {
+          AccessLevelDto accessLevelDto = new AccessLevelDto(SALES_REP);
+          given()
+                  .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+                  .contentType("application/json")
+                  .when()
+                  .body(InitData.mapToJsonString(accessLevelDto))
+                  .put("/account/id/" + id + "/accessLevel/change")
+                  .then()
+                  .statusCode(200);
+        }
+        case "bednarooooo" -> {
+          AccessLevelDto accessLevelDto = new AccessLevelDto(EMPLOYEE);
+          given()
+                  .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+                  .contentType("application/json")
+                  .when()
+                  .body(InitData.mapToJsonString(accessLevelDto))
+                  .put("/account/id/" + id + "/accessLevel/employee")
+                  .then()
+                  .statusCode(200);
+        }
+      }
+    }
+
     @DisplayName("Should properly change email")
     @ParameterizedTest(name = "login: {0}, email: {1}")
     @CsvSource({
-        "client,client.new.email@ssbd.com",
-        "salesrep,salesrep.new.email@ssbd.com",
-        "employee,employee.new.email@ssbd.com",
-        "clientemployee,clientemployee.new.email@ssbd.com"
+        "bednaro,bednaro.new.email@ssbd.com",
+        "bednaroo,bednaroo.new.email@ssbd.com",
+        "bednarooo,bednarooo.new.email@ssbd.com",
+        "bednaroooo,bednaroooo.new.email@ssbd.com"
     })
-    @Order(1)
+    @Order(2)
     void shouldProperlyChangeEmail(String login, String email) {
       String token = AuthUtil.retrieveToken(login, "Student123!");
       String version = InitData.retrieveVersion(login);
@@ -68,14 +139,15 @@ class MOK20IT {
     @DisplayName("Should fail to change other person email")
     @ParameterizedTest(name = "login: {0}, otherLogin: {1}")
     @CsvSource({
-        "client,administrator",
-        "client,salesrep",
-        "salesrep,client",
-        "clientemployee,client",
-        "employee,clientemployee",
+        "bednaro,bednaroo",
+        "bednaro,bednaroooo",
+        "bednaroooo,bednaro",
+        "bednarooooo,bednaro",
+        "bednarooo,bednarooooo",
     })
     @Order(1)
     void shouldFailToChangeOtherUserEmail(String login, String otherLogin) {
+      int id = AccountUtil.getAccountId(otherLogin);
       given()
           .contentType("application/json")
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
@@ -85,7 +157,7 @@ class MOK20IT {
                      }
               """)
           .when()
-          .put("/account/change-email/" + AccountUtil.getAccountId(otherLogin))
+          .put("/account/change-email/" + id)
           .then()
           .statusCode(403)
           .contentType("application/json")
@@ -113,7 +185,7 @@ class MOK20IT {
                      }
               """.formatted(invalidEmail))
           .when()
-          .put("/account/change-email/" + AccountUtil.getAccountId("client"))
+          .put("/account/change-email/" + AccountUtil.getAccountId("bednaro"))
           .then()
           .statusCode(400)
           .contentType("application/json")
@@ -148,6 +220,7 @@ class MOK20IT {
     @Test
     @Order(4)
     void shouldFailToChangeEmailIfEmailIsBlank() {
+      int id = AccountUtil.getAccountId("bednaro");
       given()
           .contentType("application/json")
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client", "Student123!"))
@@ -157,7 +230,7 @@ class MOK20IT {
                      }
               """)
           .when()
-          .put("/account/change-email/" + AccountUtil.getAccountId("client"))
+          .put("/account/change-email/" + id)
           .then()
           .statusCode(400)
           .contentType("application/json")
@@ -192,17 +265,19 @@ class MOK20IT {
     @DisplayName("Should fail to change email if version is invalid")
     @ParameterizedTest(name = "login: {0}, email: {1}, version: {2}")
     @CsvSource({
-        "client,client.new.email@ssbd.com,1",
-        "administrator,admin.new.email@ssbd.com,1",
-        "salesrep,salesrep.new.email@ssbd.com,1",
-        "employee,employee.new.email@ssbd.com,1",
-        "clientemployee,clientemployee.new.email@ssbd.com,1"
+        "bednaro,bednaro.new.email@ssbd.com,1",
+        "bednaroo,bednaroo.new.email@ssbd.com,1",
+        "bednarooo,bednarooo.new.email@ssbd.com,1",
+        "bednaroooo,bednaroooo.new.email@ssbd.com,1",
+        "bednarooooo,bednarooooo.new.email@ssbd.com,1"
     })
     @Order(6)
     void shouldFailToChangeEmailIfVersionIsInvalid(String login, String email, String version) {
+      String token = AuthUtil.retrieveToken(login, "Student123!");
+      int id = AccountUtil.getAccountId(login);
       given()
           .contentType("application/json")
-          .header("Authorization", "Bearer " + AuthUtil.retrieveToken(login, "Student123!"))
+          .header("Authorization", "Bearer " + token)
           .header(IF_MATCH, version)
           .body("""
                      {
@@ -210,7 +285,7 @@ class MOK20IT {
                      }
               """.formatted(email))
           .when()
-          .put("/account/change-email/" + AccountUtil.getAccountId(login))
+          .put("/account/change-email/" + id)
           .then()
           .statusCode(409)
           .contentType("application/json")

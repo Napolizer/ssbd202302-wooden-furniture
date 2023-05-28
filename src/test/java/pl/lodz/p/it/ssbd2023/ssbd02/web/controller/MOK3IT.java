@@ -108,18 +108,11 @@ public class MOK3IT {
     void shouldFailToBlockAlreadyBlockedAccount() {
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator", "Student123!"))
-          .patch("/account/block/" + AccountUtil.getAccountId("clientemployee"))
-          .then()
-          .statusCode(200)
-          .contentType("application/json")
-          .body("message", is(equalTo("mok.account.block.successful")));
-      given()
-          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator", "Student123!"))
-          .patch("/account/block/" + AccountUtil.getAccountId("clientemployee"))
+          .patch("/account/block/" + AccountUtil.getAccountId("blockaccount1"))
           .then()
           .statusCode(400)
           .contentType("application/json")
-          .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CHANGE_STATE));
+          .body("message", is(equalTo("exception.mok.account.change.state")));
     }
 
     @DisplayName("Should fail to block non existing account")

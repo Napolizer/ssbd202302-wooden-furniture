@@ -104,7 +104,7 @@ public class MOK10IT {
               .accept("application/json")
               .body(InitData.mapToJsonString(editedAccount))
               .when()
-              .put("/account/login/randomLogin/editAccountAsAdmin")
+              .put("/account/login/xxxxxxx/editAccountAsAdmin")
               .then()
               .statusCode(404)
               .contentType("application/json");
