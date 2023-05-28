@@ -31,7 +31,7 @@
   "change.email.current": "Current email address",
   "change.email.new": "New email address",
   "change.email.back": "Back",
-  "change.email.confirm": "Confirm",
+  "change.email.confirm": "Change",
   "change.email.link.sent": "Activation link has been sent to the new email address",
   "change.email.validity.matching": "New email address cannot be same as the current one",
 
@@ -176,6 +176,7 @@
   "dialog.change.email.message": "Are you sure you want to change email address?",
   "dialog.change.password.message": "Are you sure you want to change password?",
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
+  "dialog.admin.edit.account.message": "Are you sure you want to edit this account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
   "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
@@ -228,6 +229,7 @@
   "exception.invalid.time.zone": "Invalid timezone",
   "exception.password.already.used": "Password has already been used",
   "exception.current.password.invalid": "Current password is invalid",
+  "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",
@@ -256,6 +258,23 @@
   "false": "no",
   "true": "yes",
 
+  "action": "Action",
+  "accounts": "Accounts",
+  "search": "Search",
+  "login": "Login",
+  "email": "Email",
+  "email.change": "Change Email",
+  "first.name": "First Name",
+  "last.name": "Last Name",
+  "roles": "Roles",
+  "state": "State",
+  "account.show": "Show Account",
+  "perform.action": "Perform Action",
+
+  "select.role": "Select Role",
+  "current.role": "Current Role",
+  "current.roles": "Current Roles",
+
   "block.success": "Account blocked successfully",
   "activate.success": "Account activated successfully",
 
@@ -265,5 +284,12 @@
   "admin.search.descending": "Descending",
   "admin.search.sortBy": "Sort by",
   "admin.search.recordsPerPage": "Records per page",
-  "admin.search.orderBy": "Ascending/Descending"
+  "admin.search.orderBy": "Ascending/Descending",
+  "admin.create.account": "Create account",
+
+  "paginator.itemsPerPage": "Items per page",
+  "paginator.firstPageLabel": "First page",
+  "paginator.lastPageLabel": "Last page",
+  "paginator.nextPageLabel": "Next page",
+  "paginator.previousPageLabel": "Previous page"
 }

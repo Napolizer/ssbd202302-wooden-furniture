@@ -56,6 +56,16 @@ import { GithubRedirectComponent } from './pages/github-redirect/github-redirect
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { ThemeSwitcherComponentComponent } from './components/theme-switcher-component/theme-switcher-component.component';
+import {MatTableModule} from "@angular/material/table";
+import { AdminActionsMenuComponent } from './components/admin-actions-menu/admin-actions-menu.component';
+import {MatRippleModule} from "@angular/material/core";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import { AddRoleComponent } from './components/add-role/add-role.component';
+import { ChangeRoleComponent } from './components/change-role/change-role.component';
+import { RemoveRoleComponent } from './components/remove-role/remove-role.component';
+import { AdminChangeEmailComponent } from './components/admin-change-email/admin-change-email.component';
+import { AdminEditAccountComponent } from './components/admin-edit-account/admin-edit-account.component';
 
 
 @NgModule({
@@ -92,43 +102,53 @@ import { ThemeSwitcherComponentComponent } from './components/theme-switcher-com
     CreateAccountComponent,
     ChangePasswordConfirmComponent,
     GoogleRedirectComponent,
-    ThemeSwitcherComponentComponent
+    ThemeSwitcherComponentComponent,
+    AdminActionsMenuComponent,
+    AddRoleComponent,
+    ChangeRoleComponent,
+    RemoveRoleComponent,
+    AdminChangeEmailComponent,
+    AdminEditAccountComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        MatInputModule,
-        MatSlideToggleModule,
-        MatFormFieldModule,
-        MatStepperModule,
-        MatIconModule,
-        MatButtonModule,
-        MatSelectModule,
-        FormsModule,
-        AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-        ReactiveFormsModule,
-        MatListModule,
-        MatSidenavModule,
-        MatExpansionModule,
-        MatToolbarModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatCardModule,
-        MatCheckboxModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        MatProgressSpinnerModule,
-        MatDialogModule,
-        MatAutocompleteModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatStepperModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    FormsModule,
+    AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
+    ReactiveFormsModule,
+    MatListModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatCardModule,
+    MatCheckboxModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatRippleModule,
+    MatPaginatorModule,
+    MatSortModule
+  ],
   providers: [
     DatePipe,
     ThemeSwitcherComponentComponent

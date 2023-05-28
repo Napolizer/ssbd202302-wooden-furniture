@@ -12,6 +12,8 @@ import {AuthenticationService} from "../../services/authentication.service";
 import {DatePipe, Location } from "@angular/common";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ChangeEmailComponent } from '../change-email/change-email.component';
 
 @Component({
   selector: 'app-account-page',
@@ -54,7 +56,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private navigationService: NavigationService,
     private location: Location,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -144,4 +147,12 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
   }
+
+  openChangeEmailDialog(): void {
+    this.dialog.open(ChangeEmailComponent, {
+      width: '450px',
+      height: '400px',
+    } as MatDialogConfig<any>);
+  }
+  
 }

@@ -1,0 +1,68 @@
+<div class="action" [matMenuTriggerFor]="actionMenu">
+  {{'action' | translate}}
+  <mat-menu #actionMenu="matMenu">
+    <button mat-menu-item *ngIf="account.accountState !== 'BLOCKED'" (click)="confirmBlock(account)">
+      <mat-icon>lock_outline</mat-icon>
+      <span>{{'account.block' | translate}}</span>
+    </button>
+    <button mat-menu-item *ngIf="account.accountState === 'BLOCKED'" (click)="confirmUnblock(account)">
+      <mat-icon>lock_open</mat-icon>
+      <span>{{'account.unblock' | translate}}</span>
+    </button>
+    <button mat-menu-item (click)="openAdminEditAccountDialog(account)">
+      <mat-icon>edit</mat-icon>
+      <span>{{'account.edit' | translate}}</span>
+    </button>
+    <button mat-menu-item (click)="openAdminChangeEmailDialog(account)">
+      <mat-icon>email</mat-icon>
+      <span>{{'change.email.button' | translate}}</span>
+    </button>
+    <button mat-menu-item (click)="confirmChangePassword(account)">
+      <mat-icon>password</mat-icon>
+      <span>{{'change.password.button' | translate}}</span>
+    </button>
+    <button mat-menu-item [mat-menu-trigger-for]="rolesMenu">
+      <mat-icon>person</mat-icon>
+      <span>{{'account.roles' | translate}}</span>
+    </button>
+    <mat-menu #rolesMenu="matMenu">
+      <div
+        [matTooltipDisabled]="canAddRole(account)"
+        [matTooltip]="'Account has too many roles'"
+        matTooltipPosition="above"
+        matTooltipShowDelay="500">
+      <button mat-menu-item
+              (click)="openAddRoleDialog(account)"
+              [disabled]="!canAddRole(account)">
+        <mat-icon>person_add_alt_1</mat-icon>
+        <span>{{'account.addrole' | translate}}</span>
+        </button>
+      </div>
+      <div
+        [matTooltipDisabled]="canRemoveRole(account)"
+        [matTooltip]="'Account has only one role'"
+        matTooltipPosition="left"
+        matTooltipShowDelay="500">
+        <button mat-menu-item
+                (click)="openRemoveRoleDialog(account)"
+                [disabled]="!canRemoveRole(account)">
+          <mat-icon>person_remove</mat-icon>
+          <span>{{'account.removerole' | translate}}</span>
+        </button>
+      </div>
+      <div
+        [matTooltipDisabled]="canChangeRole(account)"
+        [matTooltip]="'Account has too many roles'"
+        matTooltipPosition="left"
+        matTooltipShowDelay="500">
+        <button mat-menu-item
+                (click)="openChangeRoleDialog(account)"
+                [disabled]="!canChangeRole(account)">
+          <mat-icon>person_search</mat-icon>
+          <span>{{'account.changerole' | translate}}</span>
+        </button>
+      </div>
+    </mat-menu>
+  </mat-menu>
+</div>
+

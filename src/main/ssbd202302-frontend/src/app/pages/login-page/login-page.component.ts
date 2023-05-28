@@ -121,7 +121,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
             message: data[1]
           })))
             .subscribe(data => {
-              this.alertService.danger(`${data.title}: ${data.message}`);
+              this.alertService.warning(`${data.title}: ${data.message}`);
             });
         }
       })

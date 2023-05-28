@@ -32,7 +32,7 @@
   "change.email.current": "Aktualny adres email",
   "change.email.new": "Nowy adres email",
   "change.email.back": "Powrót",
-  "change.email.confirm": "Potwierdź",
+  "change.email.confirm": "Zmień",
   "change.email.link.sent": "Link aktywacyjny został wysłany na nowy adres email",
   "change.email.validity.matching": "Nowy adres email nie może być taki sam jak obecny",
   "change.password.force.message": "Musisz zmienić hasło aby kontynuować",
@@ -176,6 +176,7 @@
   "dialog.change.password.message": "Czy na pewno chcesz zmienić hasło?",
   "dialog.change.email.message": "Czy na pewno chcesz zmienić adres email?",
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
+  "dialog.admin.edit.account.message": "Czy na pewno chcesz zmienić dane tego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
   "dialog.edit.locale": "Czy na pewno chcesz zmienić język?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",
@@ -227,6 +228,7 @@
   "exception.invalid.time.zone": "Niepoprawna strefa czasowa",
   "exception.password.already.used": "Hasło było już używane przez użytkownika",
   "exception.current.password.invalid": "Obecne hasło jest nieprawidłowe",
+  "exception.mok.account.external.invalid.state": "Twoje konto jest zablokowane bądź nieaktywne",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -255,6 +257,22 @@
   "false": "nie",
   "true": "tak",
 
+  "action": "Akcja",
+  "accounts": "Konta",
+  "search": "Szukaj",
+  "login": "Login",
+  "email": "Email",
+  "first.name": "Imię",
+  "last.name": "Nazwisko",
+  "roles": "Role",
+  "state": "Stan",
+  "account.show": "Wyświetl konto",
+  "perform.action": "Wykonaj akcję",
+
+  "select.role": "Wybierz Rolę",
+  "current.role": "Obecna Rola",
+  "current.roles": "Obecne Role",
+
   "block.success": "Pomyślnie zablokowano konto",
   "activate.success": "Pomyślnie odblokowano konto",
 
@@ -264,5 +282,12 @@
   "admin.search.descending": "Malejąco",
   "admin.search.sortBy": "Sortuj po",
   "admin.search.recordsPerPage: ": "Liczba użytkowników na stronie",
-  "admin.search.orderBy": "Rosnąco/Malejąco"
+  "admin.search.orderBy": "Rosnąco/Malejąco",
+  "admin.create.account": "Utwórz konto",
+
+  "paginator.itemsPerPage": "Liczba użytkowników na stronie",
+  "paginator.firstPageLabel": "Pierwsza strona",
+  "paginator.lastPageLabel": "Ostatnia strona",
+  "paginator.nextPageLabel": "Następna strona",
+  "paginator.previousPageLabel": "Poprzednia strona"
 }

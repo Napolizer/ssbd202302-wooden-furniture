@@ -19,7 +19,6 @@ import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.c
 import {ChangeAccountRolePageComponent} from "./pages/change-account-role-page/change-account-role-page.component";
 import {ConfirmEmailChangeComponent} from './pages/confirm-email-change/confirm-email-change.component';
 import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.component';
-import {ChangeEmailComponent} from './pages/change-email/change-email.component';
 import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
 import {CreateAccountComponent} from './pages/create-account/create-account.component';
 import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/change-password-confirm.component";
@@ -119,15 +118,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'change-email',
-    component: ChangeEmailComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP],
-      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
-    }
-  },
-  {
     path: 'change-password',
     component: ChangeOwnPasswordComponent,
     canActivate: [AuthGuard],
@@ -150,15 +140,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP],
-      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
-    }
-  },
-  {
-    path: 'change-email/:id',
-    component: ChangeEmailComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.ADMINISTRATOR],
       exclude: [AccountType.GOOGLE, AccountType.GITHUB]
     }
   },

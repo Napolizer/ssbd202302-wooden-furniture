@@ -1,37 +1,86 @@
-<app-spinner [loading]="loading"></app-spinner>
-<div class="container">
-  <mat-autocomplete #auto='matAutocomplete'>
-    <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
-      {{fullName}}
-    </mat-option>
-  </mat-autocomplete>
-
-  <form (ngSubmit)="onSearchClicked()" class="searchForm">
-    <mat-form-field appearance="fill" class="fullNameInput">
-
-      <mat-label>{{ "admin.search.placeholder" | translate }}</mat-label>
-      <input name="fullName"
-             (input)="autoCompleteFullNames($event)"
-             [(ngModel)]="fullName"
-             matInput type="text"
-             [matAutocomplete]="auto"
-             style="color: gray;"
-      >
-    </mat-form-field>
-    <button type="button" mat-raised-button color="primary" class="resetButton" (click)="onResetClicked()">
-      {{ "reset" | translate}}
-    </button>
-    <button type="submit" mat-raised-button color="primary" class="searchButton">
-      {{ "admin.search" | translate}}
-    </button>
-  </form>
-  <div class="panel" [@loadedUnloadedList]="{value: getListAnimationState()}">
-    <mat-action-list *ngIf="!loading" class="list-container">
-      <mat-list-item *ngFor="let account of accounts" (click)="redirectToAccountPage(account.id.toString())">
-        <div mat-line>{{ account.login }}</div>
-        <div mat-line>{{ account.firstName }} {{ account.lastName }}, {{account.email}}</div>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-action-list>
+<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
+<div>
+  <br>
+  <div class="container top-container">
+    <br>
+    <div class="container">
+      <div fxLayout="row" fxLayoutAlign="center center" class="content" [@loadedUnloadedList]="{value: getListAnimationState()}">
+        <mat-card class="card" >
+          <h3 class="accounts">{{'accounts' | translate}}</h3>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+            <button button="submit" mat-stroked-button color="primary" class="add-account" (click)="redirectToCreateAccountPage()">
+              <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'admin.create.account' | translate}}
+            </button>
+            <mat-form-field class="filter">
+              <mat-autocomplete #auto='matAutocomplete'>
+                <mat-option *ngFor="let fullName of fullNames" [value]="fullName">
+                  {{fullName}}
+                </mat-option>
+              </mat-autocomplete>
+              <input matInput class="search-input"
+                     placeholder="{{'search' | translate}}"
+                     (input)="autoCompleteFullNames($event)"
+                     [matAutocomplete]="auto"
+                     [(ngModel)]="fullName"
+              >
+              <button mat-raised-button color="primary" class="searchButton" (click)="onSearchClicked()">
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+            <button mat-button color="primary" class="resetButton" (click)="onResetClicked()">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="example-container mat-elevation-z8">
+              <mat-table #table [dataSource]="dataSource" matSort *ngIf="shouldDisplayTable()" (matSortChange)="onSortClicked($event)">
+                <ng-container matColumnDef="login">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'login' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account"> {{account.login}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'email' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{account.email}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="firstName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'first.name' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{account.firstName}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="lastName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'last.name' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{account.lastName}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="roles">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'roles' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{getRoles(account)}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="state">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'state' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">{{getState(account)}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="show">
+                  <mat-header-cell *matHeaderCellDef>{{'account.show' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">
+                    <mat-icon class="show" (click)="redirectToAccountPage(account.id)">remove_red_eye</mat-icon>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef>{{'perform.action' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">
+                    <app-admin-actions-menu [account]="account" (loadingChanged)="listLoading = $event.valueOf()"></app-admin-actions-menu>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+               showFirstLastButtons
+               aria-label="Select page of periodic elements">
+              </mat-paginator>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
 </div>

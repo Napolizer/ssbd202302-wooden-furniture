@@ -19,4 +19,5 @@ export interface Account {
   login: string,
   hash: string,
   timeZone: string
+  [key: string]: any;
 }
