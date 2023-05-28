@@ -103,6 +103,10 @@ public class AuthenticationService extends AbstractService implements Authentica
             .findByEmail(email)
             .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
 
+    if (!account.getAccountState().equals(AccountState.ACTIVE)) {
+      throw ApplicationExceptionFactory.createInvalidExternalAccountStateException();
+    }
+
     return setUpAccountAndGenerateToken(locale, account);
   }
 
@@ -111,6 +115,10 @@ public class AuthenticationService extends AbstractService implements Authentica
     Account account = accountFacade
         .findByEmail(email)
         .orElseThrow(ApplicationExceptionFactory::createInvalidLinkException);
+
+    if (!account.getAccountState().equals(AccountState.ACTIVE)) {
+      throw ApplicationExceptionFactory.createInvalidExternalAccountStateException();
+    }
 
     return setUpAccountAndGenerateToken(locale, account);
   }

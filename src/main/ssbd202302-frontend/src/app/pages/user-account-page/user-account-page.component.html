@@ -150,7 +150,7 @@
             <mat-card-actions>
               <div class="button-group">
                 <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
-                <button mat-raised-button *ngIf="isUserNormalType()" color="primary" (click)="onChangeEmailClicked()">{{'change.email.button' | translate}}</button>
+                <button mat-raised-button *ngIf="isUserNormalType()" color="primary" (click)="openChangeEmailDialog()">{{'change.email.button' | translate}}</button>
                 <button mat-raised-button *ngIf="isUserNormalType()" color="primary" class= "right-button" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
               </div>
             </mat-card-actions>

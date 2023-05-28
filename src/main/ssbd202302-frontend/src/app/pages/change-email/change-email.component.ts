@@ -6,9 +6,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, combineLatest, first, map, takeUntil } from 'rxjs';
@@ -28,16 +28,13 @@ import { CustomValidators } from 'src/app/utils/custom.validators';
       state(
         'loaded',
         style({
-          opacity: 1,
-          backgroundColor: 'rgba(221, 221, 221, 1)',
+          opacity: 1
         })
       ),
       state(
         'unloaded',
         style({
-          opacity: 0,
-          paddingTop: '80px',
-          backgroundColor: 'rgba(0, 0, 0, 0)',
+          opacity: 0
         })
       ),
       transition('loaded => unloaded', [animate('0.5s ease-in')]),
@@ -61,8 +58,11 @@ export class ChangeEmailComponent implements OnInit {
     private dialogService: DialogService,
     private navigationService: NavigationService,
     private alertService: AlertService,
-    private route: ActivatedRoute
-  ) {}
+    public dialogRef: MatDialogRef<ChangeEmailComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.id = data ? data.id : undefined;
+  }
 
   ngOnInit(): void {
     this.changeEmailForm = new FormGroup({
@@ -75,9 +75,8 @@ export class ChangeEmailComponent implements OnInit {
         Validators.required,
       ]),
     });
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.id = id;
+    if (this.id) {
+      this.id = this.id as string;
       this.accountService
         .retrieveAccount(this.id)
         .pipe(first(), takeUntil(this.destroy))
@@ -112,7 +111,8 @@ export class ChangeEmailComponent implements OnInit {
                   .afterClosed()
                   .pipe(first(), takeUntil(this.destroy))
                   .subscribe(() => {
-                    void this.navigationService.redirectToMainPage();
+                    this.navigationService.redirectToMainPage();
+                    this.dialogRef.close();
                   });
               });
           },
@@ -153,7 +153,8 @@ export class ChangeEmailComponent implements OnInit {
                   .afterClosed()
                   .pipe(first(), takeUntil(this.destroy))
                   .subscribe(() => {
-                    void this.navigationService.redirectToMainPage();
+                    this.navigationService.redirectToMainPage();
+                    this.dialogRef.close();
                   });
               });
           },
@@ -171,15 +172,6 @@ export class ChangeEmailComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  onBackClicked(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.navigationService.redirectToAccountPage(id);
-    } else {
-      this.navigationService.redirectToOwnAccountPage();
-    }
-  }
-
   changeEmail(): void {
     this.loading = true;
     const email: Email = {
@@ -190,44 +182,22 @@ export class ChangeEmailComponent implements OnInit {
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: () => {
-          this.loading = false;
-          const id = this.route.snapshot.paramMap.get('id');
-          if (id) {
-            this.navigationService.redirectToAccountPageWithState(this.id, {
-              changeEmailSuccess: 'change.email.link.sent',
-            });
-          } else {
-            this.navigationService.redirectToOwnAccountPageWithState({
-              changeEmailSuccess: 'change.email.link.sent',
-            });
-          }
+          this.translate
+          .get('change.email.link.sent' || 'exception.unknown')
+          .pipe(takeUntil(this.destroy))
+          .subscribe((msg) => {
+            this.alertService.success(msg);
+            this.dialogRef.close();
+          });
         },
         error: (e: HttpErrorResponse) => {
-          this.loading = false;
-          if (e.status == 409) {
-            this.translate
-              .get(e.error.message || 'exception.unknown')
-              .pipe(takeUntil(this.destroy))
-              .subscribe((msg) => {
-                this.alertService.danger(msg);
-                const id = this.route.snapshot.paramMap.get('id');
-                if (id) {
-                  this.navigationService.redirectToAccountPage(this.id)
-                } else {
-                  this.navigationService.redirectToOwnAccountPage();
-                }
-              });
-          } else if (e.status == 403) {
-            this.translate
-              .get(e.error.message || 'exception.unknown')
-              .pipe(takeUntil(this.destroy))
-              .subscribe((msg) => {
-                this.alertService.danger(msg);
-                this.navigationService.redirectToMainPage();
-              });
-          } else {
-            this.navigationService.redirectToNotFoundPage();
-          }
+          this.translate
+          .get(e.error.message || 'exception.unknown')
+          .pipe(takeUntil(this.destroy))
+          .subscribe((msg) => {
+            this.alertService.danger(msg);
+            this.dialogRef.close();
+          });
         },
       });
   }

@@ -16,6 +16,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {TokenService} from "../../services/token.service";
 import {AccountType} from "../../enums/account.type";
+import { ChangeEmailComponent } from '../change-email/change-email.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-account-page',
@@ -62,7 +64,9 @@ export class UserAccountPageComponent implements OnInit {
     private datePipe: DatePipe,
     private location: Location,
     private breadcrumbsService: BreadcrumbsService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    public dialog: MatDialog,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -147,10 +151,6 @@ export class UserAccountPageComponent implements OnInit {
 
   onEditClicked(): void {
     void this.navigationService.redirectToEditUserAccountPage(this.id);
-  }
-
-  onChangeEmailClicked(): void {
-    void this.navigationService.redirectToChangeUserEmailPage(this.id);
   }
 
   redirectToChangeAccountRolesPage(): void {
@@ -297,5 +297,15 @@ export class UserAccountPageComponent implements OnInit {
 
   isUserNormalType(): boolean {
     return this.tokenService.getAccountType() === AccountType.NORMAL;
+  }
+
+  openChangeEmailDialog(): void {
+    this.dialog.open(ChangeEmailComponent, {
+      width: '450px',
+      height: '400px',
+      data: {
+        id: this.route.snapshot.paramMap.get('id')
+      }
+    } as MatDialogConfig<any>);
   }
 }
