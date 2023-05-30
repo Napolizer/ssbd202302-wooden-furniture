@@ -22,13 +22,11 @@ import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangePasswordDto;
@@ -353,13 +351,6 @@ public class AccountEndpoint extends AbstractEndpoint implements AccountEndpoint
       fullNameDtos.add(DtoToEntityMapper.mapAccountNameToFullNameDto(account));
     }
     return fullNameDtos;
-  }
-
-  @RolesAllowed(ADMINISTRATOR)
-  public AccountSearchSettingsDto getAccountSearchSettings(String login) {
-    AccountSearchSettings accountSearchSettings =
-            repeatTransactionWithoutOptimistic(() -> accountService.getAccountSearchSettings(login));
-    return DtoToEntityMapper.mapToAccountSearchSettingsDto(accountSearchSettings);
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})

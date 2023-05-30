@@ -471,15 +471,4 @@ public class AccountController {
     List<FullNameDto> fullNameDtos = accountEndpoint.autoCompleteFullNames(phrase);
     return Response.ok(fullNameDtos).build();
   }
-
-  @GET
-  @Path("/ownSearchSettings")
-  @RolesAllowed(ADMINISTRATOR)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getOwnSearchSettings(@Context SecurityContext securityContext) {
-    String login = securityContext.getUserPrincipal().getName();
-    AccountSearchSettingsDto accountSearchSettings = accountEndpoint.getAccountSearchSettings(login);
-
-    return Response.ok(accountSearchSettings).build();
-  }
 }

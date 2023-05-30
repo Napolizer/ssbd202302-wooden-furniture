@@ -132,10 +132,6 @@ public class Account extends AbstractEntity {
   @Builder.Default
   private Boolean forcePasswordChange = false;
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-  @JoinColumn(name = "account_search_settings_id")
-  private AccountSearchSettings accountSearchSettings;
-
   public void update(Account account) {
     this.email = account.email != null ? account.email : email;
     this.person.update(account.getPerson());

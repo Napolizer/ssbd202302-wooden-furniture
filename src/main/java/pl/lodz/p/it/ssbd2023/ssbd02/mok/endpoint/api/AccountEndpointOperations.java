@@ -94,7 +94,5 @@ public interface AccountEndpointOperations {
 
   List<FullNameDto> autoCompleteFullNames(String phrase);
 
-  AccountSearchSettingsDto getAccountSearchSettings(String login);
-
   Mode getAccountMode(String login);
 }

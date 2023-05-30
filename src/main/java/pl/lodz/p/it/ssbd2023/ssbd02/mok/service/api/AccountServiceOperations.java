@@ -75,7 +75,5 @@ public interface AccountServiceOperations {
 
   List<Account> findByFullNameLike(String fullName);
 
-  AccountSearchSettings getAccountSearchSettings(String login);
-
   Mode getAccountMode(String login);
 }
