@@ -22,6 +22,7 @@ export class TokenService {
     this.localStorageService.remove(environment.refreshTokenKey);
     this.localStorageService.remove(environment.accountTypeKey);
     this.localStorageService.remove(environment.currentRoleKey);
+    this.localStorageService.remove(environment.timeoutKey);
     this.clearTimeout()
 
   }
@@ -38,6 +39,10 @@ export class TokenService {
     this.localStorageService.set(environment.accountTypeKey, accountType);
   }
 
+  public saveTimeout(timeout: number): void {
+    this.localStorageService.set(environment.timeoutKey, (Date.now() + timeout).toString());
+  }
+
   public getToken(): string | null {
     return this.localStorageService.get(environment.tokenKey);
   }
@@ -48,6 +53,10 @@ export class TokenService {
 
   public getAccountType(): string | null {
     return this.localStorageService.get(environment.accountTypeKey);
+  }
+
+  public getTimeout(): string | null {
+    return this.localStorageService.get(environment.timeoutKey);
   }
 
   public getExpirationTime(): number | null {
