@@ -144,7 +144,6 @@ export class GithubRedirectComponent implements OnInit, OnDestroy {
                 });
                 this.loading = false;
               }
-              console.log(this.finishRegistrationForm);
             },
             error: (e: HttpErrorResponse) => {
               this.loading = false;
