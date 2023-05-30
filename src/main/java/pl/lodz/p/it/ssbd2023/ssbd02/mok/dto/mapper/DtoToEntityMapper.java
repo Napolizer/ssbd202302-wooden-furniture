@@ -7,7 +7,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
@@ -157,27 +156,6 @@ public final class DtoToEntityMapper {
 
   public static FullNameDto mapAccountNameToFullNameDto(Account account) {
     return new FullNameDto(account.getPerson().getFirstName() + " " + account.getPerson().getLastName());
-  }
-
-  public static AccountSearchSettings mapAccountSearchSettingsDtoToAccountSearchSettings(
-      AccountSearchSettingsDto accountSearchSettingsDto) {
-    return AccountSearchSettings.builder()
-        .searchPage(accountSearchSettingsDto.getSearchPage())
-        .displayedAccounts(accountSearchSettingsDto.getDisplayedAccounts())
-        .searchKeyword(accountSearchSettingsDto.getSearchKeyword())
-        .sortBy(accountSearchSettingsDto.getSortBy())
-        .sortAscending(accountSearchSettingsDto.getSortAscending())
-        .build();
-  }
-
-  public static AccountSearchSettingsDto mapToAccountSearchSettingsDto(AccountSearchSettings accountSearchSettings) {
-    return AccountSearchSettingsDto.builder()
-            .searchPage(accountSearchSettings.getSearchPage())
-            .displayedAccounts(accountSearchSettings.getDisplayedAccounts())
-            .searchKeyword(accountSearchSettings.getSearchKeyword())
-            .sortBy(accountSearchSettings.getSortBy())
-            .sortAscending(accountSearchSettings.getSortAscending())
-            .build();
   }
 
   public static Mode mapChangeModeDtoToMode(ChangeModeDto changeModeDto) {

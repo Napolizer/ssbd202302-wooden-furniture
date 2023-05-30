@@ -35,6 +35,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.ClientAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
@@ -49,6 +52,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelNotAssignedException;
@@ -58,18 +62,25 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ClientAndSalesRepAccessLevels
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class AccountServiceIT {
   @PersistenceContext(unitName = "ssbd02adminPU")
   private EntityManager em;
   @Resource
   private UserTransaction utx;
+
+  @Mock
+  private MailService mailService;
+
   @Inject
-  private AccountServiceOperations accountService;
+  @InjectMocks
+  private AccountService accountService;
   @Inject
   private AdminAuth admin;
   @Inject
@@ -118,6 +129,7 @@ public class AccountServiceIT {
           .accountState(AccountState.ACTIVE)
           .timeZone(TimeZone.EUROPE_WARSAW)
           .forcePasswordChange(true)
+          .accountType(AccountType.NORMAL)
           .build();
       accountService.createAccount(account);
       accountToRegister = Account.builder()
@@ -137,6 +149,7 @@ public class AccountServiceIT {
               .build())
           .locale("pl")
           .timeZone(TimeZone.EUROPE_WARSAW)
+          .accountType(AccountType.NORMAL)
           .build();
     });
   }
@@ -635,7 +648,8 @@ public class AccountServiceIT {
       assertEquals("test123@gmail.com", accountToRegister.getEmail());
       assertEquals("newssbd02Email@gmail.com", accountToRegister.getNewEmail());
 
-      Account accountAfterUpdate = accountService.updateEmailAfterConfirmation(accountToRegister.getLogin());
+      String token = tokenService.generateTokenForEmailLink(accountToRegister, TokenType.CHANGE_EMAIL);
+      Account accountAfterUpdate = accountService.updateEmailAfterConfirmation(token);
       assertEquals("newssbd02Email@gmail.com", accountAfterUpdate.getEmail());
       assertNull(accountAfterUpdate.getNewEmail());
     });
@@ -645,7 +659,8 @@ public class AccountServiceIT {
   @Test
   void properlyResetsPassword() {
     String newPassword = "NewPassword123!";
-    assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    assertDoesNotThrow(() -> accountService.resetPassword(token, newPassword));
     admin.call(() -> {
       Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
       assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
@@ -668,7 +683,8 @@ public class AccountServiceIT {
   public void properlyPersistsOldPasswordDuringResetPassword() {
     String newPassword = "NewPassword123!";
     String oldHash = account.getPassword();
-    assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    assertDoesNotThrow(() -> accountService.resetPassword(token, newPassword));
     admin.call(() -> {
       Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
       assertTrue(CryptHashUtils.verifyPassword(newPassword, updated.getPassword()));
@@ -691,7 +707,7 @@ public class AccountServiceIT {
   public void properlyPersistsOldPasswordDuringPasswordChangeFromLink() {
     String newPassword = "NewPassword123!";
     String oldHash = account.getPassword();
-    String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     admin.call(() -> {
       assertDoesNotThrow(() -> accountService.changePasswordFromLink(token, newPassword, "test"));
       Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
@@ -702,7 +718,8 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesForcePasswordChangeFieldDuringResetPassword() {
     String newPassword = "NewPassword123!";
-    assertDoesNotThrow(() -> accountService.resetPassword(account.getLogin(), newPassword));
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.PASSWORD_RESET);
+    assertDoesNotThrow(() -> accountService.resetPassword(token, newPassword));
     admin.call(() -> {
       Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();
       assertEquals(false, updated.getForcePasswordChange());
@@ -722,7 +739,7 @@ public class AccountServiceIT {
   @Test
   public void properlyChangesForcePasswordChangeFieldDuringPasswordChangeFromLink() {
     String newPassword = "NewPassword123!";
-    String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_EMAIL);
+    String token = tokenService.generateTokenForEmailLink(account, TokenType.CHANGE_PASSWORD);
     admin.call(() -> {
       assertDoesNotThrow(() -> accountService.changePasswordFromLink(token, newPassword, "test"));
       Account updated = accountService.getAccountByLogin(account.getLogin()).orElseThrow();

@@ -21,7 +21,6 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccountSearchSettings;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.PasswordHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
@@ -196,7 +195,6 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     account.setAccountState(AccountState.NOT_VERIFIED);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
     account.setAccountType(AccountType.NORMAL);
-    account.setAccountSearchSettings(new AccountSearchSettings());
     account.setMode(Mode.LIGHT);
     Account persistedAccount = accountFacade.create(account);
     String accountConfirmationToken = tokenService.generateTokenForEmailLink(account, TokenType.ACCOUNT_CONFIRMATION);
@@ -230,7 +228,6 @@ public class AccountService extends AbstractService implements AccountServiceOpe
     account.setAccountState(AccountState.ACTIVE);
     account.setAccountType(AccountType.NORMAL);
     account.setPassword(CryptHashUtils.hashPassword(account.getPassword()));
-    account.setAccountSearchSettings(new AccountSearchSettings());
     account.setMode(Mode.LIGHT);
     account.setForcePasswordChange(true);
     return accountFacade.create(account);
@@ -521,11 +518,6 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @RolesAllowed(ADMINISTRATOR)
   public List<Account> findByFullNameLike(String fullName) {
     return accountFacade.findByFullNameLike(fullName);
-  }
-
-  @RolesAllowed(ADMINISTRATOR)
-  public AccountSearchSettings getAccountSearchSettings(String login) {
-    return accountFacade.findByLogin(login).get().getAccountSearchSettings();
   }
 
   @RolesAllowed({ADMINISTRATOR, EMPLOYEE, SALES_REP, CLIENT})
