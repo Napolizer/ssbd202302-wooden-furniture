@@ -81,11 +81,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToRegisterPage();
   }
 
-  redirectToChangeOwnPasswordPage(): void {
-    this.breadcrumbs=['toolbar.home', 'toolbar.myAccount']
-    void this.navigationService.redirectToChangeOwnPasswordPage();
-  }
-
   redirectToCreateAccountPage(): void {
     this.breadcrumbs=['toolbar.home', 'create.account.title']
     void this.navigationService.redirectToCreateAccountPage();

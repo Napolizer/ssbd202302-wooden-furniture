@@ -302,7 +302,7 @@ export class UserAccountPageComponent implements OnInit {
   openChangeEmailDialog(): void {
     this.dialog.open(ChangeEmailComponent, {
       width: '450px',
-      height: '400px',
+      height: '380px',
       data: {
         id: this.route.snapshot.paramMap.get('id')
       }

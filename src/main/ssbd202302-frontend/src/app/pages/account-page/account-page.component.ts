@@ -13,7 +13,8 @@ import {DatePipe, Location } from "@angular/common";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ChangeEmailComponent } from '../change-email/change-email.component';
+import { ChangeEmailComponent } from 'src/app/components/change-email/change-email.component';
+import { ChangeOwnPasswordComponent } from '../change-own-password/change-own-password.component';
 
 @Component({
   selector: 'app-account-page',
@@ -148,11 +149,18 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToMainPage();
   }
 
+  openChangePasswordDialog(): void {
+    this.dialog.open(ChangeOwnPasswordComponent, {
+      width: '450px',
+      height: '520px',
+    } as MatDialogConfig<any>);
+  }
+
   openChangeEmailDialog(): void {
     this.dialog.open(ChangeEmailComponent, {
       width: '450px',
-      height: '400px',
+      height: '380px',
     } as MatDialogConfig<any>);
   }
-  
+
 }

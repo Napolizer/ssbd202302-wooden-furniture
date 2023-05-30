@@ -57,7 +57,7 @@ export class DialogService {
   openAdminChangeEmailDialog(id: string): MatDialogRef<ChangeEmailComponent> {
     return this.matDialog.open(ChangeEmailComponent, {
       width: '450px',
-      height: '400px',
+      height: '380px',
       data: {
         id: id
       }

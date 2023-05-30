@@ -3,9 +3,6 @@
 <mat-divider></mat-divider>
 <div mat-dialog-content>
   <form class="form-container" [formGroup]="changeEmailForm" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
-    <ul class="breadcrumb-list">
-      <li *ngFor="let breadcrumb of breadcrumbData">{{ breadcrumb }}</li>
-    </ul>
     <div class="form">
       <app-spinner [loading]="loading"></app-spinner>
       <div class="email-container">

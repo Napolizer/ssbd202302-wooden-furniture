@@ -60,10 +60,6 @@
       <mat-icon>person</mat-icon><span>{{'toolbar.myAccount' | translate}}</span>
     </button>
     <mat-divider></mat-divider>
-    <button mat-menu-item routerLink="#" *ngIf="isUserNormalType()" (click)="redirectToChangeOwnPasswordPage()">
-      <mat-icon>settings</mat-icon><span>{{'toolbar.settings' | translate}}</span>
-    </button>
-    <mat-divider></mat-divider>
     <button mat-menu-item routerLink="#" (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>{{'toolbar.logout' | translate}}
     </button>

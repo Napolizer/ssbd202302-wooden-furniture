@@ -128,6 +128,7 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button color="primary" (click)="onEditClicked()">{{'account.edit' | translate}}</button>
+          <button mat-raised-button color="primary" *ngIf="isUserNormalType()" (click)="openChangePasswordDialog()">{{'change.password.button' | translate}}</button>
           <button mat-raised-button color="primary" *ngIf="isUserNormalType()" (click)="openChangeEmailDialog()">{{'change.email.button' | translate}}</button>
         </mat-card-actions>
       </mat-card>
