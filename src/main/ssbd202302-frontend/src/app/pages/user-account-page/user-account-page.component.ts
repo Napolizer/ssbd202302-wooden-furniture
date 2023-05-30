@@ -16,8 +16,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {TokenService} from "../../services/token.service";
 import {AccountType} from "../../enums/account.type";
-import { ChangeEmailComponent } from '../change-email/change-email.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ChangeEmailComponent } from 'src/app/components/change-email/change-email.component';
 
 @Component({
   selector: 'app-user-account-page',
@@ -296,7 +296,7 @@ export class UserAccountPageComponent implements OnInit {
   }
 
   isUserNormalType(): boolean {
-    return this.tokenService.getAccountType() === AccountType.NORMAL;
+    return this.account.accountType === AccountType.NORMAL;
   }
 
   openChangeEmailDialog(): void {

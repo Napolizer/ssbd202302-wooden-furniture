@@ -45,7 +45,6 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { AddAccountRoleComponent } from './pages/add-account-role-page/add-account-role.component';
 import { RemoveAccountRolePageComponent } from './pages/remove-account-role-page/remove-account-role-page.component';
 import { ConfirmEmailChangeComponent } from './pages/confirm-email-change/confirm-email-change.component';
-import { ChangeEmailComponent } from './pages/change-email/change-email.component';
 import { ConfirmAccountComponent } from './pages/confirm-account/confirm-account.component';
 import { ChangeAccountRolePageComponent } from './pages/change-account-role-page/change-account-role-page.component';
 import { DigitOnlyDirective } from './utils/digit.only.directive';
@@ -64,8 +63,8 @@ import {MatSortModule} from "@angular/material/sort";
 import { AddRoleComponent } from './components/add-role/add-role.component';
 import { ChangeRoleComponent } from './components/change-role/change-role.component';
 import { RemoveRoleComponent } from './components/remove-role/remove-role.component';
-import { AdminChangeEmailComponent } from './components/admin-change-email/admin-change-email.component';
 import { AdminEditAccountComponent } from './components/admin-edit-account/admin-edit-account.component';
+import { ChangeEmailComponent } from './components/change-email/change-email.component';
 
 
 @NgModule({
@@ -107,7 +106,6 @@ import { AdminEditAccountComponent } from './components/admin-edit-account/admin
     AddRoleComponent,
     ChangeRoleComponent,
     RemoveRoleComponent,
-    AdminChangeEmailComponent,
     AdminEditAccountComponent
   ],
   imports: [

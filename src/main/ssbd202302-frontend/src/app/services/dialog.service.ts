@@ -6,8 +6,8 @@ import {Account} from "../interfaces/account";
 import {AddRoleComponent} from "../components/add-role/add-role.component";
 import {ChangeRoleComponent} from "../components/change-role/change-role.component";
 import {RemoveRoleComponent} from "../components/remove-role/remove-role.component";
-import {AdminChangeEmailComponent} from "../components/admin-change-email/admin-change-email.component";
 import {AdminEditAccountComponent} from "../components/admin-edit-account/admin-edit-account.component";
+import { ChangeEmailComponent } from '../components/change-email/change-email.component';
 
 @Injectable({
   providedIn: 'root'
@@ -54,10 +54,13 @@ export class DialogService {
     });
   }
 
-  openAdminChangeEmailDialog(account: Account): MatDialogRef<AdminChangeEmailComponent> {
-    return this.matDialog.open(AdminChangeEmailComponent, {
-      data: {account},
-      width: '350px',
+  openAdminChangeEmailDialog(id: string): MatDialogRef<ChangeEmailComponent> {
+    return this.matDialog.open(ChangeEmailComponent, {
+      width: '450px',
+      height: '400px',
+      data: {
+        id: id
+      }
     });
   }
 
