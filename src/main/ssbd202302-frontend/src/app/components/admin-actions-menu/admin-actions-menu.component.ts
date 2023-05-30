@@ -144,7 +144,7 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
   }
 
   openAdminChangeEmailDialog(id: number): void {
-    this.dialogService.openAdminChangeEmailDialog(id.toString());
+    this.dialogService.openChangeEmailDialog(id.toString());
   }
 
   openAdminEditAccountDialog(account: Account): void {

@@ -16,8 +16,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {TokenService} from "../../services/token.service";
 import {AccountType} from "../../enums/account.type";
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ChangeEmailComponent } from 'src/app/components/change-email/change-email.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-account-page',
@@ -300,12 +299,6 @@ export class UserAccountPageComponent implements OnInit {
   }
 
   openChangeEmailDialog(): void {
-    this.dialog.open(ChangeEmailComponent, {
-      width: '450px',
-      height: '380px',
-      data: {
-        id: this.route.snapshot.paramMap.get('id')
-      }
-    } as MatDialogConfig<any>);
+    this.dialogService.openChangeEmailDialog(this.route.snapshot.paramMap.get('id')!);
   }
 }

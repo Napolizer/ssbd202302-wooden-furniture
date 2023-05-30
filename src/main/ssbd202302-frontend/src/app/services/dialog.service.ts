@@ -8,6 +8,7 @@ import {ChangeRoleComponent} from "../components/change-role/change-role.compone
 import {RemoveRoleComponent} from "../components/remove-role/remove-role.component";
 import {AdminEditAccountComponent} from "../components/admin-edit-account/admin-edit-account.component";
 import { ChangeEmailComponent } from '../components/change-email/change-email.component';
+import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-own-password.component';
 
 @Injectable({
   providedIn: 'root'
@@ -54,13 +55,20 @@ export class DialogService {
     });
   }
 
-  openAdminChangeEmailDialog(id: string): MatDialogRef<ChangeEmailComponent> {
+  openChangeEmailDialog(id: string | undefined): MatDialogRef<ChangeEmailComponent> {
     return this.matDialog.open(ChangeEmailComponent, {
       width: '450px',
       height: '380px',
       data: {
         id: id
       }
+    });
+  }
+
+  openChangePasswordDialog(): MatDialogRef<ChangeOwnPasswordComponent> {
+    return this.matDialog.open(ChangeOwnPasswordComponent, {
+      width: '450px',
+      height: '520px',
     });
   }
 
