@@ -35,6 +35,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.AdminAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.arquillian.auth.ClientAuth;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
@@ -59,18 +62,25 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.ClientAndSalesRepAccessLevels
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.IllegalAccountStateChangeException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.MoreThanOneAccessLevelAssignedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @ExtendWith(ArquillianExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class AccountServiceIT {
   @PersistenceContext(unitName = "ssbd02adminPU")
   private EntityManager em;
   @Resource
   private UserTransaction utx;
+
+  @Mock
+  private MailService mailService;
+
   @Inject
-  private AccountServiceOperations accountService;
+  @InjectMocks
+  private AccountService accountService;
   @Inject
   private AdminAuth admin;
   @Inject
