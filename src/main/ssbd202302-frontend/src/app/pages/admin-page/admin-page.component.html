@@ -1,9 +1,9 @@
 <app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
 <div>
   <br>
-  <div class="container top-container">
+  <div class="page-container top-container">
     <br>
-    <div class="container">
+    <div class="page-container">
       <div fxLayout="row" fxLayoutAlign="center center" class="content" [@loadedUnloadedList]="{value: getListAnimationState()}">
         <mat-card class="card" >
           <h3 class="accounts">{{'accounts' | translate}}</h3>
