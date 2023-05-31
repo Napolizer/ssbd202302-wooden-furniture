@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {animate, state, style, transition, trigger} from "@angular/animations";
 import {first, Subject, takeUntil} from "rxjs";
 import {AccountService} from "../../services/account.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -16,24 +15,6 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-change-own-password',
   templateUrl: './change-own-password.component.html',
   styleUrls: ['./change-own-password.component.sass'],
-  animations: [
-    trigger('loadedUnloadedForm', [
-      state(
-        'loaded',
-        style({
-          opacity: 1,
-        })
-      ),
-      state(
-        'unloaded',
-        style({
-          opacity: 0,
-        })
-      ),
-      transition('loaded => unloaded', [animate('0.5s ease-in')]),
-      transition('unloaded => loaded', [animate('0.5s ease-in')]),
-    ]),
-  ],
 })
 export class ChangeOwnPasswordComponent implements OnInit {
 
@@ -89,10 +70,6 @@ export class ChangeOwnPasswordComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
-  }
-
-  getFormAnimationState(): string {
-    return this.loading ? 'unloaded' : 'loaded';
   }
 
   changePassword(): void {

@@ -11,8 +11,6 @@ import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.compo
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
-import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
-import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-user-account-page.component";
 import {AddAccountRoleComponent} from "./pages/add-account-role-page/add-account-role.component";
 import {RemoveAccountRolePageComponent} from "./pages/remove-account-role-page/remove-account-role-page.component";
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
@@ -60,22 +58,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
-    }
-  },
-  {
-    path: 'edit-own-account',
-    component: EditOwnAccountComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
-    }
-  },
-  {
-    path: 'account/:id/edit',
-    component: EditUserAccountPageComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.ADMINISTRATOR]
     }
   },
   {

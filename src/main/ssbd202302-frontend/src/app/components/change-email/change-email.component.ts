@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, combineLatest, first, map, takeUntil } from 'rxjs';
+import { Account } from 'src/app/interfaces/account';
 import { Email } from 'src/app/interfaces/email';
 import { AccountService } from 'src/app/services/account.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -51,91 +52,62 @@ export class ChangeEmailComponent implements OnInit {
       ]),
     });
     if (this.id) {
-      this.id = this.id as string;
       this.accountService
         .retrieveAccount(this.id)
         .pipe(first(), takeUntil(this.destroy))
         .subscribe({
-          next: (account) => {
-            this.version = account.hash;
-            this.changeEmailForm.setValue({
-              currentEmail: account.email,
-              newEmail: '',
-            });
-            this.loading = false;
-          },
-          error: (e) => {
-            combineLatest([
-              this.translate.get('exception.occurred'),
-              this.translate.get(e.error.message || 'exception.unknown'),
-            ])
-              .pipe(
-                first(),
-                takeUntil(this.destroy),
-                map((data) => ({
-                  title: data[0],
-                  message: data[1],
-                }))
-              )
-              .subscribe((data) => {
-                const ref = this.dialogService.openErrorDialog(
-                  data.title,
-                  data.message
-                );
-                ref
-                  .afterClosed()
-                  .pipe(first(), takeUntil(this.destroy))
-                  .subscribe(() => {
-                    this.navigationService.redirectToMainPage();
-                    this.dialogRef.close();
-                  });
-              });
-          },
+          next: (account) => this.handleGetAccount(account),
+          error: (e) => this.handleGetAccountError(e),
         });
     } else {
       this.accountService
         .retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
         .pipe(first(), takeUntil(this.destroy))
         .subscribe({
-          next: (account) => {
-            this.id = account.id.toString();
-            this.version = account.hash;
-            this.changeEmailForm.setValue({
-              currentEmail: account.email,
-              newEmail: '',
-            });
-            this.loading = false;
-          },
-          error: (e) => {
-            combineLatest([
-              this.translate.get('exception.occurred'),
-              this.translate.get(e.error.message || 'exception.unknown'),
-            ])
-              .pipe(
-                first(),
-                takeUntil(this.destroy),
-                map((data) => ({
-                  title: data[0],
-                  message: data[1],
-                }))
-              )
-              .subscribe((data) => {
-                const ref = this.dialogService.openErrorDialog(
-                  data.title,
-                  data.message
-                );
-                ref
-                  .afterClosed()
-                  .pipe(first(), takeUntil(this.destroy))
-                  .subscribe(() => {
-                    this.navigationService.redirectToMainPage();
-                    this.dialogRef.close();
-                  });
-              });
-          },
+          next: (account) => this.handleGetAccount(account),
+          error: (e) => this.handleGetAccountError(e),
         });
     }
     this.changeEmailForm.get('currentEmail')?.disable();
+  }
+
+  handleGetAccount(account: Account): void {
+    this.id = account.id.toString();
+    this.version = account.hash;
+    this.changeEmailForm.setValue({
+      currentEmail: account.email,
+      newEmail: '',
+    });
+    this.loading = false;
+  }
+
+
+  handleGetAccountError(e: any): void {
+    combineLatest([
+      this.translate.get('exception.occurred'),
+      this.translate.get(e.error.message || 'exception.unknown'),
+    ])
+      .pipe(
+        first(),
+        takeUntil(this.destroy),
+        map((data) => ({
+          title: data[0],
+          message: data[1],
+        }))
+      )
+      .subscribe((data) => {
+        const ref = this.dialogService.openErrorDialog(
+          data.title,
+          data.message
+        );
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe(() => {
+            this.navigationService.redirectToMainPage();
+            this.dialogRef.close();
+          });
+      });
   }
 
   ngOnDestroy(): void {

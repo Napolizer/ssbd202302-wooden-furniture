@@ -39,8 +39,6 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 import {DatePipe} from "@angular/common";
-import { EditOwnAccountComponent } from './pages/edit-own-account/edit-own-account.component';
-import { EditUserAccountPageComponent } from './pages/edit-user-account-page/edit-user-account-page.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountRoleComponent } from './pages/add-account-role-page/add-account-role.component';
 import { RemoveAccountRolePageComponent } from './pages/remove-account-role-page/remove-account-role-page.component';
@@ -84,9 +82,6 @@ import { ChangeEmailComponent } from './components/change-email/change-email.com
     ForbiddenPageComponent,
     ResetPasswordComponent,
     UserAccountPageComponent,
-    EditOwnAccountComponent,
-    EditUserAccountPageComponent,
-    EditOwnAccountComponent,
     ForgotPasswordComponent,
     AddAccountRoleComponent,
     RemoveAccountRolePageComponent,
