@@ -69,6 +69,7 @@ public class GithubService extends AbstractService implements GithubServiceOpera
     try {
       URIBuilder uriBuilder = new URIBuilder(BASE_URI);
       uriBuilder.setParameter("client_id", CLIENT_ID);
+      uriBuilder.setParameter("scope", "user:email");
       return uriBuilder.build().toString();
     } catch (URISyntaxException e) {
       throw ApplicationExceptionFactory.createUnknownErrorException(e);
