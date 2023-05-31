@@ -12,9 +12,7 @@ import {AuthenticationService} from "../../services/authentication.service";
 import {DatePipe, Location } from "@angular/common";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ChangeEmailComponent } from '../change-email/change-email.component';
-
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-account-page',
   templateUrl: './account-page.component.html',
@@ -136,23 +134,27 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
-  onEditClicked(): void {
-    void this.navigationService.redirectToEditOwnAccountPage();
-  }
-
-  onChangeEmailClicked(): void {
-    void this.navigationService.redirectToChangeOwnEmailPage();
-  }
-
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
   }
 
-  openChangeEmailDialog(): void {
-    this.dialog.open(ChangeEmailComponent, {
-      width: '450px',
-      height: '400px',
-    } as MatDialogConfig<any>);
+  openChangePasswordDialog(): void {
+    this.dialogService.openChangePasswordDialog();
   }
-  
+
+  openChangeEmailDialog(): void {
+    this.dialogService.openChangeEmailDialog(undefined);
+  }
+
+  openEditAccountDialog(): void {
+    this.dialogService.openEditAccountDialog(this.account, false)
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'error') {
+        this.navigationService.redirectToOwnAccountPage();
+      }
+    });
+  }
+
 }

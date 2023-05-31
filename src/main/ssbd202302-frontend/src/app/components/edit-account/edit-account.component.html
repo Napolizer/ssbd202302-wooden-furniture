@@ -1,0 +1,238 @@
+<h1 mat-dialog-title>{{ "edit.account" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <form
+    class="form-container"
+    [formGroup]="editAccountForm"
+    (ngSubmit)="confirmSave()"
+  >
+    <div class="form">
+      <app-spinner [loading]="loading"></app-spinner>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.20' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewFirstName" | translate }}</mat-label>
+          <input
+            matInput
+            #firstName
+            value="{{ editableAccount.firstName }}"
+            type="text"
+            formControlName="firstName"
+            maxlength="20"
+            required
+          />
+          <mat-error
+            *ngIf="editAccountForm.get('firstName')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editAccountForm.get('firstName')?.hasError('pattern')"
+            >{{
+              "edit.firstName.validity.patternMismatch" | translate
+            }}</mat-error
+          >
+          <mat-hint align="end">{{ firstName.value.length }}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.20' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewLastName" | translate }}</mat-label>
+          <input
+            matInput
+            #lastName
+            value="{{ editableAccount.lastName }}"
+            type="text"
+            formControlName="lastName"
+            maxlength="20"
+            required
+          />
+          <mat-error
+            *ngIf="editAccountForm.get('lastName')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editAccountForm.get('lastName')?.hasError('pattern')"
+            >{{
+              "edit.lastName.validity.patternMismatch" | translate
+            }}</mat-error
+          >
+          <mat-hint align="end">{{ lastName.value.length }}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.20' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewStreet" | translate }}</mat-label>
+          <input
+            matInput
+            #street
+            value="{{ editableAccount.street }}"
+            type="text"
+            formControlName="street"
+            maxlength="20"
+            required
+          />
+          <mat-error
+            *ngIf="editAccountForm.get('street')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editAccountForm.get('street')?.hasError('pattern')"
+            >{{ "edit.street.validity.patternMismatch" | translate }}</mat-error
+          >
+          <mat-hint align="end">{{ street.value.length }}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.4' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewStreetNumber" | translate }}</mat-label>
+          <input
+            matInput
+            #streetNumber
+            value="{{ editableAccount.streetNumber }}"
+            type="number"
+            formControlName="streetNumber"
+            max="9999"
+            min="1"
+            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 4);"
+            required
+          />
+
+          <mat-error
+            *ngIf="editAccountForm.get('streetNumber')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editAccountForm.get('streetNumber')?.hasError('min')"
+            >{{ "register.validity.number.min" | translate }}</mat-error
+          >
+          <mat-hint align="end">{{ streetNumber.value.length }}/4</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.20' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewCity" | translate }}</mat-label>
+          <input
+            matInput
+            #city
+            value="{{ editableAccount.city }}"
+            type="text"
+            formControlName="city"
+            maxlength="20"
+            required
+          />
+
+          <mat-error
+            *ngIf="editAccountForm.get('city')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error *ngIf="editAccountForm.get('city')?.hasError('pattern')">{{
+            "edit.city.validity.patternMismatch" | translate
+          }}</mat-error>
+          <mat-hint align="end">{{ city.value.length }}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.6' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewPostalCode" | translate }}</mat-label>
+          <input
+            matInput
+            #postalCode
+            value="{{ editableAccount.postalCode }}"
+            type="text"
+            placeholder="00-000"
+            formControlName="postalCode"
+            maxlength="6"
+            required
+          />
+
+          <mat-error
+            *ngIf="editAccountForm.get('postalCode')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editAccountForm.get('postalCode')?.hasError('pattern')"
+            >{{
+              "edit.postalCode.validity.patternMismatch" | translate
+            }}</mat-error
+          >
+          <mat-hint align="end">{{ postalCode.value.length }}/6</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          hintLabel="{{ 'register.hint.max.20' | translate }}"
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewCountry" | translate }}</mat-label>
+          <input
+            matInput
+            #country
+            value="{{ editableAccount.country }}"
+            type="text"
+            formControlName="country"
+            maxlength="20"
+            required
+          />
+
+          <mat-error
+            *ngIf="editAccountForm.get('country')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editAccountForm.get('country')?.hasError('pattern')"
+            >{{
+              "edit.country.validity.patternMismatch" | translate
+            }}</mat-error
+          >
+          <mat-hint align="end">{{ country.value.length }}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="input-container"></div>
+      <div class="input-reset">
+        <button
+          type="button"
+          mat-button
+          color="primary"
+          class="reset-button"
+          (click)="onResetClicked()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      <div class="button-container">
+        <button mat-button type="button" mat-dialog-close>
+          {{ "change.email.back" | translate }}
+        </button>
+      </div>
+      <div class="button-container">
+        <button mat-button type="submit">
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

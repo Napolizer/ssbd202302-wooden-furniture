@@ -16,8 +16,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {TokenService} from "../../services/token.service";
 import {AccountType} from "../../enums/account.type";
-import { ChangeEmailComponent } from '../change-email/change-email.component';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-account-page',
@@ -147,10 +146,6 @@ export class UserAccountPageComponent implements OnInit {
 
   getRoles(): string {
     return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
-  }
-
-  onEditClicked(): void {
-    void this.navigationService.redirectToEditUserAccountPage(this.id);
   }
 
   redirectToChangeAccountRolesPage(): void {
@@ -296,16 +291,21 @@ export class UserAccountPageComponent implements OnInit {
   }
 
   isUserNormalType(): boolean {
-    return this.tokenService.getAccountType() === AccountType.NORMAL;
+    return this.account.accountType === AccountType.NORMAL;
   }
 
   openChangeEmailDialog(): void {
-    this.dialog.open(ChangeEmailComponent, {
-      width: '450px',
-      height: '400px',
-      data: {
-        id: this.route.snapshot.paramMap.get('id')
+    this.dialogService.openChangeEmailDialog(this.id.toString());
+  }
+
+  openAdminEditAccountDialog(): void {
+    this.dialogService.openEditAccountDialog(this.account, true)
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'error') {
+        this.navigationService.redirectToAccountPage(this.id);
       }
-    } as MatDialogConfig<any>);
+    });
   }
 }

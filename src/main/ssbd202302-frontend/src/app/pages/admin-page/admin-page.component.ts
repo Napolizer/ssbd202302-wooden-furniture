@@ -7,12 +7,13 @@ import {NavigationEnd, Router} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import {FullName} from "../../interfaces/fullName";
-import {map, Subject, takeUntil, tap} from "rxjs";
+import {first, map, Subject, takeUntil, tap} from "rxjs";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {MatRipple} from "@angular/material/core";
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -67,6 +68,7 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     private breadcrumbsService: BreadcrumbsService,
     private translate: TranslateService,
     private router: Router,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -188,7 +190,14 @@ export class AdminPageComponent implements OnInit, OnDestroy {
     return this.loading || this.listLoading;
   }
 
-  redirectToCreateAccountPage(): void {
-    void this.navigationService.redirectToCreateAccountPage();
+  openCreateAccountDialog(): void {
+    this.dialogService.openCreateAccountDialog()
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'success') {
+        this.onResetClicked();
+      }
+    });
   }
 }

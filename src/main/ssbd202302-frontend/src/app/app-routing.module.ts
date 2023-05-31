@@ -11,16 +11,12 @@ import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.compo
 import {ForbiddenPageComponent} from "./pages/forbidden-page/forbidden-page.component";
 import {ResetPasswordComponent} from './pages/reset-password/reset-password.component';
 import {UserAccountPageComponent} from "./pages/user-account-page/user-account-page.component";
-import {EditOwnAccountComponent} from "./pages/edit-own-account/edit-own-account.component";
-import {EditUserAccountPageComponent} from "./pages/edit-user-account-page/edit-user-account-page.component";
 import {AddAccountRoleComponent} from "./pages/add-account-role-page/add-account-role.component";
 import {RemoveAccountRolePageComponent} from "./pages/remove-account-role-page/remove-account-role-page.component";
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 import {ChangeAccountRolePageComponent} from "./pages/change-account-role-page/change-account-role-page.component";
 import {ConfirmEmailChangeComponent} from './pages/confirm-email-change/confirm-email-change.component';
 import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.component';
-import {ChangeOwnPasswordComponent} from "./pages/change-own-password/change-own-password.component";
-import {CreateAccountComponent} from './pages/create-account/create-account.component';
 import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/change-password-confirm.component";
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import { AccountType } from './enums/account.type';
@@ -65,22 +61,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'edit-own-account',
-    component: EditOwnAccountComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP]
-    }
-  },
-  {
-    path: 'account/:id/edit',
-    component: EditUserAccountPageComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.ADMINISTRATOR]
-    }
-  },
-  {
     path: 'admin',
     component: AdminPageComponent,
     canActivate: [AuthGuard],
@@ -115,23 +95,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.GUEST]
-    }
-  },
-  {
-    path: 'change-password',
-    component: ChangeOwnPasswordComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.CLIENT, Role.ADMINISTRATOR, Role.EMPLOYEE, Role.SALES_REP],
-      exclude: [AccountType.GOOGLE, AccountType.GITHUB]
-    }
-  },
-  {
-    path: 'create-account',
-    component: CreateAccountComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.ADMINISTRATOR]
     }
   },
   {

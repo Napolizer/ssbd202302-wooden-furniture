@@ -45,6 +45,7 @@ public class AccountMapper {
             .lastLogin(account.getLastLogin())
             .lastFailedLogin(account.getLastFailedLogin())
             .timeZone(account.getTimeZone().getDisplayName())
+            .accountType(account.getAccountType())
             .build();
   }
 

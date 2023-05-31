@@ -13,6 +13,7 @@ import lombok.ToString;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Login;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 
 @Data
 @NoArgsConstructor
@@ -53,4 +54,5 @@ public class AccountWithoutSensitiveDataDto {
   @NotNull
   private String hash;
   private String timeZone;
+  private AccountType accountType;
 }

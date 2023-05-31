@@ -20,6 +20,7 @@ import { NavigationService } from 'src/app/services/navigation.service';
 import { Constants } from 'src/app/utils/constants';
 import { CustomValidators } from 'src/app/utils/custom.validators';
 import { TimeZone } from 'src/app/utils/time.zone';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-account',
@@ -31,15 +32,12 @@ import { TimeZone } from 'src/app/utils/time.zone';
         'loaded',
         style({
           opacity: 1,
-          backgroundColor: 'rgba(221, 221, 221, 1)',
         })
       ),
       state(
         'unloaded',
         style({
           opacity: 0,
-          paddingTop: '80px',
-          backgroundColor: 'rgba(0, 0, 0, 0)',
         })
       ),
       transition('loaded => unloaded', [animate('0.5s ease-in')]),
@@ -62,7 +60,8 @@ export class CreateAccountComponent implements OnInit {
     private translate: TranslateService,
     private dialogService: DialogService,
     private navigationService: NavigationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    public dialogRef: MatDialogRef<CreateAccountComponent>,
   ) {}
 
   ngOnInit(): void {
@@ -220,12 +219,13 @@ export class CreateAccountComponent implements OnInit {
       .subscribe({
         next: (account) => {
           this.loading = false;
-          this.navigationService.redirectToAccountPageWithState(
-            account.id.toString(),
-            {
-              createAccountSuccess: 'create.account.success',
-            }
-          );
+          this.translate
+            .get('create.account.success' || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.success(msg);
+            });
+            this.dialogRef.close('success');
         },
         error: (e: HttpErrorResponse) => {
           this.loading = false;

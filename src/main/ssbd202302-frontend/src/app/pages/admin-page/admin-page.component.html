@@ -8,7 +8,7 @@
         <mat-card class="card" >
           <h3 class="accounts">{{'accounts' | translate}}</h3>
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
-            <button button="submit" mat-stroked-button color="primary" class="add-account" (click)="redirectToCreateAccountPage()">
+            <button button="submit" mat-stroked-button color="primary" class="add-account" (click)="openCreateAccountDialog()">
               <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'admin.create.account' | translate}}
             </button>
             <mat-form-field class="filter">

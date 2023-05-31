@@ -7,17 +7,17 @@
     </button>
     <button mat-menu-item *ngIf="account.accountState === 'BLOCKED'" (click)="confirmUnblock(account)">
       <mat-icon>lock_open</mat-icon>
-      <span>{{'account.unblock' | translate}}</span>
+      <span>{{'account.activate' | translate}}</span>
     </button>
     <button mat-menu-item (click)="openAdminEditAccountDialog(account)">
       <mat-icon>edit</mat-icon>
       <span>{{'account.edit' | translate}}</span>
     </button>
-    <button mat-menu-item (click)="openAdminChangeEmailDialog(account)">
+    <button mat-menu-item *ngIf="account.accountType === 'NORMAL'" (click)="openAdminChangeEmailDialog(account.id)">
       <mat-icon>email</mat-icon>
       <span>{{'change.email.button' | translate}}</span>
     </button>
-    <button mat-menu-item (click)="confirmChangePassword(account)">
+    <button mat-menu-item *ngIf="account.accountType === 'NORMAL'" (click)="confirmChangePassword(account)">
       <mat-icon>password</mat-icon>
       <span>{{'change.password.button' | translate}}</span>
     </button>

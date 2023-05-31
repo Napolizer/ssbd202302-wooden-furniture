@@ -6,8 +6,10 @@ import {Account} from "../interfaces/account";
 import {AddRoleComponent} from "../components/add-role/add-role.component";
 import {ChangeRoleComponent} from "../components/change-role/change-role.component";
 import {RemoveRoleComponent} from "../components/remove-role/remove-role.component";
-import {AdminChangeEmailComponent} from "../components/admin-change-email/admin-change-email.component";
-import {AdminEditAccountComponent} from "../components/admin-edit-account/admin-edit-account.component";
+import { EditAccountComponent } from '../components/edit-account/edit-account.component';
+import { ChangeEmailComponent } from '../components/change-email/change-email.component';
+import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-own-password.component';
+import { CreateAccountComponent } from '../pages/create-account/create-account.component';
 
 @Injectable({
   providedIn: 'root'
@@ -54,17 +56,39 @@ export class DialogService {
     });
   }
 
-  openAdminChangeEmailDialog(account: Account): MatDialogRef<AdminChangeEmailComponent> {
-    return this.matDialog.open(AdminChangeEmailComponent, {
-      data: {account},
-      width: '350px',
+  openChangeEmailDialog(id: string | undefined): MatDialogRef<ChangeEmailComponent> {
+    return this.matDialog.open(ChangeEmailComponent, {
+      disableClose: true,
+      width: '450px',
+      height: '380px',
+      data: {
+        id: id
+      }
     });
   }
 
-  openAdminEditAccountDialog(account: Account): MatDialogRef<AdminEditAccountComponent> {
-    return this.matDialog.open(AdminEditAccountComponent, {
-      data: {account},
-      width: '500px',
+  openCreateAccountDialog(): MatDialogRef<CreateAccountComponent> {
+    return this.matDialog.open(CreateAccountComponent, {
+      disableClose: true,
+      width: '1100px',
+      height: '750px',
+    });
+  }
+
+  openChangePasswordDialog(): MatDialogRef<ChangeOwnPasswordComponent> {
+    return this.matDialog.open(ChangeOwnPasswordComponent, {
+      disableClose: true,
+      width: '450px',
+      height: '520px',
+    });
+  }
+
+  openEditAccountDialog(account: Account, admin: boolean): MatDialogRef<EditAccountComponent> {
+    return this.matDialog.open(EditAccountComponent, {
+      disableClose: true,
+      width: '600px',
+      height: '600px',
+      data: { account, admin },
     });
   }
 }
