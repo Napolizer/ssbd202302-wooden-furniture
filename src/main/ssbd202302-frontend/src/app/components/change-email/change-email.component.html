@@ -2,7 +2,7 @@
 <h1 mat-dialog-title>{{ "change.email.button" | translate }}</h1>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
-  <form class="form-container" [formGroup]="changeEmailForm" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
+  <form class="form-container" [formGroup]="changeEmailForm">
     <div class="form">
       <app-spinner [loading]="loading"></app-spinner>
       <div class="email-container">

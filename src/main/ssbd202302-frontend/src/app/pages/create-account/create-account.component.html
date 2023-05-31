@@ -204,17 +204,7 @@
               "register.validity.person.patternMismatch" | translate
             }}</mat-error
           >
-          
           <mat-hint align="end">{{ lastName.value.length }}/20</mat-hint>
-
-
-          <mat-error *ngIf="firstName.validity.patternMismatch">{{
-            "edit.firstName.validity.patternMismatch" | translate
-          }}</mat-error>
-          <mat-error *ngIf="firstName.validity.valueMissing">{{
-            "edit.account.field.required" | translate
-          }}</mat-error>
-          <mat-hint align="end">{{ firstName.value.length }}/20</mat-hint>
         </mat-form-field>
       </div>
       <div class="form-create">

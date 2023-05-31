@@ -6,7 +6,7 @@ import {Account} from "../interfaces/account";
 import {AddRoleComponent} from "../components/add-role/add-role.component";
 import {ChangeRoleComponent} from "../components/change-role/change-role.component";
 import {RemoveRoleComponent} from "../components/remove-role/remove-role.component";
-import {AdminEditAccountComponent} from "../components/admin-edit-account/admin-edit-account.component";
+import { EditAccountComponent } from '../components/edit-account/edit-account.component';
 import { ChangeEmailComponent } from '../components/change-email/change-email.component';
 import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from '../pages/create-account/create-account.component';
@@ -80,11 +80,11 @@ export class DialogService {
     });
   }
 
-  openAdminEditAccountDialog(account: Account): MatDialogRef<AdminEditAccountComponent> {
-    return this.matDialog.open(AdminEditAccountComponent, {
-      data: {account},
+  openEditAccountDialog(account: Account, admin: boolean): MatDialogRef<EditAccountComponent> {
+    return this.matDialog.open(EditAccountComponent, {
       width: '600px',
       height: '600px',
+      data: { account, admin },
     });
   }
 }

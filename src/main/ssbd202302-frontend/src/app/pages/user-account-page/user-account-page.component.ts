@@ -148,10 +148,6 @@ export class UserAccountPageComponent implements OnInit {
     return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
-  onEditClicked(): void {
-    void this.navigationService.redirectToEditUserAccountPage(this.id);
-  }
-
   redirectToChangeAccountRolesPage(): void {
     void this.navigationService.redirectToChangeAccountGroupPage(this.id);
   }
@@ -299,6 +295,17 @@ export class UserAccountPageComponent implements OnInit {
   }
 
   openChangeEmailDialog(): void {
-    this.dialogService.openChangeEmailDialog(this.route.snapshot.paramMap.get('id')!);
+    this.dialogService.openChangeEmailDialog(this.id.toString());
+  }
+
+  openAdminEditAccountDialog(): void {
+    this.dialogService.openEditAccountDialog(this.account, true)
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'error') {
+        this.navigationService.redirectToAccountPage(this.id);
+      }
+    });
   }
 }

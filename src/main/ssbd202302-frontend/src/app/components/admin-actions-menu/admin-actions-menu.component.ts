@@ -6,6 +6,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {AlertService} from "@full-fledged/alerts";
 import {DialogService} from "../../services/dialog.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
   selector: 'app-admin-actions-menu',
@@ -26,6 +27,7 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private dialogService: DialogService,
     private translate: TranslateService,
+    private navigationService: NavigationService
   ) { }
 
 
@@ -148,7 +150,14 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
   }
 
   openAdminEditAccountDialog(account: Account): void {
-    this.dialogService.openAdminEditAccountDialog(account);
+    this.dialogService.openEditAccountDialog(account, true)
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'error') {
+        this.navigationService.redirectToAdminPage();
+      }
+    });
   }
 
   canAddRole(account: Account): boolean {

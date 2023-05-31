@@ -134,10 +134,6 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
-  onEditClicked(): void {
-    void this.navigationService.redirectToEditOwnAccountPage();
-  }
-
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
   }
@@ -148,6 +144,17 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   openChangeEmailDialog(): void {
     this.dialogService.openChangeEmailDialog(undefined);
+  }
+
+  openEditAccountDialog(): void {
+    this.dialogService.openEditAccountDialog(this.account, false)
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'error') {
+        this.navigationService.redirectToOwnAccountPage();
+      }
+    });
   }
 
 }

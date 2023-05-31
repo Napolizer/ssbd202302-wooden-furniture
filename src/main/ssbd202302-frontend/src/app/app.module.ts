@@ -63,9 +63,8 @@ import {MatSortModule} from "@angular/material/sort";
 import { AddRoleComponent } from './components/add-role/add-role.component';
 import { ChangeRoleComponent } from './components/change-role/change-role.component';
 import { RemoveRoleComponent } from './components/remove-role/remove-role.component';
-import { AdminEditAccountComponent } from './components/admin-edit-account/admin-edit-account.component';
+import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { ChangeEmailComponent } from './components/change-email/change-email.component';
-
 
 @NgModule({
   declarations: [
@@ -106,7 +105,7 @@ import { ChangeEmailComponent } from './components/change-email/change-email.com
     AddRoleComponent,
     ChangeRoleComponent,
     RemoveRoleComponent,
-    AdminEditAccountComponent
+    EditAccountComponent,
   ],
   imports: [
     BrowserModule,

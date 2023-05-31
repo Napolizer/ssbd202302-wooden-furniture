@@ -1,10 +1,3 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -23,24 +16,6 @@ import { CustomValidators } from 'src/app/utils/custom.validators';
   selector: 'app-change-email',
   templateUrl: './change-email.component.html',
   styleUrls: ['./change-email.component.sass'],
-  animations: [
-    trigger('loadedUnloadedForm', [
-      state(
-        'loaded',
-        style({
-          opacity: 1
-        })
-      ),
-      state(
-        'unloaded',
-        style({
-          opacity: 0
-        })
-      ),
-      transition('loaded => unloaded', [animate('0.5s ease-in')]),
-      transition('unloaded => loaded', [animate('0.5s ease-in')]),
-    ]),
-  ],
 })
 export class ChangeEmailComponent implements OnInit {
   destroy = new Subject<boolean>();
@@ -166,10 +141,6 @@ export class ChangeEmailComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
-  }
-
-  getFormAnimationState(): string {
-    return this.loading ? 'unloaded' : 'loaded';
   }
 
   changeEmail(): void {
