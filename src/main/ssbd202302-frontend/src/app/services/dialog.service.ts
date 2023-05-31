@@ -58,6 +58,7 @@ export class DialogService {
 
   openChangeEmailDialog(id: string | undefined): MatDialogRef<ChangeEmailComponent> {
     return this.matDialog.open(ChangeEmailComponent, {
+      disableClose: true,
       width: '450px',
       height: '380px',
       data: {
@@ -68,6 +69,7 @@ export class DialogService {
 
   openCreateAccountDialog(): MatDialogRef<CreateAccountComponent> {
     return this.matDialog.open(CreateAccountComponent, {
+      disableClose: true,
       width: '1100px',
       height: '750px',
     });
@@ -75,6 +77,7 @@ export class DialogService {
 
   openChangePasswordDialog(): MatDialogRef<ChangeOwnPasswordComponent> {
     return this.matDialog.open(ChangeOwnPasswordComponent, {
+      disableClose: true,
       width: '450px',
       height: '520px',
     });
@@ -82,6 +85,7 @@ export class DialogService {
 
   openEditAccountDialog(account: Account, admin: boolean): MatDialogRef<EditAccountComponent> {
     return this.matDialog.open(EditAccountComponent, {
+      disableClose: true,
       width: '600px',
       height: '600px',
       data: { account, admin },
