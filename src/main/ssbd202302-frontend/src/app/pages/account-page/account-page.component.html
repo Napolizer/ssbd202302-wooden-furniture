@@ -1,9 +1,9 @@
 <app-spinner [loading]="loading"></app-spinner>
-<div class="container" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
+<div class="container" [attr.data-bs-theme]="'dark'" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
     <div class="main-body">
           <div class="row gutters-sm">
             <div class="col-md-4 mb-3">
-              <div class="card">
+              <div class="card border-dark" [style]="getCardStyling()">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
                     <img src="assets/images/profile-picture.png" alt="Admin" class="rounded-circle" width="150">
@@ -15,29 +15,29 @@
                   </div>
                 </div>
               </div>
-              <div class="card mt-3">
+              <div class="card border-dark mt-3">
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
                     <h6 class="mb-0">{{'account.lastLogin' | translate}}</h6>
                     <span class="text-secondary">{{formatDate(account.lastLogin)}}</span>
                   </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
                     <h6 class="mb-0">{{'account.lastFailedLogin' | translate}}</h6>
                     <span class="text-secondary">{{formatDate(account.lastFailedLogin)}}</span>
                   </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
                     <h6 class="mb-0">{{'account.failedLogins' | translate}}</h6>
                     <span class="text-secondary">{{account.failedLoginCounter}}</span>
                   </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
                     <h6 class="mb-0">{{'account.lastLoginIp' | translate}}</h6>
                     <span class="text-secondary">{{account.lastLoginIpAddress ?? '-'}}</span>
                   </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
                     <h6 class="mb-0">{{'account.lastFailedLoginIp' | translate}}</h6>
                     <span class="text-secondary">{{account.lastFailedLoginIpAddress ?? '-'}}</span>
                   </li>
-                  <li *ngIf="account.blockadeEnd" class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                  <li *ngIf="account.blockadeEnd" class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
                     <h6 class="mb-0">{{'account.blockadeEnd' | translate}}</h6>
                     <span class="text-secondary">{{account.blockadeEnd}}</span>
                   </li>
@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="col-md-8">
-              <div class="card mb-3">
+              <div class="card border-dark mb-3" [style]="getCardStyling()">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-sm-3">
@@ -94,9 +94,9 @@
                   <hr class="mt-2">
                   <div class="row">
                     <div class="col-sm-12">
-                      <button mat-button color="primary">{{'account.edit' | translate}}</button>
-                      <button mat-button color="primary">{{'change.email.button' | translate}}</button>
-                      <button mat-button color="primary">{{'change.password.button' | translate}}</button>
+                      <button mat-button color="primary" (click)="openEditAccountDialog()">{{'account.edit' | translate}}</button>
+                      <button *ngIf="isUserNormalType()" mat-button color="primary" (click)="openChangeEmailDialog()">{{'change.email.button' | translate}}</button>
+                      <button *ngIf="isUserNormalType()" mat-button color="primary" (click)="openChangePasswordDialog()">{{'change.password.button' | translate}}</button>
                     </div>
                   </div>
                 </div>
@@ -104,7 +104,7 @@
 
               <div class="row gutters-sm">
                 <div class="col-sm-6 mb-3">
-                  <div class="card h-auto">
+                  <div class="card border-dark h-auto" [style]="getCardStyling()">
                     <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12">
@@ -145,7 +145,7 @@
                   </div>
                 </div>
                 <div class="col-sm-6 mb-3">
-                  <div class="card h-auto">
+                  <div class="card border-dark h-auto" [style]="getCardStyling()">
                     <div class="card-body">
                       <h3 class="d-flex align-items-center mb-3"><i class="material-icons">account_circle</i><div class="mx-2">{{'account.state.information' | translate}}</div></h3>
                       <small class="d-flex align-items-center">
@@ -157,7 +157,7 @@
                       <small class="d-flex align-items-center">
                         {{'account.accountState' | translate}}:
                         <p class="flex-grow-1 text-secondary mb-0 mx-2">
-                          {{'account.state.' + account.accountState.toLowerCase() | translate}}
+                          {{getAccountState() | translate}}
                         </p>
                       </small>
                       <small class="d-flex align-items-center">

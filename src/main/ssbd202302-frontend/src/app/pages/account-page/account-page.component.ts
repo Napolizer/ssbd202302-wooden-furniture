@@ -13,7 +13,7 @@ import {DatePipe, Location } from "@angular/common";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ChangeEmailComponent } from '../change-email/change-email.component';
+import {ChangeEmailComponent} from "../../components/change-email/change-email.component";
 
 @Component({
   selector: 'app-account-page',
@@ -134,14 +134,6 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
-  onEditClicked(): void {
-    void this.navigationService.redirectToEditOwnAccountPage();
-  }
-
-  onChangeEmailClicked(): void {
-    void this.navigationService.redirectToChangeOwnEmailPage();
-  }
-
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
   }
@@ -153,8 +145,17 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     } as MatDialogConfig<any>);
   }
 
-  getFormattedAddress(): string {
-    const address = this.account.address;
-    return address.country + ', ' + address.city + ' ' + address.street + ', ' + address.streetNumber;
+  openEditAccountDialog(): void {
+    this.dialogService.openEditAccountDialog(this.account, false);
+  }
+
+  openChangePasswordDialog(): void {
+    this.dialogService.openChangePasswordDialog();
+  }
+
+  getCardStyling(): any {
+    return {
+      'background-color': document.body.classList.contains('dark-mode') ? '#424242' : '#fafafa'
+    };
   }
 }
