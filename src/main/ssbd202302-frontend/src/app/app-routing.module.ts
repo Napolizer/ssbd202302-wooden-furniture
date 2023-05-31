@@ -19,7 +19,6 @@ import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.c
 import {ChangeAccountRolePageComponent} from "./pages/change-account-role-page/change-account-role-page.component";
 import {ConfirmEmailChangeComponent} from './pages/confirm-email-change/confirm-email-change.component';
 import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.component';
-import {CreateAccountComponent} from './pages/create-account/create-account.component';
 import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/change-password-confirm.component";
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import { AccountType } from './enums/account.type';
@@ -114,14 +113,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.GUEST]
-    }
-  },
-  {
-    path: 'create-account',
-    component: CreateAccountComponent,
-    canActivate: [AuthGuard],
-    data: {
-      roles: [Role.ADMINISTRATOR]
     }
   },
   {

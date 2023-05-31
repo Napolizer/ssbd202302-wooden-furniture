@@ -9,6 +9,7 @@ import {RemoveRoleComponent} from "../components/remove-role/remove-role.compone
 import {AdminEditAccountComponent} from "../components/admin-edit-account/admin-edit-account.component";
 import { ChangeEmailComponent } from '../components/change-email/change-email.component';
 import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-own-password.component';
+import { CreateAccountComponent } from '../pages/create-account/create-account.component';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +66,13 @@ export class DialogService {
     });
   }
 
+  openCreateAccountDialog(): MatDialogRef<CreateAccountComponent> {
+    return this.matDialog.open(CreateAccountComponent, {
+      width: '1100px',
+      height: '750px',
+    });
+  }
+
   openChangePasswordDialog(): MatDialogRef<ChangeOwnPasswordComponent> {
     return this.matDialog.open(ChangeOwnPasswordComponent, {
       width: '450px',
@@ -75,7 +83,8 @@ export class DialogService {
   openAdminEditAccountDialog(account: Account): MatDialogRef<AdminEditAccountComponent> {
     return this.matDialog.open(AdminEditAccountComponent, {
       data: {account},
-      width: '500px',
+      width: '600px',
+      height: '600px',
     });
   }
 }

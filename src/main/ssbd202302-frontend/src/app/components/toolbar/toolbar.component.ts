@@ -81,11 +81,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToRegisterPage();
   }
 
-  redirectToCreateAccountPage(): void {
-    this.breadcrumbs=['toolbar.home', 'create.account.title']
-    void this.navigationService.redirectToCreateAccountPage();
-  }
-
   isUserLoggedIn(): boolean {
     return this.authenticationService.isUserLoggedIn();
   }
