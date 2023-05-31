@@ -12,7 +12,9 @@ import {AuthenticationService} from "../../services/authentication.service";
 import {DatePipe, Location } from "@angular/common";
 import { TokenService } from 'src/app/services/token.service';
 import { AccountType } from 'src/app/enums/account.type';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ChangeEmailComponent } from '../change-email/change-email.component';
+
 @Component({
   selector: 'app-account-page',
   templateUrl: './account-page.component.html',
@@ -21,12 +23,10 @@ import { MatDialog } from '@angular/material/dialog';
     trigger('loadedUnloadedForm', [
       state('loaded', style({
         opacity: 1,
-        backgroundColor: "rgba(221, 221, 221, 1)"
       })),
       state('unloaded', style({
         opacity: 0,
-        paddingTop: "80px",
-        backgroundColor: "rgba(0, 0, 0, 0)"
+        paddingTop: "20px",
       })),
       transition('loaded => unloaded', [
         animate('0.5s ease-in')
@@ -134,27 +134,27 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     return this.account.roles.map(role => this.translate.instant(`role.${role.toLowerCase()}`)).join(', ') ?? '-';
   }
 
+  onEditClicked(): void {
+    void this.navigationService.redirectToEditOwnAccountPage();
+  }
+
+  onChangeEmailClicked(): void {
+    void this.navigationService.redirectToChangeOwnEmailPage();
+  }
+
   onBackClicked(): void {
     void this.navigationService.redirectToMainPage();
   }
 
-  openChangePasswordDialog(): void {
-    this.dialogService.openChangePasswordDialog();
-  }
-
   openChangeEmailDialog(): void {
-    this.dialogService.openChangeEmailDialog(undefined);
+    this.dialog.open(ChangeEmailComponent, {
+      width: '450px',
+      height: '400px',
+    } as MatDialogConfig<any>);
   }
 
-  openEditAccountDialog(): void {
-    this.dialogService.openEditAccountDialog(this.account, false)
-    .afterClosed()
-    .pipe(first(), takeUntil(this.destroy))
-    .subscribe((result) => {
-      if (result === 'error') {
-        this.navigationService.redirectToOwnAccountPage();
-      }
-    });
+  getFormattedAddress(): string {
+    const address = this.account.address;
+    return address.country + ', ' + address.city + ' ' + address.street + ', ' + address.streetNumber;
   }
-
 }

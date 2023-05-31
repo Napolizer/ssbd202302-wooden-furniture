@@ -112,6 +112,8 @@
   "reset.password.button": "Resetuj",
   "reset.password.success": "Hasło zostało zresetowane, możesz się zalogować",
 
+  "account.address.information": "Informacje o adresie",
+  "account.state.information": "Informacje o stanie konta",
   "account.confirmation.success": "Twoje konto zostało zweryfikowane i możesz się zalogować",
   "account.firstName": "Imię",
   "account.lastName": "Nazwisko",
