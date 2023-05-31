@@ -5,4 +5,5 @@ export const environment = {
   accountTypeKey: 'type',
   currentRoleKey: 'role',
   refreshTokenKey: 'refreshToken',
+  timeoutKey: 'timeout',
 };
