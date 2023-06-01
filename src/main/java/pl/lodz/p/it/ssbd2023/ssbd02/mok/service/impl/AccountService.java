@@ -406,7 +406,7 @@ public class AccountService extends AbstractService implements AccountServiceOpe
   @PermitAll
   public void sendResetPasswordEmail(String email) {
     Account account = accountFacade.findByEmail(email)
-            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+            .orElseThrow(ApplicationExceptionFactory::createEmailNotFoundException);
 
     if (account.getAccountState() != AccountState.ACTIVE) {
       throw ApplicationExceptionFactory.createAccountNotActiveException();

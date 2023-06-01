@@ -71,6 +71,7 @@ public class MOK19IT {
 
     @DisplayName("Should fail to login with wrong password for the second time")
     @Order(2)
+    @Test
     void shouldFailToLoginWithWrongPasswordForSecondTime() {
       UserCredentialsDto userCredentialsDto = UserCredentialsDto.builder()
               .login(login)
@@ -90,6 +91,7 @@ public class MOK19IT {
 
     @DisplayName("Should fail to login with wrong password for the third time")
     @Order(3)
+    @Test
     void shouldFailToLoginWithWrongPasswordForThirdTime() {
       UserCredentialsDto userCredentialsDto = UserCredentialsDto.builder()
               .login(login)
@@ -109,6 +111,7 @@ public class MOK19IT {
 
     @DisplayName("Should fail to login with correct password cause of account blockade")
     @Order(4)
+    @Test
     void shouldFailToLoginWithCorrectPasswordCauseOfBlockade() {
       UserCredentialsDto userCredentialsDto = UserCredentialsDto.builder()
               .login(login)

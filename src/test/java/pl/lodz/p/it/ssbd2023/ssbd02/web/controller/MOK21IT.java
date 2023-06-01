@@ -1,9 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType.PASSWORD_RESET;
 
 import io.jsonwebtoken.Jwts;
@@ -20,6 +22,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
@@ -58,111 +61,118 @@ public class MOK21IT {
             .contentType("application/json")
             .body("message", is(equalTo("reset.password.success")));
       }
-
-      @Nested
-      @Order(2)
-      @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-      class Negative {
-        @DisplayName("Should fail if email is in invalid format")
-        @ParameterizedTest(name = "invalid email: {0}")
-        @CsvSource({
-            "blabla",
-            "123",
-            "@",
-            "null",
-            "abc@",
-            "@123"
-        })
-        @Order(1)
-        void shouldFailIfEmailIsInInvalidFormat(String email) {
-          given()
-              .contentType("application/json")
-              .body("""
-                         {
-                             "email": "%s"
-                         }
-                  """.formatted(email))
-              .when()
-              .post("/account/forgot-password")
-              .then()
-              .statusCode(400)
-              .contentType("application/json")
-              .body("errors", notNullValue())
-              .body("errors.size()", is(equalTo(1)))
-              .body("errors[0].message", is(equalTo("must be a well-formed email address")));
-        }
-
-        @DisplayName("Should fail if email is empty")
-        @Test
-        @Order(2)
-        void shouldFailIfEmailIsEmpty() {
-          given()
-              .contentType("application/json")
-              .body("""
-                         {
-                             "email": ""
-                         }
-                  """)
-              .when()
-              .post("/account/forgot-password")
-              .then()
-              .statusCode(400)
-              .contentType("application/json")
-              .body("errors", notNullValue())
-              .body("errors.size()", is(equalTo(1)))
-              .body("errors[0].message", is(equalTo("must not be blank")));
-        }
-
-        @DisplayName("Should fail to change email in invalid format")
-        @ParameterizedTest(name = "invalid email: {0}")
-        @CsvSource({
-            "does.not.exist@ssbd.com",
-            "another.non.existing@ssbd.com"
-        })
-        @Order(3)
-        void shouldFailIfEmailDoesNotExist(String email) {
-          given()
-              .contentType("application/json")
-              .body("""
-                         {
-                             "email": "%s"
-                         }
-                  """.formatted(email))
-              .when()
-              .post("/account/forgot-password")
-              .then()
-              .statusCode(404)
-              .contentType("application/json")
-              .body("message", notNullValue())
-              .body("message", is(equalTo("exception.mok.account.email.does.not.exist")));
-        }
-
-        @DisplayName("Should fail if account is inactive")
-        @Test
-        @Order(4)
-        void shouldFailIfAccountIsInactive() {
-          AccountUtil.registerUser("inactiveaccount");
-
-          given()
-              .contentType("application/json")
-              .body("""
-                         {
-                             "email": "inactiveaccount@ssbd.com"
-                         }
-                  """)
-              .when()
-              .post("/account/forgot-password")
-              .then()
-              .statusCode(400)
-              .contentType("application/json")
-              .body("message", notNullValue())
-              .body("message", is(equalTo("exception.mok.account.not.active")));
-        }
-      }
     }
 
     @Nested
     @Order(2)
+    @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+    class Negative {
+      @DisplayName("Should fail if email is in invalid format")
+      @ParameterizedTest(name = "invalid email: {0}")
+      @CsvSource({
+              "blabla",
+              "123",
+              "@",
+              "null",
+              "abc@",
+              "@123"
+      })
+      @Order(1)
+      void shouldFailIfEmailIsInInvalidFormat(String email) {
+        given()
+                .contentType("application/json")
+                .body("""
+                         {
+                             "email": "%s"
+                         }
+                  """.formatted(email))
+                .when()
+                .post("/account/forgot-password")
+                .then()
+                .statusCode(400)
+                .contentType("application/json")
+                .body("errors", notNullValue())
+                .body("errors.size()", is(equalTo(1)))
+                .body("errors[0].message", is(equalTo("must be a well-formed email address")));
+      }
+
+      @DisplayName("Should fail if email is empty")
+      @Test
+      @Order(2)
+      void shouldFailIfEmailIsEmpty() {
+        given()
+                .contentType("application/json")
+                .body("""
+                         {
+                             "email": ""
+                         }
+                  """)
+                .when()
+                .post("/account/forgot-password")
+                .then()
+                .statusCode(400)
+                .contentType("application/json")
+                .body("errors", notNullValue())
+                .body("errors.size()", is(equalTo(1)))
+                .body("errors[0].message", is(equalTo("must not be blank")));
+      }
+
+      @DisplayName("Should fail to change email in invalid format")
+      @ParameterizedTest(name = "invalid email: {0}")
+      @CsvSource({
+              "does.not.exist@ssbd.com",
+              "another.non.existing@ssbd.com"
+      })
+      @Order(3)
+      void shouldFailIfEmailDoesNotExist(String email) {
+        given()
+                .contentType("application/json")
+                .body("""
+                         {
+                             "email": "%s"
+                         }
+                  """.formatted(email))
+                .when()
+                .post("/account/forgot-password")
+                .then()
+                .statusCode(404)
+                .contentType("application/json")
+                .body("message", notNullValue())
+                .body("message", is(equalTo("exception.mok.account.email.does.not.exist")));
+      }
+
+      @DisplayName("Should fail if account is inactive")
+      @Test
+      @Order(4)
+      void shouldFailIfAccountIsInactive() {
+        int id = AccountUtil.registerUser("inactiveaccount123");
+
+        given()
+                .contentType("application/json")
+                .body("""
+                         {
+                             "email": "inactiveaccount123@ssbd.com"
+                         }
+                  """)
+                .when()
+                .post("/account/forgot-password")
+                .then()
+                .statusCode(400)
+                .contentType("application/json")
+                .body("message", notNullValue())
+                .body("message", is(equalTo("exception.mok.account.not.active")));
+
+        given()
+                .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+                .when()
+                .patch("/account/activate/" + id)
+                .then()
+                .statusCode(200);
+      }
+    }
+
+    @Nested
+    @Order(3)
     class ResetPassword {
       private String generateResetPasswordToken(boolean expired) {
         long now = System.currentTimeMillis();

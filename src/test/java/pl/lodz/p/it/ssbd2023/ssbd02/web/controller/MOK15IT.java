@@ -1,9 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +18,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
 @MicroShedTest
@@ -132,7 +135,7 @@ public class MOK15IT {
             @Test
             @Order(4)
             void shouldFailIfAccountIsInactive() {
-                AccountUtil.registerUser("inactiveaccount");
+                int id = AccountUtil.registerUser("inactiveaccount");
 
                 given()
                         .contentType("application/json")
@@ -148,6 +151,13 @@ public class MOK15IT {
                         .contentType("application/json")
                         .body("message", notNullValue())
                         .body("message", is(equalTo("exception.mok.account.not.active")));
+
+                given()
+                        .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(ADMINISTRATOR))
+                        .when()
+                        .patch("/account/activate/" + id)
+                        .then()
+                        .statusCode(200);
             }
         }
 }

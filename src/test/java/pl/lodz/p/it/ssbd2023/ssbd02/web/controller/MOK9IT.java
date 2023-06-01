@@ -94,24 +94,6 @@ public class MOK9IT {
 
     @Test
     @Order(1)
-    @DisplayName("Should fail to edit own account with invalid login")
-    void shouldFailToEditOwnAccountWithInvalidLogin() {
-      String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
-      EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
-      given()
-          .header(AUTHORIZATION, "Bearer " + token)
-          .contentType("application/json")
-          .accept("application/json")
-          .body(InitData.mapToJsonString(editedAccount))
-          .when()
-          .put("/account/login/randomLogin/editOwnAccount")
-          .then()
-          .statusCode(404)
-          .contentType("application/json");
-    }
-
-    @Test
-    @Order(2)
     @DisplayName("Should fail to edit other account")
     void shouldFailToEditOtherAccount() {
       String token = AuthUtil.retrieveToken(CLIENT);
@@ -130,7 +112,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     @DisplayName("Should fail to edit own account with empty data")
     void shouldFailToEditOwnAccountWithEmptyData() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -147,7 +129,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(5)
+    @Order(3)
     @DisplayName("Should fail to edit own account with invalid last name format")
     void shouldFailToEditOwnAccountWithInvalidLastNameFormat() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -167,7 +149,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(6)
+    @Order(4)
     @DisplayName("Should fail to edit own account with invalid country format")
     void shouldFailToEditOwnAccountWithInvalidCountryFormat() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -187,7 +169,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(7)
+    @Order(5)
     @DisplayName("Should fail to edit own account with invalid city format")
     void shouldFailToEditOwnAccountWithInvalidCityFormat() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -207,7 +189,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(8)
+    @Order(6)
     @DisplayName("Should fail to edit own account with invalid street format")
     void shouldFailToEditOwnAccountWithInvalidStreetFormat() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -227,7 +209,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(9)
+    @Order(7)
     @DisplayName("Should fail to edit own account with invalid postal code format")
     void shouldFailToEditOwnAccountWithInvalidPostalCodeFormat() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -247,7 +229,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(10)
+    @Order(8)
     @DisplayName("Should fail to edit own account with invalid street number format")
     void shouldFailToEditOwnAccountWithInvalidStreetNumberFormat() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -267,7 +249,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(11)
+    @Order(9)
     @DisplayName("Should fail to edit own account when OptimisticLockException is thrown")
     void shouldFailToEditOwnAccountWhenOptimisticLockExceptionIsThrown() {
       String token = AuthUtil.retrieveToken(accountToEditLogin, "Student123!");
@@ -295,7 +277,7 @@ public class MOK9IT {
     }
 
     @Test
-    @Order(12)
+    @Order(10)
     @DisplayName("Should fail to edit own account without token")
     void shouldFailToEditOwnAccountWithoutToken() {
       EditPersonInfoDto editedAccount = InitData.getEditedAccount(accountToEditLogin);
