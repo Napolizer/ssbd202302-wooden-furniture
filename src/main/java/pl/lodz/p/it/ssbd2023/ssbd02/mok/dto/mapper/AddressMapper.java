@@ -1,10 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Stateful;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
 
-@Stateless
+@Stateful
 public class AddressMapper {
   public AddressDto mapToAddressDto(Address address) {
     return AddressDto.builder()

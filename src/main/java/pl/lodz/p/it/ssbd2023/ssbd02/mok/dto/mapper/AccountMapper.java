@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Stateful;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 import java.security.Principal;
@@ -14,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
-@Stateless
+@Stateful
 public class AccountMapper {
   @Inject
   private AddressMapper addressMapper;
