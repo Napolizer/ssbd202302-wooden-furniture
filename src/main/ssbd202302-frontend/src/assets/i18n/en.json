@@ -294,5 +294,8 @@
   "paginator.firstPageLabel": "First page",
   "paginator.lastPageLabel": "Last page",
   "paginator.nextPageLabel": "Next page",
-  "paginator.previousPageLabel": "Previous page"
+  "paginator.previousPageLabel": "Previous page",
+
+  "session.expired.title": "Session expired",
+  "session.expired.message": "Your session has expired, please log in again"
 }

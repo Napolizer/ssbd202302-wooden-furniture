@@ -292,5 +292,8 @@
   "paginator.firstPageLabel": "Pierwsza strona",
   "paginator.lastPageLabel": "Ostatnia strona",
   "paginator.nextPageLabel": "Następna strona",
-  "paginator.previousPageLabel": "Poprzednia strona"
+  "paginator.previousPageLabel": "Poprzednia strona",
+
+  "session.expired.title": "Sesja wygasła",
+  "session.expired.message": "Twoja sesja wygasła, zaloguj się ponownie"
 }

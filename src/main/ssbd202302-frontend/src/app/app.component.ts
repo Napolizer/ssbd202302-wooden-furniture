@@ -44,5 +44,9 @@ export class AppComponent {
     } else {
       this.localStorageService.remove(environment.timeoutKey);
     }
+
+    if (this.authenticationService.isUserLoggedIn()) {
+      this.authenticationService.showWarningIfSessionExpired();
+    }
   }
 }

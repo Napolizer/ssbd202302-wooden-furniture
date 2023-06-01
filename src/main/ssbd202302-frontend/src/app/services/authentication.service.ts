@@ -9,16 +9,23 @@ import {AccountRegister} from "../interfaces/account.register";
 import {LocalStorageService} from "./local-storage.service";
 import { ForcePasswordChange } from '../interfaces/force.password.change';
 import {Tokens} from "../interfaces/tokens";
+import {DialogService} from "./dialog.service";
+import {TranslateService} from "@ngx-translate/core";
+import {NavigationService} from "./navigation.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
+  private expiredSessionWarning: NodeJS.Timeout;
 
   constructor(
     private httpClient: HttpClient,
     private tokenService: TokenService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private dialogService: DialogService,
+    private translate: TranslateService,
+    private navigationService: NavigationService,
   ) {}
 
   public login(login: string, password: string, locale : string): Observable<Tokens> {
@@ -99,6 +106,7 @@ export class AuthenticationService {
 
   public logout(): void {
     this.tokenService.logout();
+    this.clearExpiredSessionWarning();
   }
 
   public isUserLoggedIn(): boolean {
@@ -149,5 +157,24 @@ export class AuthenticationService {
         }),
         catchError(() => of(false))
       );
+  }
+
+  public clearExpiredSessionWarning(): void {
+    if (this.expiredSessionWarning) {
+      clearTimeout(this.expiredSessionWarning);
+    }
+  }
+
+  public showWarningIfSessionExpired(): void {
+    const now = Date.now() / 1000;
+    this.expiredSessionWarning = setTimeout(() => {
+      this.dialogService.openErrorDialog(
+        this.translate.instant('session.expired.title'),
+        this.translate.instant('session.expired.message'),
+      ).afterClosed()
+        .subscribe(() => {
+          void this.navigationService.redirectToLoginPage();
+        });
+    }, (Number(this.tokenService.getExpirationTime()) - now) * 1000);
   }
 }
