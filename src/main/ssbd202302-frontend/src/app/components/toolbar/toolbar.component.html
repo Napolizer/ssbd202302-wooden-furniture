@@ -1,12 +1,8 @@
-<mat-toolbar [ngStyle]="{
-  'background-color': isCurrentGroup('ADMINISTRATOR') ? 'grey' :
-                      (isCurrentGroup('EMPLOYEE') ? 'green' :
-                      (isCurrentGroup('SALES_REP') ? 'yellow' :
-                      (isCurrentGroup('CLIENT')  ? 'pink' : '')))}">
+<mat-toolbar [ngStyle]="getToolbarColor()">
   <button *ngIf="isUserLoggedIn()" mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class= "breadcrumb mb-0" *ngFor="let breadcrumb of breadcrumbs; let last = last">
+  <span class= "breadcrumb mb-0 mx-1" *ngFor="let breadcrumb of breadcrumbs; let last = last">
     <ng-container *ngIf="!last">
       <a (click)="navigateBreadcrumb(breadcrumb)" style="all: unset;">
       {{ breadcrumb | translate}} /
@@ -26,11 +22,8 @@
   </span>
   <span class="toolbar-item-spacer"></span>
   <app-theme-switcher-component></app-theme-switcher-component>
-  <button *ngIf="!isUserLoggedIn()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
-  <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="primary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
-  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
-    <mat-icon>account_circle</mat-icon>
-  </button>
+  <button *ngIf="!isUserLoggedIn()" mat-button color="secondary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
+  <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="secondary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
   <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="Switch Access Level" [matMenuTriggerFor]="switchAccessLevel">
     <mat-icon>autorenew</mat-icon>
   </button>
@@ -51,6 +44,9 @@
     <mat-icon>person_pin</mat-icon><span>{{'role.client' | translate}}</span>
   </button>
   </mat-menu>
+  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+    <mat-icon>account_circle</mat-icon>
+  </button>
 
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAccountPage()">
@@ -79,3 +75,9 @@
     </button>
   </mat-menu>
 </mat-toolbar>
+<div class="line" [ngStyle]="{
+  'background-color': isCurrentGroup('ADMINISTRATOR') ? 'grey' :
+                      (isCurrentGroup('EMPLOYEE') ? 'green' :
+                      (isCurrentGroup('SALES_REP') ? 'yellow' :
+                      (isCurrentGroup('CLIENT')  ? 'pink' : '')))}"
+></div>

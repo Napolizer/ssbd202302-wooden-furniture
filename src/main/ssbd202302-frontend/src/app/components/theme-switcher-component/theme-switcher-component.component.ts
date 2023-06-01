@@ -10,25 +10,25 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class ThemeSwitcherComponentComponent implements OnInit{
   isDarkThemeActive: boolean;
-  mode: string;
   changeMode: Mode = {
-    mode: 'DARK'
+    mode: 'LIGHT'
   }
 
 
   constructor(@Inject(DOCUMENT) private document: Document,
-              private accountService: AccountService) 
+              private accountService: AccountService)
   {}
 
   onThemeClick(theme: string): void {
+    this.changeMode.mode = theme;
     switch(theme) {
-      case 'DARK': 
+      case 'DARK':
       this.document.body.classList.add('dark-mode');
       this.changeMode.mode = 'DARK';
       this.accountService.changeMode(this.changeMode)
       .subscribe();
         break;
-      case 'LIGHT': 
+      case 'LIGHT':
       this.document.body.classList.remove('dark-mode');
       this.changeMode.mode='LIGHT';
       this.accountService.changeMode(this.changeMode)
@@ -43,13 +43,13 @@ export class ThemeSwitcherComponentComponent implements OnInit{
   loginInit(): void {
     this.accountService.retrieveOwnMode()
     .subscribe(mode => {
-      this.mode = mode.mode;
-      switch(this.mode) {
-        case 'DARK': 
+      this.changeMode.mode = mode.mode;
+      switch(this.changeMode.mode) {
+        case 'DARK':
           this.isDarkThemeActive=true;
           this.document.body.classList.add('dark-mode');
           break;
-        case 'LIGHT': 
+        case 'LIGHT':
           this.isDarkThemeActive=false;
           this.document.body.classList.remove('dark-mode');
           break;
@@ -62,13 +62,13 @@ export class ThemeSwitcherComponentComponent implements OnInit{
   ngOnInit(): void {
     this.accountService.retrieveOwnMode()
     .subscribe(mode => {
-      this.mode = mode.mode;
-      switch(this.mode) {
-        case 'DARK': 
+      this.changeMode.mode = mode.mode;
+      switch(this.changeMode.mode) {
+        case 'DARK':
           this.isDarkThemeActive=false;
           this.document.body.classList.add('dark-mode');
           break;
-        case 'LIGHT': 
+        case 'LIGHT':
           this.isDarkThemeActive=true;
           this.document.body.classList.remove('dark-mode');
           break;
@@ -76,5 +76,9 @@ export class ThemeSwitcherComponentComponent implements OnInit{
           break;
       }
     })
+  }
+
+  isChecked(): boolean {
+    return document.body.classList.contains('dark-mode');
   }
 }
