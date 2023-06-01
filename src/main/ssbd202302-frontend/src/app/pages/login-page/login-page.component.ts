@@ -57,7 +57,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private location: Location,
     private localStorageService: LocalStorageService,
     private refreshTokenService: RefreshTokenService,
-    private accountService: AccountService
+    private accountService: AccountService,
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +104,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           this.tokenService.saveAccountType(AccountType.NORMAL);
           this.tokenService.saveTimeout(this.tokenService.getRefreshTokenTime()!);
           this.localStorageService.set(environment.currentRoleKey, this.tokenService.getTokenData()?.roles[0] ?? '')
+          this.authenticationService.showWarningIfSessionExpired();
           this.translate.get('login.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
@@ -113,7 +114,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           this.tokenService.setTimeout(() => {
             this.refreshTokenService.generateNewToken();
           }, this.tokenService.getRefreshTokenTime()!);
-          console.log("konto: ")
           this.accountService.retrieveOwnAccount()
             .subscribe(account => {
               console.log(account)
