@@ -95,7 +95,7 @@ export class EditAccountComponent implements OnInit, OnDestroy {
         });
     } else {
       this.accountService
-        .retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
+        .retrieveOwnAccount()
         .pipe(first(), takeUntil(this.destroy))
         .subscribe({
           next: (account) => this.fillFormWithAccount(account),

@@ -56,7 +56,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private location: Location,
     private localStorageService: LocalStorageService,
-    private refreshTokenService: RefreshTokenService
+    private refreshTokenService: RefreshTokenService,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
@@ -111,7 +112,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
             });
           this.tokenService.setTimeout(() => {
             this.refreshTokenService.generateNewToken();
-          }, this.tokenService.getRefreshTokenTime()!)
+          }, this.tokenService.getRefreshTokenTime()!);
+          console.log("konto: ")
+          this.accountService.retrieveOwnAccount()
+            .subscribe(account => {
+              console.log(account)
+              this.localStorageService.set(environment.localeKey, account.locale);
+            });
         },
         error: e => {
           combineLatest([

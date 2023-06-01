@@ -152,7 +152,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   changeLocaleToPolish(): void {
-    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
+    this.accountService.retrieveOwnAccount()
       .subscribe(account => {
         this.id = account.id
       })
@@ -173,6 +173,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 .pipe(first(), takeUntil(this.destroy))
                 .subscribe({
                   next: () => {
+                    this.localStorageService.set(environment.localeKey, 'pl');
                     this.translate.use('pl');
                     this.translate.get('change.locale.success')
                       .pipe(takeUntil(this.destroy))
@@ -198,7 +199,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   changeLocaleToEnglish(): void {
-    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
+    this.accountService.retrieveOwnAccount()
       .subscribe(account => {
         this.id = account.id
       })
@@ -219,6 +220,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 .pipe(first(), takeUntil(this.destroy))
                 .subscribe({
                   next: () => {
+                    this.localStorageService.set(environment.localeKey, 'en');
                     this.translate.use('en');
                     this.translate.get('change.locale.success')
                       .pipe(takeUntil(this.destroy))
