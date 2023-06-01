@@ -272,6 +272,7 @@
   "state": "State",
   "account.show": "Show Account",
   "perform.action": "Perform Action",
+  "dark.mode": "Dark mode",
 
   "select.role": "Select Role",
   "current.role": "Current Role",

@@ -303,4 +303,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  getToolbarColor(): any {
+    return {
+      'background': (document.body.classList.contains('dark-mode')
+        ? 'radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%)'
+        : 'linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%)'
+      )
+    };
+  }
 }
