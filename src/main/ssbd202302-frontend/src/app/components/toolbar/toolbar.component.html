@@ -6,9 +6,9 @@
   <button *ngIf="isUserLoggedIn()" mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class= "breadcrumb" *ngFor="let breadcrumb of breadcrumbs; let last = last">
+  <span class= "breadcrumb mb-0" *ngFor="let breadcrumb of breadcrumbs; let last = last">
     <ng-container *ngIf="!last">
-      <a (click)="navigateBreadcrumb(breadcrumb)">
+      <a (click)="navigateBreadcrumb(breadcrumb)" style="all: unset;">
       {{ breadcrumb | translate}} /
       </a>
     </ng-container>

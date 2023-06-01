@@ -112,6 +112,8 @@
   "reset.password.button": "Reset",
   "reset.password.success": "Your password has been reset, you can log in",
 
+  "account.address.information": "Address information",
+  "account.state.information": "Account state information",
   "account.confirmation.success": "Your account has been verified and you can now log in",
   "account.firstName": "First Name",
   "account.lastName": "Last Name",
