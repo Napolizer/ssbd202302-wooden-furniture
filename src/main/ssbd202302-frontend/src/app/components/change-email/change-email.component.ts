@@ -61,7 +61,7 @@ export class ChangeEmailComponent implements OnInit {
         });
     } else {
       this.accountService
-        .retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
+        .retrieveOwnAccount()
         .pipe(first(), takeUntil(this.destroy))
         .subscribe({
           next: (account) => this.handleGetAccount(account),

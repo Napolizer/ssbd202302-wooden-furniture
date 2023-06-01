@@ -23,6 +23,7 @@ export class TokenService {
     this.localStorageService.remove(environment.accountTypeKey);
     this.localStorageService.remove(environment.currentRoleKey);
     this.localStorageService.remove(environment.timeoutKey);
+    this.localStorageService.remove(environment.localeKey);
     this.clearTimeout()
 
   }

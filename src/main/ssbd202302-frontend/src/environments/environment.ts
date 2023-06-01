@@ -6,4 +6,5 @@ export const environment = {
   currentRoleKey: 'role',
   refreshTokenKey: 'refreshToken',
   timeoutKey: 'timeout',
+  localeKey: 'locale'
 };

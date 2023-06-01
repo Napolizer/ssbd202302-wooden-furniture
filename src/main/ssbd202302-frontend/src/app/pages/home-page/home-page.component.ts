@@ -21,7 +21,7 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     if (this.authenticationService.isUserLoggedIn()) {
       this.executeThemeSwitcherComponentOnInit();
-      this.accountService.retrieveOwnAccount(this.authenticationService.getLogin()!)
+      this.accountService.retrieveOwnAccount()
         .subscribe(account => {
           this.translate.use(account.locale);
         })

@@ -59,7 +59,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.accountService.retrieveOwnAccount(this.authenticationService.getLogin() ?? '')
+    this.accountService.retrieveOwnAccount()
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: account => {

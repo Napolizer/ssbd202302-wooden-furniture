@@ -6,6 +6,7 @@ import {TokenService} from "./services/token.service";
 import {RefreshTokenService} from "./services/refresh-token.service";
 import {LocalStorageService} from "./services/local-storage.service";
 import {environment} from "../environments/environment";
+import {AuthenticationService} from "./services/authentication.service";
 
 @Component({
   selector: 'app-root',
@@ -20,11 +21,16 @@ export class AppComponent {
     private domSanitizer: DomSanitizer,
     private tokenServce: TokenService,
     private refreshTokenService: RefreshTokenService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private authenticationService: AuthenticationService
   ) {
     this.matIconRegistry.addSvgIcon('google-logo',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/google-logo.svg'))
     translate.setDefaultLang('en');
+
+    if (authenticationService.isUserLoggedIn()) {
+      translate.use(this.localStorageService.get(environment.localeKey)!);
+    }
 
     translate.onLangChange.subscribe(() => {
       translate.get('page.title').subscribe((res: string) => {

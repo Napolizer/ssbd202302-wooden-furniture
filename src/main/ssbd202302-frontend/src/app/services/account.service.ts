@@ -25,7 +25,7 @@ export class AccountService {
     private tokenService: TokenService
   ) {}
 
-  public retrieveOwnAccount(login: string): Observable<Account> {
+  public retrieveOwnAccount(): Observable<Account> {
     return this.httpClient.get<Account>(
       `${environment.apiBaseUrl}/account/self`,
       {
@@ -323,7 +323,7 @@ public changeAccountRole(id: string, accessLevel: Accesslevel): Observable<Accou
       }
     );
   }
-  
+
   public retrieveOwnMode(): Observable<Mode> {
     return this.httpClient.get<Mode>(
       `${environment.apiBaseUrl}/account/self/mode`,
