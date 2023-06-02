@@ -138,6 +138,7 @@ export class ChangePasswordConfirmComponent implements OnInit {
             .pipe(takeUntil(this.destroy))
             .subscribe((msg) =>{
               this.alertService.success(msg);
+              this.navigationService.redirectToLoginPage();
             })
         },
         error: (e: HttpErrorResponse) => {
@@ -158,7 +159,7 @@ export class ChangePasswordConfirmComponent implements OnInit {
               })
           } else {
             this.translate
-              .get('exception.unknown')
+              .get(e.error.message || 'exception.unknown')
               .pipe(takeUntil(this.destroy))
               .subscribe((msg) => {
                 this.alertService.danger(msg);
