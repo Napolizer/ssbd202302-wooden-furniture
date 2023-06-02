@@ -1,5 +1,5 @@
 <app-spinner [loading]="loading"></app-spinner>
-<div class="container">
+<div class="page-container">
   <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
     <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
       <mat-card class="profile-card">
