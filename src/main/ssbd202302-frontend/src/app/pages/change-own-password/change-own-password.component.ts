@@ -72,6 +72,10 @@ export class ChangeOwnPasswordComponent implements OnInit {
     this.destroy.unsubscribe();
   }
 
+  onBackClicked(): void {
+    this.dialogRef.close("back");
+  }
+
   changePassword(): void {
     this.loading = true;
     const newPassword: ChangePassword = {
@@ -99,8 +103,13 @@ export class ChangeOwnPasswordComponent implements OnInit {
             .pipe(takeUntil(this.destroy))
             .subscribe((msg) => {
               this.alertService.danger(msg);
-              this.dialogRef.close();
             });
+            if (e.status == 409) {
+              this.changePasswordForm.get('newPassword')?.setErrors({ incorrect: true });
+              this.changePasswordForm.get('confirmPassword')?.setErrors({ incorrect: true });
+            } else if (e.status == 400) {
+              this.changePasswordForm.get('currentPassword')?.setErrors({ incorrect: true });
+            }
         }
       })
   }

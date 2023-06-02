@@ -6,7 +6,7 @@ import {TokenService} from "../services/token.service";
 import {NavigationService} from "../services/navigation.service";
 import { Role } from '../enums/role';
 import {TranslateService} from "@ngx-translate/core";
-import { Constants } from '../utils/constants';
+import { DialogService } from '../services/dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,8 @@ export class AuthGuard implements CanActivate {
     private authenticationService: AuthenticationService,
     private navigationService: NavigationService,
     private tokenService: TokenService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private dialogService: DialogService
   ) {}
 
   private displayAuthenticationWarning(): void {
@@ -29,23 +30,31 @@ export class AuthGuard implements CanActivate {
     this.alertService.warning(this.translate.instant('auth.token.expired'));
   }
 
+  private handleForcePasswordChange(): void {
+    this.alertService.danger(this.translate.instant('change.password.force.message'))
+    this.dialogService.openChangePasswordDialog()
+    .afterClosed()
+    .subscribe((result) => {
+      if (result === 'back') {
+        this.handleForcePasswordChange();
+      }
+    });
+  }
+
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
     if (route.data['roles']) {
 
-      if (state.url !== Constants.CHANGE_PASSWORD_URL) {
-        if (this.authenticationService.getLogin()) {
-          this.authenticationService
-          .isUserForcedToChangePassword()
-          .subscribe((result) => {
-            if (result) {
-              this.alertService.danger(this.translate.instant('change.password.force.message'))
-              this.navigationService.redirectToChangeOwnPasswordPage();
-            }
-          });
-        }
+      if (this.authenticationService.getLogin()) {
+        this.authenticationService
+        .isUserForcedToChangePassword()
+        .subscribe((result) => {
+          if (result && this.authenticationService.getLogin()) {
+            this.handleForcePasswordChange();
+          }
+        });
       }
 
       if (route.data['roles'].includes(Role.GUEST) && this.authenticationService.isUserInRole(Role.GUEST)) {
