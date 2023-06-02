@@ -12,6 +12,7 @@ import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
@@ -57,7 +58,7 @@ public class CategoryFacade extends AbstractFacade<Category> implements Category
 
   @Override
   @PermitAll
-  public Optional<Category> findByCategoryName(String categoryName) {
+  public Optional<Category> findByCategoryName(CategoryName categoryName) {
     try {
       return Optional.of(em.createNamedQuery(Category.FIND_BY_CATEGORY_NAME, Category.class)
               .setParameter("categoryName", categoryName)

@@ -111,5 +111,9 @@ public class MessageUtil {
     public static final String ERROR_INVALID_CURRENT_PASSWORD = "exception.current.password.invalid";
     public static final String ERROR_INVALID_MODE = "exception.mok.invalid.mode";
     public static final String TRANSACTION_ROLLBACK = "exception.transaction.rollback";
+
+    public static final String CATEGORY_NOT_FOUND = "exception.moz.category.not.found";
+    public static final String PARENT_CATEGORY_NOT_ALLOWED = "exception.moz.parent.category.not.allowed";
+    public static final String PRODUCT_GROUP_ALREADY_EXITS = "exception.moz.product.group.already.exists";
   }
 }

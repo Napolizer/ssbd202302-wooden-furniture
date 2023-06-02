@@ -15,19 +15,21 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeModeDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.CategoryDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 public final class DtoToEntityMapper {
@@ -196,6 +198,22 @@ public final class DtoToEntityMapper {
             .build();
     category.getSubcategories().forEach(sub -> categoryDto.getSubcategories().add(mapCategoryToCategoryDto(sub)));
     return categoryDto;
+  }
+
+  public static CategoryName mapStringToCategoryName(String categoryName) {
+    try {
+      return CategoryName.valueOf(categoryName.toUpperCase());
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createCategoryNotFoundException();
+    }
+  }
+
+  public static ProductGroupInfoDto mapProductGroupToProductGroupInfoDto(ProductGroup productGroup) {
+    return ProductGroupInfoDto.builder().id(productGroup.getId())
+            .averageRating(productGroup.getAverageRating())
+            .name(productGroup.getName())
+            .archive(productGroup.getArchive())
+            .category(mapCategoryToCategoryDto(productGroup.getCategory())).build();
   }
 
 }
