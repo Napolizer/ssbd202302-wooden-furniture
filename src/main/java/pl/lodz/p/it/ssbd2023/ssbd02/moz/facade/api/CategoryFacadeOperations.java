@@ -8,9 +8,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 @Local
 public interface CategoryFacadeOperations {
 
-  List<Category> findAllByParentCategory(Category parentCategory);
-
   Optional<Category> find(Long id);
+
+  Optional<Category> findByCategoryName(String categoryName);
+
+  List<Category> findAllParentCategories();
 
   List<Category> findAll();
 

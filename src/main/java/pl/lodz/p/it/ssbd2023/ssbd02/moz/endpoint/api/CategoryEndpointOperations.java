@@ -4,13 +4,14 @@ import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.CategoryDto;
 
 @Local
 public interface CategoryEndpointOperations {
 
-  List<Category> findAllByParentCategory(Category parentCategory);
-
   Optional<Category> find(Long id);
+
+  List<CategoryDto> findAllParentCategories();
 
   List<Category> findAll();
 

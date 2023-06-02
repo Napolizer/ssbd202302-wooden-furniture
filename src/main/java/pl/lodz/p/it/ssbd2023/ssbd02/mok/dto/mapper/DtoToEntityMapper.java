@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
@@ -26,6 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.CategoryDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 public final class DtoToEntityMapper {
@@ -185,4 +187,15 @@ public final class DtoToEntityMapper {
       default -> throw ApplicationExceptionFactory.createInvalidModeException();
     }
   }
+
+  public static CategoryDto mapCategoryToCategoryDto(Category category) {
+    CategoryDto categoryDto = CategoryDto.builder()
+            .id(category.getId())
+            .name(category.getCategoryName())
+            .parentName(category.getParentCategory() != null ? category.getParentCategory().getCategoryName() : null)
+            .build();
+    category.getSubcategories().forEach(sub -> categoryDto.getSubcategories().add(mapCategoryToCategoryDto(sub)));
+    return categoryDto;
+  }
+
 }
