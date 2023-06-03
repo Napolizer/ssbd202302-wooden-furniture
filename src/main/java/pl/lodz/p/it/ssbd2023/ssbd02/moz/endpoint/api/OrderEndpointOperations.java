@@ -16,7 +16,7 @@ public interface OrderEndpointOperations {
 
   List<OrderDto> findByState(OrderState orderState);
 
-  OrderDto create(CreateOrderDto entity);
+  CreateOrderDto create(CreateOrderDto entity);
 
   OrderDto archive(Long id);
 

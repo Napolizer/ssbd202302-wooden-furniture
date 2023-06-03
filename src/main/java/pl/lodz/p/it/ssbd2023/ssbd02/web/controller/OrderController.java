@@ -1,12 +1,19 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
@@ -34,8 +41,11 @@ public class OrderController {
   }
 
   @POST
-  public Response create(CreateOrderDto entity) {
-    throw new UnsupportedOperationException();
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(CLIENT)
+  public Response create(@NotNull @Valid CreateOrderDto createOrderDto) {
+    return Response.status(Response.Status.CREATED)
+        .entity(orderEndpoint.create(createOrderDto)).build();
   }
 
   @PUT

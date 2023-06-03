@@ -6,8 +6,12 @@ import jakarta.inject.Inject;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
@@ -47,6 +51,35 @@ public class AccountMapper {
             .timeZone(account.getTimeZone().getDisplayName())
             .accountType(account.getAccountType())
             .build();
+  }
+
+  public Account mapToAccount(AccountWithoutSensitiveDataDto account) {
+    Address address = addressMapper.mapToAddress(account.getAddress());
+    Person person = Person.builder()
+        .firstName(account.getFirstName())
+        .lastName(account.getLastName())
+        .address(address)
+        .build();
+    List<AccessLevel> accessLevels = new ArrayList<>();
+    account.getRoles().forEach(role -> accessLevels.add(DtoToEntityMapper.mapStringToAccessLevel(role)));
+    return Account.builder()
+        .id(account.getId())
+        .login(account.getLogin())
+        .email(account.getEmail())
+        .person(person)
+        .archive(account.getArchive())
+        .lastLoginIpAddress(account.getLastLoginIpAddress())
+        .lastFailedLoginIpAddress(account.getLastFailedLoginIpAddress())
+        .locale(account.getLocale())
+        .failedLoginCounter(account.getFailedLoginCounter())
+        .blockadeEnd(account.getBlockadeEnd())
+        .accountState(account.getAccountState())
+        .accessLevels(accessLevels)
+        .lastLogin(account.getLastLogin())
+        .lastFailedLogin(account.getLastFailedLogin())
+        .timeZone(DtoToEntityMapper.mapStringToTimeZone(account.getTimeZone()))
+        .accountType(account.getAccountType())
+        .build();
   }
 
   public AccountWithoutSensitiveDataDto

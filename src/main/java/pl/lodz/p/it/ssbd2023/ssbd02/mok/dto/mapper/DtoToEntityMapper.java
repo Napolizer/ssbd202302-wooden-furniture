@@ -140,6 +140,24 @@ public final class DtoToEntityMapper {
     }
   }
 
+  public static AccessLevel mapStringToAccessLevel(String accessLevel) {
+    switch (accessLevel.toLowerCase()) {
+      case CLIENT -> {
+        return new Client();
+      }
+      case ADMINISTRATOR -> {
+        return new Administrator();
+      }
+      case EMPLOYEE -> {
+        return new Employee();
+      }
+      case SALES_REP -> {
+        return new SalesRep();
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidAccessLevelException();
+    }
+  }
+
   public static GoogleAccountInfoDto mapAccountToGoogleAccountInfoDto(Account account) {
     String login = account.getEmail().split("@")[0];
     String loginCapitalized = login.substring(0, 1).toUpperCase() + login.substring(1);

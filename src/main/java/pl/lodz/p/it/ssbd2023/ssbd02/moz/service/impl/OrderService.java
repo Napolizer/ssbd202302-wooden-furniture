@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -25,7 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
     LoggerInterceptor.class
 })
 @DenyAll
-public class OrderService implements OrderServiceOperations {
+public class OrderService extends AbstractService implements OrderServiceOperations {
 
   @Inject
   private OrderFacadeOperations orderFacade;

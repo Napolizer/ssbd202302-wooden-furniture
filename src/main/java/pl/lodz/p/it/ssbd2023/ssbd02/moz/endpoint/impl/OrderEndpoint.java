@@ -11,7 +11,9 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.Optional;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
@@ -19,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -27,10 +30,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
     LoggerInterceptor.class
 })
 @DenyAll
-public class OrderEndpoint implements OrderEndpointOperations {
+public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOperations {
 
   @Inject
   private OrderServiceOperations orderService;
+  @Inject
+  private OrderMapper orderMapper;
 
   @Override
   public List<OrderDto> findByAccountLogin(String login) {
@@ -44,8 +49,10 @@ public class OrderEndpoint implements OrderEndpointOperations {
 
   @Override
   @RolesAllowed(CLIENT)
-  public OrderDto create(CreateOrderDto createOrderDto) {
-    return null;
+  public CreateOrderDto create(CreateOrderDto createOrderDto) {
+    Order order = orderMapper.mapToOrder(createOrderDto);
+    Order created = repeatTransactionWithOptimistic(() -> orderService.create(order));
+    return orderMapper.mapToCreateOrderDto(order);
   }
 
   @Override
@@ -101,5 +108,10 @@ public class OrderEndpoint implements OrderEndpointOperations {
   @Override
   public List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  protected boolean isLastTransactionRollback() {
+    return orderService.isLastTransactionRollback();
   }
 }

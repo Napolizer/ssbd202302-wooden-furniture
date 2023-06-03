@@ -21,4 +21,20 @@ public class ProductMapper {
              .woodType(product.getWoodType())
              .build();
   }
+
+  public Product mapToProduct(ProductDto productDto) {
+    return Product.builder()
+        .id(productDto.getId())
+        .price(productDto.getPrice())
+        .available(productDto.getAvailable())
+        .image(productDto.getImage())
+        .weight(productDto.getWeight())
+        .amount(productDto.getAmount())
+        .weightInPackage(productDto.getWeightInPackage())
+        .furnitureDimensions(productDto.getFurnitureDimensions())
+        .packageDimensions(productDto.getPackageDimensions())
+        .color(productDto.getColor())
+        .woodType(productDto.getWoodType())
+        .build();
+  }
 }
