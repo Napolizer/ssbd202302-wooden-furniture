@@ -13,13 +13,16 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -77,14 +80,19 @@ public class ProductController {
   }
 
   @GET
-  @Path("/id")
-  public Response find(Long id) {
-    throw new UnsupportedOperationException();
+  @Path("/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response find(@PathParam("id") Long id) {
+    ProductDto product = productEndpoint.find(id);
+
+    return Response.ok(product).build();
   }
 
   @GET
+  @Produces(MediaType.APPLICATION_JSON)
   public Response findAll() {
-    throw new UnsupportedOperationException();
+    List<ProductDto> productDtoList = productEndpoint.findAll();
+    return Response.ok(productDtoList).build();
   }
 
   @GET

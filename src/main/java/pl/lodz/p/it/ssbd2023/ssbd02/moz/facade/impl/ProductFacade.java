@@ -1,11 +1,16 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
+
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
 import java.util.List;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
@@ -54,5 +59,18 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
         .setParameter("minPrice", minPrice)
         .setParameter("maxPrice", maxPrice)
         .getResultList();
+  }
+
+  @Override
+  @PermitAll
+  @TransactionAttribute(REQUIRES_NEW)
+  public Optional<Product> findById(Long productId) {
+    try {
+      return Optional.of(em.createNamedQuery(Product.FIND_BY_PRODUCT_ID, Product.class)
+              .setParameter("id", productId)
+              .getSingleResult());
+    } catch (PersistenceException e) {
+      return Optional.empty();
+    }
   }
 }

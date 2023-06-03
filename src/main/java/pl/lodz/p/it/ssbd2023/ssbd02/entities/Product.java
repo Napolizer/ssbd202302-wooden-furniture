@@ -7,27 +7,25 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product",
-    indexes = @Index(name = "product_product_group_id", columnList = "product_group_id", unique = true))
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
@@ -36,13 +34,16 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
     @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
         query = "SELECT product FROM Product product WHERE product.available = true"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
-        query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice")
+        query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
+    @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
+        query = "SELECT product FROM Product product WHERE product.id = :id")
 })
 public class Product extends AbstractEntity {
   public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
   public static final String FIND_ALL_BY_COLOR = "Product.findAllByColor";
   public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
   public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
+  public static final String FIND_BY_PRODUCT_ID = "Product.findByProductId";
 
   @Column(nullable = false)
   private Double price;
@@ -87,4 +88,8 @@ public class Product extends AbstractEntity {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "wood_type", nullable = false)
   private WoodType woodType;
+
+  @ManyToOne
+  @JoinColumn(name = "product_group_id", nullable = false)
+  private ProductGroup productGroup;
 }

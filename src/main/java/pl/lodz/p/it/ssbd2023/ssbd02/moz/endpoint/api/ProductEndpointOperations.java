@@ -18,7 +18,7 @@ public interface ProductEndpointOperations {
 
   ProductDto update(Long id, UpdateProductDto entity);
 
-  Optional<ProductDto> find(Long id);
+  ProductDto find(Long id);
 
   List<ProductDto> findAll();
 
