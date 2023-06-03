@@ -22,6 +22,10 @@ export class NavigationService {
     return this.router.navigate(['/admin']);
   }
 
+  public redirectToEmployeePage(): Promise<boolean> {
+    return this.router.navigate(['/employee']);
+  }
+
   public redirectToOwnAccountPage(): Promise<boolean> {
     return this.router.navigate(['/self']);
   }

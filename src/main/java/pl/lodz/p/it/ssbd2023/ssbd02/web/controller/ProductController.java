@@ -1,23 +1,33 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 
 @Path("/product")
+@Interceptors({SimpleLoggerInterceptor.class})
 public class ProductController {
 
   @Inject
@@ -47,8 +57,11 @@ public class ProductController {
 
   @POST
   @Path("/group")
-  public Response createProductGroup(ProductGroupDto entity) {
-    throw new UnsupportedOperationException();
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response createProductGroup(@NotNull @Valid ProductGroupCreateDto productGroupCreateDto) {
+    return Response.status(Response.Status.CREATED)
+            .entity(productGroupEndpoint.create(productGroupCreateDto)).build();
   }
 
   @POST

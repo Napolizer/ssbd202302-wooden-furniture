@@ -8,9 +8,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 
 @Local
 public interface CategoryServiceOperations {
-  List<Category> findAllByParentCategory(Category parentCategory);
 
   Optional<Category> find(Long id);
+
+  List<Category> findAllParentCategories();
 
   List<Category> findAll();
 

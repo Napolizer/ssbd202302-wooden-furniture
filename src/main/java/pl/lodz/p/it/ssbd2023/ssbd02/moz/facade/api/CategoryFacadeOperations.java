@@ -4,13 +4,16 @@ import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 
 @Local
 public interface CategoryFacadeOperations {
 
-  List<Category> findAllByParentCategory(Category parentCategory);
-
   Optional<Category> find(Long id);
+
+  Optional<Category> findByCategoryName(CategoryName categoryName);
+
+  List<Category> findAllParentCategories();
 
   List<Category> findAll();
 

@@ -28,14 +28,24 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 @Entity
 @Table(indexes = @Index(name = "category_parent_category_id", columnList = "parent_category_id"))
 @NamedQueries({
-    @NamedQuery(name = Category.FIND_ALL_BY_PARENT_CATEGORY,
-        query = "SELECT category FROM Category category WHERE category.parentCategory = :parentCategory")
+    @NamedQuery(name = Category.FIND_BY_CATEGORY_NAME,
+                query = "SELECT category FROM Category category "
+                        + "WHERE category.categoryName = :categoryName"),
+    @NamedQuery(name = Category.FIND_ALL_PARENT_CATEGORIES,
+            query = "SELECT category FROM Category category "
+                    + "WHERE category.parentCategory = null "),
+
 })
 public class Category extends AbstractEntity {
-  public static final String FIND_ALL_BY_PARENT_CATEGORY = "Category.findAllByParentCategory";
+
+  public static final String FIND_BY_CATEGORY_NAME = "Category.findByCategoryName";
+  public static final String FIND_ALL_PARENT_CATEGORIES = "Category.findAllParentCategories";
+
+  @OneToMany(mappedBy = "parentCategory")
+  private List<Category> subcategories = new ArrayList<>();
 
   @ManyToOne
-  @JoinColumn(name = "parent_category_id")
+  @JoinColumn(name = "parent_category_id", insertable = false, updatable = false)
   private Category parentCategory;
 
   @Enumerated(value = EnumType.STRING)

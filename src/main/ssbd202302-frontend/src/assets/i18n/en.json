@@ -106,6 +106,12 @@
   "create.account.label.access.level": "Access level",
   "create.account.success": "Account has been successfully created",
 
+  "add.product.group.name": "Product group name",
+  "add.product.group.category.label": "Product group category",
+  "add.product.group.back": "Back",
+  "add.product.group.confirm": "Add",
+  "add.product.group.success": "Product group has been successfully added",
+
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
   "reset.password.confirmNewPassword": "Confirm new password",
@@ -190,6 +196,7 @@
   "dialog.block.account.message":"Are you sure you want to block this account?",
   "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
   "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
+  "dialog.add.product.group.message": "Are you sure you want to add new product group?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -233,6 +240,8 @@
   "exception.current.password.invalid": "Current password is invalid",
   "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
 
+  "exception.moz.product.group.already.exists": "Product group with given name already exists",
+  
   "role.administrator": "Administrator",
   "role.employee": "Employee",
   "role.sales_rep": "Sales Representative",
@@ -241,6 +250,7 @@
 
   "toolbar.home": "Home Page",
   "toolbar.adminPanel": "Admin Panel",
+  "toolbar.employeePanel": "Employee Panel",
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
@@ -290,6 +300,8 @@
   "admin.search.orderBy": "Ascending/Descending",
   "admin.create.account": "Create account",
 
+  "employee.add.product.group": "Add product group",
+
   "paginator.itemsPerPage": "Items per page",
   "paginator.firstPageLabel": "First page",
   "paginator.lastPageLabel": "Last page",
@@ -297,5 +309,22 @@
   "paginator.previousPageLabel": "Previous page",
 
   "session.expired.title": "Session expired",
-  "session.expired.message": "Your session has expired, please log in again"
+  "session.expired.message": "Your session has expired, please log in again",
+
+  "BED": "Bed",
+  "SINGLE_BED": "Single bed",
+  "DOUBLE_BED": "Double bed",
+  "KIDS": "Kids bed",
+  "CASE_FURNITURE": "Case furniture",
+  "WARDROBE": "Wardrobe",
+  "DRESSER": "Dresser",
+  "LOCKER": "Locker",
+  "SEAT": "Seat",
+  "CHAIR": "Chair",
+  "DESK": "Desk",
+  "STOOL": "Stool",
+  "ARMCHAIR": "Armchair",
+  "TABLE": "Table",
+  "ROUND_TABLE": "Round table",
+  "RECTANGULAR_TABLE": "Rectangular table"
 }

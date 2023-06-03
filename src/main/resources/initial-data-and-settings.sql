@@ -11,6 +11,7 @@ GRANT SELECT,INSERT,DELETE ON TABLE sales_rep TO ssbd02mok;
 GRANT SELECT ON TABLE sales_order TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE account_search_settings TO ssbd02mok;
 
+GRANT SELECT ON TABLE account TO ssbd02moz;
 GRANT SELECT ON TABLE category TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE product TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE product_group TO ssbd02moz;
@@ -30,7 +31,7 @@ GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02moz;
 
 INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Aleje Testowe', '55', now());
 INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Jan', 'Kowalski', (SELECT id FROM address WHERE street = 'Aleje Testowe'), now());
-INSERT INTO category (id, version, archive, category_name, parent_category_id, created_at) VALUES (1, 1, false, 'Bed', null, now()),(2, 1, false, 'Case Furniture', null, now()),(3, 1, false, 'Seat', null, now()),(4, 1, false, 'Table', null, now()),(5, 1, false, 'Single Bed', 1, now()),(6, 1, false, 'Double Bed', 1, now()),(7, 1, false, 'Kids', 1, now()),(8, 1, false, 'Wardrobe', 2, now()),(9, 1, false, 'Dresser', 2, now()),(10, 1, false, 'Locker', 2, now()),(11, 1, false, 'Desk', 2, now()),(12, 1, false, 'Chair', 3, now()),(13, 1, false, 'Stool', 3, now()),(14, 1, false, 'Armchair', 3, now()),(15, 1, false, 'Round Table', 4, now()),(16, 1, false, 'Rectangular Table', 4, now());
+INSERT INTO category (id, version, archive, category_name, parent_category_id, created_at) VALUES (1, 1, false, 'BED', null, now()),(2, 1, false, 'CASE_FURNITURE', null, now()),(3, 1, false, 'SEAT', null, now()),(4, 1, false, 'TABLE', null, now()),(5, 1, false, 'SINGLE_BED', 1, now()),(6, 1, false, 'DOUBLE_BED', 1, now()),(7, 1, false, 'KIDS', 1, now()),(8, 1, false, 'WARDROBE', 2, now()),(9, 1, false, 'DRESSER', 2, now()),(10, 1, false, 'LOCKER', 2, now()),(11, 1, false, 'DESK', 2, now()),(12, 1, false, 'CHAIR', 3, now()),(13, 1, false, 'STOOL', 3, now()),(14, 1, false, 'ARMCHAIR', 3, now()),(15, 1, false, 'ROUND_TABLE', 4, now()),(16, 1, false, 'RECTANGULAR_TABLE', 4, now());
 INSERT INTO account (id, version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'administrator', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Jan'), now(), 'DARK');
 INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'administrator', (SELECT id FROM account WHERE login = 'administrator'), now());
 INSERT INTO administrator (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'administrator'));

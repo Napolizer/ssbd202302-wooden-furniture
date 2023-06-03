@@ -4,22 +4,23 @@ import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 
 @Local
 public interface ProductGroupEndpointOperations {
 
-  ProductGroupDto create(ProductGroupDto entity);
+  ProductGroupInfoDto create(ProductGroupCreateDto entity);
 
-  ProductGroupDto archive(Long id);
+  ProductGroupInfoDto archive(Long id);
 
-  ProductGroupDto update(Long id, ProductGroup entity);
+  ProductGroupInfoDto update(Long id, ProductGroup entity);
 
-  Optional<ProductGroupDto> find(Long id);
+  Optional<ProductGroupInfoDto> find(Long id);
 
-  List<ProductGroupDto> findAll();
+  List<ProductGroupInfoDto> findAll();
 
-  List<ProductGroupDto> findAllPresent();
+  List<ProductGroupInfoDto> findAllPresent();
 
-  List<ProductGroupDto> findAllArchived();
+  List<ProductGroupInfoDto> findAllArchived();
 }
