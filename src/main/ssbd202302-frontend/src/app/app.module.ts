@@ -63,6 +63,8 @@ import { ChangeRoleComponent } from './components/change-role/change-role.compon
 import { RemoveRoleComponent } from './components/remove-role/remove-role.component';
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { ChangeEmailComponent } from './components/change-email/change-email.component';
+import { AddProductGroupComponent } from './components/add-product-group/add-product-group.component';
+import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +103,8 @@ import { ChangeEmailComponent } from './components/change-email/change-email.com
     ChangeRoleComponent,
     RemoveRoleComponent,
     EditAccountComponent,
+    AddProductGroupComponent,
+    EmployeePageComponent,
   ],
   imports: [
     BrowserModule,

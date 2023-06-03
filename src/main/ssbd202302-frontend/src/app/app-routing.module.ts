@@ -21,6 +21,7 @@ import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/ch
 import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
 import { AccountType } from './enums/account.type';
 import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
+import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,14 @@ const routes: Routes = [
     data: {
       roles: [Role.ADMINISTRATOR],
       breadcrumbs: ['Home']
+    }
+  },
+  {
+    path: 'employee',
+    component: EmployeePageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.EMPLOYEE],
     }
   },
   {

@@ -10,6 +10,7 @@ import { EditAccountComponent } from '../components/edit-account/edit-account.co
 import { ChangeEmailComponent } from '../components/change-email/change-email.component';
 import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from '../pages/create-account/create-account.component';
+import { AddProductGroupComponent } from '../components/add-product-group/add-product-group.component';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,14 @@ export class DialogService {
       width: '600px',
       height: '600px',
       data: { account, admin },
+    });
+  }
+
+  openAddProductGroupDialog(): MatDialogRef<AddProductGroupComponent> {
+    return this.matDialog.open(AddProductGroupComponent, {
+      disableClose: true,
+      width: '450px',
+      height: '520px',
     });
   }
 }

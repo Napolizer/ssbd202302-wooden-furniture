@@ -106,6 +106,9 @@
   "create.account.label.access.level": "Access level",
   "create.account.success": "Account has been successfully created",
 
+  "add.product.group.back": "Back",
+  "add.product.group.confirm": "Add",
+
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
   "reset.password.confirmNewPassword": "Confirm new password",
@@ -241,6 +244,7 @@
 
   "toolbar.home": "Home Page",
   "toolbar.adminPanel": "Admin Panel",
+  "toolbar.employeePanel": "Employee Panel",
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
@@ -289,6 +293,8 @@
   "admin.search.recordsPerPage": "Records per page",
   "admin.search.orderBy": "Ascending/Descending",
   "admin.create.account": "Create account",
+
+  "employee.add.product.group": "Add product group",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.firstPageLabel": "First page",

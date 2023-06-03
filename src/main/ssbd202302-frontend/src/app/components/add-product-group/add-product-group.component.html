@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ "employee.add.product.group" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <form
+    class="form-container"
+    [@loadedUnloadedForm]="{ value: getFormAnimationState() }"
+  >
+    <div class="form">
+      <app-spinner [loading]="loading"></app-spinner>
+      <div class="button-container">
+        <button mat-button type="button" mat-dialog-close>
+          {{ "add.product.group.back" | translate }}
+        </button>
+        <button mat-button type="submit" (click)="onConfirm()">
+          {{ "add.product.group.confirm" | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

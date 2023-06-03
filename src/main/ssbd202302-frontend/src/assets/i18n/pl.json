@@ -106,6 +106,9 @@
   "create.account.label.access.level": "Poziom dostępu",
   "create.account.success": "Konto zostało pomyślnie utworzone",
 
+  "add.product.group.back": "Powrót",
+  "add.product.group.confirm": "Dodaj",
+
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
   "reset.password.confirmNewPassword": "Powtórz nowe hasło",
@@ -240,6 +243,7 @@
 
   "toolbar.home": "Strona Domowa",
   "toolbar.adminPanel": "Panel Administracyjny",
+  "toolbar.employeePanel": "Panel Pracownika",
   "toolbar.myAccount": "Moje konto",
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
@@ -287,6 +291,8 @@
   "admin.search.recordsPerPage: ": "Liczba użytkowników na stronie",
   "admin.search.orderBy": "Rosnąco/Malejąco",
   "admin.create.account": "Utwórz konto",
+
+  "employee.add.product.group": "Dodaj grupę produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.firstPageLabel": "Pierwsza strona",
