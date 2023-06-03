@@ -1,8 +1,18 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -76,8 +86,7 @@ public class Product extends AbstractEntity {
   @Column(name = "wood_type", nullable = false)
   private WoodType woodType;
 
-  @ManyToOne()
-  @JoinColumn(name = "product_group_id")
-  @Builder.Default
-  private ProductGroup productGroup = new ProductGroup();
+  @ManyToOne
+  @JoinColumn(name = "product_group_id", nullable = false)
+  private ProductGroup productGroup;
 }

@@ -46,6 +46,7 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   public List<Product> findAll() {
     return productFacade.findAll();
   }
+
   @Override
   public List<Product> findAllPresent() {
     throw new UnsupportedOperationException();

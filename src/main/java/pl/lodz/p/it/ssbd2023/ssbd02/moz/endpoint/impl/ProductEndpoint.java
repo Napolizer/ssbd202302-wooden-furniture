@@ -7,14 +7,12 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
@@ -25,13 +23,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsI
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
-
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({
-        GenericServiceExceptionsInterceptor.class,
-        LoggerInterceptor.class
+  GenericServiceExceptionsInterceptor.class,
+  LoggerInterceptor.class
 })
 @DenyAll
 public class ProductEndpoint extends AbstractEndpoint implements ProductEndpointOperations {
