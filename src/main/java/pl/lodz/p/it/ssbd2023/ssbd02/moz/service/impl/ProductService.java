@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -11,11 +12,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class ProductService implements ProductServiceOperations {
+public class ProductService extends AbstractService implements ProductServiceOperations {
 
   @Inject
   private ProductFacadeOperations productFacade;
@@ -40,11 +42,10 @@ public class ProductService implements ProductServiceOperations {
     throw new UnsupportedOperationException();
   }
 
-  @Override
+  @PermitAll
   public List<Product> findAll() {
-    throw new UnsupportedOperationException();
+    return productFacade.findAll();
   }
-
   @Override
   public List<Product> findAllPresent() {
     throw new UnsupportedOperationException();
