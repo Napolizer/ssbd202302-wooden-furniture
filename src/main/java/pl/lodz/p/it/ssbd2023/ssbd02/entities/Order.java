@@ -29,7 +29,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 @Entity(name = "sales_order")
 @Table(name = "sales_order", indexes = {
     @Index(name = "sales_order_account_id", columnList = "account_id", unique = true),
-    @Index(name = "sales_order_delivery_person_id", columnList = "delivery_person_id", unique = true),
+    @Index(name = "sales_order_delivery_person_id", columnList = "recipient_id", unique = true),
     @Index(name = "sales_order_delivery_address_id", columnList = "delivery_address_id", unique = true)
 })
 public class Order extends AbstractEntity {
@@ -48,8 +48,8 @@ public class Order extends AbstractEntity {
   )
   private List<Product> products = new ArrayList<>();
   @ManyToOne
-  @JoinColumn(name = "delivery_person_id", nullable = false, updatable = false)
-  private Person deliveryPerson;
+  @JoinColumn(name = "recipient_id", nullable = false, updatable = false)
+  private Person recipient;
   @OneToOne
   @JoinColumn(name = "delivery_address_id", nullable = false, updatable = false)
   private Address deliveryAddress;

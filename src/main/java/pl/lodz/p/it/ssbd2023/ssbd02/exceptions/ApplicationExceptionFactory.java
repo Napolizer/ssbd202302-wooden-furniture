@@ -25,6 +25,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
@@ -225,6 +226,10 @@ public final class ApplicationExceptionFactory {
 
   public static ProductGroupAlreadyExistsException createProductGroupAlreadyExistsException() {
     return new ProductGroupAlreadyExistsException();
+  }
+
+  public static OrderAlreadyExistsException createOrderAlreadyExistsException() {
+    return new OrderAlreadyExistsException();
   }
 
   public static ParentCategoryNotAllowedException createParentCategoryNotAllowedException() {

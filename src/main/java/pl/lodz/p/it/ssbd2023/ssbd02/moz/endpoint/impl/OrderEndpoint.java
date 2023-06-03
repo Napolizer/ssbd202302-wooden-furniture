@@ -1,9 +1,14 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
@@ -12,10 +17,16 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
-
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
+@Interceptors({
+    GenericEndpointExceptionsInterceptor.class,
+    LoggerInterceptor.class
+})
+@DenyAll
 public class OrderEndpoint implements OrderEndpointOperations {
 
   @Inject
@@ -32,8 +43,9 @@ public class OrderEndpoint implements OrderEndpointOperations {
   }
 
   @Override
-  public OrderDto create(CreateOrderDto entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public OrderDto create(CreateOrderDto createOrderDto) {
+    return null;
   }
 
   @Override
