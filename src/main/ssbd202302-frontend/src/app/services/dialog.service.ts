@@ -97,7 +97,7 @@ export class DialogService {
     return this.matDialog.open(AddProductGroupComponent, {
       disableClose: true,
       width: '450px',
-      height: '520px',
+      height: '400px',
     });
   }
 }

@@ -1,12 +1,57 @@
 <h1 mat-dialog-title>{{ "employee.add.product.group" | translate }}</h1>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
-  <form
-    class="form-container"
-    [@loadedUnloadedForm]="{ value: getFormAnimationState() }"
-  >
+  <form class="form-container" [formGroup]="addProductGroupForm">
     <div class="form">
       <app-spinner [loading]="loading"></app-spinner>
+
+      <mat-form-field appearance="fill" class="input">
+        <mat-label>{{
+          "add.product.group.category.label" | translate
+        }}</mat-label>
+        <mat-select required formControlName="category">
+          <mat-optgroup
+            *ngFor="let category of this.categories"
+            [label]="category.viewValue"
+            [disabled]
+          >
+            <mat-option
+              *ngFor="let subcategory of category.subcategories"
+              [value]="subcategory.value"
+            >
+              {{ subcategory.viewValue }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        hintLabel="{{ 'register.hint.max.20' | translate }}"
+        appearance="fill"
+        class="input"
+      >
+        <mat-label>{{ "add.product.group.name" | translate }}</mat-label>
+        <input
+          matInput
+          #name
+          type="text"
+          formControlName="name"
+          maxlength="20"
+          required
+        />
+        <mat-error
+          *ngIf="addProductGroupForm.get('name')?.hasError('required')"
+          >{{ "register.validity.required" | translate }}</mat-error
+        >
+        <mat-error
+          *ngIf="addProductGroupForm.get('name')?.hasError('pattern')"
+          >{{
+            "register.validity.person.patternMismatch" | translate
+          }}</mat-error
+        >
+        <mat-hint align="end">{{ name.value.length }}/20</mat-hint>
+      </mat-form-field>
+
       <div class="button-container">
         <button mat-button type="button" mat-dialog-close>
           {{ "add.product.group.back" | translate }}

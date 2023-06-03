@@ -106,8 +106,11 @@
   "create.account.label.access.level": "Poziom dostępu",
   "create.account.success": "Konto zostało pomyślnie utworzone",
 
+  "add.product.group.name": "Nazwa grupy produktów",
+  "add.product.group.category.label": "Kategoria grupy produktów",
   "add.product.group.back": "Powrót",
   "add.product.group.confirm": "Dodaj",
+  "add.product.group.success": "Grupa produktów została pomyślnie dodana",
 
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
@@ -193,6 +196,7 @@
   "dialog.block.account.message":"Czy na pewno chcesz zablokować wybrane konto?",
   "dialog.unblock.account.message":"Czy na pewno chcesz odblokować wybrane konto?",
   "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
+  "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -234,6 +238,8 @@
   "exception.password.already.used": "Hasło było już używane przez użytkownika",
   "exception.current.password.invalid": "Obecne hasło jest nieprawidłowe",
   "exception.mok.account.external.invalid.state": "Twoje konto jest zablokowane bądź nieaktywne",
+
+  "exception.moz.product.group.already.exists": "Grupa produktów z podaną nazwą już istnieje",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -301,5 +307,22 @@
   "paginator.previousPageLabel": "Poprzednia strona",
 
   "session.expired.title": "Sesja wygasła",
-  "session.expired.message": "Twoja sesja wygasła, zaloguj się ponownie"
+  "session.expired.message": "Twoja sesja wygasła, zaloguj się ponownie",
+
+  "BED": "Łóżko",
+  "SINGLE_BED": "Łóżko pojedyncze",
+  "DOUBLE_BED": "Łóżko podwójne",
+  "KIDS": "Łóżko dla dzieci",
+  "CASE_FURNITURE": "Meble skrzyniowe",
+  "WARDROBE": "Szafa",
+  "DRESSER": "Komoda",
+  "LOCKER": "Szafka",
+  "SEAT": "Siedzenie",
+  "CHAIR": "Krzesło",
+  "DESK": "Biurko",
+  "STOOL": "Taboret",
+  "ARMCHAIR": "Fotel",
+  "TABLE": "Stół",
+  "ROUND_TABLE": "Stół okrągły",
+  "RECTANGULAR_TABLE": "Stół prostokątny"
 }
