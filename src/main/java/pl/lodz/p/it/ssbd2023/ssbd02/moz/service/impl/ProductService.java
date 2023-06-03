@@ -37,9 +37,9 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     throw new UnsupportedOperationException();
   }
 
-  @Override
+  @PermitAll
   public Optional<Product> find(Long id) {
-    throw new UnsupportedOperationException();
+    return productFacade.findById(id);
   }
 
   @PermitAll

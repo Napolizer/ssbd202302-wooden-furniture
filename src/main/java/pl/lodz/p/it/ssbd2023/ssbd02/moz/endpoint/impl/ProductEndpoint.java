@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
@@ -60,9 +61,11 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public Optional<ProductDto> find(Long id) {
-    throw new UnsupportedOperationException();
+  @PermitAll
+  public ProductDto find(Long productId) {
+    return repeatTransactionWithoutOptimistic(() -> productService.find(productId))
+            .map(productMapper::mapToProductDto)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
   }
 
   @Override
