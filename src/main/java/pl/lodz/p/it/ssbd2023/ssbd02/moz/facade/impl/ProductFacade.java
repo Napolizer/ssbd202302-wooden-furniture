@@ -1,23 +1,21 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
+
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.persistence.PersistenceException;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
-
-import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)

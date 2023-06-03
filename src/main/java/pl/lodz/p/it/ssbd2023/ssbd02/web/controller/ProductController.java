@@ -21,7 +21,6 @@ import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
@@ -29,8 +28,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
-
-import javax.print.attribute.standard.Media;
 
 @Path("/product")
 @Interceptors({SimpleLoggerInterceptor.class})
