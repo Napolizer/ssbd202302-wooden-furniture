@@ -25,7 +25,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyCancelledException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyInDeliveryException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
@@ -231,6 +235,22 @@ public final class ApplicationExceptionFactory {
 
   public static OrderAlreadyExistsException createOrderAlreadyExistsException() {
     return new OrderAlreadyExistsException();
+  }
+
+  public static OrderAlreadyCancelledException createOrderAlreadyCancelledException() {
+    return new OrderAlreadyCancelledException();
+  }
+
+  public static OrderAlreadyInDeliveryException createOrderAlreadyInDeliveryException() {
+    return new OrderAlreadyInDeliveryException();
+  }
+
+  public static OrderAlreadyDeliveredException createOrderAlreadyDeliveredException() {
+    return new OrderAlreadyDeliveredException();
+  }
+
+  public static OrderNotFoundException createOrderNotFoundException() {
+    return new OrderNotFoundException();
   }
 
   public static ParentCategoryNotAllowedException createParentCategoryNotAllowedException() {

@@ -117,5 +117,9 @@ public class MessageUtil {
     public static final String PRODUCT_GROUP_ALREADY_EXITS = "exception.moz.product.group.already.exists";
     public static final String PRODUCT_NOT_FOUND = "exception.moz.product.not.found";
     public static final String ORDER_ALREADY_EXITS = "exception.moz.order.already.exists";
+    public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
+    public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
+    public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";
+    public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
   }
 }
