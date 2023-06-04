@@ -2,14 +2,12 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
@@ -64,8 +62,8 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @PermitAll
   public ProductDto find(Long productId) {
     return repeatTransactionWithoutOptimistic(() -> productService.find(productId))
-            .map(productMapper::mapToProductDto)
-            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+      .map(productMapper::mapToProductDto)
+      .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
   }
 
   @Override

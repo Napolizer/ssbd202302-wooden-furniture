@@ -19,7 +19,7 @@ public class ProductDto {
   @NotNull
   private Double price;
   private Boolean available;
-  private Byte[] image;
+  private String image;
   @NotNull
   private Double weight;
   @NotNull
@@ -34,7 +34,7 @@ public class ProductDto {
   private Color color;
   @NotNull
   private WoodType woodType;
-  // @NotNull
-  // private ProductGroup productGroup;
+  @NotNull
+  private ProductGroupInfoDto productGroup;
 }
 

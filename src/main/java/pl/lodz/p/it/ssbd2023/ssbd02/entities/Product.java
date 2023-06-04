@@ -52,7 +52,7 @@ public class Product extends AbstractEntity {
   private Boolean available;
 
   @Lob
-  private Byte[] image;
+  private byte[] image;
 
   @Column(nullable = false)
   private Double weight;

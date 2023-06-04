@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 col-lg-3 g-mb-30" *ngFor="let product of products; let i = index;">
+        <mat-card class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5">
+        <div class="product-content">
+          <a href="#" class="no-hover-underline">
+            <img class="d-inline-block img-fluid mb-4" [src]="product.image" alt="Zdjęcie produktu">
+              <span class="d-block g-color-primary name">{{product.productGroup.name}}</span>
+              <span class="d-block g-color-primary">{{product.productGroup.category.name}}, {{product.furnitureDimensions.width}}m x {{product.furnitureDimensions.depth}}m x {{product.furnitureDimensions.height}}m</span>
+              <span class="d-block g-color-primary price">{{product.price}},-</span>
+              <div class="star-rating">
+                <ng-container *ngFor="let star of getStarArray(product.productGroup.averageRating)">
+                  <mat-icon class="star-icon">{{star}}</mat-icon>
+                </ng-container>
+                <span class="d-inline-block g-color-primary rating">{{product.productGroup.averageRating}}</span>
+              </div>              
+          </a>
+          <span class="d-block g-color-primary">{{product.available}}</span>
+        </div>
+        </mat-card>
+        <mat-divider class="divider" *ngIf="(i + 1) % 4 !== 0"></mat-divider>
+    </div>
+  </div>
+  

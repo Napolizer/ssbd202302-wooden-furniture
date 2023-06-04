@@ -2,13 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api;
 
 import jakarta.ejb.Local;
 import java.util.List;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
-
 
 @Local
 public interface ProductEndpointOperations {
