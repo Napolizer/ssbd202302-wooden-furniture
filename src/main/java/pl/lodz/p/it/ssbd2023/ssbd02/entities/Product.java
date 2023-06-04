@@ -2,11 +2,13 @@ package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
@@ -52,7 +54,8 @@ public class Product extends AbstractEntity {
   private Boolean available;
 
   @Lob
-  private Byte[] image;
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] image;
 
   @Column(nullable = false)
   private Double weight;

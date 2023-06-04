@@ -1,8 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -31,6 +33,14 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
   @Override
   protected EntityManager getEntityManager() {
     return em;
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public Product create(Product entity) {
+    Product product = super.create(entity);
+    em.flush();
+    return product;
   }
 
   @Override

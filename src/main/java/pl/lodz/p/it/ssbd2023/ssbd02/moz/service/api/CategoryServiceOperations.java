@@ -9,6 +9,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 @Local
 public interface CategoryServiceOperations {
 
+  boolean isLastTransactionRollback();
+
   Optional<Category> find(Long id);
 
   List<Category> findAllParentCategories();
