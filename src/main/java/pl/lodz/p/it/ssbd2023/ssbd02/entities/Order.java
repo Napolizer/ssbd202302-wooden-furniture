@@ -62,4 +62,12 @@ public class Order extends AbstractEntity {
     creationDate = LocalDateTime.now();
   }
 
+  public Long getSumOfVersions() {
+    Long sumOfProductsVersions = 0L;
+    for (Product product : this.getProducts()) {
+      sumOfProductsVersions += product.getVersion();
+    }
+    return this.getVersion() + sumOfProductsVersions + this.getRecipient().getVersion()
+        + this.getDeliveryAddress().getVersion() + this.getAccount().getSumOfVersions();
+  }
 }

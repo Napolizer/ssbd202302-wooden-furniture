@@ -27,11 +27,11 @@ public interface OrderServiceOperations {
 
   List<Order> findAllArchived();
 
-  Order cancelOrder(Long id);
+  Order cancelOrder(Long id, String hash);
 
   void observeOrder(Long id);
 
-  Order changeStateOfOrder(OrderState state);
+  Order changeOrderState(OrderState state);
 
   void generateReport();
 

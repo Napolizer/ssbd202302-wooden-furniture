@@ -17,6 +17,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
@@ -88,9 +89,11 @@ public class OrderController {
 
 
   @PUT
-  @Path("/cancel/{id}")
-  public Response cancelOrder(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+  @Path("/cancel")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(CLIENT)
+  public Response cancelOrder(@NotNull @Valid OrderDto orderDto) {
+    return Response.ok(orderEndpoint.cancelOrder(orderDto)).build();
   }
 
   @PUT
