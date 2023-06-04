@@ -36,4 +36,6 @@ public interface OrderServiceOperations {
   void generateReport();
 
   List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+
+  boolean isLastTransactionRollback();
 }
