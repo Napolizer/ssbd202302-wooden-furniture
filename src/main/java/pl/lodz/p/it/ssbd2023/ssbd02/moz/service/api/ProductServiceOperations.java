@@ -31,4 +31,6 @@ public interface ProductServiceOperations {
   List<Product> findAllAvailable();
 
   List<Product> findAllByPrice(Double minPrice, Double maxPrice);
+
+  boolean isLastTransactionRollback();
 }

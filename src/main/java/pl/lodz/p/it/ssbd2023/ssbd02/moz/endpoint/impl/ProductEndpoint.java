@@ -1,28 +1,48 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
-@TransactionAttribute(TransactionAttributeType.NEVER)
-public class ProductEndpoint implements ProductEndpointOperations {
-
-  private final ProductServiceOperations productService;
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({
+  GenericServiceExceptionsInterceptor.class,
+  LoggerInterceptor.class
+})
+@DenyAll
+public class ProductEndpoint extends AbstractEndpoint implements ProductEndpointOperations {
 
   @Inject
-  public ProductEndpoint(ProductServiceOperations productService) {
-    this.productService = productService;
+  private ProductServiceOperations productService;
+
+  @Inject
+  private ProductMapper productMapper;
+
+  @PermitAll
+  public List<ProductDto> findAll() {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAll()).stream()
+            .map(productMapper::mapToProductDto)
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -42,11 +62,6 @@ public class ProductEndpoint implements ProductEndpointOperations {
 
   @Override
   public Optional<ProductDto> find(Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<ProductDto> findAll() {
     throw new UnsupportedOperationException();
   }
 
@@ -78,5 +93,10 @@ public class ProductEndpoint implements ProductEndpointOperations {
   @Override
   public List<ProductDto> findAllByPrice(Double minPrice, Double maxPrice) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  protected boolean isLastTransactionRollback() {
+    return productService.isLastTransactionRollback();
   }
 }
