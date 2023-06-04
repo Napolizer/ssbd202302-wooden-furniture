@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -34,7 +35,11 @@ public abstract class AbstractFacade<T extends AbstractEntity> implements Facade
 
   @Override
   public Optional<T> find(Long id) {
-    return Optional.ofNullable(getEntityManager().find(entityClass, id));
+    try {
+      return Optional.of(getEntityManager().find(entityClass, id));
+    } catch (PersistenceException e) {
+      return Optional.empty();
+    }
   }
 
   @Override

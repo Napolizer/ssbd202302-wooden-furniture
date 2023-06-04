@@ -9,6 +9,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 @Local
 public interface ProductGroupServiceOperations {
 
+  boolean isLastTransactionRollback();
+
   ProductGroup create(ProductGroup entity, CategoryName categoryName);
 
   ProductGroup archive(Long id);

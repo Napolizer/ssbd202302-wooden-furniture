@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -10,6 +11,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
@@ -31,6 +33,10 @@ public class ProductGroupFacade extends AbstractFacade<ProductGroup>
   @PersistenceContext(unitName = "ssbd02mozPU")
   private EntityManager em;
 
+  public ProductGroupFacade() {
+    super(ProductGroup.class);
+  }
+
   @Override
   protected EntityManager getEntityManager() {
     return em;
@@ -42,5 +48,11 @@ public class ProductGroupFacade extends AbstractFacade<ProductGroup>
     ProductGroup productGroup = super.create(entity);
     em.flush();
     return productGroup;
+  }
+
+  @Override
+  @PermitAll
+  public Optional<ProductGroup> find(Long id) {
+    return super.find(id);
   }
 }
