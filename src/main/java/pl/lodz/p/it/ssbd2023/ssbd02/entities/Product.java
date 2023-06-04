@@ -34,13 +34,16 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
     @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
         query = "SELECT product FROM Product product WHERE product.available = true"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
-        query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice")
+        query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
+    @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
+        query = "SELECT product FROM Product product WHERE product.id = :id")
 })
 public class Product extends AbstractEntity {
   public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
   public static final String FIND_ALL_BY_COLOR = "Product.findAllByColor";
   public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
   public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
+  public static final String FIND_BY_PRODUCT_ID = "Product.findByProductId";
 
   @Column(nullable = false)
   private Double price;

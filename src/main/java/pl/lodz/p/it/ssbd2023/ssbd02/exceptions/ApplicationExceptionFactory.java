@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
@@ -229,5 +230,9 @@ public final class ApplicationExceptionFactory {
 
   public static ParentCategoryNotAllowedException createParentCategoryNotAllowedException() {
     return new ParentCategoryNotAllowedException();
+  }
+
+  public static ProductNotFoundException createProductNotFoundException() {
+    return new ProductNotFoundException();
   }
 }

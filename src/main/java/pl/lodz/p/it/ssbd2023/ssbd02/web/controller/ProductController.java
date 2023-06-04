@@ -80,9 +80,12 @@ public class ProductController {
   }
 
   @GET
-  @Path("/id")
-  public Response find(Long id) {
-    throw new UnsupportedOperationException();
+  @Path("/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response find(@PathParam("id") Long id) {
+    ProductDto product = productEndpoint.find(id);
+
+    return Response.ok(product).build();
   }
 
   @GET
