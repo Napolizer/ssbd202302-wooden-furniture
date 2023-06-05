@@ -32,4 +32,7 @@ public class CreateOrderDto {
 
   @NotNull
   private AccountWithoutSensitiveDataDto account;
+
+  @NotNull
+  private Boolean observed;
 }
