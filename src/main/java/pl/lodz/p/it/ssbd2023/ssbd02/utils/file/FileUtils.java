@@ -8,9 +8,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 
 public final class FileUtils {
 
-  private static final String JPG = ".jpg";
-  private static final String JPEG = ".jpeg";
-  private static final String PNG = ".png";
+  public static final String JPG = ".jpg";
+  public static final String JPEG = ".jpeg";
+  public static final String PNG = ".png";
 
   public static byte[] readImageFromFileInputStream(InputStream inputStream, FormDataContentDisposition fileMetaData) {
     if (inputStream == null) {

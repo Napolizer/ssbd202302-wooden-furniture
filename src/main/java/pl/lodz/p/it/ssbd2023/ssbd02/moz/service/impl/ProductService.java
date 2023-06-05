@@ -15,6 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
@@ -30,14 +31,18 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   @Inject
   private ProductGroupFacadeOperations productGroupFacade;
 
+  @Inject
+  private GoogleServiceOperations googleService;
+
   @Override
   @RolesAllowed(EMPLOYEE)
-  public Product create(Product product, byte[] image, Long productGroupId) {
+  public Product create(Product product, byte[] image, Long productGroupId, String fileFormat) {
     ProductGroup productGroup = productGroupFacade.find(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
-    product.setImage(image);
     product.setProductGroup(productGroup);
-    return productFacade.create(product);
+    Product entity = productFacade.create(product);
+    entity.setImageUrl(googleService.saveImageInStorage(image, fileFormat));
+    return entity;
   }
 
   @Override

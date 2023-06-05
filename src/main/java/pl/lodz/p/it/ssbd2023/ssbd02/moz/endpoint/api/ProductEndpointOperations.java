@@ -11,7 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 
 @Local
 public interface ProductEndpointOperations {
-  ProductDto create(ProductCreateDto entity, byte[] image);
+  ProductDto create(ProductCreateDto entity, byte[] image, String fileFormat);
 
   ProductDto archive(Long id, UpdateProductDto entity);
 

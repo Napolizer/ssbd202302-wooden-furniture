@@ -44,6 +44,14 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
+  public Product update(Product entity) {
+    Product product = super.update(entity);
+    em.flush();
+    return product;
+  }
+
+  @Override
   public List<Product> findAllByWoodType(WoodType woodType) {
     return em.createNamedQuery(Product.FIND_ALL_BY_WOOD_TYPE, Product.class)
         .setParameter("woodType", woodType)

@@ -18,6 +18,7 @@ public class ProductMapper {
              .available(product.getAvailable())
              .weight(product.getWeight())
              .amount(product.getAmount())
+             .imageUrl(product.getImageUrl())
              .weightInPackage(product.getWeightInPackage())
              .furnitureDimensions(product.getFurnitureDimensions())
              .packageDimensions(product.getPackageDimensions())

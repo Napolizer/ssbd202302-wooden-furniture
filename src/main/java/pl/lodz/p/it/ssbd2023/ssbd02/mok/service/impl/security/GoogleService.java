@@ -2,6 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.ejb.Stateless;
@@ -10,6 +15,8 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.ws.rs.core.Response;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -18,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -35,6 +43,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.file.FileUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
@@ -55,6 +64,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
   private static final String STATE;
   private static final String GRANT_TYPE;
   private static final String RESPONSE_TYPE;
+  private static final String SECRET_FILE_PATH;
+  private static final String STORAGE_URL;
 
   static {
     Properties prop = new Properties();
@@ -71,6 +82,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
       STATE = prop.getProperty("google.state");
       GRANT_TYPE = prop.getProperty("google.grant.type");
       RESPONSE_TYPE = prop.getProperty("google.response.type");
+      SECRET_FILE_PATH = prop.getProperty("google.secret.file.path");
+      STORAGE_URL = prop.getProperty("google.storage.url");
     } catch (Exception e) {
       throw new RuntimeException("Error loading configuration file: " + e.getMessage());
     }
@@ -185,5 +198,31 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createUnknownErrorException(e);
     }
+  }
+
+  @Override
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public String saveImageInStorage(byte[] image, String fileFormat) {
+    Credentials credentials;
+    try {
+      credentials = GoogleCredentials
+              .fromStream(new FileInputStream(SECRET_FILE_PATH));
+    } catch (IOException e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
+    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+
+    String bucketName = "furniture-store-images";
+    String blobName = "product-" + UUID.randomUUID();
+    BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, blobName)
+            .setContentType(fileFormat.equals(FileUtils.JPG) || fileFormat.equals(FileUtils.JPEG)
+                    ? "image/jpeg" : "image/png")
+            .build();
+    try {
+      storage.create(blobInfo, image);
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
+    return STORAGE_URL + blobName;
   }
 }

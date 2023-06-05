@@ -50,10 +50,11 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductDto create(ProductCreateDto productCreateDto, byte[] image) {
+  public ProductDto create(ProductCreateDto productCreateDto, byte[] image, String fileFormat) {
     Product product = productMapper.mapToProduct(productCreateDto);
     return repeatTransactionWithOptimistic(() ->
-            productMapper.mapToProductDto(productService.create(product, image, productCreateDto.getProductGroupId())));
+            productMapper.mapToProductDto(productService
+                    .create(product, image, productCreateDto.getProductGroupId(), fileFormat)));
   }
 
   @Override
