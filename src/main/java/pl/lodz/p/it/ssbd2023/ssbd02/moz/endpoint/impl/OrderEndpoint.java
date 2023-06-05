@@ -52,7 +52,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   public CreateOrderDto create(CreateOrderDto createOrderDto) {
     Order order = orderMapper.mapToOrder(createOrderDto);
     Order created = repeatTransactionWithOptimistic(() -> orderService.create(order));
-    return orderMapper.mapToCreateOrderDto(order);
+    return orderMapper.mapToCreateOrderDto(created);
   }
 
   @Override
@@ -86,17 +86,23 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public OrderDto cancelOrder(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public OrderDto cancelOrder(OrderDto orderDto) {
+    Order order = repeatTransactionWithOptimistic(
+        () -> orderService.cancelOrder(orderDto.getId(), orderDto.getHash()));
+    return orderMapper.mapToOrderDto(order);
   }
 
   @Override
-  public void observeOrder(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public OrderDto observeOrder(OrderDto orderDto) {
+    Order order = repeatTransactionWithOptimistic(
+        () -> orderService.observeOrder(orderDto.getId(), orderDto.getHash()));
+    return orderMapper.mapToOrderDto(order);
   }
 
   @Override
-  public OrderDto changeStateOfOrder(Long id, OrderState state) {
+  public OrderDto changeOrderState(Long id, OrderState state) {
     throw new UnsupportedOperationException();
   }
 

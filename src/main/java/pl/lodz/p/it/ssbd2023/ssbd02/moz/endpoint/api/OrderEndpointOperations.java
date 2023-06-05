@@ -30,11 +30,11 @@ public interface OrderEndpointOperations {
 
   List<OrderDto> findAllArchived();
 
-  OrderDto cancelOrder(Long id);
+  OrderDto cancelOrder(OrderDto orderDto);
 
-  void observeOrder(Long id);
+  OrderDto observeOrder(OrderDto orderDto);
 
-  OrderDto changeStateOfOrder(Long id, OrderState state);
+  OrderDto changeOrderState(Long id, OrderState state);
 
   void generateReport();
 

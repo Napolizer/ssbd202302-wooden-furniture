@@ -11,7 +11,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateful
 public class OrderMapper {
@@ -31,6 +33,7 @@ public class OrderMapper {
         .lastName(order.getRecipient().getLastName())
         .addressDto(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
+        .observed(order.getObserved())
         .build();
   }
 
@@ -50,6 +53,43 @@ public class OrderMapper {
         .deliveryAddress(address)
         .products(products)
         .account(accountMapper.mapToAccount(createOrderDto.getAccount()))
+        .observed(createOrderDto.getObserved())
+        .build();
+  }
+
+  public Order mapToOrder(OrderDto orderDto) {
+    Address address = addressMapper.mapToAddress(orderDto.getAddressDto());
+    Person recipient = Person.builder()
+        .firstName(orderDto.getFirstName())
+        .lastName(orderDto.getLastName())
+        .address(address)
+        .build();
+
+    List<Product> products = new ArrayList<>();
+    orderDto.getProducts().forEach(productDto -> products.add(productMapper.mapToProduct(productDto)));
+
+    return Order.builder()
+        .id(orderDto.getId())
+        .recipient(recipient)
+        .deliveryAddress(address)
+        .products(products)
+        .account(accountMapper.mapToAccount(orderDto.getAccount()))
+        .observed(orderDto.getObserved())
+        .build();
+  }
+
+  public OrderDto mapToOrderDto(Order order) {
+    List<ProductDto> productDtos = new ArrayList<>();
+    order.getProducts().forEach(product -> productDtos.add(productMapper.mapToProductDto(product)));
+    return OrderDto.builder()
+        .id(order.getId())
+        .products(productDtos)
+        .firstName(order.getRecipient().getFirstName())
+        .lastName(order.getRecipient().getLastName())
+        .addressDto(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
+        .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
+        .observed(order.getObserved())
+        .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
         .build();
   }
 }
