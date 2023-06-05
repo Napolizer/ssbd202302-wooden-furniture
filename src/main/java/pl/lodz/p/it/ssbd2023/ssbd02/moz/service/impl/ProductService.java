@@ -36,12 +36,12 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public Product create(Product product, byte[] image, Long productGroupId, String fileFormat) {
+  public Product create(Product product, byte[] image, Long productGroupId, String fileName) {
     ProductGroup productGroup = productGroupFacade.findById(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
     product.setProductGroup(productGroup);
     Product entity = productFacade.create(product);
-    entity.setImageUrl(googleService.saveImageInStorage(image, fileFormat));
+    entity.setImageUrl(googleService.saveImageInStorage(image, fileName));
     return entity;
   }
 

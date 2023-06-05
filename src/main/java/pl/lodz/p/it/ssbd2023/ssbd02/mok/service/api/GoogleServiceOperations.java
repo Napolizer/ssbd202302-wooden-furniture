@@ -12,5 +12,5 @@ public interface GoogleServiceOperations {
 
   void validateIdToken(String idToken);
 
-  String saveImageInStorage(byte[] image, String fileFormat);
+  String saveImageInStorage(byte[] image, String fileName);
 }

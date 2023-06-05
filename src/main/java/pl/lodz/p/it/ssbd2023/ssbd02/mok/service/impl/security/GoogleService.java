@@ -220,7 +220,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
   @Override
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   @RolesAllowed(EMPLOYEE)
-  public String saveImageInStorage(byte[] image, String fileFormat) {
+  public String saveImageInStorage(byte[] image, String fileName) {
     Credentials credentials;
     try {
       credentials = GoogleCredentials
@@ -232,7 +232,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
 
     String blobName = "product-" + UUID.randomUUID();
     BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName)
-            .setContentType(fileFormat.equals(FileUtils.JPG) || fileFormat.equals(FileUtils.JPEG)
+            .setContentType(fileName.endsWith(FileUtils.JPG) || fileName.endsWith(FileUtils.JPEG)
                     ? "image/jpeg" : "image/png")
             .build();
     try {

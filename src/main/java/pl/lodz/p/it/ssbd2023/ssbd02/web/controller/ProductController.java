@@ -67,10 +67,8 @@ public class ProductController {
     ProductCreateDto productCreateDto =
             FormDataMapper.mapFormDataBodyPartToProductCreateDto(product);
     byte[] image = FileUtils.readImageFromFileInputStream(fileInputStream, fileMetaData);
-    String fileName = fileMetaData.getFileName();
-    String fileFormat = "." + fileName.substring(fileName.lastIndexOf('.') + 1);
     return Response.status(Response.Status.CREATED)
-            .entity(productEndpoint.create(productCreateDto, image, fileFormat)).build();
+            .entity(productEndpoint.create(productCreateDto, image, fileMetaData.getFileName())).build();
   }
 
   @POST
