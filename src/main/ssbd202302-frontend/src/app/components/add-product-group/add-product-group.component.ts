@@ -24,6 +24,9 @@ export class AddProductGroupComponent implements OnInit {
   loading = true;
   addProductGroupForm: FormGroup;
   categories: SelectCategory[] = [];
+  images: Map<string, string> = new Map<string, string>();
+  displayedImage : string;
+  loadingImage = true;
 
   constructor(
     private dialogRef: MatDialogRef<AddProductGroupComponent>,
@@ -75,7 +78,10 @@ export class AddProductGroupComponent implements OnInit {
             viewValue: displayName,
             subcategories: [],
           };
-          subcategories.forEach(({ name: subcategoryName }) => {
+          subcategories.forEach(({ name: subcategoryName, imageUrl }) => {
+            if (subcategoryName === 'SINGLE_BED') {
+              this.displayedImage = imageUrl;
+            }
             this.translate
               .get(subcategoryName || 'exception.unknown')
               .pipe(takeUntil(this.destroy))
@@ -86,10 +92,14 @@ export class AddProductGroupComponent implements OnInit {
                   subcategories: [],
                 } as SelectCategory);
               });
+              this.images.set(subcategoryName, imageUrl);
+              this.loadingImage = false;
           });
           this.categories.push(selectCategory);
         });
+
     });
+    this.addProductGroupForm.get('category')?.setValue('SINGLE_BED');
     this.loading = false;
   }
 
@@ -179,4 +189,13 @@ export class AddProductGroupComponent implements OnInit {
       this.addProductGroupForm.markAllAsTouched();
     }
   }
+
+  onSelectCategoryChange(event : any): void {
+    this.loadingImage = true;
+    setTimeout(() => {
+      this.displayedImage = this.images.get(event.value)!;
+      this.loadingImage = false;
+    }, 800);
+  }
+
 }

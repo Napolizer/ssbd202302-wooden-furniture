@@ -96,8 +96,8 @@ export class DialogService {
   openAddProductGroupDialog(): MatDialogRef<AddProductGroupComponent> {
     return this.matDialog.open(AddProductGroupComponent, {
       disableClose: true,
-      width: '450px',
-      height: '400px',
+      width: '800px',
+      height: '500px',
     });
   }
 }
