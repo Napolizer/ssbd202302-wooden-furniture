@@ -30,5 +30,7 @@ public interface MailServiceOperations {
 
   void sendEmailAboutAdminSession(String to, String locale, String ip);
 
+  void sendEmailAboutChangingOrderState(String to, String locale);
+
   void sendEmail(String to, String subject, String message) throws MessagingException;
 }

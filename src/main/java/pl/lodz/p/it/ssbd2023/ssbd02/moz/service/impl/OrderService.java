@@ -15,6 +15,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.MailService;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -33,6 +34,8 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Inject
   private OrderFacadeOperations orderFacade;
+  @Inject
+  private MailService mailService;
 
   @Override
   public List<Order> findByAccountLogin(String login) {
@@ -120,7 +123,12 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
-  public Order changeOrderState(OrderState state) {
+  public Order changeOrderState(Long id, OrderState state) {
+    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+    //TODO change order state logic
+    if (order.getObserved()) {
+      mailService.sendEmailAboutChangingOrderState(order.getAccount().getEmail(), order.getAccount().getLocale());
+    }
     throw new UnsupportedOperationException();
   }
 

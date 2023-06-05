@@ -31,7 +31,7 @@ public interface OrderServiceOperations {
 
   Order observeOrder(Long id, String hash);
 
-  Order changeOrderState(OrderState state);
+  Order changeOrderState(Long id, OrderState state);
 
   void generateReport();
 
