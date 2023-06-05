@@ -12,6 +12,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -42,6 +43,8 @@ public class OrderController {
   }
 
   @POST
+  @Path("/create")
+  @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
   public Response create(@NotNull @Valid CreateOrderDto createOrderDto) {
@@ -90,6 +93,7 @@ public class OrderController {
 
   @PUT
   @Path("/cancel")
+  @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
   public Response cancelOrder(@NotNull @Valid OrderDto orderDto) {
@@ -97,9 +101,12 @@ public class OrderController {
   }
 
   @PUT
-  @Path("/observe/{id}")
-  public Response observeOrder(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+  @Path("/observe")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(CLIENT)
+  public Response observeOrder(@NotNull @Valid OrderDto orderDto) {
+    return Response.ok(orderEndpoint.observeOrder(orderDto)).build();
   }
 
 

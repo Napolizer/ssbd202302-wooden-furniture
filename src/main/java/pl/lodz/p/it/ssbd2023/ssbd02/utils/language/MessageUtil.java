@@ -120,6 +120,8 @@ public class MessageUtil {
     public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
     public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
     public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";
+    public static final String ORDER_ALREADY_OBSERVED = "exception.moz.order.already.observed";
+
     public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
   }
 }

@@ -29,7 +29,7 @@ public interface OrderServiceOperations {
 
   Order cancelOrder(Long id, String hash);
 
-  void observeOrder(Long id);
+  Order observeOrder(Long id, String hash);
 
   Order changeOrderState(OrderState state);
 

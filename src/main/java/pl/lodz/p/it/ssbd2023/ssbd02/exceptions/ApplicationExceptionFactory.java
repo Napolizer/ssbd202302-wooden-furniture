@@ -29,6 +29,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyCancelledExceptio
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyInDeliveryException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyObservedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
@@ -251,6 +252,10 @@ public final class ApplicationExceptionFactory {
 
   public static OrderNotFoundException createOrderNotFoundException() {
     return new OrderNotFoundException();
+  }
+
+  public static OrderAlreadyObservedException createOrderAlreadyObservedException() {
+    return new OrderAlreadyObservedException();
   }
 
   public static ParentCategoryNotAllowedException createParentCategoryNotAllowedException() {

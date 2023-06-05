@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -56,6 +57,9 @@ public class Order extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "account_id", nullable = false, updatable = false)
   private Account account;
+  @Column(name = "observed", columnDefinition = "boolean default false not null")
+  @Builder.Default
+  private Boolean observed = false;
 
   @PrePersist
   public void init() {

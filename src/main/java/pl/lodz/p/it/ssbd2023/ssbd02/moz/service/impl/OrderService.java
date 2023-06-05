@@ -103,8 +103,20 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
-  public void observeOrder(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public Order observeOrder(Long id, String hash) {
+    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+
+    if (order.getObserved()) {
+      throw ApplicationExceptionFactory.createOrderAlreadyObservedException();
+    }
+
+    if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
+    order.setObserved(true);
+    return orderFacade.update(order);
   }
 
   @Override
