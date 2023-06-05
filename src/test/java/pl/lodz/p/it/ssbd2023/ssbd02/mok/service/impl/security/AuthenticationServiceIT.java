@@ -76,6 +76,8 @@ public class AuthenticationServiceIT {
         .addPackages(true, "javax.xml.bind")
         .addPackages(true, "at.favre")
         .addPackages(true, "org.apache")
+        .addPackages(true, "com.google.cloud")
+        .addPackages(true, "com.google.auth")
         .addAsResource(new File("src/test/resources/"), "");
   }
 

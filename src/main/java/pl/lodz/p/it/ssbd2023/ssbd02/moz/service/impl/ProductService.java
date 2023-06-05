@@ -37,7 +37,7 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   @Override
   @RolesAllowed(EMPLOYEE)
   public Product create(Product product, byte[] image, Long productGroupId, String fileFormat) {
-    ProductGroup productGroup = productGroupFacade.find(productGroupId)
+    ProductGroup productGroup = productGroupFacade.findById(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
     product.setProductGroup(productGroup);
     Product entity = productFacade.create(product);

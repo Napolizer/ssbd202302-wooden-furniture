@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.Credentials;
@@ -9,6 +11,9 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -50,6 +55,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({ LoggerInterceptor.class })
+@DenyAll
 public class GoogleService extends AbstractService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
@@ -66,6 +72,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
   private static final String RESPONSE_TYPE;
   private static final String SECRET_FILE_PATH;
   private static final String STORAGE_URL;
+  private static final String BUCKET_NAME;
 
   static {
     Properties prop = new Properties();
@@ -82,13 +89,16 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
       STATE = prop.getProperty("google.state");
       GRANT_TYPE = prop.getProperty("google.grant.type");
       RESPONSE_TYPE = prop.getProperty("google.response.type");
-      SECRET_FILE_PATH = prop.getProperty("google.secret.file.path");
+      SECRET_FILE_PATH = System.getProperty("user.home") + "/" + prop.getProperty("google.secret.file.name");
       STORAGE_URL = prop.getProperty("google.storage.url");
+      BUCKET_NAME = prop.getProperty("google.storage.bucket.name");
     } catch (Exception e) {
       throw new RuntimeException("Error loading configuration file: " + e.getMessage());
     }
   }
 
+  @Override
+  @PermitAll
   public String getGoogleOauthLink() {
     try {
       URIBuilder uriBuilder = new URIBuilder(BASE_URI);
@@ -104,6 +114,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @Override
+  @PermitAll
   public Account getRegisteredAccountOrCreateNew(String code, String state) {
     String token = getIdToken(code, state);
     String email = getAccountEmailFromToken(token);
@@ -117,6 +129,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @PermitAll
   private String getIdToken(String code, String state) {
     if (!state.equals(STATE)) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
@@ -151,6 +164,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @PermitAll
   private String getAccountEmailFromToken(String token) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {
@@ -160,6 +174,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @PermitAll
   private Account createAccountFromIdTokenClaims(String token) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {
@@ -177,6 +192,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @Override
+  @PermitAll
   public void validateIdToken(String idToken) {
     URI uri;
     try {
@@ -202,6 +219,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
 
   @Override
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  @RolesAllowed(EMPLOYEE)
   public String saveImageInStorage(byte[] image, String fileFormat) {
     Credentials credentials;
     try {
@@ -212,9 +230,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
     Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 
-    String bucketName = "furniture-store-images";
     String blobName = "product-" + UUID.randomUUID();
-    BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, blobName)
+    BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName)
             .setContentType(fileFormat.equals(FileUtils.JPG) || fileFormat.equals(FileUtils.JPEG)
                     ? "image/jpeg" : "image/png")
             .build();
