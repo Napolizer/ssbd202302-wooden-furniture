@@ -66,6 +66,7 @@ import { ChangeEmailComponent } from './components/change-email/change-email.com
 import { AddProductGroupComponent } from './components/add-product-group/add-product-group.component';
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -145,7 +146,8 @@ import { ProductPageComponent } from './pages/product-page/product-page.componen
     MatTableModule,
     MatRippleModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatGridListModule
   ],
   providers: [
     DatePipe,
