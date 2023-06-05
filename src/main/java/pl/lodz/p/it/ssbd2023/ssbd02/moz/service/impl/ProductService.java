@@ -2,12 +2,14 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
@@ -19,10 +21,17 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors({
+    GenericServiceExceptionsInterceptor.class,
+    LoggerInterceptor.class
+})
+@DenyAll
 public class ProductService extends AbstractService implements ProductServiceOperations {
 
   @Inject
@@ -41,7 +50,7 @@ public class ProductService extends AbstractService implements ProductServiceOpe
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
     product.setProductGroup(productGroup);
     Product entity = productFacade.create(product);
-    entity.setImageUrl(googleService.saveImageInStorage(image, fileName));
+    entity.getImage().setUrl(googleService.saveImageInStorage(image, fileName));
     return entity;
   }
 
