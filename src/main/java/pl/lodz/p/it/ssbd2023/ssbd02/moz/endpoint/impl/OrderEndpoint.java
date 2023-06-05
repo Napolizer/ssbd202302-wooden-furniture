@@ -88,13 +88,17 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @Override
   @RolesAllowed(CLIENT)
   public OrderDto cancelOrder(OrderDto orderDto) {
-    Order order = repeatTransactionWithOptimistic(() -> orderService.cancelOrder(orderDto.getId(), orderDto.getHash()));
+    Order order = repeatTransactionWithOptimistic(
+        () -> orderService.cancelOrder(orderDto.getId(), orderDto.getHash()));
     return orderMapper.mapToOrderDto(order);
   }
 
   @Override
-  public void observeOrder(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public OrderDto observeOrder(OrderDto orderDto) {
+    Order order = repeatTransactionWithOptimistic(
+        () -> orderService.observeOrder(orderDto.getId(), orderDto.getHash()));
+    return orderMapper.mapToOrderDto(order);
   }
 
   @Override

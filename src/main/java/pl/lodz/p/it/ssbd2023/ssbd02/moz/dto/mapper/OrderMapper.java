@@ -33,6 +33,7 @@ public class OrderMapper {
         .lastName(order.getRecipient().getLastName())
         .addressDto(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
+        .observed(order.getObserved())
         .build();
   }
 
@@ -52,6 +53,7 @@ public class OrderMapper {
         .deliveryAddress(address)
         .products(products)
         .account(accountMapper.mapToAccount(createOrderDto.getAccount()))
+        .observed(createOrderDto.getObserved())
         .build();
   }
 
@@ -72,6 +74,7 @@ public class OrderMapper {
         .deliveryAddress(address)
         .products(products)
         .account(accountMapper.mapToAccount(orderDto.getAccount()))
+        .observed(orderDto.getObserved())
         .build();
   }
 
@@ -85,6 +88,7 @@ public class OrderMapper {
         .lastName(order.getRecipient().getLastName())
         .addressDto(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
+        .observed(order.getObserved())
         .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
         .build();
   }

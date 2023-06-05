@@ -203,6 +203,19 @@ public class MailService extends AbstractService implements MailServiceOperation
     }
   }
 
+  @Override
+  @PermitAll
+  public void sendEmailAboutChangingOrderState(String to, String locale) {
+    try {
+      sendEmail(to,
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_SUBJECT),
+                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE)
+      );
+    } catch (MessagingException e) {
+      throw ApplicationExceptionFactory.createMailServiceException(e);
+    }
+  }
+
 
   @PermitAll
   public void sendEmail(String to, String subject, String message) throws MessagingException {

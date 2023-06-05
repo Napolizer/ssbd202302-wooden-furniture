@@ -105,6 +105,8 @@ public class MessageUtil {
     public static final String EMAIL_RESET_PASSWORD_MESSAGE2 = "mok.email.account.reset.password.message2";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_SUBJECT = "mok.email.admin.login.subject";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_MESSAGE = "mok.email.admin.login.message";
+    public static final String EMAIL_ORDER_STATE_CHANGE_SUBJECT = "moz.email.order.state.change.subject";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE = "moz.email.order.state.change.message";
     public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
     public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
@@ -120,6 +122,8 @@ public class MessageUtil {
     public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
     public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
     public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";
+    public static final String ORDER_ALREADY_OBSERVED = "exception.moz.order.already.observed";
+
     public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
   }
 }

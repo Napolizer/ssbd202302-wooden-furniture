@@ -29,9 +29,9 @@ public interface OrderServiceOperations {
 
   Order cancelOrder(Long id, String hash);
 
-  void observeOrder(Long id);
+  Order observeOrder(Long id, String hash);
 
-  Order changeOrderState(OrderState state);
+  Order changeOrderState(Long id, OrderState state);
 
   void generateReport();
 

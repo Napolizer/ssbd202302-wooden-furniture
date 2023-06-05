@@ -32,7 +32,7 @@ public interface OrderEndpointOperations {
 
   OrderDto cancelOrder(OrderDto orderDto);
 
-  void observeOrder(Long id);
+  OrderDto observeOrder(OrderDto orderDto);
 
   OrderDto changeOrderState(Long id, OrderState state);
 

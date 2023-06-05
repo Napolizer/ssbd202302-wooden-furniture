@@ -39,6 +39,9 @@ public class OrderDto {
   @NotNull
   private String hash;
 
+  @NotNull
+  private Boolean observed;
+
   @Override
   public String toString() {
     return "OrderDto{}";
