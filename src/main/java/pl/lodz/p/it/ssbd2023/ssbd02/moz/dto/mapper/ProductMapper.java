@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateless;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
@@ -18,7 +19,7 @@ public class ProductMapper {
              .available(product.getAvailable())
              .weight(product.getWeight())
              .amount(product.getAmount())
-             .imageUrl(product.getImageUrl())
+             .imageUrl(product.getImage().getUrl())
              .weightInPackage(product.getWeightInPackage())
              .furnitureDimensions(product.getFurnitureDimensions())
              .packageDimensions(product.getPackageDimensions())
@@ -57,6 +58,7 @@ public class ProductMapper {
                     productCreateDto.getPackageDepth()))
             .color(mapToColor(productCreateDto.getColor()))
             .woodType(mapToWoodType(productCreateDto.getWoodType()))
+            .image(new Image(""))
             .build();
   }
 

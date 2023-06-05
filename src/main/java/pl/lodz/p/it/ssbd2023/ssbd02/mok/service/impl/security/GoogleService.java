@@ -230,7 +230,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
     Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 
-    String blobName = "product-" + UUID.randomUUID();
+    String blobName = UUID.randomUUID().toString();
     BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName)
             .setContentType(fileName.endsWith(FileUtils.JPG) || fileName.endsWith(FileUtils.JPEG)
                     ? "image/jpeg" : "image/png")

@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(indexes = @Index(name = "category_parent_category_id", columnList = "parent_category_id"))
+@Table(indexes = {@Index(name = "category_parent_category_id", columnList = "parent_category_id"),
+                  @Index(name = "category_image_id", columnList = "image_id")})
 @NamedQueries({
     @NamedQuery(name = Category.FIND_BY_CATEGORY_NAME,
                 query = "SELECT category FROM Category category "
@@ -51,6 +53,10 @@ public class Category extends AbstractEntity {
   @Enumerated(value = EnumType.STRING)
   @Column(name = "category_name", nullable = false)
   private CategoryName categoryName;
+
+  @OneToOne
+  @JoinColumn(name = "image_id", nullable = false)
+  private Image image;
 
   @OneToMany(mappedBy = "category")
   @JoinColumn(nullable = false)

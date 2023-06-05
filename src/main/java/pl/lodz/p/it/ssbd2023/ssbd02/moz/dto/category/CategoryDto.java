@@ -28,4 +28,7 @@ public class CategoryDto {
 
   @NotNull
   private CategoryName parentName;
+
+  @NotNull
+  private String imageUrl;
 }

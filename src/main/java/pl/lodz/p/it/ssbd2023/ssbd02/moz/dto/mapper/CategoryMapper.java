@@ -11,6 +11,7 @@ public final class CategoryMapper {
             .id(category.getId())
             .name(category.getCategoryName())
             .parentName(category.getParentCategory() != null ? category.getParentCategory().getCategoryName() : null)
+            .imageUrl(category.getImage().getUrl())
             .build();
     category.getSubcategories().forEach(sub -> categoryDto.getSubcategories().add(mapToCategoryDto(sub)));
     return categoryDto;
