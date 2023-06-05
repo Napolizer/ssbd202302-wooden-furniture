@@ -1,7 +1,12 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateless;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 
 @Stateless
@@ -11,9 +16,9 @@ public class ProductMapper {
              .id(product.getId())
              .price(product.getPrice())
              .available(product.getAvailable())
-             .image(product.getImage())
              .weight(product.getWeight())
              .amount(product.getAmount())
+             .imageUrl(product.getImageUrl())
              .weightInPackage(product.getWeightInPackage())
              .furnitureDimensions(product.getFurnitureDimensions())
              .packageDimensions(product.getPackageDimensions())
@@ -27,7 +32,6 @@ public class ProductMapper {
         .id(productDto.getId())
         .price(productDto.getPrice())
         .available(productDto.getAvailable())
-        .image(productDto.getImage())
         .weight(productDto.getWeight())
         .amount(productDto.getAmount())
         .weightInPackage(productDto.getWeightInPackage())
@@ -37,4 +41,40 @@ public class ProductMapper {
         .woodType(productDto.getWoodType())
         .build();
   }
+
+  public Product mapToProduct(ProductCreateDto productCreateDto) {
+    return Product.builder()
+            .price(productCreateDto.getPrice())
+            .available(productCreateDto.getAvailable())
+            .weight(productCreateDto.getWeight())
+            .amount(productCreateDto.getAmount())
+            .weightInPackage(productCreateDto.getWeightInPackage())
+            .furnitureDimensions(new Dimensions(productCreateDto.getFurnitureWidth(),
+                    productCreateDto.getFurnitureHeight(),
+                    productCreateDto.getFurnitureDepth()))
+            .packageDimensions(new Dimensions(productCreateDto.getPackageWidth(),
+                    productCreateDto.getPackageHeight(),
+                    productCreateDto.getPackageDepth()))
+            .color(mapToColor(productCreateDto.getColor()))
+            .woodType(mapToWoodType(productCreateDto.getWoodType()))
+            .build();
+  }
+
+  public static Color mapToColor(String color) {
+    try {
+      return Color.valueOf(color.toUpperCase());
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+    }
+  }
+
+  public static WoodType mapToWoodType(String woodType) {
+    try {
+      return WoodType.valueOf(woodType.toUpperCase());
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+    }
+  }
+
+
 }

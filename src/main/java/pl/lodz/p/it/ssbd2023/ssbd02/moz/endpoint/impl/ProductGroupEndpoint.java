@@ -13,13 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.CategoryMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductGroupMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -28,7 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
     LoggerInterceptor.class
 })
 @DenyAll
-public class ProductGroupEndpoint implements ProductGroupEndpointOperations {
+public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGroupEndpointOperations {
 
   @Inject
   private ProductGroupServiceOperations productGroupService;
@@ -36,9 +38,10 @@ public class ProductGroupEndpoint implements ProductGroupEndpointOperations {
   @Override
   @RolesAllowed(EMPLOYEE)
   public ProductGroupInfoDto create(ProductGroupCreateDto entity) {
-    CategoryName category = DtoToEntityMapper.mapStringToCategoryName(entity.getCategoryName());
-    return DtoToEntityMapper.mapProductGroupToProductGroupInfoDto(productGroupService
+    CategoryName category = CategoryMapper.mapToCategoryName(entity.getCategoryName());
+    ProductGroup productGroup = repeatTransactionWithOptimistic(() -> productGroupService
             .create(ProductGroup.builder().name(entity.getName()).build(), category));
+    return ProductGroupMapper.mapToProductGroupInfoDto(productGroup);
   }
 
   @Override
@@ -69,5 +72,10 @@ public class ProductGroupEndpoint implements ProductGroupEndpointOperations {
   @Override
   public List<ProductGroupInfoDto> findAllArchived() {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  protected boolean isLastTransactionRollback() {
+    return productGroupService.isLastTransactionRollback();
   }
 }

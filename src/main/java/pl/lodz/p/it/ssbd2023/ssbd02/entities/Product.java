@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -51,8 +50,8 @@ public class Product extends AbstractEntity {
   @Column(nullable = false)
   private Boolean available;
 
-  @Lob
-  private Byte[] image;
+  @Column(name = "image_url")
+  private String imageUrl;
 
   @Column(nullable = false)
   private Double weight;

@@ -11,4 +11,6 @@ public interface GoogleServiceOperations {
   Account getRegisteredAccountOrCreateNew(String code, String state);
 
   void validateIdToken(String idToken);
+
+  String saveImageInStorage(byte[] image, String fileName);
 }

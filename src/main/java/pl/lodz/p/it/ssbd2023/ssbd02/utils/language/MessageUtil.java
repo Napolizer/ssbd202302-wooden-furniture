@@ -118,7 +118,10 @@ public class MessageUtil {
     public static final String PARENT_CATEGORY_NOT_ALLOWED = "exception.moz.parent.category.not.allowed";
     public static final String PRODUCT_GROUP_ALREADY_EXITS = "exception.moz.product.group.already.exists";
     public static final String PRODUCT_NOT_FOUND = "exception.moz.product.not.found";
+    public static final String PRODUCT_GROUP_NOT_FOUND = "exception.moz.product.group.not.found";
     public static final String ORDER_ALREADY_EXITS = "exception.moz.order.already.exists";
+    public static final String PRODUCT_CREATE_DTO_VALIDATION = "exception.moz.product.create.dto.validation";
+    public static final String INVALID_IMAGE_FILE_FORMAT = "exception.invalid.image.file.format";
     public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
     public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
     public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";

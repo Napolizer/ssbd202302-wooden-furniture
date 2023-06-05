@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -9,13 +11,13 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -47,8 +49,12 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   }
 
   @Override
-  public ProductDto create(CreateProductDto entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public ProductDto create(ProductCreateDto productCreateDto, byte[] image, String fileName) {
+    Product product = productMapper.mapToProduct(productCreateDto);
+    return repeatTransactionWithOptimistic(() ->
+            productMapper.mapToProductDto(productService
+                    .create(product, image, productCreateDto.getProductGroupId(), fileName)));
   }
 
   @Override

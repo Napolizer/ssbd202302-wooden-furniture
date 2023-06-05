@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.CategoryDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.category.CategoryDto;
 
 @Data
 @NoArgsConstructor

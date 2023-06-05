@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.exceptions;
 
+import jakarta.json.JsonObject;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessDeniedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.AccessLevelAlreadyAssignedException;
@@ -33,6 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyObservedException
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -262,7 +264,25 @@ public final class ApplicationExceptionFactory {
     return new ParentCategoryNotAllowedException();
   }
 
+  public static BaseWebApplicationException createProductCreateDtoValidationException(JsonObject body) {
+    return new BaseWebApplicationException(body, Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createProductCreateDtoValidationException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.PRODUCT_CREATE_DTO_VALIDATION,
+            Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createInvalidImageFileFormatException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_IMAGE_FILE_FORMAT,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static ProductNotFoundException createProductNotFoundException() {
     return new ProductNotFoundException();
+  }
+
+  public static ProductGroupNotFoundException createProductGroupNotFoundException() {
+    return new ProductGroupNotFoundException();
   }
 }
