@@ -10,7 +10,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @Local
 public interface ProductServiceOperations {
-  Product create(Product entity, byte[] image, Long productGroupId, String fileName);
+  Product createProductWithNewImage(Product entity, byte[] image, Long productGroupId, String fileName);
+
+  Product createProductWithExistingImage(Product entity, Long productGroupId, Long imageProductId);
 
   Product archive(Long id, Product entity);
 

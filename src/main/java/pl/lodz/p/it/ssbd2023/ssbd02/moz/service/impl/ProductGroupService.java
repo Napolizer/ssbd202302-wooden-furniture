@@ -68,8 +68,9 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   }
 
   @Override
+  @PermitAll
   public List<ProductGroup> findAll() {
-    throw new UnsupportedOperationException();
+    return productGroupFacade.findAll();
   }
 
   @Override

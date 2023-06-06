@@ -6,6 +6,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupNameDto;
 
 @Local
 public interface ProductGroupEndpointOperations {
@@ -19,6 +20,8 @@ public interface ProductGroupEndpointOperations {
   Optional<ProductGroupInfoDto> find(Long id);
 
   List<ProductGroupInfoDto> findAll();
+
+  List<ProductGroupNameDto> findAllNames();
 
   List<ProductGroupInfoDto> findAllPresent();
 

@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -50,10 +51,26 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductDto create(ProductCreateDto productCreateDto, byte[] image, String fileName) {
+  public ProductDto createProductWithNewImage(ProductCreateDto productCreateDto, byte[] image, String fileName) {
     Product product = productMapper.mapToProduct(productCreateDto);
-    return productMapper.mapToProductDto(repeatTransactionWithOptimistic(() -> productService
-                    .create(product, image, productCreateDto.getProductGroupId(), fileName)));
+    return productMapper.mapToProductDto(
+            repeatTransactionWithOptimistic(() ->
+                    productService.createProductWithNewImage(
+                            product,
+                            image,
+                            productCreateDto.getProductGroupId(), fileName)));
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public ProductDto createProductWithExistingImage(ProductCreateWithImageDto productCreateWithImageDto) {
+    Product product = productMapper.mapToProduct(productCreateWithImageDto);
+    return productMapper.mapToProductDto(
+            repeatTransactionWithOptimistic(() ->
+                    productService.createProductWithExistingImage(
+                            product,
+                            productCreateWithImageDto.getProductGroupId(),
+                            productCreateWithImageDto.getImageProductId())));
   }
 
   @Override

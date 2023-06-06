@@ -274,8 +274,13 @@ public final class ApplicationExceptionFactory {
   }
 
   public static BaseWebApplicationException createInvalidImageFileFormatException() {
-    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_IMAGE_FILE_FORMAT,
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INCOMPATIBLE_PRODUCT_IMAGE,
             Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createIncompatibleProductImageException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INCOMPATIBLE_PRODUCT_IMAGE,
+            Response.Status.CONFLICT);
   }
 
   public static ProductNotFoundException createProductNotFoundException() {

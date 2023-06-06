@@ -122,6 +122,7 @@ public class MessageUtil {
     public static final String ORDER_ALREADY_EXITS = "exception.moz.order.already.exists";
     public static final String PRODUCT_CREATE_DTO_VALIDATION = "exception.moz.product.create.dto.validation";
     public static final String INVALID_IMAGE_FILE_FORMAT = "exception.invalid.image.file.format";
+    public static final String INCOMPATIBLE_PRODUCT_IMAGE = "exception.moz.incompatible.product.image";
     public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
     public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
     public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";
