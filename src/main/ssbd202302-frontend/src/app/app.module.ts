@@ -65,6 +65,8 @@ import { EditAccountComponent } from './components/edit-account/edit-account.com
 import { ChangeEmailComponent } from './components/change-email/change-email.component';
 import { AddProductGroupComponent } from './components/add-product-group/add-product-group.component';
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
+import { ProductPageComponent } from './pages/product-page/product-page.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -105,6 +107,7 @@ import { EmployeePageComponent } from './pages/employee-page/employee-page.compo
     EditAccountComponent,
     AddProductGroupComponent,
     EmployeePageComponent,
+    ProductPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -143,7 +146,8 @@ import { EmployeePageComponent } from './pages/employee-page/employee-page.compo
     MatTableModule,
     MatRippleModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatGridListModule
   ],
   providers: [
     DatePipe,

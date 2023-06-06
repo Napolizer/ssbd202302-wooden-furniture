@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateless;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
@@ -8,25 +9,58 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 
 @Stateless
 public class ProductMapper {
+
+
   public ProductDto mapToProductDto(Product product) {
-    return ProductDto.builder()
-             .id(product.getId())
-             .price(product.getPrice())
-             .available(product.getAvailable())
-             .weight(product.getWeight())
-             .amount(product.getAmount())
-             .imageUrl(product.getImage().getUrl())
-             .weightInPackage(product.getWeightInPackage())
-             .furnitureDimensions(product.getFurnitureDimensions())
-             .packageDimensions(product.getPackageDimensions())
-             .color(product.getColor())
-             .woodType(product.getWoodType())
-             .build();
+    if (product.getImage() != null) {
+      return ProductDto.builder()
+              .id(product.getId())
+              .price(product.getPrice())
+              .available(product.getAvailable())
+              .imageUrl(product.getImage().getUrl())
+              .weight(product.getWeight())
+              .amount(product.getAmount())
+              .weightInPackage(product.getWeightInPackage())
+              .furnitureDimensions(product.getFurnitureDimensions())
+              .packageDimensions(product.getPackageDimensions())
+              .color(product.getColor())
+              .woodType(product.getWoodType())
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
+              )
+              .build();
+    } else {
+      return ProductDto.builder()
+              .id(product.getId())
+              .price(product.getPrice())
+              .available(product.getAvailable())
+              .weight(product.getWeight())
+              .amount(product.getAmount())
+              .weightInPackage(product.getWeightInPackage())
+              .furnitureDimensions(product.getFurnitureDimensions())
+              .packageDimensions(product.getPackageDimensions())
+              .color(product.getColor())
+              .woodType(product.getWoodType())
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
+              )
+              .build();
+    }
   }
+
+  public ProductGroupInfoDto mapToProductGroupInfoDto(ProductGroup productGroup) {
+    return ProductGroupInfoDto.builder()
+            .id(productGroup.getId())
+            .name(productGroup.getName())
+            .averageRating(productGroup.getAverageRating())
+            .archive(productGroup.getArchive())
+            .build();
+  }
+
 
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()

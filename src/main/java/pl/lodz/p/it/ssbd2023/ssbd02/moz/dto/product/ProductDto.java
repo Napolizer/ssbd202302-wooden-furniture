@@ -35,7 +35,7 @@ public class ProductDto {
   private Color color;
   @NotNull
   private WoodType woodType;
-  // @NotNull
-  // private ProductGroup productGroup;
+  @NotNull
+  private ProductGroupInfoDto productGroup;
 }
 

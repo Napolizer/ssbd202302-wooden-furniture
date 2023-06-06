@@ -22,6 +22,7 @@ import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect
 import { AccountType } from './enums/account.type';
 import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
+import { ProductPageComponent } from './pages/product-page/product-page.component';
 
 const routes: Routes = [
   {
@@ -175,6 +176,10 @@ const routes: Routes = [
     data: {
       roles: [Role.ADMINISTRATOR]
     }
+  },
+  {
+    path:'products',
+    component:ProductPageComponent
   },
   // IMPORTANT: this route must be the last one
   {
