@@ -161,7 +161,7 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
   }
 
   canAddRole(account: Account): boolean {
-    return account.roles.length < 2;
+    return (this.account.roles.length < 2 && !this.isAdmin());
   }
 
   canChangeRole(account: Account): boolean {
@@ -170,6 +170,10 @@ export class AdminActionsMenuComponent implements OnInit, OnDestroy {
 
   canRemoveRole(account: Account): boolean {
     return account.roles.length > 1;
+  }
+
+  isAdmin(): boolean {
+    return this.account.roles.includes("administrator")
   }
 
   confirmChangePassword(account: Account): void {
