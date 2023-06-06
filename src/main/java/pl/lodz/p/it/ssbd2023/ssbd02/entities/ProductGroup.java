@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -24,7 +26,13 @@ import lombok.experimental.SuperBuilder;
 @Entity(name = "product_group")
 @Table(name = "product_group",
     indexes = @Index(name = "product_group_category_id", columnList = "category_id"))
+@NamedQueries({
+    @NamedQuery(name = ProductGroup.FIND_BY_ID,
+            query = "SELECT productGroup FROM product_group productGroup WHERE productGroup.id = :id"),
+})
 public class ProductGroup extends AbstractEntity {
+
+  public static final String FIND_BY_ID = "ProductGroup.findById";
 
   @Column(nullable = false, unique = true)
   private String name;

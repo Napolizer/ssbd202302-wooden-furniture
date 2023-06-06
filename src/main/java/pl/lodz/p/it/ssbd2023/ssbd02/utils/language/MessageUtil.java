@@ -105,6 +105,8 @@ public class MessageUtil {
     public static final String EMAIL_RESET_PASSWORD_MESSAGE2 = "mok.email.account.reset.password.message2";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_SUBJECT = "mok.email.admin.login.subject";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_MESSAGE = "mok.email.admin.login.message";
+    public static final String EMAIL_ORDER_STATE_CHANGE_SUBJECT = "moz.email.order.state.change.subject";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE = "moz.email.order.state.change.message";
     public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
     public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
@@ -116,5 +118,15 @@ public class MessageUtil {
     public static final String PARENT_CATEGORY_NOT_ALLOWED = "exception.moz.parent.category.not.allowed";
     public static final String PRODUCT_GROUP_ALREADY_EXITS = "exception.moz.product.group.already.exists";
     public static final String PRODUCT_NOT_FOUND = "exception.moz.product.not.found";
+    public static final String PRODUCT_GROUP_NOT_FOUND = "exception.moz.product.group.not.found";
+    public static final String ORDER_ALREADY_EXITS = "exception.moz.order.already.exists";
+    public static final String PRODUCT_CREATE_DTO_VALIDATION = "exception.moz.product.create.dto.validation";
+    public static final String INVALID_IMAGE_FILE_FORMAT = "exception.invalid.image.file.format";
+    public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
+    public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
+    public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";
+    public static final String ORDER_ALREADY_OBSERVED = "exception.moz.order.already.observed";
+
+    public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
   }
 }

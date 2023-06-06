@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.CategoryServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 
 @Stateful
@@ -23,7 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
     LoggerInterceptor.class
 })
 @DenyAll
-public class CategoryService implements CategoryServiceOperations {
+public class CategoryService extends AbstractService implements CategoryServiceOperations {
 
   @Inject
   private CategoryFacadeOperations categoryFacade;

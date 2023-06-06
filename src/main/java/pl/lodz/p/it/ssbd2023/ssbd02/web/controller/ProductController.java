@@ -17,17 +17,23 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.List;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.CreateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.file.FileUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.FormDataMapper;
 
 @Path("/product")
 @Interceptors({SimpleLoggerInterceptor.class})
@@ -40,12 +46,6 @@ public class ProductController {
   private ProductGroupEndpointOperations productGroupEndpoint;
 
 
-
-  @POST
-  public Response create(CreateProductDto entity) {
-    throw new UnsupportedOperationException();
-  }
-
   @PUT
   @Path("/archive/id/{id}")
   public Response archive(@PathParam("id") Long id, UpdateProductDto entity) {
@@ -56,6 +56,19 @@ public class ProductController {
   @Path("/id/{id}")
   public Response update(@PathParam("id") Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
+  }
+
+  @POST
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @RolesAllowed(EMPLOYEE)
+  public Response createProduct(@FormDataParam("product") FormDataBodyPart product,
+                         @FormDataParam("image") InputStream fileInputStream,
+                         @FormDataParam("image") FormDataContentDisposition fileMetaData) {
+    ProductCreateDto productCreateDto =
+            FormDataMapper.mapFormDataBodyPartToProductCreateDto(product);
+    byte[] image = FileUtils.readImageFromFileInputStream(fileInputStream, fileMetaData);
+    return Response.status(Response.Status.CREATED)
+            .entity(productEndpoint.create(productCreateDto, image, fileMetaData.getFileName())).build();
   }
 
   @POST

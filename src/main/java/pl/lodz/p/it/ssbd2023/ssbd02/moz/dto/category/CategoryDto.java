@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto;
+package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.category;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -28,4 +28,7 @@ public class CategoryDto {
 
   @NotNull
   private CategoryName parentName;
+
+  @NotNull
+  private String imageUrl;
 }

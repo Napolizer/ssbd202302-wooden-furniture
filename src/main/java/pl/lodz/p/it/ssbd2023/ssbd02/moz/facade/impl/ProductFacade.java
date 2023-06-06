@@ -1,11 +1,15 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
@@ -15,10 +19,17 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Interceptors({
+    GenericFacadeExceptionsInterceptor.class,
+    LoggerInterceptor.class
+})
+@DenyAll
 public class ProductFacade extends AbstractFacade<Product> implements ProductFacadeOperations {
 
   @PersistenceContext(unitName = "ssbd02mozPU")
@@ -31,6 +42,22 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
   @Override
   protected EntityManager getEntityManager() {
     return em;
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public Product create(Product entity) {
+    Product product = super.create(entity);
+    em.flush();
+    return product;
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public Product update(Product entity) {
+    Product product = super.update(entity);
+    em.flush();
+    return product;
   }
 
   @Override

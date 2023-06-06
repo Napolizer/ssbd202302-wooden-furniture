@@ -35,6 +35,8 @@ public class MailServiceIT {
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
         .addPackages(true, "org.apache")
+        .addPackages(true, "com.google.cloud")
+        .addPackages(true, "com.google.auth")
         .addAsResource(new File("src/test/resources/"), "");
   }
 

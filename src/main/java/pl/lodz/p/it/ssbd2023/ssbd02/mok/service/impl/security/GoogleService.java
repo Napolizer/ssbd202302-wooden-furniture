@@ -1,15 +1,27 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.ws.rs.core.Response;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -18,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -35,12 +48,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.file.FileUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({ LoggerInterceptor.class })
+@DenyAll
 public class GoogleService extends AbstractService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
@@ -55,6 +70,9 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
   private static final String STATE;
   private static final String GRANT_TYPE;
   private static final String RESPONSE_TYPE;
+  private static final String SECRET_FILE_PATH;
+  private static final String STORAGE_URL;
+  private static final String BUCKET_NAME;
 
   static {
     Properties prop = new Properties();
@@ -71,11 +89,16 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
       STATE = prop.getProperty("google.state");
       GRANT_TYPE = prop.getProperty("google.grant.type");
       RESPONSE_TYPE = prop.getProperty("google.response.type");
+      SECRET_FILE_PATH = System.getProperty("user.home") + "/" + prop.getProperty("google.secret.file.name");
+      STORAGE_URL = prop.getProperty("google.storage.url");
+      BUCKET_NAME = prop.getProperty("google.storage.bucket.name");
     } catch (Exception e) {
       throw new RuntimeException("Error loading configuration file: " + e.getMessage());
     }
   }
 
+  @Override
+  @PermitAll
   public String getGoogleOauthLink() {
     try {
       URIBuilder uriBuilder = new URIBuilder(BASE_URI);
@@ -91,6 +114,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @Override
+  @PermitAll
   public Account getRegisteredAccountOrCreateNew(String code, String state) {
     String token = getIdToken(code, state);
     String email = getAccountEmailFromToken(token);
@@ -104,6 +129,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @PermitAll
   private String getIdToken(String code, String state) {
     if (!state.equals(STATE)) {
       throw ApplicationExceptionFactory.createInvalidLinkException();
@@ -138,6 +164,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @PermitAll
   private String getAccountEmailFromToken(String token) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {
@@ -147,6 +174,7 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @PermitAll
   private Account createAccountFromIdTokenClaims(String token) {
     String claims = token.substring(0, token.lastIndexOf('.') + 1);
     try {
@@ -164,6 +192,8 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     }
   }
 
+  @Override
+  @PermitAll
   public void validateIdToken(String idToken) {
     URI uri;
     try {
@@ -185,5 +215,31 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createUnknownErrorException(e);
     }
+  }
+
+  @Override
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  @RolesAllowed(EMPLOYEE)
+  public String saveImageInStorage(byte[] image, String fileName) {
+    Credentials credentials;
+    try {
+      credentials = GoogleCredentials
+              .fromStream(new FileInputStream(SECRET_FILE_PATH));
+    } catch (IOException e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
+    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+
+    String blobName = UUID.randomUUID().toString();
+    BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName)
+            .setContentType(fileName.endsWith(FileUtils.JPG) || fileName.endsWith(FileUtils.JPEG)
+                    ? "image/jpeg" : "image/png")
+            .build();
+    try {
+      storage.create(blobInfo, image);
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
+    return STORAGE_URL + blobName;
   }
 }

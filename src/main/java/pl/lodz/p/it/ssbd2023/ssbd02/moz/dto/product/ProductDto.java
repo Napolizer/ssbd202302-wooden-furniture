@@ -19,7 +19,8 @@ public class ProductDto {
   @NotNull
   private Double price;
   private Boolean available;
-  private String image;
+  @NotNull
+  private String imageUrl;
   @NotNull
   private Double weight;
   @NotNull

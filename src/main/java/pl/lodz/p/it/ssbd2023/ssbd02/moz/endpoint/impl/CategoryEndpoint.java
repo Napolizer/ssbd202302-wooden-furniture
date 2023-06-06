@@ -10,12 +10,13 @@ import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.CategoryDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.category.CategoryDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.CategoryMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.CategoryEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.CategoryServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -24,7 +25,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
     LoggerInterceptor.class
 })
 @DenyAll
-public class CategoryEndpoint implements CategoryEndpointOperations {
+public class CategoryEndpoint extends AbstractEndpoint implements CategoryEndpointOperations {
 
   @Inject
   private CategoryServiceOperations categoryService;
@@ -32,8 +33,8 @@ public class CategoryEndpoint implements CategoryEndpointOperations {
   @Override
   @PermitAll
   public List<CategoryDto> findAllParentCategories() {
-    return categoryService.findAllParentCategories()
-            .stream().map(DtoToEntityMapper::mapCategoryToCategoryDto).toList();
+    return repeatTransactionWithoutOptimistic(() -> categoryService.findAllParentCategories())
+            .stream().map(CategoryMapper::mapToCategoryDto).toList();
   }
 
   @Override
@@ -54,5 +55,10 @@ public class CategoryEndpoint implements CategoryEndpointOperations {
   @Override
   public List<Category> findAllArchived() {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  protected boolean isLastTransactionRollback() {
+    return categoryService.isLastTransactionRollback();
   }
 }

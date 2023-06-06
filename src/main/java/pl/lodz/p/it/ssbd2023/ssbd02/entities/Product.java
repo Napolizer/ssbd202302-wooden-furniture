@@ -2,16 +2,19 @@ package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +29,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
+                  @Index(name = "product_image_id", columnList = "image_id")})
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
@@ -51,8 +56,9 @@ public class Product extends AbstractEntity {
   @Column(nullable = false)
   private Boolean available;
 
-  @Lob
-  private byte[] image;
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinColumn(name = "image_id", nullable = false)
+  private Image image;
 
   @Column(nullable = false)
   private Double weight;

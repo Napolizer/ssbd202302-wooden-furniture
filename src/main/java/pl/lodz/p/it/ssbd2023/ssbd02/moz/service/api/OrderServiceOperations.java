@@ -27,13 +27,15 @@ public interface OrderServiceOperations {
 
   List<Order> findAllArchived();
 
-  Order cancelOrder(Long id);
+  Order cancelOrder(Long id, String hash);
 
-  void observeOrder(Long id);
+  Order observeOrder(Long id, String hash);
 
-  Order changeStateOfOrder(OrderState state);
+  Order changeOrderState(Long id, OrderState state);
 
   void generateReport();
 
   List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+
+  boolean isLastTransactionRollback();
 }

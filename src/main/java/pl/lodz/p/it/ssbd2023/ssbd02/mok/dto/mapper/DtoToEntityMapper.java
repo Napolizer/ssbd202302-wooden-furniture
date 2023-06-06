@@ -9,16 +9,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Company;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Mode;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
@@ -28,8 +25,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.FullNameDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GithubAccountInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.GoogleAccountInfoDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.CategoryDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 public final class DtoToEntityMapper {
@@ -140,6 +135,24 @@ public final class DtoToEntityMapper {
     }
   }
 
+  public static AccessLevel mapStringToAccessLevel(String accessLevel) {
+    switch (accessLevel.toLowerCase()) {
+      case CLIENT -> {
+        return new Client();
+      }
+      case ADMINISTRATOR -> {
+        return new Administrator();
+      }
+      case EMPLOYEE -> {
+        return new Employee();
+      }
+      case SALES_REP -> {
+        return new SalesRep();
+      }
+      default -> throw ApplicationExceptionFactory.createInvalidAccessLevelException();
+    }
+  }
+
   public static GoogleAccountInfoDto mapAccountToGoogleAccountInfoDto(Account account) {
     String login = account.getEmail().split("@")[0];
     String loginCapitalized = login.substring(0, 1).toUpperCase() + login.substring(1);
@@ -189,31 +202,4 @@ public final class DtoToEntityMapper {
       default -> throw ApplicationExceptionFactory.createInvalidModeException();
     }
   }
-
-  public static CategoryDto mapCategoryToCategoryDto(Category category) {
-    CategoryDto categoryDto = CategoryDto.builder()
-            .id(category.getId())
-            .name(category.getCategoryName())
-            .parentName(category.getParentCategory() != null ? category.getParentCategory().getCategoryName() : null)
-            .build();
-    category.getSubcategories().forEach(sub -> categoryDto.getSubcategories().add(mapCategoryToCategoryDto(sub)));
-    return categoryDto;
-  }
-
-  public static CategoryName mapStringToCategoryName(String categoryName) {
-    try {
-      return CategoryName.valueOf(categoryName.toUpperCase());
-    } catch (Exception e) {
-      throw ApplicationExceptionFactory.createCategoryNotFoundException();
-    }
-  }
-
-  public static ProductGroupInfoDto mapProductGroupToProductGroupInfoDto(ProductGroup productGroup) {
-    return ProductGroupInfoDto.builder().id(productGroup.getId())
-            .averageRating(productGroup.getAverageRating())
-            .name(productGroup.getName())
-            .archive(productGroup.getArchive())
-            .category(mapCategoryToCategoryDto(productGroup.getCategory())).build();
-  }
-
 }

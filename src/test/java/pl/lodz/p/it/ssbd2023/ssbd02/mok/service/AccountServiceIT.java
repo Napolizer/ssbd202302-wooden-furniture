@@ -102,6 +102,8 @@ public class AccountServiceIT {
             .addPackages(true, "at.favre.lib")
             .addPackages(true, "io.jsonwebtoken")
             .addPackages(true, "javax.xml.bind")
+            .addPackages(true, "com.google.cloud")
+            .addPackages(true, "com.google.auth")
             .addAsResource(new File("src/test/resources/"), "")
             .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }

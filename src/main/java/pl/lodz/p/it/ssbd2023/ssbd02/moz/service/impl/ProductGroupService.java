@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
@@ -20,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -28,7 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
     LoggerInterceptor.class
 })
 @DenyAll
-public class ProductGroupService implements ProductGroupServiceOperations {
+public class ProductGroupService extends AbstractService implements ProductGroupServiceOperations {
 
   @Inject
   private ProductGroupFacadeOperations productGroupFacade;
@@ -60,8 +62,9 @@ public class ProductGroupService implements ProductGroupServiceOperations {
   }
 
   @Override
+  @PermitAll
   public Optional<ProductGroup> find(Long id) {
-    throw new UnsupportedOperationException();
+    return productGroupFacade.find(id);
   }
 
   @Override

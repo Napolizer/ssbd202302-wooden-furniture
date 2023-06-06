@@ -55,7 +55,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       .subscribe((products) => {
         this.products = products.map((product) => ({
           ...product,
-          image: this.getImageSrc(product.image),
+          image: this.getImageSrc(product.imageUrl),
         }));
 
         this.loading = false;
@@ -101,11 +101,11 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     const binaryString = atob(base64String);
     const length = binaryString.length;
     const byteArray = new Uint8Array(length);
-  
+
     for (let i = 0; i < length; i++) {
       byteArray[i] = binaryString.charCodeAt(i);
     }
-  
+
     return byteArray;
   }
 
@@ -122,19 +122,19 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     const fullStars = Math.floor(averageRating);
     const halfStars = Math.ceil(averageRating - fullStars);
     const emptyStars = 5 - fullStars - halfStars;
-  
+
     for (let i = 0; i < fullStars; i++) {
       starArray.push('star');
     }
-  
+
     for (let i = 0; i < halfStars; i++) {
       starArray.push('star_half');
     }
-  
+
     for (let i = 0; i < emptyStars; i++) {
       starArray.push('star_border');
     }
-  
+
     return starArray;
   }
 }

@@ -11,7 +11,7 @@ export interface Product {
     furnitureDimensions: FurnitureDimensions,
     packageDimensions: PackageDimensions,
     price: number,
-    image: string;
+    imageUrl: string;
     weight: number,
     weightInPackage: number,
     woodType: string;

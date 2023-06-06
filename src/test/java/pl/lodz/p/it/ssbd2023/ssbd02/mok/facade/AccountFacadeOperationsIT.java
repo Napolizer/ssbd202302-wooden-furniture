@@ -65,6 +65,8 @@ public class AccountFacadeOperationsIT {
         .addPackages(true, "org.hamcrest")
         .addPackages(true, "io.jsonwebtoken")
         .addPackages(true, "org.apache")
+        .addPackages(true, "com.google.cloud")
+        .addPackages(true, "com.google.auth")
         .addAsResource(new File("src/test/resources/"), "")
         .addAsWebInfResource(new File("src/test/resources/WEB-INF/glassfish-web.xml"), "glassfish-web.xml");
   }

@@ -3,4 +3,5 @@ export interface Category {
   name: string;
   subcategories: Category[];
   parentName: string;
+  imageUrl: string;
 }
