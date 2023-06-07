@@ -128,5 +128,6 @@ public class MessageUtil {
     public static final String ORDER_ALREADY_OBSERVED = "exception.moz.order.already.observed";
 
     public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
+    public static final String PRODUCT_ALREADY_RATED = "exception.moz.product.rate.exists";
   }
 }

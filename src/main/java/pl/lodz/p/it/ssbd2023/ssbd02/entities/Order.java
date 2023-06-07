@@ -1,7 +1,18 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +36,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 })
 @NamedQuery(
         name = Order.FIND_CLIENTS_DELIVERED_ORDERS,
-        query = "SELECT o FROM sales_order o" +
-                " WHERE o.account.id = :id " +
-                "AND (o.orderState = pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.COMPLETED" +
-                " OR o.orderState = pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.DELIVERED)"
+        query = "SELECT o FROM sales_order o"
+                + " WHERE o.account.id = :id "
+                + "AND (o.orderState = pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.COMPLETED"
+                + " OR o.orderState = pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.DELIVERED)"
 )
 public class Order extends AbstractEntity {
   public static final String FIND_CLIENTS_DELIVERED_ORDERS = "Order.findClientsDeliveredOrders";
