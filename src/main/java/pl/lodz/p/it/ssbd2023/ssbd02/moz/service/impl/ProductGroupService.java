@@ -54,8 +54,17 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public ProductGroup archive(Long id) {
-    throw new UnsupportedOperationException();
+    ProductGroup productGroup = productGroupFacade.findById(id)
+        .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+    if (!productGroup.getArchive().equals(false)) {
+      throw ApplicationExceptionFactory.createProductGroupAlreadyArchivedException();
+    }
+
+    productGroup.setArchive(true);
+    return productGroupFacade.update(productGroup);
   }
 
   @Override

@@ -81,10 +81,12 @@ public class ProductController {
             .entity(productGroupEndpoint.create(productGroupCreateDto)).build();
   }
 
-  @POST
+  @PUT
   @Path("/group/archive/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
   public Response archiveProductGroup(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+    return Response.ok(productGroupEndpoint.archive(id)).build();
   }
 
   @PUT
