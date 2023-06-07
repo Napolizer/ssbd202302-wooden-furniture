@@ -11,7 +11,7 @@ public interface RateServiceOperations {
 
   void delete(Long id);
 
-  Rate create(Rate entity);
+  Rate create(String login, Integer rateValue, Long productId);
 
   Rate archive(Long id, Rate entity);
 

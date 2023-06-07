@@ -29,7 +29,7 @@ import lombok.experimental.SuperBuilder;
 @NamedQueries({@NamedQuery(name = Rate.FIND_ALL_BY_VALUE,
     query = "SELECT rate from Rate rate WHERE rate.value = :value"),
     @NamedQuery(name = Rate.FIND_ALL_BY_PERSON_ID,
-        query = "SELECT rate from Rate rate WHERE rate.person.id = :personId")}
+        query = "SELECT rate from Rate rate WHERE rate.account.id = :personId")}
 )
 public class Rate extends AbstractEntity {
 
@@ -42,6 +42,6 @@ public class Rate extends AbstractEntity {
   private Integer value;
 
   @ManyToOne
-  @JoinColumn(name = "person_id", nullable = false)
-  private Person person;
+  @JoinColumn(name = "account_id", nullable = false)
+  private Account account;
 }
