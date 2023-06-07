@@ -116,6 +116,15 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
     throw new UnsupportedOperationException();
   }
 
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<OrderDto> findDeliveredCustomerOrders(Long accountId) {
+    return orderService.findDeliveredCustomerOrders(accountId).stream()
+            .map(orderMapper::mapToOrderDto)
+            .toList();
+  }
+
   @Override
   protected boolean isLastTransactionRollback() {
     return orderService.isLastTransactionRollback();

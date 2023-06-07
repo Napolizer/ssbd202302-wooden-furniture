@@ -141,4 +141,10 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<Order> findDeliveredCustomerOrders(Long accountId) {
+    return orderFacade.findDeliveredCustomerOrders(accountId);
+  }
 }

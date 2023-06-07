@@ -23,6 +23,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 
+import java.util.List;
+
 
 @Path("/order")
 public class OrderController {
@@ -134,5 +136,13 @@ public class OrderController {
   @Path("/statistics")
   public Response getStatistics(TimePeriodDto timePeriod) {
     throw new UnsupportedOperationException();
+  }
+
+  @GET
+  @Path("/delivered/account/{id}")
+  @RolesAllowed(CLIENT)
+  public Response findDeliveredCustomerOrders(@PathParam("id") Long id) {
+    List<OrderDto> clientOrders = orderEndpoint.findDeliveredCustomerOrders(id);
+    return Response.ok(clientOrders).build();
   }
 }
