@@ -38,4 +38,6 @@ public interface OrderServiceOperations {
   List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
 
   boolean isLastTransactionRollback();
+
+  List<Order> findDeliveredCustomerOrders(Long accountId);
 }

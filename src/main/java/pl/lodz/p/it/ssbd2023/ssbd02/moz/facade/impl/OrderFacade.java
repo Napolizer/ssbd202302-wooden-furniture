@@ -50,6 +50,14 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
 
   @Override
   @RolesAllowed(CLIENT)
+  public List<Order> findDeliveredCustomerOrders(Long accountId) {
+    return getEntityManager().createNamedQuery(Order.FIND_CLIENTS_DELIVERED_ORDERS, Order.class)
+            .setParameter("id", accountId)
+            .getResultList();
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
   public Order create(Order entity) {
     Order order = super.create(entity);
     em.flush();
