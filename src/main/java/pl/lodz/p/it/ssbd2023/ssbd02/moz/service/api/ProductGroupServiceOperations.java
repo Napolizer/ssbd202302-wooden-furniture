@@ -15,7 +15,7 @@ public interface ProductGroupServiceOperations {
 
   ProductGroup archive(Long id);
 
-  ProductGroup update(Long id, ProductGroup entity);
+  ProductGroup editProductGroupName(Long id, String name, String hash);
 
   Optional<ProductGroup> find(Long id);
 

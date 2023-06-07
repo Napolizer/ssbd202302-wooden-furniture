@@ -10,6 +10,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
@@ -21,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateful
@@ -57,8 +59,17 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   }
 
   @Override
-  public ProductGroup update(Long id, ProductGroup entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public ProductGroup editProductGroupName(Long id, String name, String hash) {
+    ProductGroup productGroup = productGroupFacade.findById(id)
+        .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+    if (!CryptHashUtils.verifyVersion(productGroup.getVersion(), hash)) {
+      throw new OptimisticLockException();
+    }
+
+    productGroup.setName(name);
+    return productGroupFacade.update(productGroup);
   }
 
   @Override
