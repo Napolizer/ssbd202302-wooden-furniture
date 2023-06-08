@@ -25,19 +25,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.NipAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyCancelledException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyInDeliveryException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyObservedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyRatedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
@@ -295,5 +283,10 @@ public final class ApplicationExceptionFactory {
   public static ProductAlreadyRatedException createProductAlreadyRatedException() {
     return new ProductAlreadyRatedException(MessageUtil.MessageKey.PRODUCT_ALREADY_RATED,
             Response.Status.CONFLICT);
+  }
+
+  public static RateNotFoundException createRateNotFoundException() {
+    return new RateNotFoundException(MessageUtil.MessageKey.RATE_NOT_FOUND,
+            Response.Status.NOT_FOUND);
   }
 }

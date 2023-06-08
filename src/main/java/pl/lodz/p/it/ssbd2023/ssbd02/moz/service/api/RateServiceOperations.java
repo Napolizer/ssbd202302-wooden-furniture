@@ -9,7 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 @Local
 public interface RateServiceOperations {
 
-  void delete(Long id);
+  void delete(Long id, String login);
 
   Rate create(String login, Integer rateValue, Long productId);
 

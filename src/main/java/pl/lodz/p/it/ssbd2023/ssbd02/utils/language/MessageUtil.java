@@ -130,5 +130,6 @@ public class MessageUtil {
 
     public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
     public static final String PRODUCT_ALREADY_RATED = "exception.moz.product.rate.exists";
+    public static final String RATE_NOT_FOUND = "exception.moz.rate.notfound";
   }
 }

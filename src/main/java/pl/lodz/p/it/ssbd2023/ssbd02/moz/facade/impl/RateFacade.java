@@ -34,8 +34,9 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
   }
 
   @Override
-  public void delete(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public void delete(Rate rate) {
+    em.remove(em.merge(rate));
   }
 
   @Override
