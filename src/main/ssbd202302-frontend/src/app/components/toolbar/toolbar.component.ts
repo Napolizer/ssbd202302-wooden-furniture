@@ -71,6 +71,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.navigationService.redirectToEmployeePage();
   }
 
+  redirectToClientPage(): void {
+    this.breadcrumbs=['toolbar.home','toolbar.clientPanel']
+    this.navigationService.redirectToClientPage();
+  }
+
   redirectToAccountPage(): void {
     this.breadcrumbs=['toolbar.home','toolbar.myAccount']
     void this.navigationService.redirectToOwnAccountPage();
@@ -96,6 +101,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isUserEmployee(): boolean {
     return this.authenticationService.isCurrentRole(Role.EMPLOYEE);
+  }
+
+  isUserClient(): boolean {
+    return this.authenticationService.isCurrentRole(Role.CLIENT);
   }
 
   isCurrentlyOnLoginPage(): boolean {

@@ -250,6 +250,7 @@
   "toolbar.home": "Strona Domowa",
   "toolbar.adminPanel": "Panel Administracyjny",
   "toolbar.employeePanel": "Panel Pracownika",
+  "toolbar.clientPanel": "Panel Klienta",
   "toolbar.myAccount": "Moje konto",
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",

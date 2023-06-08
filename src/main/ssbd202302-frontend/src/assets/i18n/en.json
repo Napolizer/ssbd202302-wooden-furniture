@@ -241,7 +241,7 @@
   "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
 
   "exception.moz.product.group.already.exists": "Product group with given name already exists",
-  
+
   "role.administrator": "Administrator",
   "role.employee": "Employee",
   "role.sales_rep": "Sales Representative",
@@ -251,6 +251,7 @@
   "toolbar.home": "Home Page",
   "toolbar.adminPanel": "Admin Panel",
   "toolbar.employeePanel": "Employee Panel",
+  "toolbar.clientPanel": "Client Panel",
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
