@@ -111,6 +111,24 @@
   "add.product.group.back": "Back",
   "add.product.group.confirm": "Add",
   "add.product.group.success": "Product group has been successfully added",
+  "add.product.group.hint.max.50": "Max 50 characters",
+
+  "add.product.validity.notexisting": "The specified product group does not exist",
+  "add.product.category": "Category",
+  "add.product.wood.type": "Wood type",
+  "add.product.color": "Color",
+  "add.product.hint.max.3": "Max 3 digits",
+  "add.product.hint.max.6": "Max 6 digits",
+  "add.product.furniture.details": "Furniture details",
+  "add.product.quantity.price": "Quantity & price",
+  "add.product.furniture.dimensions": "Furniture dimensions",
+  "add.product.package.dimensions": "Package dimensions",
+  "add.product.width": "Width",
+  "add.product.height": "Height",
+  "add.product.depth": "Depth",
+  "add.product.weight": "Weight",
+  "add.product.quantity": "Quantity",
+  "add.product.price": "Price",
 
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
@@ -301,6 +319,7 @@
   "admin.create.account": "Create account",
 
   "employee.add.product.group": "Add product group",
+  "employee.add.product": "Add product",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.firstPageLabel": "First page",
@@ -326,5 +345,20 @@
   "ARMCHAIR": "Armchair",
   "TABLE": "Table",
   "ROUND_TABLE": "Round table",
-  "RECTANGULAR_TABLE": "Rectangular table"
+  "RECTANGULAR_TABLE": "Rectangular table",
+
+  "product.wood.type.birch": "Birch",
+  "product.wood.type.oak": "Oak",
+  "product.wood.type.dark.oak": "Dark oak",
+  "product.wood.type.spruce": "Spruce",
+  "product.wood.type.jungle": "Jungle wood",
+  "product.wood.type.acacia": "Acacia",
+
+  "product.color.black": "Black",
+  "product.color.red": "Red",
+  "product.color.green": "Green",
+  "product.color.blue": "Blue",
+  "product.color.brown": "Brown",
+  "product.color.white": "White"
+
 }

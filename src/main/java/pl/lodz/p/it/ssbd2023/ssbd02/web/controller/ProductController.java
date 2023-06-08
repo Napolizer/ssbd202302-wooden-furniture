@@ -120,13 +120,6 @@ public class ProductController {
   }
 
   @GET
-  @Path("/group/name")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response findAllProductGroupNames() {
-    return Response.ok(productGroupEndpoint.findAllNames()).build();
-  }
-
-  @GET
   @Path("/present")
   public Response findAllPresent() {
     throw new UnsupportedOperationException();
@@ -146,8 +139,9 @@ public class ProductController {
 
   @GET
   @Path("/group")
+  @Produces(MediaType.APPLICATION_JSON)
   public Response findAllGroups() {
-    throw new UnsupportedOperationException();
+    return Response.ok(productGroupEndpoint.findAll()).build();
   }
 
   @GET

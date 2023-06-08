@@ -1,0 +1,416 @@
+<h1 mat-dialog-title>{{ "employee.add.product" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <app-spinner [loading]="loading"></app-spinner>
+
+  <div class="left-panel">
+    <form class="form-container" [formGroup]="addProductForm">
+      <div class="form">
+        <h4 class="furniture-details-label">
+          {{ "add.product.furniture.details" | translate }}
+        </h4>
+        <mat-divider></mat-divider>
+
+        <mat-form-field
+          class="product-group-input"
+          appearance="fill"
+          hintLabel="{{ 'add.product.group.hint.max.50' | translate }}"
+        >
+          <mat-label>{{ "add.product.group.name" | translate }}</mat-label>
+          <input
+            type="text"
+            matInput
+            #productGroupName
+            formControlName="productGroupName"
+            [matAutocomplete]="auto"
+            required
+          />
+          <mat-error
+            *ngIf="addProductForm.get('productGroupName')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              addProductForm
+                .get('productGroupName')
+                ?.hasError('invalidProductGroup')
+            "
+            >{{ "add.product.validity.notexisting" | translate }}</mat-error
+          >
+          <mat-hint align="end"
+            >{{ productGroupName.value.length }}/50</mat-hint
+          >
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let option of filteredOptions | async"
+              [value]="option.name"
+              style="font-size: 15px"
+            >
+              <div style="display: flex; justify-content: space-between">
+                <span>{{ option.name }}</span>
+                <small style="font-size: 10px">{{
+                  option.categoryName | translate
+                }}</small>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <div class="select">
+          <mat-form-field appearance="fill" class="input">
+            <mat-label>{{ "add.product.wood.type" | translate }}</mat-label>
+            <mat-select required formControlName="woodType">
+              <mat-option
+                *ngFor="let woodType of woodTypes"
+                [value]="woodType.value"
+              >
+                {{ woodType.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="addProductForm.get('woodType')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="input">
+            <mat-label>{{ "add.product.color" | translate }}</mat-label>
+            <mat-select required formControlName="color">
+              <mat-option *ngFor="let color of colors" [value]="color.value">
+                {{ color.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="addProductForm.get('color')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <h4 class="furniture-dimensions-label">
+          {{ "add.product.furniture.dimensions" | translate }}
+        </h4>
+        <mat-divider></mat-divider>
+        <div class="furniture-dimensions">
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.3' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.width" | translate }}</mat-label>
+            <input
+              matInput
+              #furnitureWidth
+              placeholder="cm"
+              type="number"
+              formControlName="furnitureWidth"
+              min="1"
+              max="999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 3);"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('furnitureWidth')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('furnitureWidth')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ furnitureWidth.value.length }}/3</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.3' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.height" | translate }}</mat-label>
+            <input
+              matInput
+              #furnitureHeight
+              placeholder="cm"
+              type="number"
+              formControlName="furnitureHeight"
+              min="1"
+              max="999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 3);"
+              required
+            />
+            <mat-error
+              *ngIf="
+                addProductForm.get('furnitureHeight')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('furnitureHeight')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end"
+              >{{ furnitureHeight.value.length }}/3</mat-hint
+            >
+          </mat-form-field>
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.3' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.depth" | translate }}</mat-label>
+            <input
+              matInput
+              #furnitureDepth
+              placeholder="cm"
+              type="number"
+              formControlName="furnitureDepth"
+              min="1"
+              max="999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 3);"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('furnitureDepth')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('furnitureDepth')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ furnitureDepth.value.length }}/3</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.4' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.weight" | translate }}</mat-label>
+            <input
+              matInput
+              #weight
+              placeholder="kg"
+              type="number"
+              formControlName="weight"
+              min="1"
+              max="9999"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('weight')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error *ngIf="addProductForm.get('weight')?.hasError('min')">{{
+              "register.validity.number.min" | translate
+            }}</mat-error>
+            <mat-hint align="end">{{ weight.value.length }}/4</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <h4 class="package-dimensions-label">
+          {{ "add.product.package.dimensions" | translate }}
+        </h4>
+        <mat-divider></mat-divider>
+        <div class="package-dimensions">
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.3' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.width" | translate }}</mat-label>
+            <input
+              matInput
+              #packageWidth
+              placeholder="cm"
+              type="number"
+              formControlName="packageWidth"
+              min="1"
+              max="999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 3);"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('packageWidth')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('packageWidth')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ packageWidth.value.length }}/3</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.3' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.height" | translate }}</mat-label>
+            <input
+              matInput
+              #packageHeight
+              placeholder="cm"
+              type="number"
+              formControlName="packageHeight"
+              min="1"
+              max="999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 3);"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('packageHeight')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('packageHeight')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ packageHeight.value.length }}/3</mat-hint>
+          </mat-form-field>
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.3' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.depth" | translate }}</mat-label>
+            <input
+              matInput
+              #packageDepth
+              placeholder="cm"
+              type="number"
+              formControlName="packageDepth"
+              min="1"
+              max="999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 3);"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('packageDepth')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('packageDepth')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ packageDepth.value.length }}/3</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.4' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.weight" | translate }}</mat-label>
+            <input
+              matInput
+              #weightInPackage
+              placeholder="kg"
+              type="number"
+              formControlName="weightInPackage"
+              min="1"
+              max="9999"
+              required
+            />
+            <mat-error
+              *ngIf="
+                addProductForm.get('weightInPackage')?.hasError('required')
+              "
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('weightInPackage')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end"
+              >{{ weightInPackage.value.length }}/4</mat-hint
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="button-container">
+          <button mat-button type="button" mat-dialog-close>
+            {{ "add.product.group.back" | translate }}
+          </button>
+          <button mat-button type="submit" (click)="onConfirm()">
+            {{ "add.product.group.confirm" | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="center-panel"></div>
+
+  <div class="right-panel">
+    <h4 class="furniture-details-label">
+      {{ "add.product.quantity.price" | translate }}
+    </h4>
+    <mat-divider></mat-divider>
+    <form class="form-container" [formGroup]="addProductForm">
+      <div class="form">
+        <div class="select">
+          <mat-form-field
+            hintLabel="{{ 'register.hint.max.4' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.quantity" | translate }}</mat-label>
+            <input
+              matInput
+              #quantity
+              type="number"
+              formControlName="quantity"
+              min="1"
+              max="9999"
+              digitOnly
+              oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 4);"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('quantity')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error
+              *ngIf="addProductForm.get('quantity')?.hasError('min')"
+              >{{ "register.validity.number.min" | translate }}</mat-error
+            >
+            <mat-hint align="end">{{ quantity.value.length }}/4</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field
+            hintLabel="{{ 'add.product.hint.max.6' | translate }}"
+            appearance="fill"
+            class="input"
+          >
+            <mat-label>{{ "add.product.price" | translate }}</mat-label>
+            <input
+              matInput
+              #price
+              placeholder="PLN"
+              type="number"
+              formControlName="price"
+              min="1"
+              max="999999"
+              required
+            />
+            <mat-error
+              *ngIf="addProductForm.get('price')?.hasError('required')"
+              >{{ "register.validity.required" | translate }}</mat-error
+            >
+            <mat-error *ngIf="addProductForm.get('price')?.hasError('min')">{{
+              "register.validity.number.min" | translate
+            }}</mat-error>
+            <mat-hint align="end">{{ price.value.length }}/6</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <img
+      src="https://storage.googleapis.com/furniture-store-images/ee85e2fb-54b5-4616-8fd6-82988ba1b366"
+    />
+  </div>
+</div>

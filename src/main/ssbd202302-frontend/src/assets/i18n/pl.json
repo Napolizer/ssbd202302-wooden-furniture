@@ -111,7 +111,25 @@
   "add.product.group.back": "Powrót",
   "add.product.group.confirm": "Dodaj",
   "add.product.group.success": "Grupa produktów została pomyślnie dodana",
+  "add.product.group.hint.max.50": "Maksymalnie 50 znaków",
 
+  "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "add.product.category": "Kategoria",
+  "add.product.wood.type": "Rodzaj drewna",
+  "add.product.color": "Kolor",
+  "add.product.hint.max.3": "Maksymalnie 3 cyfry",
+  "add.product.hint.max.6": "Maksymalnie 6 cyfr",
+  "add.product.furniture.details": "Szczegóły produktu",
+  "add.product.quantity.price": "Liczba sztuk i cena",
+  "add.product.furniture.dimensions": "Wymiary mebla",
+  "add.product.package.dimensions": "Wymiary paczki",
+  "add.product.width": "Szerokość",
+  "add.product.height": "Wysokość",
+  "add.product.depth": "Głębokość",
+  "add.product.weight": "Waga",
+  "add.product.quantity": "Liczba sztuk",
+  "add.product.price": "Cena",
+  
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
   "reset.password.confirmNewPassword": "Powtórz nowe hasło",
@@ -324,5 +342,19 @@
   "ARMCHAIR": "Fotel",
   "TABLE": "Stół",
   "ROUND_TABLE": "Stół okrągły",
-  "RECTANGULAR_TABLE": "Stół prostokątny"
+  "RECTANGULAR_TABLE": "Stół prostokątny",
+
+  "product.wood.type.birch": "Brzoza",
+  "product.wood.type.oak": "Dąb",
+  "product.wood.type.dark.oak": "Ciemny dąb",
+  "product.wood.type.spruce": "Świerk",
+  "product.wood.type.jungle": "Drewno tropikalne",
+  "product.wood.type.acacia": "Akacja",
+
+  "product.color.black": "Czarny",
+  "product.color.red": "Czerwony",
+  "product.color.green": "Zielony",
+  "product.color.blue": "Niebieski",
+  "product.color.brown": "Brązowy",
+  "product.color.white": "Biały"
 }

@@ -4,6 +4,7 @@ import { ProductGroupCreate } from '../interfaces/product.group.create';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TokenService } from './token.service';
+import { ProductGroup } from '../interfaces/product.group';
 import { Product } from '../interfaces/product';
 
 @Injectable({
@@ -32,5 +33,11 @@ export class ProductService {
 
   public retrieveAllProducts(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product`);
+  }
+
+  public retrieveAllProductGroupNames(): Observable<ProductGroup[]> {
+    return this.httpClient.get<ProductGroup[]>(
+      `${environment.apiBaseUrl}/product/group`
+    );
   }
 }

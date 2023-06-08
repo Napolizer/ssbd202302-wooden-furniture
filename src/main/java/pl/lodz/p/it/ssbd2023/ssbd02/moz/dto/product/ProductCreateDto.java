@@ -34,27 +34,27 @@ public class ProductCreateDto {
 
   @Positive
   @NotNull
-  private Double furnitureWidth;
+  private Integer furnitureWidth;
 
   @Positive
   @NotNull
-  private Double furnitureHeight;
+  private Integer furnitureHeight;
 
   @Positive
   @NotNull
-  private Double furnitureDepth;
+  private Integer furnitureDepth;
 
   @Positive
   @NotNull
-  private Double packageWidth;
+  private Integer packageWidth;
 
   @Positive
   @NotNull
-  private Double packageHeight;
+  private Integer packageHeight;
 
   @Positive
   @NotNull
-  private Double packageDepth;
+  private Integer packageDepth;
 
   @NotNull
   private String color;
