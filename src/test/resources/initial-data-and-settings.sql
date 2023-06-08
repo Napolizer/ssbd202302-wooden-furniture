@@ -9,9 +9,11 @@ GRANT SELECT,INSERT,DELETE ON TABLE employee TO ssbd02mok;
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE person TO ssbd02mok;
 GRANT SELECT,INSERT,DELETE ON TABLE sales_rep TO ssbd02mok;
 
+GRANT SELECT ON TABLE access_level TO ssbd02moz;
 GRANT SELECT ON TABLE account TO ssbd02moz;
 GRANT SELECT ON TABLE address TO ssbd02moz;
 GRANT SELECT ON TABLE category TO ssbd02moz;
+GRANT SELECT ON TABLE client TO ssbd02moz;
 GRANT SELECT ON TABLE image TO ssbd02moz;
 GRANT SELECT ON TABLE person TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE product TO ssbd02moz;
@@ -332,5 +334,5 @@ INSERT INTO product (id, amount, archive, product_state, color, created_at, imag
 -- Orders
 INSERT INTO sales_order (id, archive, created_at, observed, order_state, updated_at, version, account_id, created_by, recipient_id, updated_by, delivery_address_id) VALUES (1, false, now(), false, 'CREATED', NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM person WHERE first_name = 'Adam'), NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
 INSERT INTO sales_order_product (order_id, product_id) VALUES (1, 113);
-INSERT INTO sales_order (id, archive, created_at, observed, order_state, updated_at, version, account_id, created_by, recipient_id, updated_by, delivery_address_id) VALUES (2, false, now(), false, 'DELIVERED', NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM person WHERE first_name = 'Steve'), NULL, (SELECT id FROM address WHERE street = 'Politechniki'));
+INSERT INTO sales_order (id, archive, created_at, observed, order_state, updated_at, version, account_id, created_by, recipient_id, updated_by, delivery_address_id) VALUES (2, true, now(), false, 'DELIVERED', NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM person WHERE first_name = 'Steve'), NULL, (SELECT id FROM address WHERE street = 'Politechniki'));
 INSERT INTO sales_order_product (order_id, product_id) VALUES (2, 114);
