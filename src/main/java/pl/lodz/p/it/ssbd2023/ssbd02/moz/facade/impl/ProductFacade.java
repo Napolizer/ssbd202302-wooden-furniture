@@ -100,4 +100,14 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
       return Optional.empty();
     }
   }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType) {
+    return em.createNamedQuery(Product.FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE, Product.class)
+            .setParameter("productGroupId", productGroupId)
+            .setParameter("color", color)
+            .setParameter("woodType", woodType)
+            .getResultList();
+  }
 }

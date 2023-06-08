@@ -120,6 +120,17 @@ public class ProductController {
   }
 
   @GET
+  @Path("/search")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllByProductGroupColorAndWoodType(
+          @QueryParam("productGroupId") Long productGroupId,
+          @QueryParam("color") String color,
+          @QueryParam("woodType") String woodType) {
+    return Response.ok(productEndpoint.findAllByProductGroupColorAndWoodType(productGroupId, color, woodType))
+            .build();
+  }
+
+  @GET
   @Path("/present")
   public Response findAllPresent() {
     throw new UnsupportedOperationException();

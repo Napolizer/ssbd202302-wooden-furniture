@@ -76,7 +76,7 @@ public class ProductMapper {
         .build();
   }
 
-  public Product mapToProduct(ProductCreateDto productCreateDto) {
+  public static Product mapToProduct(ProductCreateDto productCreateDto) {
     return Product.builder()
             .price(productCreateDto.getPrice())
             .available(productCreateDto.getAvailable())
@@ -96,18 +96,24 @@ public class ProductMapper {
   }
 
   public static Color mapToColor(String color) {
+    if (color == null) {
+      return null;
+    }
     try {
       return Color.valueOf(color.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidColorException();
     }
   }
 
   public static WoodType mapToWoodType(String woodType) {
+    if (woodType == null) {
+      return null;
+    }
     try {
       return WoodType.valueOf(woodType.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidWoodTypeException();
     }
   }
 

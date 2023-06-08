@@ -34,5 +34,7 @@ public interface ProductServiceOperations {
 
   List<Product> findAllByPrice(Double minPrice, Double maxPrice);
 
+  List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType);
+
   boolean isLastTransactionRollback();
 }

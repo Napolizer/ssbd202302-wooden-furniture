@@ -52,7 +52,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @Override
   @RolesAllowed(EMPLOYEE)
   public ProductDto createProductWithNewImage(ProductCreateDto productCreateDto, byte[] image, String fileName) {
-    Product product = productMapper.mapToProduct(productCreateDto);
+    Product product = ProductMapper.mapToProduct(productCreateDto);
     return productMapper.mapToProductDto(
             repeatTransactionWithOptimistic(() ->
                     productService.createProductWithNewImage(
@@ -64,7 +64,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @Override
   @RolesAllowed(EMPLOYEE)
   public ProductDto createProductWithExistingImage(ProductCreateWithImageDto productCreateWithImageDto) {
-    Product product = productMapper.mapToProduct(productCreateWithImageDto);
+    Product product = ProductMapper.mapToProduct(productCreateWithImageDto);
     return productMapper.mapToProductDto(
             repeatTransactionWithOptimistic(() ->
                     productService.createProductWithExistingImage(
@@ -118,6 +118,16 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @Override
   public List<ProductDto> findAllByPrice(Double minPrice, Double maxPrice) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @PermitAll
+  public List<ProductDto> findAllByProductGroupColorAndWoodType(Long productGroupId, String color, String woodType) {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAllByProductGroupColorAndWoodType(
+            productGroupId,
+            ProductMapper.mapToColor(color),
+            ProductMapper.mapToWoodType(woodType)))
+            .stream().map(productMapper::mapToProductDto).toList();
   }
 
   @Override

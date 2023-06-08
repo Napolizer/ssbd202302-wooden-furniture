@@ -273,8 +273,18 @@ public final class ApplicationExceptionFactory {
             Response.Status.BAD_REQUEST);
   }
 
+  public static BaseWebApplicationException createInvalidColorException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_COLOR,
+            Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createInvalidWoodTypeException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_WOOD_TYPE,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static BaseWebApplicationException createInvalidImageFileFormatException() {
-    return new BaseWebApplicationException(MessageUtil.MessageKey.INCOMPATIBLE_PRODUCT_IMAGE,
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_IMAGE_FILE_FORMAT,
             Response.Status.BAD_REQUEST);
   }
 

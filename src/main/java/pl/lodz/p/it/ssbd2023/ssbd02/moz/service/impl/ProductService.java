@@ -122,4 +122,10 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   public List<Product> findAllByPrice(Double minPrice, Double maxPrice) {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType) {
+    return productFacade.findAllByProductGroupColorAndWoodType(productGroupId, color, woodType);
+  }
 }

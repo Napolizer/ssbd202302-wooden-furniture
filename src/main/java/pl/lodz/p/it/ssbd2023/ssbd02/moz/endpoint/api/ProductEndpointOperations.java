@@ -34,4 +34,7 @@ public interface ProductEndpointOperations {
   List<ProductDto> findAllAvailable();
 
   List<ProductDto> findAllByPrice(Double minPrice, Double maxPrice);
+
+  List<ProductDto> findAllByProductGroupColorAndWoodType(Long productGroupId, String color, String woodType);
+
 }
