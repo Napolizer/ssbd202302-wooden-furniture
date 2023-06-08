@@ -129,6 +129,8 @@
   "add.product.weight": "Weight",
   "add.product.quantity": "Quantity",
   "add.product.price": "Price",
+  "add.product.drop.upload.label": "Drag and drop here to upload an image",
+  "add.product.drop.fill.label": "Add furniture details to upload an image",
 
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
@@ -215,6 +217,7 @@
   "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
   "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
+  "dialog.add.product.message": "Are you sure you want to add new product?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -257,9 +260,10 @@
   "exception.password.already.used": "Password has already been used",
   "exception.current.password.invalid": "Current password is invalid",
   "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
-
   "exception.moz.product.group.already.exists": "Product group with given name already exists",
-  
+  "exception.invalid.image.file.format": "The selected file is not a valid image, please upload an image file",
+  "exception.image.required": "Product must have an image",
+
   "role.administrator": "Administrator",
   "role.employee": "Employee",
   "role.sales_rep": "Sales Representative",

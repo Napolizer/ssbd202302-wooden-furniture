@@ -24,6 +24,7 @@
             formControlName="productGroupName"
             [matAutocomplete]="auto"
             required
+            (ngModelChange)="onSelectChange()"
           />
           <mat-error
             *ngIf="addProductForm.get('productGroupName')?.hasError('required')"
@@ -59,7 +60,11 @@
         <div class="select">
           <mat-form-field appearance="fill" class="input">
             <mat-label>{{ "add.product.wood.type" | translate }}</mat-label>
-            <mat-select required formControlName="woodType">
+            <mat-select
+              required
+              formControlName="woodType"
+              (selectionChange)="onSelectChange()"
+            >
               <mat-option
                 *ngFor="let woodType of woodTypes"
                 [value]="woodType.value"
@@ -74,7 +79,11 @@
           </mat-form-field>
           <mat-form-field appearance="fill" class="input">
             <mat-label>{{ "add.product.color" | translate }}</mat-label>
-            <mat-select required formControlName="color">
+            <mat-select
+              required
+              formControlName="color"
+              (selectionChange)="onSelectChange()"
+            >
               <mat-option *ngFor="let color of colors" [value]="color.value">
                 {{ color.viewValue }}
               </mat-option>
@@ -409,8 +418,36 @@
         </div>
       </div>
     </form>
-    <img
-      src="https://storage.googleapis.com/furniture-store-images/ee85e2fb-54b5-4616-8fd6-82988ba1b366"
-    />
+    <div class="image-container">
+      <ngx-dropzone
+        *ngIf="this.imageUpload"
+        class="dropzone"
+        [accept]="'image/*'"
+        [multiple]="false"
+        [disabled]="!(imageUpload && allSelected)"
+        (change)="onFileAdd($event)"
+      >
+        <ngx-dropzone-label>
+          <h2 *ngIf="allSelected">
+            {{ "add.product.drop.upload.label" | translate }}
+          </h2>
+          <h2 *ngIf="!allSelected">
+            {{ "add.product.drop.fill.label" | translate }}
+          </h2>
+        </ngx-dropzone-label>
+        <ngx-dropzone-image-preview
+          *ngIf="this.image"
+          [file]="this.image"
+          [removable]="true"
+          (removed)="onFileRemove()"
+        >
+        </ngx-dropzone-image-preview>
+      </ngx-dropzone>
+      <img
+        *ngIf="!this.imageUpload"
+        [src]="this.displayedImage"
+        (error)="handleMissingImage()"
+      />
+    </div>
   </div>
 </div>

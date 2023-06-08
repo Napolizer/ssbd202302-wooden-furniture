@@ -15,6 +15,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,7 +31,15 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @AllArgsConstructor
 @Entity
 @Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
-                  @Index(name = "product_image_id", columnList = "image_id")})
+                  @Index(name = "product_image_id", columnList = "image_id")},
+       uniqueConstraints = @UniqueConstraint(name = "product_details",
+               columnNames = {"product_group_id",
+                              "color",
+                              "woodType",
+                              "weight",
+                              "furniture_width",
+                              "furniture_height",
+                              "furniture_depth" }))
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),

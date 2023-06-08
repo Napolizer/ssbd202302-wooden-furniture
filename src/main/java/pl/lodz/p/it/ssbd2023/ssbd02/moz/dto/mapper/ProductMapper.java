@@ -96,7 +96,7 @@ public class ProductMapper {
   }
 
   public static Color mapToColor(String color) {
-    if (color == null) {
+    if (color == null || color.equals("")) {
       return null;
     }
     try {
@@ -107,7 +107,7 @@ public class ProductMapper {
   }
 
   public static WoodType mapToWoodType(String woodType) {
-    if (woodType == null) {
+    if (woodType == null || woodType.equals("")) {
       return null;
     }
     try {

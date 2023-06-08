@@ -129,6 +129,8 @@
   "add.product.weight": "Waga",
   "add.product.quantity": "Liczba sztuk",
   "add.product.price": "Cena",
+  "add.product.drop.upload.label": "Przeciągnij obraz tutaj, aby go dodać",
+  "add.product.drop.fill.label": "Dodaj szczegóły mebla aby dodać obraz",
   
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
@@ -215,6 +217,7 @@
   "dialog.unblock.account.message":"Czy na pewno chcesz odblokować wybrane konto?",
   "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
+  "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -256,8 +259,9 @@
   "exception.password.already.used": "Hasło było już używane przez użytkownika",
   "exception.current.password.invalid": "Obecne hasło jest nieprawidłowe",
   "exception.mok.account.external.invalid.state": "Twoje konto jest zablokowane bądź nieaktywne",
-
   "exception.moz.product.group.already.exists": "Grupa produktów z podaną nazwą już istnieje",
+  "exception.invalid.image.file.format": "Wybrany plik nie jest obrazem, wybierz inny plik",
+  "exception.image.required": "Produkt musi zawierać zdjęcie",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

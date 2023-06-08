@@ -8,7 +8,7 @@ import { AlertService } from '@full-fledged/alerts';
 import {
   Observable,
   Subject,
-  filter,
+  first,
   map,
   startWith,
   takeUntil,
@@ -30,12 +30,14 @@ export class AddProductComponent implements OnInit {
   loading = true;
   addProductForm: FormGroup;
   displayedImage: string;
-  loadingImage = true;
   productGroupNames: Map<string, number> = new Map();
   allOptions: any[];
   filteredOptions: Observable<any[]>;
   woodTypes: SelectItem[] = [];
   colors: SelectItem[] = [];
+  imageUpload = true;
+  allSelected = false;
+  image: File;
 
   constructor(
     private dialogRef: MatDialogRef<AddProductComponent>,
@@ -176,5 +178,84 @@ export class AddProductComponent implements OnInit {
       .sort((a, b) => a.categoryName.localeCompare(b.categoryName));
   }
 
-  onConfirm(): void {}
+  createProduct(): void {
+
+  }
+
+  onConfirm(): void {
+    if (this.addProductForm.valid) {
+      if (this.imageUpload && !this.image) {
+        this.translate
+        .get('exception.image.required' || 'exception.unknown')
+        .pipe(takeUntil(this.destroy))
+        .subscribe((msg) => {
+          this.alertService.danger(msg);
+        });
+      } else {
+        this.translate
+        .get('dialog.add.product.group.message')
+        .pipe(takeUntil(this.destroy))
+        .subscribe((msg) => {
+          const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+          ref
+            .afterClosed()
+            .pipe(first(), takeUntil(this.destroy))
+            .subscribe((result) => {
+              if (result === 'action') {
+                this.createProduct();
+              }
+            });
+        });
+      }
+    } else {
+      this.addProductForm.markAllAsTouched();
+    }
+  }
+
+  onFileAdd(event: any): void {
+    if (event.rejectedFiles.length) {
+      this.translate
+        .get('exception.invalid.image.file.format' || 'exception.unknown')
+        .pipe(takeUntil(this.destroy))
+        .subscribe((msg) => {
+          this.alertService.danger(msg);
+        });
+    } else {
+      this.image = event.addedFiles[0];
+    }
+  }
+
+  onFileRemove(): void {
+    this.image = null as any;
+  }
+
+  onSelectChange(): void {
+    if (
+      this.addProductForm.get('productGroupName')?.valid &&
+      this.addProductForm.get('color')?.valid &&
+      this.addProductForm.get('woodType')?.valid
+    ) {
+      const productGroupId = this.productGroupNames.get(
+        this.addProductForm.get('productGroupName')?.value
+      ) as number;
+      const color = this.addProductForm.get('color')?.value;
+      const woodType = this.addProductForm.get('woodType')?.value;
+      this.productService
+        .retrieveAllProductWithOptions(productGroupId, color, woodType)
+        .pipe(takeUntil(this.destroy))
+        .subscribe((products) => {
+          this.displayedImage = products.at(0)?.imageUrl as string;
+          this.imageUpload = this.displayedImage ? false : true;
+          this.allSelected = true;
+        });
+    } else {
+      this.allSelected = false;
+      this.imageUpload = true;
+      this.onFileRemove();
+    }
+  }
+
+  handleMissingImage(): void {
+    this.imageUpload = true;
+  }
 }

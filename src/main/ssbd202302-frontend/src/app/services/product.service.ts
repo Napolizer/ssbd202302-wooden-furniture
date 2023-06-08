@@ -40,4 +40,10 @@ export class ProductService {
       `${environment.apiBaseUrl}/product/group`
     );
   }
+
+  public retrieveAllProductWithOptions(productGroupId: number, color: string, woodType: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(
+      `${environment.apiBaseUrl}/product/search?productGroupId=${productGroupId}&color=${color}&woodType=${woodType}`
+    );
+  }
 }
