@@ -1,7 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -14,11 +18,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.security.Principal;
 import java.util.List;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateInputDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.RateEndpointOperations;
-
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 
 @Path("/rate")
 public class RateController {
@@ -40,7 +42,7 @@ public class RateController {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response create(RateCreateDto rate) {
+  public Response create(RateInputDto rate) {
     RateDto rateDto = rateEndpoint.create(principal.getName(), rate);
     return Response.ok(rateDto).build();
   }
@@ -54,8 +56,10 @@ public class RateController {
 
   @PUT
   @Path("/id/{id}")
-  public Response update(@PathParam("id") Long id, RateDto entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public Response changeRate(@PathParam("id") Long id, @NotNull @Valid RateInputDto entity) {
+    RateDto updatedRate = rateEndpoint.update(id, entity, principal.getName());
+    return Response.ok(updatedRate).build();
   }
 
 
