@@ -327,5 +327,7 @@
   "ARMCHAIR": "Armchair",
   "TABLE": "Table",
   "ROUND_TABLE": "Round table",
-  "RECTANGULAR_TABLE": "Rectangular table"
+  "RECTANGULAR_TABLE": "Rectangular table",
+
+  "client.orders.delivered": "Browse your delivered orders"
 }

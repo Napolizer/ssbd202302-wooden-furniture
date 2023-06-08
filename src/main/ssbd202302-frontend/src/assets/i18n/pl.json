@@ -325,5 +325,7 @@
   "ARMCHAIR": "Fotel",
   "TABLE": "Stół",
   "ROUND_TABLE": "Stół okrągły",
-  "RECTANGULAR_TABLE": "Stół prostokątny"
+  "RECTANGULAR_TABLE": "Stół prostokątny",
+
+  "client.orders.delivered": "Przeglądaj swoje dostarczone zamówienia"
 }
