@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -39,8 +40,29 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<Order> findAll() {
+    return super.findAll();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
   public List<Order> findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+    return getEntityManager().createNamedQuery(Order.FIND_BY_STATE, Order.class)
+        .setParameter("orderState", orderState)
+        .getResultList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<Order> findAllPresent() {
+    return super.findAllPresent();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<Order> findAllArchived() {
+    return super.findAllArchived();
   }
 
   @Override

@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -39,8 +40,9 @@ public class OrderController {
 
   @GET
   @Path("/state")
+  @RolesAllowed(EMPLOYEE)
   public Response findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findByState(orderState)).build();
   }
 
   @POST
@@ -68,27 +70,30 @@ public class OrderController {
 
   @GET
   @Path("/id/{id}")
-  public Response find(Long id) {
+  public Response find(@PathParam("id") Long id) {
     throw new UnsupportedOperationException();
   }
 
   @GET
+  @RolesAllowed(EMPLOYEE)
   public Response findAll() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAll()).build();
   }
 
 
   @GET
   @Path("/present")
+  @RolesAllowed(EMPLOYEE)
   public Response findAllPresent() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAllPresent()).build();
   }
 
 
   @GET
   @Path("/archived")
+  @RolesAllowed(EMPLOYEE)
   public Response findAllArchived() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAllArchived()).build();
   }
 
 
