@@ -71,6 +71,14 @@ public class InitData {
     return retrieveToken(InitData.getUserCredentials("administrator", "Student123!"));
   }
 
+  public static String retrieveEmployeeToken() {
+    return retrieveToken(InitData.getUserCredentials("employee", "Student123!"));
+  }
+
+  public static String retrieveSalesRepToken() {
+    return retrieveToken(InitData.getUserCredentials("salesrep", "Student123!"));
+  }
+
   public static String retrieveClientToken() {
     return retrieveToken(InitData.getUserCredentials("client", "Student123!"));
   }

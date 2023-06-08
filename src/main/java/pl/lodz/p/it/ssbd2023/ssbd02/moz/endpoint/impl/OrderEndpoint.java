@@ -44,6 +44,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<OrderDto> findByState(OrderState orderState) {
     return repeatTransactionWithOptimistic(() -> orderService.findByState(orderState))
         .stream()

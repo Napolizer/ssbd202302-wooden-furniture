@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +16,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -44,6 +46,7 @@ public class Category extends AbstractEntity {
   public static final String FIND_ALL_PARENT_CATEGORIES = "Category.findAllParentCategories";
 
   @OneToMany(mappedBy = "parentCategory")
+  @Builder.Default
   private List<Category> subcategories = new ArrayList<>();
 
   @ManyToOne
@@ -54,11 +57,12 @@ public class Category extends AbstractEntity {
   @Column(name = "category_name", nullable = false)
   private CategoryName categoryName;
 
-  @OneToOne
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "image_id", nullable = false)
   private Image image;
 
   @OneToMany(mappedBy = "category")
   @JoinColumn(nullable = false)
+  @Builder.Default
   private List<ProductGroup> productGroups = new ArrayList<>();
 }
