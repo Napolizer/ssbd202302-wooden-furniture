@@ -118,7 +118,7 @@
   "add.product.wood.type": "Wood type",
   "add.product.color": "Color",
   "add.product.hint.max.3": "Max 3 digits",
-  "add.product.hint.max.6": "Max 6 digits",
+  "add.product.hint.max.8": "Max 8 digits",
   "add.product.furniture.details": "Furniture details",
   "add.product.quantity.price": "Quantity & price",
   "add.product.furniture.dimensions": "Furniture dimensions",
@@ -131,6 +131,7 @@
   "add.product.price": "Price",
   "add.product.drop.upload.label": "Drag and drop here to upload an image",
   "add.product.drop.fill.label": "Add furniture details to upload an image",
+  "add.product.success": "Product has been successfully added",
 
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
@@ -261,8 +262,10 @@
   "exception.current.password.invalid": "Current password is invalid",
   "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
   "exception.moz.product.group.already.exists": "Product group with given name already exists",
+  "exception.moz.product.dimensions.already.exists": "Product with given dimensions already exists",
   "exception.invalid.image.file.format": "The selected file is not a valid image, please upload an image file",
   "exception.image.required": "Product must have an image",
+  "exception.moz.product.not.found": "Product not found",
 
   "role.administrator": "Administrator",
   "role.employee": "Employee",

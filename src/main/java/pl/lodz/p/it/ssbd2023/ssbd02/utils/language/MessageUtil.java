@@ -117,6 +117,7 @@ public class MessageUtil {
     public static final String CATEGORY_NOT_FOUND = "exception.moz.category.not.found";
     public static final String PARENT_CATEGORY_NOT_ALLOWED = "exception.moz.parent.category.not.allowed";
     public static final String PRODUCT_GROUP_ALREADY_EXITS = "exception.moz.product.group.already.exists";
+    public static final String PRODUCT_ALREADY_EXITS = "exception.moz.product.dimensions.already.exists";
     public static final String PRODUCT_NOT_FOUND = "exception.moz.product.not.found";
     public static final String PRODUCT_GROUP_NOT_FOUND = "exception.moz.product.group.not.found";
     public static final String ORDER_ALREADY_EXITS = "exception.moz.order.already.exists";

@@ -391,7 +391,7 @@
           </mat-form-field>
 
           <mat-form-field
-            hintLabel="{{ 'add.product.hint.max.6' | translate }}"
+            hintLabel="{{ 'add.product.hint.max.8' | translate }}"
             appearance="fill"
             class="input"
           >
@@ -403,7 +403,7 @@
               type="number"
               formControlName="price"
               min="1"
-              max="999999"
+              max="99999999"
               required
             />
             <mat-error
@@ -413,7 +413,7 @@
             <mat-error *ngIf="addProductForm.get('price')?.hasError('min')">{{
               "register.validity.number.min" | translate
             }}</mat-error>
-            <mat-hint align="end">{{ price.value.length }}/6</mat-hint>
+            <mat-hint align="end">{{ price.value.length }}/8</mat-hint>
           </mat-form-field>
         </div>
       </div>

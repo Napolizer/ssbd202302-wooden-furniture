@@ -32,14 +32,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @Entity
 @Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
                   @Index(name = "product_image_id", columnList = "image_id")},
-       uniqueConstraints = @UniqueConstraint(name = "product_details",
+       uniqueConstraints = { @UniqueConstraint(name = "product_details",
                columnNames = {"product_group_id",
                               "color",
-                              "woodType",
+                              "wood_type",
                               "weight",
                               "furniture_width",
                               "furniture_height",
-                              "furniture_depth" }))
+                              "furniture_depth" }) })
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
