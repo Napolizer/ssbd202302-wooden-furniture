@@ -116,4 +116,13 @@ public class Product extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "product_group_id", nullable = false)
   private ProductGroup productGroup;
+
+  public Long getSumOfVersions() {
+    return this.getVersion();
+  }
+
+  public void update(Product product) {
+    this.price = product.price != null ? product.price : price;
+    this.amount = product.amount != null ? product.amount : amount;
+  }
 }

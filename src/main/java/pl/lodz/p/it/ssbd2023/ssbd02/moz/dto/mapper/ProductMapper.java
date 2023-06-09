@@ -8,9 +8,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 public class ProductMapper {
@@ -30,8 +32,8 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup()))
+              .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
               .build();
     } else {
       return ProductDto.builder()
@@ -45,8 +47,8 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup()))
+              .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
               .build();
     }
   }
@@ -60,6 +62,13 @@ public class ProductMapper {
             .build();
   }
 
+  public static Product mapEditProductDtoToProduct(EditProductDto editProductDto) {
+
+    return Product.builder()
+            .price(editProductDto.getPrice())
+            .amount(editProductDto.getAmount())
+            .build();
+  }
 
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()

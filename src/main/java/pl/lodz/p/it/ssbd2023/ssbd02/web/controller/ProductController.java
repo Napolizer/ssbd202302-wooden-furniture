@@ -28,6 +28,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
@@ -118,6 +119,16 @@ public class ProductController {
   public Response editProductGroupName(@PathParam("id") Long id,
                                        @NotNull @Valid EditProductGroupDto editProductGroupDto) {
     return Response.ok(productGroupEndpoint.editProductGroupName(id, editProductGroupDto)).build();
+  }
+
+  @PUT
+  @Path("/editProduct/id/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response editProduct(@PathParam("id") Long id,
+                                     @NotNull @Valid EditProductDto editProductDto) {
+    return Response.ok(productEndpoint.editProduct(id, editProductDto)).build();
   }
 
   @GET
