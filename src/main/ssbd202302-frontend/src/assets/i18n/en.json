@@ -360,8 +360,8 @@
   "product.amounts": "pieces",
   "product.rating": "Average Rating: ",
   "product.choose.color": "Choose color",
-  "product.choose.size": "Choose size"
-  "RECTANGULAR_TABLE": "Rectangular table",
+  "product.choose.size": "Choose size",
+  "product.add.to.cart": "Add to cart",
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",

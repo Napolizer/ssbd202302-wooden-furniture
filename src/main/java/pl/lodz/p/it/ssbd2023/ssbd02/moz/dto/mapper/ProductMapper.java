@@ -49,6 +49,7 @@ public class ProductMapper {
               .build();
     }
   }
+
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()
         .id(productDto.getId())

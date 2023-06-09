@@ -14,25 +14,26 @@
         </ng-container>
       </div>
       <p class="d-inline-block g-color-primary rating">{{ 'product.rating' | translate }} {{product.productGroup.averageRating}}</p>
-      <div *ngIf="product.available" class="available-message">
+      <div *ngIf="product.productState === 'AVAILABLE'" class="available-message">
         {{ 'product.available.true' | translate }} {{product.amount}} {{'product.amounts' | translate}} , {{'product.order.now' | translate}}
         <div>
             <button mat-button [matMenuTriggerFor]="menu">{{ 'product.choose.color' | translate }}</button>
             <mat-menu #menu="matMenu">
               <!-- <button mat-menu-item *ngFor="let color of product.productGroup.colors">{{color}}</button> -->
             </mat-menu>
-          </div>        
+        </div>
         <div>
             <div>
                 <button mat-button [matMenuTriggerFor]="menu">{{ 'product.choose.size' | translate }}</button>
                 <mat-menu #menu="matMenu">
                   <!-- <button mat-menu-item *ngFor="let color of product.productGroup.colors">{{color}}</button> -->
                 </mat-menu>
-              </div>        
+              </div>
             <div>
-    </div>
+              <button mat-button color="primary">{{'product.add.to.cart' | translate}}</button>
       </div>
-      <p *ngIf="!product.available" class="unavailable-message">{{ 'product.available.false' | translate }}</p>
+      </div>
+      <p *ngIf="product.productState !== 'AVAILABLE'" class="unavailable-message">{{ 'product.available.false' | translate }}</p>
     </div>
   </div>
 </div>

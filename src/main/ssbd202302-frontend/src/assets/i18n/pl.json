@@ -364,8 +364,7 @@
   "product.color.green": "Zielony",
   "product.color.blue": "Niebieski",
   "product.color.brown": "Brązowy",
-  "product.color.white": "Biały"
-  "RECTANGULAR_TABLE": "Stół prostokątny",
+  "product.color.white": "Biały",
 
   "product.available.true": "Produkt jest dostępny w ilości ",
   "product.available.false": "Produkt jest niedostępny.",
@@ -373,5 +372,6 @@
   "product.amounts": "sztuk",
   "product.rating": "Średnia ocena: ",
   "product.choose.color": "Wybierz kolor",
-  "product.choose.size": "Wybierz rozmiar"
+  "product.choose.size": "Wybierz rozmiar",
+  "product.add.to.cart": "Dodaj do koszyka"
 }
