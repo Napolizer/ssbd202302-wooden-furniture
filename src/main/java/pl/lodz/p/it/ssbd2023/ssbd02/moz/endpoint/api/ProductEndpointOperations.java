@@ -39,4 +39,6 @@ public interface ProductEndpointOperations {
   List<ProductDto> findAllByProductGroupColorAndWoodType(Long productGroupId, String color, String woodType);
 
   List<ProductDto> findAllByProductGroupId(Long productGroupId);
+
+  List<ProductDto> findAllByCategoryId(Long categoryId);
 }

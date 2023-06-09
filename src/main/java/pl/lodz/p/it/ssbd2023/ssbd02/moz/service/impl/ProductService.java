@@ -142,4 +142,10 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   public List<Product> findAllByProductGroup(Long productGroupId) {
     return productFacade.findAllByProductGroup(productGroupId);
   }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByCategory(Long categoryId) {
+    return productFacade.findAllByCategory(categoryId);
+  }
 }

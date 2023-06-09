@@ -127,6 +127,12 @@ public class ProductController {
     return Response.ok(productEndpoint.findAllByProductGroupId(id)).build();
   }
 
+  @GET
+  @Path("/category/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllProductsByCategoryId(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findAllByCategoryId(id)).build();
+  }
 
   @GET
   @Path("/id/{id}")

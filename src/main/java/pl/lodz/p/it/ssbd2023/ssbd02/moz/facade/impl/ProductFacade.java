@@ -120,4 +120,12 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
             .setParameter("productGroupId", productGroupId)
             .getResultList();
   }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByCategory(Long categoryId) {
+    return em.createNamedQuery(Product.FIND_ALL_BY_CATEGORY_ID, Product.class)
+            .setParameter("categoryId", categoryId)
+            .getResultList();
+  }
 }
