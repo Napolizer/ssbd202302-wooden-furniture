@@ -136,4 +136,10 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   public List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType) {
     return productFacade.findAllByProductGroupColorAndWoodType(productGroupId, color, woodType);
   }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroup(Long productGroupId) {
+    return productFacade.findAllByProductGroup(productGroupId);
+  }
 }

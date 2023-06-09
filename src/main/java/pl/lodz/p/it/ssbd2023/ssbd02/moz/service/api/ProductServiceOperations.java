@@ -37,4 +37,6 @@ public interface ProductServiceOperations {
   List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType);
 
   boolean isLastTransactionRollback();
+
+  List<Product> findAllByProductGroup(Long productGroupId);
 }
