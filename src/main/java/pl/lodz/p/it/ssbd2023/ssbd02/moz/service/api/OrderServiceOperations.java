@@ -39,5 +39,4 @@ public interface OrderServiceOperations {
 
   boolean isLastTransactionRollback();
 
-  List<Order> findDeliveredCustomerOrders(Long accountId);
 }
