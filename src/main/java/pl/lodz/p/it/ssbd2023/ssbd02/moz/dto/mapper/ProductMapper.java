@@ -6,12 +6,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 public class ProductMapper {
@@ -22,7 +23,7 @@ public class ProductMapper {
       return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .productState(product.getProductState())
+              .archive(product.getArchive())
               .imageUrl(product.getImage().getUrl())
               .weight(product.getWeight())
               .amount(product.getAmount())
@@ -31,14 +32,14 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup()))
+              .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
               .build();
     } else {
       return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .productState(product.getProductState())
+              .archive(product.getArchive())
               .weight(product.getWeight())
               .amount(product.getAmount())
               .weightInPackage(product.getWeightInPackage())
@@ -46,8 +47,8 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup()))
+              .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
               .build();
     }
   }
@@ -61,12 +62,19 @@ public class ProductMapper {
             .build();
   }
 
+  public static Product mapEditProductDtoToProduct(EditProductDto editProductDto) {
+
+    return Product.builder()
+            .price(editProductDto.getPrice())
+            .amount(editProductDto.getAmount())
+            .build();
+  }
 
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()
         .id(productDto.getId())
         .price(productDto.getPrice())
-        .productState(productDto.getProductState())
+        .archive(productDto.getArchive())
         .weight(productDto.getWeight())
         .amount(productDto.getAmount())
         .weightInPackage(productDto.getWeightInPackage())
@@ -80,7 +88,7 @@ public class ProductMapper {
   public static Product mapToProduct(ProductCreateDto productCreateDto) {
     return Product.builder()
             .price(productCreateDto.getPrice())
-            .productState(ProductState.AVAILABLE)
+            .archive(false)
             .weight(productCreateDto.getWeight())
             .amount(productCreateDto.getAmount())
             .weightInPackage(productCreateDto.getWeightInPackage())

@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
@@ -129,6 +130,22 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
             ProductMapper.mapToColor(color),
             ProductMapper.mapToWoodType(woodType)))
             .stream().map(productMapper::mapToProductDto).toList();
+  }
+
+  @Override
+  @PermitAll
+  public List<ProductDto> findAllByProductGroupId(Long productGroupId) {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAllByProductGroup(
+            productGroupId))
+            .stream().map(productMapper::mapToProductDto).toList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public ProductDto editProduct(Long id, EditProductDto editProductDto) {
+    Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
+            ProductMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
+    return productMapper.mapToProductDto(product);
   }
 
   @Override

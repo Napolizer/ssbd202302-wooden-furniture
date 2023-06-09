@@ -112,4 +112,12 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
             .setParameter("woodType", woodType)
             .getResultList();
   }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroup(Long productGroupId) {
+    return em.createNamedQuery(Product.FIND_ALL_BY_PRODUCT_GROUP_ID, Product.class)
+            .setParameter("productGroupId", productGroupId)
+            .getResultList();
+  }
 }
