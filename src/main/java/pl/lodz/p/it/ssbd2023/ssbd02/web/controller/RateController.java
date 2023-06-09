@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -17,8 +19,6 @@ import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.RateEndpointOperations;
-
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 
 @Path("/rate")
 public class RateController {

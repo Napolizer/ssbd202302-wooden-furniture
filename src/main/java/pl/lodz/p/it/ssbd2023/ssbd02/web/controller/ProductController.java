@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
@@ -60,16 +61,26 @@ public class ProductController {
   }
 
   @POST
+  @Path("/new-image")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(EMPLOYEE)
-  public Response createProduct(@FormDataParam("product") FormDataBodyPart product,
+  public Response createProductWithNewImage(@FormDataParam("product") FormDataBodyPart product,
                          @FormDataParam("image") InputStream fileInputStream,
                          @FormDataParam("image") FormDataContentDisposition fileMetaData) {
     ProductCreateDto productCreateDto =
             FormDataMapper.mapFormDataBodyPartToProductCreateDto(product);
     byte[] image = FileUtils.readImageFromFileInputStream(fileInputStream, fileMetaData);
+    return Response.status(Response.Status.CREATED).entity(
+            productEndpoint.createProductWithNewImage(productCreateDto, image, fileMetaData.getFileName())).build();
+  }
+
+  @POST
+  @Path("/existing-image")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response createProductWithExistingImage(@NotNull @Valid ProductCreateWithImageDto productCreateWithImageDto) {
     return Response.status(Response.Status.CREATED)
-            .entity(productEndpoint.create(productCreateDto, image, fileMetaData.getFileName())).build();
+            .entity(productEndpoint.createProductWithExistingImage(productCreateWithImageDto)).build();
   }
 
   @POST
@@ -116,6 +127,17 @@ public class ProductController {
   }
 
   @GET
+  @Path("/search")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllByProductGroupColorAndWoodType(
+          @QueryParam("productGroupId") Long productGroupId,
+          @QueryParam("color") String color,
+          @QueryParam("woodType") String woodType) {
+    return Response.ok(productEndpoint.findAllByProductGroupColorAndWoodType(productGroupId, color, woodType))
+            .build();
+  }
+
+  @GET
   @Path("/present")
   public Response findAllPresent() {
     throw new UnsupportedOperationException();
@@ -135,8 +157,9 @@ public class ProductController {
 
   @GET
   @Path("/group")
+  @Produces(MediaType.APPLICATION_JSON)
   public Response findAllGroups() {
-    throw new UnsupportedOperationException();
+    return Response.ok(productGroupEndpoint.findAll()).build();
   }
 
   @GET

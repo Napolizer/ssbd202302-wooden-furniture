@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class Dimensions {
-  private double width;
-  private double height;
-  private double depth;
+  private Integer width;
+  private Integer height;
+  private Integer depth;
 }

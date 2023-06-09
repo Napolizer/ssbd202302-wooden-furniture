@@ -39,6 +39,7 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 import {DatePipe} from "@angular/common";
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountRoleComponent } from './pages/add-account-role-page/add-account-role.component';
 import { RemoveAccountRolePageComponent } from './pages/remove-account-role-page/remove-account-role-page.component';
@@ -67,6 +68,7 @@ import { AddProductGroupComponent } from './components/add-product-group/add-pro
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { AddProductComponent } from './add-product/add-product.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +109,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     EditAccountComponent,
     AddProductGroupComponent,
     EmployeePageComponent,
+    AddProductComponent,
     ProductPageComponent,
   ],
   imports: [
@@ -122,6 +125,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
+    NgxDropzoneModule,
     FormsModule,
     AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
     ReactiveFormsModule,

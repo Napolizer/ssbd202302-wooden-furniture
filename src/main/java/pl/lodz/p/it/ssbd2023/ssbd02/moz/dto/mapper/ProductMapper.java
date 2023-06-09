@@ -1,12 +1,12 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateless;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
@@ -22,7 +22,7 @@ public class ProductMapper {
       return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .available(product.getAvailable())
+              .productState(product.getProductState())
               .imageUrl(product.getImage().getUrl())
               .weight(product.getWeight())
               .amount(product.getAmount())
@@ -38,7 +38,7 @@ public class ProductMapper {
       return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .available(product.getAvailable())
+              .productState(product.getProductState())
               .weight(product.getWeight())
               .amount(product.getAmount())
               .weightInPackage(product.getWeightInPackage())
@@ -66,7 +66,7 @@ public class ProductMapper {
     return Product.builder()
         .id(productDto.getId())
         .price(productDto.getPrice())
-        .available(productDto.getAvailable())
+        .productState(productDto.getProductState())
         .weight(productDto.getWeight())
         .amount(productDto.getAmount())
         .weightInPackage(productDto.getWeightInPackage())
@@ -77,10 +77,10 @@ public class ProductMapper {
         .build();
   }
 
-  public Product mapToProduct(ProductCreateDto productCreateDto) {
+  public static Product mapToProduct(ProductCreateDto productCreateDto) {
     return Product.builder()
             .price(productCreateDto.getPrice())
-            .available(productCreateDto.getAvailable())
+            .productState(ProductState.AVAILABLE)
             .weight(productCreateDto.getWeight())
             .amount(productCreateDto.getAmount())
             .weightInPackage(productCreateDto.getWeightInPackage())
@@ -97,18 +97,24 @@ public class ProductMapper {
   }
 
   public static Color mapToColor(String color) {
+    if (color == null || color.equals("")) {
+      return null;
+    }
     try {
       return Color.valueOf(color.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidColorException();
     }
   }
 
   public static WoodType mapToWoodType(String woodType) {
+    if (woodType == null || woodType.equals("")) {
+      return null;
+    }
     try {
       return WoodType.valueOf(woodType.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidWoodTypeException();
     }
   }
 

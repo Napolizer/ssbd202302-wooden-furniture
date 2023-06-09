@@ -13,6 +13,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
@@ -64,6 +65,12 @@ public class ProductGroupFacade extends AbstractFacade<ProductGroup>
     } catch (PersistenceException e) {
       return Optional.empty();
     }
+  }
+
+  @Override
+  @PermitAll
+  public List<ProductGroup> findAll() {
+    return super.findAll();
   }
 
   @Override

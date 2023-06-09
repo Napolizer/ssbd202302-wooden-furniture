@@ -57,4 +57,16 @@ export class EmployeePageComponent implements OnInit {
     });
   }
 
+
+  openAddProductDialog(): void {
+    this.dialogService.openAddProductDialog()
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'success') {
+        // refresh list if there is any list
+      }
+    });
+  }
+
 }
