@@ -43,9 +43,9 @@ public class OrderController {
   }
 
   @GET
-  @Path("/state")
+  @Path("/state/{state}")
   @RolesAllowed(EMPLOYEE)
-  public Response findByState(OrderState orderState) {
+  public Response findByState(@PathParam("state") OrderState orderState) {
     return Response.ok(orderEndpoint.findByState(orderState)).build();
   }
 

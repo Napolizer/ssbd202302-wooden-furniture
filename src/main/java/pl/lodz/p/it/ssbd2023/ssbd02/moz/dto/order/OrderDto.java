@@ -25,13 +25,13 @@ public class OrderDto {
   private List<ProductDto> products = new ArrayList<>();
 
   @Capitalized
-  private String firstName;
+  private String recipientFirstName;
 
   @Capitalized
-  private String lastName;
+  private String recipientLastName;
 
   @NotNull
-  private AddressDto addressDto;
+  private AddressDto recipientAddress;
 
   @NotNull
   private AccountWithoutSensitiveDataDto account;

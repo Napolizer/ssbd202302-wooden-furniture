@@ -11,4 +11,5 @@ public final class ProductGroupMapper {
             .archive(productGroup.getArchive())
             .category(CategoryMapper.mapToCategoryDto(productGroup.getCategory())).build();
   }
+
 }

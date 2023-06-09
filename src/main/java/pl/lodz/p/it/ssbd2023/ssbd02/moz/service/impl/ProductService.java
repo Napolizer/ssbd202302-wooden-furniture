@@ -45,13 +45,32 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public Product create(Product product, byte[] image, Long productGroupId, String fileName) {
+  public Product createProductWithNewImage(Product product, byte[] image, Long productGroupId, String fileName) {
     ProductGroup productGroup = productGroupFacade.findById(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
     product.setProductGroup(productGroup);
     Product entity = productFacade.create(product);
     entity.getImage().setUrl(googleService.saveImageInStorage(image, fileName));
     return entity;
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public Product createProductWithExistingImage(Product product, Long productGroupId, Long imageProductId) {
+    ProductGroup productGroup = productGroupFacade.findById(productGroupId)
+            .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+    Product productWithImage = productFacade.findById(imageProductId)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+    if (!(productGroup.getId().equals(productWithImage.getProductGroup().getId())
+            && product.getColor().equals(productWithImage.getColor())
+            && product.getWoodType().equals(productWithImage.getWoodType()))) {
+      throw ApplicationExceptionFactory.createIncompatibleProductImageException();
+    }
+
+    product.setProductGroup(productGroup);
+    product.setImage(productWithImage.getImage());
+    return productFacade.update(product);
   }
 
   @Override
@@ -102,5 +121,11 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   @Override
   public List<Product> findAllByPrice(Double minPrice, Double maxPrice) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType) {
+    return productFacade.findAllByProductGroupColorAndWoodType(productGroupId, color, woodType);
   }
 }

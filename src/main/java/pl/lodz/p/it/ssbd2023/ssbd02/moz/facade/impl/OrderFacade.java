@@ -45,7 +45,9 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   @Override
   @RolesAllowed(EMPLOYEE)
   public List<Order> findAll() {
-    return super.findAll();
+    return getEntityManager()
+        .createQuery("SELECT entity FROM sales_order entity", Order.class)
+        .getResultList();
   }
 
   @Override
@@ -59,13 +61,17 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   @Override
   @RolesAllowed(EMPLOYEE)
   public List<Order> findAllPresent() {
-    return super.findAllPresent();
+    return getEntityManager()
+        .createQuery("SELECT entity FROM sales_order entity WHERE entity.archive = false", Order.class)
+        .getResultList();
   }
 
   @Override
   @RolesAllowed(EMPLOYEE)
   public List<Order> findAllArchived() {
-    return super.findAllArchived();
+    return getEntityManager()
+        .createQuery("SELECT entity FROM sales_order entity WHERE entity.archive = true", Order.class)
+        .getResultList();
   }
 
   @Override

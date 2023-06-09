@@ -31,7 +31,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 @NoArgsConstructor
 @Entity(name = "sales_order")
 @Table(name = "sales_order", indexes = {
-    @Index(name = "sales_order_account_id", columnList = "account_id", unique = true),
+    @Index(name = "sales_order_account_id", columnList = "account_id"),
     @Index(name = "sales_order_delivery_person_id", columnList = "recipient_id", unique = true),
     @Index(name = "sales_order_delivery_address_id", columnList = "delivery_address_id", unique = true)
 })
@@ -50,9 +50,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 public class Order extends AbstractEntity {
   public static final String FIND_ACCOUNT_ORDERS = "Order.findAccountOrders";
   public static final String FIND_BY_STATE = "Order.findByState";
-
-  @Column(nullable = false, updatable = false, name = "creation_date")
-  private LocalDateTime creationDate;
 
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, name = "order_state")
@@ -82,11 +79,6 @@ public class Order extends AbstractEntity {
   @Column(name = "observed", columnDefinition = "boolean default false not null")
   @Builder.Default
   private Boolean observed = false;
-
-  @PrePersist
-  public void init() {
-    creationDate = LocalDateTime.now();
-  }
 
   public Long getSumOfVersions() {
     Long sumOfProductsVersions = 0L;

@@ -39,6 +39,7 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 import {DatePipe} from "@angular/common";
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountRoleComponent } from './pages/add-account-role-page/add-account-role.component';
 import { RemoveAccountRolePageComponent } from './pages/remove-account-role-page/remove-account-role-page.component';
@@ -69,6 +70,7 @@ import { ProductPageComponent } from './pages/product-page/product-page.componen
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ClientPageComponent } from './pages/client-page/client-page.component';
 import { ClientOrdersPageComponent } from './pages/client-orders-page/client-orders-page.component';
+import { AddProductComponent } from './add-product/add-product.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +111,7 @@ import { ClientOrdersPageComponent } from './pages/client-orders-page/client-ord
     EditAccountComponent,
     AddProductGroupComponent,
     EmployeePageComponent,
+    AddProductComponent,
     ProductPageComponent,
     ClientPageComponent,
     ClientOrdersPageComponent,
@@ -126,6 +129,7 @@ import { ClientOrdersPageComponent } from './pages/client-orders-page/client-ord
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
+    NgxDropzoneModule,
     FormsModule,
     AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
     ReactiveFormsModule,
