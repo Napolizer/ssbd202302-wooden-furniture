@@ -89,7 +89,7 @@ public class OrderFacadeOperationsIT {
       Order order = orderList.get(0);
       assertThat(order.getId(), notNullValue());
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
-      assertThat(order.getProducts().size(), equalTo(1));
+      assertThat(order.getOrderedProducts().size(), equalTo(1));
       assertThat(order.getRecipient(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
@@ -155,7 +155,7 @@ public class OrderFacadeOperationsIT {
       Order order = orderList.get(0);
       assertThat(order.getId(), notNullValue());
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
-      assertThat(order.getProducts().size(), equalTo(1));
+      assertThat(order.getOrderedProducts().size(), equalTo(1));
       assertThat(order.getRecipient(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
@@ -222,7 +222,7 @@ public class OrderFacadeOperationsIT {
       assertThat(order.getId(), notNullValue());
       assertThat(order.getArchive(), equalTo(true));
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
-      assertThat(order.getProducts().size(), equalTo(1));
+      assertThat(order.getOrderedProducts().size(), equalTo(1));
       assertThat(order.getRecipient(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
@@ -292,7 +292,7 @@ public class OrderFacadeOperationsIT {
       assertThat(order.getId(), notNullValue());
       assertThat(order.getArchive(), equalTo(true));
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
-      assertThat(order.getProducts().size(), equalTo(1));
+      assertThat(order.getOrderedProducts().size(), equalTo(1));
       assertThat(order.getRecipient(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());

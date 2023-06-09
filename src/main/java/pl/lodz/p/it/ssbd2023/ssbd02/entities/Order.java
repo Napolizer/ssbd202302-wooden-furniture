@@ -1,20 +1,18 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
@@ -57,14 +55,11 @@ public class Order extends AbstractEntity {
   @Column(nullable = false, name = "order_state")
   private OrderState orderState;
 
-  @ManyToMany
-  @JoinTable(
-      name = "sales_order_product",
-      joinColumns = @JoinColumn(name = "order_id"),
-      inverseJoinColumns = @JoinColumn(name = "product_id"),
-      indexes = @Index(name = "sales_order_product_product_id", columnList = "product_id", unique = true)
-  )
-  private List<Product> products = new ArrayList<>();
+  @OneToMany(mappedBy = "order")
+  private List<OrderProduct> orderedProducts = new ArrayList<>();
+
+  @Column(nullable = false, name = "total_price", updatable = false)
+  private Double totalPrice;
 
   @ManyToOne
   @JoinColumn(name = "recipient_id", nullable = false, updatable = false)
@@ -84,7 +79,7 @@ public class Order extends AbstractEntity {
 
   public Long getSumOfVersions() {
     Long sumOfProductsVersions = 0L;
-    for (Product product : this.getProducts()) {
+    for (OrderProduct product : this.getOrderedProducts()) {
       sumOfProductsVersions += product.getVersion();
     }
     return this.getVersion() + sumOfProductsVersions + this.getRecipient().getVersion()
