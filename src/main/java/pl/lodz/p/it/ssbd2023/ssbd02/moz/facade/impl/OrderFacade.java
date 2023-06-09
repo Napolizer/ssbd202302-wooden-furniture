@@ -35,8 +35,11 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   private EntityManager em;
 
   @Override
+  @RolesAllowed(CLIENT)
   public List<Order> findByAccountLogin(String login) {
-    throw new UnsupportedOperationException();
+    return getEntityManager().createNamedQuery(Order.FIND_ACCOUNT_ORDERS, Order.class)
+            .setParameter("login", login)
+            .getResultList();
   }
 
   @Override
@@ -74,14 +77,6 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   @Override
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  @RolesAllowed(CLIENT)
-  public List<Order> findDeliveredCustomerOrders(Long accountId) {
-    return getEntityManager().createNamedQuery(Order.FIND_CLIENTS_DELIVERED_ORDERS, Order.class)
-            .setParameter("id", accountId)
-            .getResultList();
   }
 
   @Override

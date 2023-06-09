@@ -19,6 +19,9 @@
     <button mat-menu-item routerLink="#" *ngIf="isUserEmployee()" (click)="redirectToEmployeePage()">
       <mat-icon>work</mat-icon><span>{{'toolbar.employeePanel' | translate}}</span>
     </button>
+    <button mat-menu-item routerLink="#" *ngIf="isUserClient()" (click)="redirectToClientPage()">
+      <mat-icon>accessibility</mat-icon><span>{{'toolbar.clientPanel' | translate}}</span>
+    </button>
   </mat-menu>
   <span class="toolbar-right title">
     <div class="title-text" (click)="redirectToMainPage()">{{'shop.title' | translate}}</div>

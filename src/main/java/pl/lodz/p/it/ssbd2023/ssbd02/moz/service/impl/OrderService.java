@@ -39,8 +39,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   private MailServiceOperations mailService;
 
   @Override
+  @RolesAllowed(CLIENT)
   public List<Order> findByAccountLogin(String login) {
-    throw new UnsupportedOperationException();
+    return orderFacade.findByAccountLogin(login);
   }
 
   @Override
@@ -152,9 +153,4 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  @RolesAllowed(CLIENT)
-  public List<Order> findDeliveredCustomerOrders(Long accountId) {
-    return orderFacade.findDeliveredCustomerOrders(accountId);
-  }
 }

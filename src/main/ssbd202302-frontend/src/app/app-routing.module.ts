@@ -23,6 +23,8 @@ import { AccountType } from './enums/account.type';
 import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
+import {ClientPageComponent} from "./pages/client-page/client-page.component";
+import {ClientOrdersPageComponent} from "./pages/client-orders-page/client-orders-page.component";
 
 const routes: Routes = [
   {
@@ -77,6 +79,22 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.EMPLOYEE],
+    }
+  },
+  {
+    path: 'client',
+    component: ClientPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.CLIENT],
+    }
+  },
+  {
+    path: 'client/orders',
+    component: ClientOrdersPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.CLIENT],
     }
   },
   {

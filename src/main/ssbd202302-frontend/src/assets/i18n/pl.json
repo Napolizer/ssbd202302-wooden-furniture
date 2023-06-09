@@ -132,7 +132,7 @@
   "add.product.drop.upload.label": "Przeciągnij obraz tutaj, aby go dodać",
   "add.product.drop.fill.label": "Dodaj szczegóły mebla aby dodać obraz",
   "add.product.success": "Produkt został pomyślnie dodany",
-  
+
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
   "reset.password.confirmNewPassword": "Powtórz nowe hasło",
@@ -275,6 +275,7 @@
   "toolbar.home": "Strona Domowa",
   "toolbar.adminPanel": "Panel Administracyjny",
   "toolbar.employeePanel": "Panel Pracownika",
+  "toolbar.clientPanel": "Panel Klienta",
   "toolbar.myAccount": "Moje konto",
   "toolbar.logout": "Wyloguj",
   "toolbar.logout.success.message": "Zostałeś pomyślnie wylogowany",
@@ -351,6 +352,11 @@
   "TABLE": "Stół",
   "ROUND_TABLE": "Stół okrągły",
   "RECTANGULAR_TABLE": "Stół prostokątny",
+  "CREATED": "Stworzone",
+  "COMPLETED": "Zakończone",
+  "IN_DELIVERY": "W dostawie",
+  "DELIVERED": "Dostarczone",
+  "CANCELLED": "Anulowane",
 
   "product.wood.type.birch": "Brzoza",
   "product.wood.type.oak": "Dąb",
@@ -364,5 +370,14 @@
   "product.color.green": "Zielony",
   "product.color.blue": "Niebieski",
   "product.color.brown": "Brązowy",
-  "product.color.white": "Biały"
+  "product.color.white": "Biały",
+
+  "order.show": "Wyświetl zamówienie",
+  "order.client.observe": "Obserwuj zamówienie",
+  "order.client.observe.button": "Obserwuj",
+  "order.state": "Stan zamówienia",
+  "order.client.already.observed": "Już obserwowane",
+  "orders.client": "Twoje zamówienia",
+  "products.size": "Liczba produktów",
+  "products.total.price": "Cena całkowita"
 }

@@ -36,11 +36,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 })
 @NamedQueries({
     @NamedQuery(
-        name = Order.FIND_CLIENTS_DELIVERED_ORDERS,
+        name = Order.FIND_ACCOUNT_ORDERS,
         query = "SELECT o FROM sales_order o"
-            + " WHERE o.account.id = :id "
-            + "AND (o.orderState = pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.COMPLETED"
-            + " OR o.orderState = pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.DELIVERED)"
+            + " WHERE o.account.login = :login "
     ),
     @NamedQuery(
         name = Order.FIND_BY_STATE,
@@ -49,7 +47,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
     )
 })
 public class Order extends AbstractEntity {
-  public static final String FIND_CLIENTS_DELIVERED_ORDERS = "Order.findClientsDeliveredOrders";
+  public static final String FIND_ACCOUNT_ORDERS = "Order.findAccountOrders";
   public static final String FIND_BY_STATE = "Order.findByState";
 
   @Enumerated(value = EnumType.STRING)

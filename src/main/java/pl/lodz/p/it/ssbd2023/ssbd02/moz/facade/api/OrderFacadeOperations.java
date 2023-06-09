@@ -14,7 +14,4 @@ public interface OrderFacadeOperations extends Facade<Order> {
   List<Order> findByState(OrderState orderState);
 
   List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
-
-  List<Order> findDeliveredCustomerOrders(Long accountId);
-
 }

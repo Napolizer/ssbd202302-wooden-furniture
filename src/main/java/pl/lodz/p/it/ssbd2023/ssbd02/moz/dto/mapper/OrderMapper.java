@@ -76,6 +76,7 @@ public class OrderMapper {
     return OrderDto.builder()
         .id(order.getId())
         .orderProductList(orderProductDtoList)
+        .orderState(order.getOrderState().name())
         .recipientFirstName(order.getRecipient().getFirstName())
         .recipientLastName(order.getRecipient().getLastName())
         .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))

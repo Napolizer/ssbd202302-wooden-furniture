@@ -39,8 +39,11 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   private OrderMapper orderMapper;
 
   @Override
+  @RolesAllowed(CLIENT)
   public List<OrderDto> findByAccountLogin(String login) {
-    throw new UnsupportedOperationException();
+    return orderService.findByAccountLogin(login).stream()
+            .map(orderMapper::mapToOrderDto)
+            .toList();
   }
 
   @Override
@@ -131,15 +134,6 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @Override
   public List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
-  }
-
-
-  @Override
-  @RolesAllowed(CLIENT)
-  public List<OrderDto> findDeliveredCustomerOrders(Long accountId) {
-    return orderService.findDeliveredCustomerOrders(accountId).stream()
-            .map(orderMapper::mapToOrderDto)
-            .toList();
   }
 
   @Override
