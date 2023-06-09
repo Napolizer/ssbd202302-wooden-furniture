@@ -352,6 +352,11 @@
   "TABLE": "Stół",
   "ROUND_TABLE": "Stół okrągły",
   "RECTANGULAR_TABLE": "Stół prostokątny",
+  "CREATED": "Stworzone",
+  "COMPLETED": "Zakończone",
+  "IN_DELIVERY": "W dostawie",
+  "DELIVERED": "Dostarczone",
+  "CANCELLED": "Anulowane",
 
   "product.wood.type.birch": "Brzoza",
   "product.wood.type.oak": "Dąb",
@@ -369,6 +374,9 @@
 
   "order.show": "Wyświetl zamówienie",
   "order.client.observe": "Obserwuj zamówienie",
+  "order.client.observe.button": "Obserwuj",
+  "order.state": "Stan zamówienia",
+  "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
   "products.size": "Liczba produktów"
 }

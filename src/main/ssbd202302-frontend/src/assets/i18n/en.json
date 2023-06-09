@@ -355,6 +355,12 @@
   "TABLE": "Table",
   "ROUND_TABLE": "Round table",
   "RECTANGULAR_TABLE": "Rectangular table",
+  "CREATED": "Created",
+  "COMPLETED": "Completed",
+  "IN_DELIVERY": "In delivery",
+  "DELIVERED": "Delivered",
+  "CANCELLED": "Cancelled",
+
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
@@ -372,6 +378,9 @@
 
   "order.show": "Show oder",
   "order.client.observe": "Observe order",
+  "order.client.observe.button": "Observe",
+  "order.state": "Order state",
+  "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
   "products.size": "Number of products"
 }

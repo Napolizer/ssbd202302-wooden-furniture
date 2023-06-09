@@ -39,7 +39,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
   orders: ClientOrder[] = [];
   loading = true;
   listLoading = false;
-  displayedColumns = ['id', 'productsNumber', 'show', 'observe'];
+  displayedColumns = ['id', 'productsNumber', 'orderState', 'show', 'observe'];
   dataSource = new MatTableDataSource<ClientOrder>(this.orders);
   destroy = new Subject<boolean>();
 
@@ -63,6 +63,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
     this.orderService.getAllClientOrders()
       .pipe(tap(() => this.loading = true), takeUntil(this.destroy))
       .subscribe(orders => {
+        console.log(orders)
         this.orders = orders;
         this.loading = false;
         this.dataSource = new MatTableDataSource<ClientOrder>(this.orders);
@@ -108,4 +109,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   }
 
+  canObserve(order: any): boolean {
+    return (order.orderState == 'CREATED' || order.orderState == 'IN_DELIVERY') && !order.observed;
+  }
 }

@@ -23,6 +23,10 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.size' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let order">{{order.products.length}}</mat-cell>
                 </ng-container>
+                <ng-container matColumnDef="orderState">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'order.state' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{order.orderState | translate}}</mat-cell>
+                </ng-container>
                 <ng-container matColumnDef="show">
                   <mat-header-cell *matHeaderCellDef>{{'order.show' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let order">
@@ -32,7 +36,12 @@
                 <ng-container matColumnDef="observe">
                   <mat-header-cell *matHeaderCellDef>{{'order.client.observe' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let order">
-                    <mat-icon class="show" (click)="observeOrder()">remove_red_eye</mat-icon>
+                    <button mat-button color="primary" class="my-button" (click)="observeOrder()" *ngIf="canObserve(order)">
+                      {{'order.client.observe.button' | translate}}
+                    </button>
+                    <button mat-button color="primary" *ngIf="order.observed">
+                      {{'order.client.already.observed' | translate}}
+                    </button>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
