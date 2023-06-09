@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "sales_order_product", indexes = {
     @Index(name = "sales_order_product_product_id", columnList = "product_id"),
-    @Index(name = "sales_order_product_order_id", columnList = "product_id"),
+    @Index(name = "sales_order_product_order_id", columnList = "order_id"),
 })
 public class OrderProduct extends AbstractEntity {
 
