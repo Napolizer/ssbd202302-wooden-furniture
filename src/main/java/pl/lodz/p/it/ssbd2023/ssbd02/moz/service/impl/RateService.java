@@ -31,8 +31,14 @@ public class RateService implements RateServiceOperations {
   private AccountFacadeOperations accountFacade;
 
   @Override
-  public void delete(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public void delete(Long id, String login) {
+    Rate rate = rateFacade.find(id)
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+    if (!rate.getAccount().getLogin().equals(login)) {
+      throw ApplicationExceptionFactory.createRateNotFoundException();
+    }
+    rateFacade.delete(rate);
   }
 
   @Override

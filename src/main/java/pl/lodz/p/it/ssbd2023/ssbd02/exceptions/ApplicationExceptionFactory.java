@@ -39,6 +39,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedEx
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.RateNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
@@ -315,5 +316,10 @@ public final class ApplicationExceptionFactory {
   public static ProductAlreadyRatedException createProductAlreadyRatedException() {
     return new ProductAlreadyRatedException(MessageUtil.MessageKey.PRODUCT_ALREADY_RATED,
             Response.Status.CONFLICT);
+  }
+
+  public static RateNotFoundException createRateNotFoundException() {
+    return new RateNotFoundException(MessageUtil.MessageKey.RATE_NOT_FOUND,
+            Response.Status.NOT_FOUND);
   }
 }

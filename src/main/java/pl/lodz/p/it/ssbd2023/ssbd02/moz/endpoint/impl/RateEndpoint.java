@@ -24,8 +24,9 @@ public class RateEndpoint implements RateEndpointOperations {
   private RateServiceOperations rateService;
 
   @Override
-  public void delete(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public void delete(Long id, String login) {
+    rateService.delete(id, login);
   }
 
   @Override

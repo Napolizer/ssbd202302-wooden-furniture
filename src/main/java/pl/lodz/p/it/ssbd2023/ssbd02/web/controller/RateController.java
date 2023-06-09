@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -28,8 +31,10 @@ public class RateController {
 
   @DELETE
   @Path("id")
-  public void delete(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public Response delete(Long id) {
+    rateEndpoint.delete(id, principal.getName());
+    return Response.noContent().build();
   }
 
   @POST
