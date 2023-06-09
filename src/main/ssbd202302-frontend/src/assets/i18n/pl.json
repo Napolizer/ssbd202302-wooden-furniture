@@ -367,5 +367,8 @@
   "product.color.brown": "Brązowy",
   "product.color.white": "Biały",
 
-  "client.orders.delivered": "Przeglądaj swoje dostarczone zamówienia"
+  "order.show": "Wyświetl zamówienie",
+  "order.client.observe": "Obserwuj zamówienie",
+  "orders.client": "Twoje zamówienia",
+  "products.size": "Liczba produktów"
 }

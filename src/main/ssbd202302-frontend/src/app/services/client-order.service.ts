@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenService} from "./token.service";
 import {Observable} from "rxjs";
-import {Product} from "../interfaces/product";
 import {environment} from "../../environments/environment";
 import {ClientOrder} from "../interfaces/clientOrder";
 
@@ -18,7 +17,7 @@ export class ClientOrderService {
 
   public getAllClientOrders(): Observable<ClientOrder[]> {
     return this.httpClient.get<ClientOrder[]>(
-      `${environment.apiBaseUrl}/order/delivered/`,
+      `${environment.apiBaseUrl}/order/customer`,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,

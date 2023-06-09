@@ -370,5 +370,8 @@
   "product.color.brown": "Brown",
   "product.color.white": "White",
 
-  "client.orders.delivered": "Browse your delivered orders"
+  "order.show": "Show oder",
+  "order.client.observe": "Observe order",
+  "orders.client": "Your orders",
+  "products.size": "Number of products"
 }
