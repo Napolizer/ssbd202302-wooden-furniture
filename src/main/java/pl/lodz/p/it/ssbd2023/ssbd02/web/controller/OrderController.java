@@ -121,9 +121,9 @@ public class OrderController {
 
 
   @PUT
-  @Path("/state/{id}")
-  public Response changeStateOfOrder(@PathParam("id") Long id, OrderState state) {
-    throw new UnsupportedOperationException();
+  @Path("/state/{id}/state/{state}")
+  public Response changeOrderState(@PathParam("id") Long id, @PathParam("state") OrderState state) {
+    return Response.ok(orderEndpoint.changeOrderState(id, state)).build();
   }
 
   @POST

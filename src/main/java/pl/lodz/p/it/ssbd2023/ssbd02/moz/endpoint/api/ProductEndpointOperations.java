@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api;
 
 import jakarta.ejb.Local;
 import java.util.List;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
@@ -15,7 +16,7 @@ public interface ProductEndpointOperations {
 
   ProductDto createProductWithExistingImage(ProductCreateWithImageDto entity);
 
-  ProductDto archive(Long id, UpdateProductDto entity);
+  Product archive(Long id);
 
   ProductDto update(Long id, UpdateProductDto entity);
 

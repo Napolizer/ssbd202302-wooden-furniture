@@ -131,7 +131,12 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @Override
   public Order changeOrderState(Long id, OrderState state) {
     Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
-    //TODO change order state logic
+    if (state.ordinal() < order.getOrderState().ordinal()) {
+      throw ApplicationExceptionFactory.createInvalidOrderStateTransitionException();
+    }
+    order.setOrderState(state);
+    orderFacade.update(order);
+
     if (order.getObserved()) {
       mailService.sendEmailAboutChangingOrderState(order.getAccount().getEmail(), order.getAccount().getLocale());
     }

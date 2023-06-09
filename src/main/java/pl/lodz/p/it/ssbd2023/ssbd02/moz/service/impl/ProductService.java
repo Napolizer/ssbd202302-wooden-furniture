@@ -73,9 +73,17 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     return productFacade.update(product);
   }
 
-  @Override
-  public Product archive(Long id, Product entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public Product archive(Long id) {
+    Product product = productFacade.findById(id)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+    if (!product.getArchive().equals(false)) {
+      throw ApplicationExceptionFactory.createIllegalProductStateChangeException();
+    }
+
+    product.setArchive(true);
+    return productFacade.update(product);
   }
 
   @Override

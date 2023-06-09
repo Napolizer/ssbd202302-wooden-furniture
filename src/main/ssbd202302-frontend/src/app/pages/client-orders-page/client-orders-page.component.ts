@@ -39,7 +39,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
   orders: ClientOrder[] = [];
   loading = true;
   listLoading = false;
-  displayedColumns = ['id', 'productsNumber', 'orderState', 'show', 'observe'];
+  displayedColumns = ['id', 'productsNumber', 'totalPrice', 'orderState', 'show', 'observe'];
   dataSource = new MatTableDataSource<ClientOrder>(this.orders);
   destroy = new Subject<boolean>();
 
@@ -111,5 +111,13 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   canObserve(order: any): boolean {
     return (order.orderState == 'CREATED' || order.orderState == 'IN_DELIVERY') && !order.observed;
+  }
+
+  calculateTotalQuantity(order: any): number {
+    let total = 0;
+    for (const product of order.orderProductList) {
+      total += product.amount;
+    }
+    return total;
   }
 }

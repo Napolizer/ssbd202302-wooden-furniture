@@ -382,5 +382,6 @@
   "order.state": "Order state",
   "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
-  "products.size": "Number of products"
+  "products.size": "Number of products",
+  "products.total.price": "Total price"
 }

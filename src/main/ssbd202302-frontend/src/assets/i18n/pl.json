@@ -378,5 +378,6 @@
   "order.state": "Stan zamówienia",
   "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
-  "products.size": "Liczba produktów"
+  "products.size": "Liczba produktów",
+  "products.total.price": "Cena całkowita"
 }

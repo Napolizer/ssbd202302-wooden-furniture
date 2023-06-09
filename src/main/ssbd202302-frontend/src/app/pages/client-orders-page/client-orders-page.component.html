@@ -21,7 +21,15 @@
                 </ng-container>
                 <ng-container matColumnDef="productsNumber">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.size' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order">{{order.products.length}}</mat-cell>
+                  <mat-cell *matCellDef="let order">
+                    {{ calculateTotalQuantity(order) }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="totalPrice">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.total.price' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">
+                    {{ order.totalPrice + ' zł' }}
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="orderState">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>{{'order.state' | translate}}</mat-header-cell>

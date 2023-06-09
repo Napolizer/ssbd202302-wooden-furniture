@@ -22,7 +22,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @EqualsAndHashCode(callSuper = true)
@@ -47,7 +46,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
     @NamedQuery(name = Product.FIND_ALL_BY_COLOR,
         query = "SELECT product FROM Product product WHERE product.color = :color"),
     @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
-        query = "SELECT product FROM Product product WHERE product.productState = 'AVAILABLE'"),
+        query = "SELECT product FROM Product product WHERE product.archive = false"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
         query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
     @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
@@ -68,10 +67,6 @@ public class Product extends AbstractEntity {
 
   @Column(nullable = false)
   private Double price;
-
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false, name = "product_state")
-  private ProductState productState;
 
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "image_id", nullable = false)
