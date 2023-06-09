@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
@@ -26,7 +26,7 @@ public class OrderMapper {
 
   public CreateOrderDto mapToCreateOrderDto(Order order) {
     List<ProductDto> productDtos = new ArrayList<>();
-    order.getProducts().forEach(product -> productDtos.add(productMapper.mapToProductDto(product)));
+    order.getOrderedProducts().forEach(product -> productDtos.add(productMapper.mapToProductDto(product.getProduct())));
     return CreateOrderDto.builder()
         .products(productDtos)
         .firstName(order.getRecipient().getFirstName())
@@ -45,16 +45,20 @@ public class OrderMapper {
         .address(address)
         .build();
 
-    List<Product> products = new ArrayList<>();
-    createOrderDto.getProducts().forEach(productDto -> products.add(productMapper.mapToProduct(productDto)));
+    Order order = Order.builder()
+            .recipient(recipient)
+            .deliveryAddress(address)
+            .account(accountMapper.mapToAccount(createOrderDto.getAccount()))
+            .observed(createOrderDto.getObserved())
+            .build();
 
-    return Order.builder()
-        .recipient(recipient)
-        .deliveryAddress(address)
-        .products(products)
-        .account(accountMapper.mapToAccount(createOrderDto.getAccount()))
-        .observed(createOrderDto.getObserved())
-        .build();
+    createOrderDto.getProducts().forEach(productDto -> order.getOrderedProducts().add(
+            OrderProduct.builder().price(productDto.getPrice()).amount(productDto.getAmount())
+                    .product(productMapper.mapToProduct(productDto))
+                    .order(order).build()
+    ));
+
+    return order;
   }
 
   public Order mapToOrder(OrderDto orderDto) {
@@ -65,22 +69,26 @@ public class OrderMapper {
         .address(address)
         .build();
 
-    List<Product> products = new ArrayList<>();
-    orderDto.getProducts().forEach(productDto -> products.add(productMapper.mapToProduct(productDto)));
+    Order order = Order.builder()
+            .id(orderDto.getId())
+            .recipient(recipient)
+            .deliveryAddress(address)
+            .account(accountMapper.mapToAccount(orderDto.getAccount()))
+            .observed(orderDto.getObserved())
+            .build();
 
-    return Order.builder()
-        .id(orderDto.getId())
-        .recipient(recipient)
-        .deliveryAddress(address)
-        .products(products)
-        .account(accountMapper.mapToAccount(orderDto.getAccount()))
-        .observed(orderDto.getObserved())
-        .build();
+    orderDto.getProducts().forEach(productDto -> order.getOrderedProducts().add(
+            OrderProduct.builder().price(productDto.getPrice()).amount(productDto.getAmount())
+                    .product(productMapper.mapToProduct(productDto))
+                    .order(order).build()
+    ));
+
+    return order;
   }
 
   public OrderDto mapToOrderDto(Order order) {
     List<ProductDto> productDtos = new ArrayList<>();
-    order.getProducts().forEach(product -> productDtos.add(productMapper.mapToProductDto(product)));
+    order.getOrderedProducts().forEach(product -> productDtos.add(productMapper.mapToProductDto(product.getProduct())));
     return OrderDto.builder()
         .id(order.getId())
         .products(productDtos)
