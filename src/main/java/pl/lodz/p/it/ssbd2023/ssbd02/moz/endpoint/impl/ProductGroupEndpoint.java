@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
@@ -67,8 +68,10 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
   }
 
   @Override
+  @PermitAll
   public List<ProductGroupInfoDto> findAll() {
-    throw new UnsupportedOperationException();
+    return repeatTransactionWithoutOptimistic(() -> productGroupService.findAll()).stream()
+            .map(ProductGroupMapper::mapToProductGroupInfoDto).toList();
   }
 
   @Override

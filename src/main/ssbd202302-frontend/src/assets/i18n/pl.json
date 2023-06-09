@@ -111,7 +111,28 @@
   "add.product.group.back": "Powrót",
   "add.product.group.confirm": "Dodaj",
   "add.product.group.success": "Grupa produktów została pomyślnie dodana",
+  "add.product.group.hint.max.50": "Maksymalnie 50 znaków",
 
+  "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "add.product.category": "Kategoria",
+  "add.product.wood.type": "Rodzaj drewna",
+  "add.product.color": "Kolor",
+  "add.product.hint.max.3": "Maksymalnie 3 cyfry",
+  "add.product.hint.max.8": "Maksymalnie 8 cyfr",
+  "add.product.furniture.details": "Szczegóły produktu",
+  "add.product.quantity.price": "Liczba sztuk i cena",
+  "add.product.furniture.dimensions": "Wymiary mebla",
+  "add.product.package.dimensions": "Wymiary paczki",
+  "add.product.width": "Szerokość",
+  "add.product.height": "Wysokość",
+  "add.product.depth": "Głębokość",
+  "add.product.weight": "Waga",
+  "add.product.quantity": "Liczba sztuk",
+  "add.product.price": "Cena",
+  "add.product.drop.upload.label": "Przeciągnij obraz tutaj, aby go dodać",
+  "add.product.drop.fill.label": "Dodaj szczegóły mebla aby dodać obraz",
+  "add.product.success": "Produkt został pomyślnie dodany",
+  
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
   "reset.password.confirmNewPassword": "Powtórz nowe hasło",
@@ -197,6 +218,7 @@
   "dialog.unblock.account.message":"Czy na pewno chcesz odblokować wybrane konto?",
   "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
+  "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -238,8 +260,11 @@
   "exception.password.already.used": "Hasło było już używane przez użytkownika",
   "exception.current.password.invalid": "Obecne hasło jest nieprawidłowe",
   "exception.mok.account.external.invalid.state": "Twoje konto jest zablokowane bądź nieaktywne",
-
   "exception.moz.product.group.already.exists": "Grupa produktów z podaną nazwą już istnieje",
+  "exception.moz.product.dimensions.already.exists": "Produkt z podanymi wymiarami już istnieje",
+  "exception.invalid.image.file.format": "Wybrany plik nie jest obrazem, wybierz inny plik",
+  "exception.image.required": "Produkt musi zawierać zdjęcie",
+  "exception.moz.product.not.found": "Produkt nie istnieje",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -299,6 +324,7 @@
   "admin.create.account": "Utwórz konto",
 
   "employee.add.product.group": "Dodaj grupę produktów",
+  "employee.add.product": "Dodaj produkt",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.firstPageLabel": "Pierwsza strona",
@@ -324,5 +350,19 @@
   "ARMCHAIR": "Fotel",
   "TABLE": "Stół",
   "ROUND_TABLE": "Stół okrągły",
-  "RECTANGULAR_TABLE": "Stół prostokątny"
+  "RECTANGULAR_TABLE": "Stół prostokątny",
+
+  "product.wood.type.birch": "Brzoza",
+  "product.wood.type.oak": "Dąb",
+  "product.wood.type.dark.oak": "Ciemny dąb",
+  "product.wood.type.spruce": "Świerk",
+  "product.wood.type.jungle": "Drewno tropikalne",
+  "product.wood.type.acacia": "Akacja",
+
+  "product.color.black": "Czarny",
+  "product.color.red": "Czerwony",
+  "product.color.green": "Zielony",
+  "product.color.blue": "Niebieski",
+  "product.color.brown": "Brązowy",
+  "product.color.white": "Biały"
 }

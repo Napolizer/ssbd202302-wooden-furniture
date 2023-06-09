@@ -2,10 +2,8 @@
 <mat-divider></mat-divider>
 <div mat-dialog-content>
   <app-spinner [loading]="loading"></app-spinner>
+  
   <div class="left-panel">
-    <img [src]="this.displayedImage" [class.loaded]="!loadingImage" (loadstart)="loadingImage=true;" (loadeddata)="loadingImage=false;">
-  </div>
-  <div class="right-panel">
     <form class="form-container" [formGroup]="addProductGroupForm">
       <div class="form">
       
@@ -30,7 +28,7 @@
         </mat-form-field>
   
         <mat-form-field
-          hintLabel="{{ 'register.hint.max.20' | translate }}"
+          hintLabel="{{ 'add.product.group.hint.max.50' | translate }}"
           appearance="fill"
           class="input"
         >
@@ -40,7 +38,7 @@
             #name
             type="text"
             formControlName="name"
-            maxlength="20"
+            maxlength="50"
             required
           />
           <mat-error
@@ -53,7 +51,7 @@
               "register.validity.person.patternMismatch" | translate
             }}</mat-error
           >
-          <mat-hint align="end">{{ name.value.length }}/20</mat-hint>
+          <mat-hint align="end">{{ name.value.length }}/50</mat-hint>
         </mat-form-field>
   
         <div class="button-container">
@@ -66,6 +64,10 @@
         </div>
       </div>
     </form>
+  </div>
+
+  <div class="right-panel">
+    <img [src]="this.displayedImage" [class.loaded]="!loadingImage" (loadstart)="loadingImage=true;" (loadeddata)="loadingImage=false;">
   </div>
   
 </div>

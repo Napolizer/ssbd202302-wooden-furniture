@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @Data
@@ -18,7 +19,7 @@ public class ProductDto {
   private Long id;
   @NotNull
   private Double price;
-  private Boolean available;
+  private ProductState productState;
   @NotNull
   private String imageUrl;
   @NotNull
