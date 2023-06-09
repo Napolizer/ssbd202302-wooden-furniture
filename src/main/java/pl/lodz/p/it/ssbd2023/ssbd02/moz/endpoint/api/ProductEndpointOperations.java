@@ -41,5 +41,7 @@ public interface ProductEndpointOperations {
 
   List<ProductDto> findAllByProductGroupId(Long productGroupId);
 
+  List<ProductDto> findAllByCategoryId(Long categoryId);
+
   ProductDto editProduct(Long id, EditProductDto editProductDto);
 }

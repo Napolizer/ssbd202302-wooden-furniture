@@ -147,6 +147,12 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     return productFacade.findAllByProductGroup(productGroupId);
   }
 
+  @Override
+  @PermitAll
+  public List<Product> findAllByCategory(Long categoryId) {
+    return productFacade.findAllByCategory(categoryId);
+  }
+
   @RolesAllowed(EMPLOYEE)
   public Product editProduct(Long id, Product productWithChanges, String hash) {
     Product product = productFacade.findById(id)

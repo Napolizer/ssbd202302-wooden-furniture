@@ -23,4 +23,6 @@ public interface ProductFacadeOperations extends Facade<Product> {
   List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType);
 
   List<Product> findAllByProductGroup(Long productGroupId);
+
+  List<Product> findAllByCategory(Long categoryId);
 }

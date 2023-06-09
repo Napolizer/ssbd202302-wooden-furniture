@@ -55,6 +55,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
         query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId "
                 + "AND (:color IS NULL OR product.color = :color) "
                 + "AND (:woodType IS NULL OR product.woodType = :woodType)"),
+    @NamedQuery(name = Product.FIND_ALL_BY_CATEGORY_ID,
+        query = "SELECT product FROM Product product WHERE product.productGroup.category.id = :categoryId"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_ID,
         query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId")
 })
@@ -67,6 +69,8 @@ public class Product extends AbstractEntity {
   public static final String
           FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE = "Product.findAllByProductGroupColorAndWoodType";
   public static final String FIND_ALL_BY_PRODUCT_GROUP_ID = "Product.findAllByProductGroupId";
+  public static final String FIND_ALL_BY_CATEGORY_ID = "Product.findAllByCategoryId";
+
   @Column(nullable = false)
   private Double price;
 

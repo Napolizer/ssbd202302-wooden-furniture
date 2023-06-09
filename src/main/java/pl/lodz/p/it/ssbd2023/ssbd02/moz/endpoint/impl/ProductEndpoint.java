@@ -141,6 +141,14 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   }
 
   @Override
+  @PermitAll
+  public List<ProductDto> findAllByCategoryId(Long categoryId) {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAllByCategory(
+            categoryId))
+            .stream().map(productMapper::mapToProductDto).toList();
+  }
+
+  @Override
   @RolesAllowed(EMPLOYEE)
   public ProductDto editProduct(Long id, EditProductDto editProductDto) {
     Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,

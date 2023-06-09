@@ -40,5 +40,7 @@ public interface ProductServiceOperations {
 
   List<Product> findAllByProductGroup(Long productGroupId);
 
+  List<Product> findAllByCategory(Long categoryId);
+
   Product editProduct(Long id, Product productWithChanges, String hash);
 }
