@@ -120,7 +120,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   public OrderDto changeOrderState(Long id, OrderState state) {
-    throw new UnsupportedOperationException();
+    return orderMapper.mapToOrderDto(orderService.changeOrderState(id, state));
   }
 
   @Override
