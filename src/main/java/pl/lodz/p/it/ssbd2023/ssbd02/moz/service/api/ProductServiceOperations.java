@@ -14,7 +14,7 @@ public interface ProductServiceOperations {
 
   Product createProductWithExistingImage(Product entity, Long productGroupId, Long imageProductId);
 
-  Product archive(Long id, Product entity);
+  Product archive(Long id);
 
   Product update(Long id, Product entity);
 
