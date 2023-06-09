@@ -68,8 +68,21 @@ public class RateService implements RateServiceOperations {
   }
 
   @Override
-  public Rate update(Long id, Rate entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public Rate update(Long id, Integer newRate, String login) {
+    accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    Rate rate = rateFacade.find(id)
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+
+    if (!rate.getAccount().getLogin().equals(login)) {
+      //throw if rate isn't assigned by this account
+      throw ApplicationExceptionFactory.createRateNotFoundException();
+    }
+
+    rate.setValue(newRate);
+    return rateFacade.update(rate);
   }
 
   @Override

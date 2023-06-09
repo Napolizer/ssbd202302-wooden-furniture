@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.RateMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateInputDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.RateEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.RateServiceOperations;
 
@@ -31,7 +31,7 @@ public class RateEndpoint implements RateEndpointOperations {
 
   @Override
   @RolesAllowed(CLIENT)
-  public RateDto create(String login, RateCreateDto entity) {
+  public RateDto create(String login, RateInputDto entity) {
     Rate rate = rateService.create(login, entity.getRate(), entity.getProductId());
     return RateMapper.matToRateDto(rate);
   }
@@ -42,8 +42,10 @@ public class RateEndpoint implements RateEndpointOperations {
   }
 
   @Override
-  public RateDto update(Long id, RateDto entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public RateDto update(Long id, RateInputDto entity, String login) {
+    Rate updatedRate = rateService.update(id, entity.getRate(), login);
+    return RateMapper.matToRateDto(updatedRate);
   }
 
   @Override

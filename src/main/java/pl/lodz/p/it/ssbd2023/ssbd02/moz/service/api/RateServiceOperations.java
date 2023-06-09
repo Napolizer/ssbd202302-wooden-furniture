@@ -15,7 +15,7 @@ public interface RateServiceOperations {
 
   Rate archive(Long id, Rate entity);
 
-  Rate update(Long id, Rate entity);
+  Rate update(Long id, Integer rateNewValue, String login);
 
   Optional<Rate> find(Long id);
 
