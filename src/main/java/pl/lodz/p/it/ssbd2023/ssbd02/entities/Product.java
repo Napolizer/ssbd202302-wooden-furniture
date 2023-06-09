@@ -108,13 +108,6 @@ public class Product extends AbstractEntity {
 
   public void update(Product product) {
     this.price = product.price != null ? product.price : price;
-    this.productState = product.productState != null ? product.productState : productState;
-    this.weight = product.weight != null ? product.weight : weight;
     this.amount = product.amount != null ? product.amount : amount;
-    this.weightInPackage = product.weightInPackage != null ? product.weightInPackage : weightInPackage;
-    this.furnitureDimensions = product.furnitureDimensions != null ? product.furnitureDimensions : furnitureDimensions;
-    this.packageDimensions = product.packageDimensions != null ? product.packageDimensions : packageDimensions;
-    this.color = product.color != null ? product.color : color;
-    this.woodType = product.woodType != null ? product.woodType : woodType;
   }
 }

@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateless
 public class ProductMapper {
@@ -32,8 +33,8 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup()))
+              .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
               .build();
     } else {
       return ProductDto.builder()
@@ -47,8 +48,8 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(mapToProductGroupInfoDto(product.getProductGroup()))
+              .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
               .build();
     }
   }
@@ -66,14 +67,7 @@ public class ProductMapper {
 
     return Product.builder()
             .price(editProductDto.getPrice())
-            .productState(editProductDto.getProductState())
-            .weight(editProductDto.getWeight())
             .amount(editProductDto.getAmount())
-            .weightInPackage(editProductDto.getWeightInPackage())
-            .furnitureDimensions(editProductDto.getFurnitureDimensions())
-            .packageDimensions(editProductDto.getPackageDimensions())
-            .color(editProductDto.getColor())
-            .woodType(editProductDto.getWoodType())
             .build();
   }
 

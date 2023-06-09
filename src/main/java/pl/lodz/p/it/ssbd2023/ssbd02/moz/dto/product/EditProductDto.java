@@ -18,21 +18,7 @@ public class EditProductDto {
   @NotNull
   private Double price;
   @NotNull
-  private ProductState productState;
-  @NotNull
-  private Double weight;
-  @NotNull
   private Integer amount;
-  @NotNull
-  private Double weightInPackage;
-  @NotNull
-  private Dimensions furnitureDimensions;
-  @NotNull
-  private Dimensions packageDimensions;
-  @NotNull
-  private Color color;
-  @NotNull
-  private WoodType woodType;
   @NotNull
   private String hash;
 
