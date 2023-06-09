@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RateCreateDto {
+public class RateInputDto {
   @Min(1)
   @Max(5)
   @NotNull

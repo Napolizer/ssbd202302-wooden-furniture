@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateless;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
@@ -24,7 +23,7 @@ public class ProductMapper {
       return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .productState(product.getProductState())
+              .archive(product.getArchive())
               .imageUrl(product.getImage().getUrl())
               .weight(product.getWeight())
               .amount(product.getAmount())
@@ -40,7 +39,7 @@ public class ProductMapper {
       return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .productState(product.getProductState())
+              .archive(product.getArchive())
               .weight(product.getWeight())
               .amount(product.getAmount())
               .weightInPackage(product.getWeightInPackage())
@@ -75,7 +74,7 @@ public class ProductMapper {
     return Product.builder()
         .id(productDto.getId())
         .price(productDto.getPrice())
-        .productState(productDto.getProductState())
+        .archive(productDto.getArchive())
         .weight(productDto.getWeight())
         .amount(productDto.getAmount())
         .weightInPackage(productDto.getWeightInPackage())
@@ -86,10 +85,10 @@ public class ProductMapper {
         .build();
   }
 
-  public Product mapToProduct(ProductCreateDto productCreateDto) {
+  public static Product mapToProduct(ProductCreateDto productCreateDto) {
     return Product.builder()
             .price(productCreateDto.getPrice())
-            .productState(productCreateDto.getProductState())
+            .archive(false)
             .weight(productCreateDto.getWeight())
             .amount(productCreateDto.getAmount())
             .weightInPackage(productCreateDto.getWeightInPackage())
@@ -106,18 +105,24 @@ public class ProductMapper {
   }
 
   public static Color mapToColor(String color) {
+    if (color == null || color.equals("")) {
+      return null;
+    }
     try {
       return Color.valueOf(color.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidColorException();
     }
   }
 
   public static WoodType mapToWoodType(String woodType) {
+    if (woodType == null || woodType.equals("")) {
+      return null;
+    }
     try {
       return WoodType.valueOf(woodType.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidWoodTypeException();
     }
   }
 

@@ -8,7 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.Facade;
 @Local
 public interface RateFacadeOperations extends Facade<Rate> {
 
-  void delete(Long id);
+  void delete(Rate rate);
 
   List<Rate> findAllByValue(Integer value);
 

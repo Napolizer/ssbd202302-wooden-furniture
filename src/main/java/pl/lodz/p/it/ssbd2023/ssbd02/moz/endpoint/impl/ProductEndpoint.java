@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
@@ -19,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -51,15 +53,31 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductDto create(ProductCreateDto productCreateDto, byte[] image, String fileName) {
-    Product product = productMapper.mapToProduct(productCreateDto);
-    return productMapper.mapToProductDto(repeatTransactionWithOptimistic(() -> productService
-                    .create(product, image, productCreateDto.getProductGroupId(), fileName)));
+  public ProductDto createProductWithNewImage(ProductCreateDto productCreateDto, byte[] image, String fileName) {
+    Product product = ProductMapper.mapToProduct(productCreateDto);
+    return productMapper.mapToProductDto(
+            repeatTransactionWithOptimistic(() ->
+                    productService.createProductWithNewImage(
+                            product,
+                            image,
+                            productCreateDto.getProductGroupId(), fileName)));
   }
 
   @Override
-  public ProductDto archive(Long id, UpdateProductDto entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public ProductDto createProductWithExistingImage(ProductCreateWithImageDto productCreateWithImageDto) {
+    Product product = ProductMapper.mapToProduct(productCreateWithImageDto);
+    return productMapper.mapToProductDto(
+            repeatTransactionWithOptimistic(() ->
+                    productService.createProductWithExistingImage(
+                            product,
+                            productCreateWithImageDto.getProductGroupId(),
+                            productCreateWithImageDto.getImageProductId())));
+  }
+
+  @RolesAllowed(EMPLOYEE)
+  public Product archive(Long id) {
+    return repeatTransactionWithOptimistic(() -> productService.archive(id));
   }
 
   @Override
@@ -105,10 +123,28 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   }
 
   @Override
+  @PermitAll
+  public List<ProductDto> findAllByProductGroupColorAndWoodType(Long productGroupId, String color, String woodType) {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAllByProductGroupColorAndWoodType(
+            productGroupId,
+            ProductMapper.mapToColor(color),
+            ProductMapper.mapToWoodType(woodType)))
+            .stream().map(productMapper::mapToProductDto).toList();
+  }
+
+  @Override
+  @PermitAll
+  public List<ProductDto> findAllByProductGroupId(Long productGroupId) {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAllByProductGroup(
+            productGroupId))
+            .stream().map(productMapper::mapToProductDto).toList();
+  }
+
+  @Override
   @RolesAllowed(EMPLOYEE)
   public ProductDto editProduct(Long id, EditProductDto editProductDto) {
     Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
-            productMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
+            ProductMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
     return productMapper.mapToProductDto(product);
   }
 

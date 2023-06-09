@@ -1,4 +1,4 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CustomValidators {
   static MatchPasswords(control: AbstractControl) {
@@ -48,4 +48,15 @@ export class CustomValidators {
       return null;
     }
   }
+
+  static ProductGroupMustExist(productGroupNames: Map<string, number>) : ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (value && !productGroupNames.has(value)) {
+        return { invalidProductGroup: true };
+      }
+      return null;
+    };
+  }
+
 }

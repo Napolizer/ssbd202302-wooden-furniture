@@ -111,6 +111,27 @@
   "add.product.group.back": "Back",
   "add.product.group.confirm": "Add",
   "add.product.group.success": "Product group has been successfully added",
+  "add.product.group.hint.max.50": "Max 50 characters",
+
+  "add.product.validity.notexisting": "The specified product group does not exist",
+  "add.product.category": "Category",
+  "add.product.wood.type": "Wood type",
+  "add.product.color": "Color",
+  "add.product.hint.max.3": "Max 3 digits",
+  "add.product.hint.max.8": "Max 8 digits",
+  "add.product.furniture.details": "Furniture details",
+  "add.product.quantity.price": "Quantity & price",
+  "add.product.furniture.dimensions": "Furniture dimensions",
+  "add.product.package.dimensions": "Package dimensions",
+  "add.product.width": "Width",
+  "add.product.height": "Height",
+  "add.product.depth": "Depth",
+  "add.product.weight": "Weight",
+  "add.product.quantity": "Quantity",
+  "add.product.price": "Price",
+  "add.product.drop.upload.label": "Drag and drop here to upload an image",
+  "add.product.drop.fill.label": "Add furniture details to upload an image",
+  "add.product.success": "Product has been successfully added",
 
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
@@ -197,6 +218,7 @@
   "dialog.unblock.account.message":"Are you sure you want to unblock this account?",
   "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
+  "dialog.add.product.message": "Are you sure you want to add new product?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -239,9 +261,12 @@
   "exception.password.already.used": "Password has already been used",
   "exception.current.password.invalid": "Current password is invalid",
   "exception.mok.account.external.invalid.state": "Your account is either blocked or inactive",
-
   "exception.moz.product.group.already.exists": "Product group with given name already exists",
-  
+  "exception.moz.product.dimensions.already.exists": "Product with given dimensions already exists",
+  "exception.invalid.image.file.format": "The selected file is not a valid image, please upload an image file",
+  "exception.image.required": "Product must have an image",
+  "exception.moz.product.not.found": "Product not found",
+
   "role.administrator": "Administrator",
   "role.employee": "Employee",
   "role.sales_rep": "Sales Representative",
@@ -301,6 +326,7 @@
   "admin.create.account": "Create account",
 
   "employee.add.product.group": "Add product group",
+  "employee.add.product": "Add product",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.firstPageLabel": "First page",
@@ -326,5 +352,20 @@
   "ARMCHAIR": "Armchair",
   "TABLE": "Table",
   "ROUND_TABLE": "Round table",
-  "RECTANGULAR_TABLE": "Rectangular table"
+  "RECTANGULAR_TABLE": "Rectangular table",
+
+  "product.wood.type.birch": "Birch",
+  "product.wood.type.oak": "Oak",
+  "product.wood.type.dark.oak": "Dark oak",
+  "product.wood.type.spruce": "Spruce",
+  "product.wood.type.jungle": "Jungle wood",
+  "product.wood.type.acacia": "Acacia",
+
+  "product.color.black": "Black",
+  "product.color.red": "Red",
+  "product.color.green": "Green",
+  "product.color.blue": "Blue",
+  "product.color.brown": "Brown",
+  "product.color.white": "White"
+
 }

@@ -26,6 +26,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.OldPasswordGivenException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.IllegalProductStateChangeException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.InvalidOrderStateTransitionException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyCancelledException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
@@ -33,11 +35,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyInDeliveryExcepti
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyObservedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyRatedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.RateNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountIsInactiveException;
@@ -238,6 +242,10 @@ public final class ApplicationExceptionFactory {
     return new ProductGroupAlreadyExistsException();
   }
 
+  public static ProductAlreadyExistsException createProductAlreadyExistsException() {
+    return new ProductAlreadyExistsException();
+  }
+
   public static OrderAlreadyExistsException createOrderAlreadyExistsException() {
     return new OrderAlreadyExistsException();
   }
@@ -275,9 +283,24 @@ public final class ApplicationExceptionFactory {
             Response.Status.BAD_REQUEST);
   }
 
+  public static BaseWebApplicationException createInvalidColorException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_COLOR,
+            Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createInvalidWoodTypeException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_WOOD_TYPE,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static BaseWebApplicationException createInvalidImageFileFormatException() {
     return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_IMAGE_FILE_FORMAT,
             Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createIncompatibleProductImageException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INCOMPATIBLE_PRODUCT_IMAGE,
+            Response.Status.CONFLICT);
   }
 
   public static ProductNotFoundException createProductNotFoundException() {
@@ -295,5 +318,18 @@ public final class ApplicationExceptionFactory {
   public static ProductAlreadyRatedException createProductAlreadyRatedException() {
     return new ProductAlreadyRatedException(MessageUtil.MessageKey.PRODUCT_ALREADY_RATED,
             Response.Status.CONFLICT);
+  }
+
+  public static RateNotFoundException createRateNotFoundException() {
+    return new RateNotFoundException(MessageUtil.MessageKey.RATE_NOT_FOUND,
+            Response.Status.NOT_FOUND);
+  }
+
+  public static IllegalProductStateChangeException createIllegalProductStateChangeException() {
+    return new IllegalProductStateChangeException();
+  }
+
+  public static InvalidOrderStateTransitionException createInvalidOrderStateTransitionException() {
+    return new InvalidOrderStateTransitionException();
   }
 }

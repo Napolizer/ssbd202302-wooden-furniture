@@ -15,14 +15,13 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @EqualsAndHashCode(callSuper = true)
@@ -32,18 +31,32 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @AllArgsConstructor
 @Entity
 @Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
-                  @Index(name = "product_image_id", columnList = "image_id")})
+                  @Index(name = "product_image_id", columnList = "image_id")},
+       uniqueConstraints = { @UniqueConstraint(name = "product_details",
+               columnNames = {"product_group_id",
+                              "color",
+                              "wood_type",
+                              "weight",
+                              "furniture_width",
+                              "furniture_height",
+                              "furniture_depth" }) })
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
     @NamedQuery(name = Product.FIND_ALL_BY_COLOR,
         query = "SELECT product FROM Product product WHERE product.color = :color"),
     @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
-        query = "SELECT product FROM Product product WHERE product.productState = 'AVAILABLE'"),
+        query = "SELECT product FROM Product product WHERE product.archive = false"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
         query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
     @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
-        query = "SELECT product FROM Product product WHERE product.id = :id")
+        query = "SELECT product FROM Product product WHERE product.id = :id"),
+    @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE,
+        query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId "
+                + "AND (:color IS NULL OR product.color = :color) "
+                + "AND (:woodType IS NULL OR product.woodType = :woodType)"),
+    @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_ID,
+        query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId")
 })
 public class Product extends AbstractEntity {
   public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
@@ -51,13 +64,11 @@ public class Product extends AbstractEntity {
   public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
   public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
   public static final String FIND_BY_PRODUCT_ID = "Product.findByProductId";
-
+  public static final String
+          FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE = "Product.findAllByProductGroupColorAndWoodType";
+  public static final String FIND_ALL_BY_PRODUCT_GROUP_ID = "Product.findAllByProductGroupId";
   @Column(nullable = false)
   private Double price;
-
-  @Enumerated(value = EnumType.STRING)
-  @Column(nullable = false, name = "product_state")
-  private ProductState productState;
 
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "image_id", nullable = false)
