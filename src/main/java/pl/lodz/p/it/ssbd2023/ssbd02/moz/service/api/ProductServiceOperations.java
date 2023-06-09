@@ -39,4 +39,6 @@ public interface ProductServiceOperations {
   boolean isLastTransactionRollback();
 
   List<Product> findAllByProductGroup(Long productGroupId);
+
+  Product editProduct(Long id, Product productWithChanges, String hash);
 }

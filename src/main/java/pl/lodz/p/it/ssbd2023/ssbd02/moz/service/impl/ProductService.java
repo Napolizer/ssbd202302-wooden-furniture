@@ -10,6 +10,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
@@ -23,6 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
 @Stateful
@@ -141,5 +143,18 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   @PermitAll
   public List<Product> findAllByProductGroup(Long productGroupId) {
     return productFacade.findAllByProductGroup(productGroupId);
+  }
+
+  @RolesAllowed(EMPLOYEE)
+  public Product editProduct(Long id, Product productWithChanges, String hash) {
+    Product product = productFacade.findById(id)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+    if (!CryptHashUtils.verifyVersion(product.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
+    product.update(productWithChanges);
+    return productFacade.update(product);
   }
 }

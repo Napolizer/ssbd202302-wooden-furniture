@@ -7,37 +7,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDto {
-  @NotNull
-  private Long id;
+public class EditProductDto {
   @NotNull
   private Double price;
-  private Boolean archive;
-  @NotNull
-  private String imageUrl;
-  @NotNull
-  private Double weight;
   @NotNull
   private Integer amount;
   @NotNull
-  private Double weightInPackage;
-  @NotNull
-  private Dimensions furnitureDimensions;
-  @NotNull
-  private Dimensions packageDimensions;
-  @NotNull
-  private Color color;
-  @NotNull
-  private WoodType woodType;
-  @NotNull
-  private ProductGroupInfoDto productGroup;
-  @NotNull
   private String hash;
-}
 
+  @Override
+  public String toString() {
+    return "EditPersonInfoDto{}";
+  }
+}
