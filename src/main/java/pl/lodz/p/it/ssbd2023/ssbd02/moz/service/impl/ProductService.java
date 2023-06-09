@@ -15,6 +15,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
@@ -73,9 +74,19 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     return productFacade.update(product);
   }
 
-  @Override
-  public Product archive(Long id, Product entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public Product archive(Long id) {
+    Product product = productFacade.findById(id)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+    if (!product.getProductState().equals(ProductState.AVAILABLE)) {
+      throw ApplicationExceptionFactory.createIllegalProductStateChangeException();
+    }
+
+    product.setProductState(ProductState.UNAVAILABLE);
+    Product productAfterUpdate = productFacade.update(product);
+
+    return productAfterUpdate;
   }
 
   @Override

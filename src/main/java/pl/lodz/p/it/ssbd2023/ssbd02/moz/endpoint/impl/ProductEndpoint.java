@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
@@ -73,9 +74,9 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
                             productCreateWithImageDto.getImageProductId())));
   }
 
-  @Override
-  public ProductDto archive(Long id, UpdateProductDto entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public Product archive(Long id) {
+    return repeatTransactionWithOptimistic(() -> productService.archive(id));
   }
 
   @Override
