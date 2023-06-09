@@ -11,6 +11,7 @@ import { ChangeEmailComponent } from '../components/change-email/change-email.co
 import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-own-password.component';
 import { CreateAccountComponent } from '../pages/create-account/create-account.component';
 import { AddProductGroupComponent } from '../components/add-product-group/add-product-group.component';
+import { AddProductComponent } from '../add-product/add-product.component';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,15 @@ export class DialogService {
       disableClose: true,
       width: '800px',
       height: '500px',
+    });
+  }
+
+  openAddProductDialog(): MatDialogRef<AddProductComponent> {
+    return this.matDialog.open(AddProductComponent, {
+      disableClose: true,
+      width: '1100px',
+      height: '750px',
+      autoFocus: false,
     });
   }
 }

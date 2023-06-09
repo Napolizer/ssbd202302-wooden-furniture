@@ -15,6 +15,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +32,15 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @AllArgsConstructor
 @Entity
 @Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
-                  @Index(name = "product_image_id", columnList = "image_id")})
+                  @Index(name = "product_image_id", columnList = "image_id")},
+       uniqueConstraints = { @UniqueConstraint(name = "product_details",
+               columnNames = {"product_group_id",
+                              "color",
+                              "wood_type",
+                              "weight",
+                              "furniture_width",
+                              "furniture_height",
+                              "furniture_depth" }) })
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
@@ -42,7 +51,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
     @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
         query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
     @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
-        query = "SELECT product FROM Product product WHERE product.id = :id")
+        query = "SELECT product FROM Product product WHERE product.id = :id"),
+    @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE,
+        query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId "
+                + "AND (:color IS NULL OR product.color = :color) "
+                + "AND (:woodType IS NULL OR product.woodType = :woodType)")
 })
 public class Product extends AbstractEntity {
   public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
@@ -50,6 +63,8 @@ public class Product extends AbstractEntity {
   public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
   public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
   public static final String FIND_BY_PRODUCT_ID = "Product.findByProductId";
+  public static final String
+          FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE = "Product.findAllByProductGroupColorAndWoodType";
 
   @Column(nullable = false)
   private Double price;

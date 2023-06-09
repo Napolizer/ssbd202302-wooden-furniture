@@ -1,12 +1,12 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateless;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
@@ -77,10 +77,10 @@ public class ProductMapper {
         .build();
   }
 
-  public Product mapToProduct(ProductCreateDto productCreateDto) {
+  public static Product mapToProduct(ProductCreateDto productCreateDto) {
     return Product.builder()
             .price(productCreateDto.getPrice())
-            .productState(productCreateDto.getProductState())
+            .productState(ProductState.AVAILABLE)
             .weight(productCreateDto.getWeight())
             .amount(productCreateDto.getAmount())
             .weightInPackage(productCreateDto.getWeightInPackage())
@@ -97,18 +97,24 @@ public class ProductMapper {
   }
 
   public static Color mapToColor(String color) {
+    if (color == null || color.equals("")) {
+      return null;
+    }
     try {
       return Color.valueOf(color.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidColorException();
     }
   }
 
   public static WoodType mapToWoodType(String woodType) {
+    if (woodType == null || woodType.equals("")) {
+      return null;
+    }
     try {
       return WoodType.valueOf(woodType.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidWoodTypeException();
     }
   }
 
