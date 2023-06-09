@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -32,8 +33,15 @@ public class OrderProduct extends AbstractEntity {
   @JoinColumn(name = "order_id", nullable = false, updatable = false)
   private Order order;
 
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "product_id", nullable = false, updatable = false)
   private Product product;
 
+  @Override
+  public String toString() {
+    return "OrderProduct{"
+        + "amount=" + amount
+        + ", price=" + price
+        + '}';
+  }
 }

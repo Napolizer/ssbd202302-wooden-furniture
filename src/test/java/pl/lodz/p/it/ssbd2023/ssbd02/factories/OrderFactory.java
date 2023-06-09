@@ -33,6 +33,7 @@ public class OrderFactory {
         .recipient(account.getPerson())
         .deliveryAddress(account.getPerson().getAddress())
         .account(account)
+        .totalPrice(100.0)
         .build();
     Product product = productFactory.create(login);
     order.setOrderedProducts(List.of(
@@ -47,6 +48,7 @@ public class OrderFactory {
   }
 
   public void clean() throws Exception {
+    em.createQuery("DELETE FROM OrderProduct").executeUpdate();
     em.createQuery("DELETE FROM sales_order").executeUpdate();
     productFactory.clean();
     accountFactory.clean();

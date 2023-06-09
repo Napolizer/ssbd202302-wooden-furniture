@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.factories;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color.GREEN;
-import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState.AVAILABLE;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType.OAK;
 
 import jakarta.ejb.Stateless;
@@ -23,7 +22,7 @@ public class ProductFactory {
   public Product create(String name) throws Exception {
     Product product = Product.builder()
         .price(100.0)
-        .productState(AVAILABLE)
+        .archive(false)
         .image(new Image("https://www.ssbd.com/image.jpg"))
         .weight(10.0)
         .amount(2)
