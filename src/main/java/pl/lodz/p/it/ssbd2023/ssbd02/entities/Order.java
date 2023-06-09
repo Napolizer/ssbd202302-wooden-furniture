@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,7 +56,7 @@ public class Order extends AbstractEntity {
   @Column(nullable = false, name = "order_state")
   private OrderState orderState;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private List<OrderProduct> orderedProducts = new ArrayList<>();
 
   @Column(nullable = false, name = "total_price", updatable = false)

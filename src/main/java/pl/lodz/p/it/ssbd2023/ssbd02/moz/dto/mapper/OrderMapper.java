@@ -12,6 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
@@ -23,6 +24,8 @@ public class OrderMapper {
   private AccountMapper accountMapper;
   @Inject
   private ProductMapper productMapper;
+  @Inject
+  private OrderProductMapper orderProductMapper;
 
   public CreateOrderDto mapToCreateOrderDto(Order order) {
     List<ProductDto> productDtos = new ArrayList<>();
@@ -67,16 +70,18 @@ public class OrderMapper {
   }
 
   public OrderDto mapToOrderDto(Order order) {
-    List<ProductDto> productDtos = new ArrayList<>();
-    order.getOrderedProducts().forEach(product -> productDtos.add(productMapper.mapToProductDto(product.getProduct())));
+    List<OrderProductDto> orderProductDtoList = new ArrayList<>();
+    order.getOrderedProducts().forEach(
+        orderProduct -> orderProductDtoList.add(orderProductMapper.mapToDto(orderProduct)));
     return OrderDto.builder()
         .id(order.getId())
-        .products(productDtos)
+        .orderProductList(orderProductDtoList)
         .recipientFirstName(order.getRecipient().getFirstName())
         .recipientLastName(order.getRecipient().getLastName())
         .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
         .observed(order.getObserved())
+        .totalPrice(order.getTotalPrice())
         .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
         .build();
   }

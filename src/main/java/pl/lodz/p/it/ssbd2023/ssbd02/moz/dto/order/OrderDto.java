@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class OrderDto {
 
   @NotNull
   @Builder.Default
-  private List<ProductDto> products = new ArrayList<>();
+  private List<OrderProductDto> orderProductList = new ArrayList<>();
 
   @Capitalized
   private String recipientFirstName;
@@ -41,6 +42,9 @@ public class OrderDto {
 
   @NotNull
   private Boolean observed;
+  @NotNull
+  @Positive
+  private Double totalPrice;
 
   @Override
   public String toString() {
