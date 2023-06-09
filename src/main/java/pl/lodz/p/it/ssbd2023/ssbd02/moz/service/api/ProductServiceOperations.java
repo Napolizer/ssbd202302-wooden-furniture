@@ -33,4 +33,6 @@ public interface ProductServiceOperations {
   List<Product> findAllByPrice(Double minPrice, Double maxPrice);
 
   boolean isLastTransactionRollback();
+
+  Product editProduct(Long id, Product productWithChanges, String hash);
 }

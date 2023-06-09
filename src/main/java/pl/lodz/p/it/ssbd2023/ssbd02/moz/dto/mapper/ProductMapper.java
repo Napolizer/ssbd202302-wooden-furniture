@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
@@ -61,6 +62,20 @@ public class ProductMapper {
             .build();
   }
 
+  public static Product mapEditProductDtoToProduct(EditProductDto editProductDto) {
+
+    return Product.builder()
+            .price(editProductDto.getPrice())
+            .productState(editProductDto.getProductState())
+            .weight(editProductDto.getWeight())
+            .amount(editProductDto.getAmount())
+            .weightInPackage(editProductDto.getWeightInPackage())
+            .furnitureDimensions(editProductDto.getFurnitureDimensions())
+            .packageDimensions(editProductDto.getPackageDimensions())
+            .color(editProductDto.getColor())
+            .woodType(editProductDto.getWoodType())
+            .build();
+  }
 
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()

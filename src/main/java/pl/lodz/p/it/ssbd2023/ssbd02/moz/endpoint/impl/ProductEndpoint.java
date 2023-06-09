@@ -13,13 +13,13 @@ import jakarta.interceptor.Interceptors;
 import java.util.List;
 import java.util.stream.Collectors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductGroupMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -101,6 +101,14 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @Override
   public List<ProductDto> findAllByPrice(Double minPrice, Double maxPrice) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public ProductDto editProduct(Long id, EditProductDto editProductDto) {
+    Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
+            productMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
+    return productMapper.mapToProductDto(product);
   }
 
   @Override
