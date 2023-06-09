@@ -32,5 +32,6 @@ public interface ProductEndpointOperations {
   List<ProductDto> findAllAvailable();
 
   List<ProductDto> findAllByPrice(Double minPrice, Double maxPrice);
+
   ProductDto editProduct(Long id, EditProductDto editProductDto);
 }

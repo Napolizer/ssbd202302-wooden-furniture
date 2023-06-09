@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -8,11 +10,9 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.persistence.OptimisticLockException;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
@@ -26,9 +26,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsI
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
-
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

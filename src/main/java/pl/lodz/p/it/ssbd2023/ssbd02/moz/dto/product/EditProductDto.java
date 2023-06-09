@@ -15,28 +15,29 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @AllArgsConstructor
 @Builder
 public class EditProductDto {
-    @NotNull
-    private Double price;
-    private ProductState productState;
-    @NotNull
-    private Double weight;
-    @NotNull
-    private Integer amount;
-    @NotNull
-    private Double weightInPackage;
-    @NotNull
-    private Dimensions furnitureDimensions;
-    @NotNull
-    private Dimensions packageDimensions;
-    @NotNull
-    private Color color;
-    @NotNull
-    private WoodType woodType;
-    @NotNull
-    private String hash;
+  @NotNull
+  private Double price;
+  @NotNull
+  private ProductState productState;
+  @NotNull
+  private Double weight;
+  @NotNull
+  private Integer amount;
+  @NotNull
+  private Double weightInPackage;
+  @NotNull
+  private Dimensions furnitureDimensions;
+  @NotNull
+  private Dimensions packageDimensions;
+  @NotNull
+  private Color color;
+  @NotNull
+  private WoodType woodType;
+  @NotNull
+  private String hash;
 
-    @Override
-    public String toString() {
-        return "EditPersonInfoDto{}";
-    }
+  @Override
+  public String toString() {
+    return "EditPersonInfoDto{}";
+  }
 }
