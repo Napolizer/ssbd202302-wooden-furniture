@@ -19,6 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
+import javax.print.attribute.standard.Media;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -46,13 +47,6 @@ public class ProductController {
 
   @Inject
   private ProductGroupEndpointOperations productGroupEndpoint;
-
-
-  @PUT
-  @Path("/archive/id/{id}")
-  public Response archive(@PathParam("id") Long id, UpdateProductDto entity) {
-    throw new UnsupportedOperationException();
-  }
 
   @PUT
   @Path("/id/{id}")
@@ -109,6 +103,14 @@ public class ProductController {
                                        @NotNull @Valid EditProductGroupDto editProductGroupDto) {
     return Response.ok(productGroupEndpoint.editProductGroupName(id, editProductGroupDto)).build();
   }
+
+  @GET
+  @Path("/group/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllProductsByProductGroupId(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findAllByProductGroupId(id)).build();
+  }
+
 
   @GET
   @Path("/id/{id}")

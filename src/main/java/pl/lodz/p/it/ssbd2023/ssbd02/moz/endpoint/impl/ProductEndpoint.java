@@ -131,6 +131,14 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   }
 
   @Override
+  @PermitAll
+  public List<ProductDto> findAllByProductGroupId(Long productGroupId) {
+    return repeatTransactionWithoutOptimistic(() -> productService.findAllByProductGroup(
+            productGroupId))
+            .stream().map(productMapper::mapToProductDto).toList();
+  }
+
+  @Override
   protected boolean isLastTransactionRollback() {
     return productService.isLastTransactionRollback();
   }
