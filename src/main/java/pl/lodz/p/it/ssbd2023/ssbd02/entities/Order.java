@@ -58,6 +58,9 @@ public class Order extends AbstractEntity {
   @OneToMany(mappedBy = "order")
   private List<OrderProduct> orderedProducts = new ArrayList<>();
 
+  @Column(nullable = false, name = "total_price", updatable = false)
+  private Double totalPrice;
+
   @ManyToOne
   @JoinColumn(name = "recipient_id", nullable = false, updatable = false)
   private Person recipient;

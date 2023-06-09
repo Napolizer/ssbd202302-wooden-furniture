@@ -50,38 +50,18 @@ public class OrderMapper {
             .deliveryAddress(address)
             .account(accountMapper.mapToAccount(createOrderDto.getAccount()))
             .observed(createOrderDto.getObserved())
+            .totalPrice(0.0)
             .build();
 
-    createOrderDto.getProducts().forEach(productDto -> order.getOrderedProducts().add(
-            OrderProduct.builder().price(productDto.getPrice()).amount(productDto.getAmount())
-                    .product(productMapper.mapToProduct(productDto))
-                    .order(order).build()
-    ));
-
-    return order;
-  }
-
-  public Order mapToOrder(OrderDto orderDto) {
-    Address address = addressMapper.mapToAddress(orderDto.getRecipientAddress());
-    Person recipient = Person.builder()
-        .firstName(orderDto.getRecipientFirstName())
-        .lastName(orderDto.getRecipientLastName())
-        .address(address)
-        .build();
-
-    Order order = Order.builder()
-            .id(orderDto.getId())
-            .recipient(recipient)
-            .deliveryAddress(address)
-            .account(accountMapper.mapToAccount(orderDto.getAccount()))
-            .observed(orderDto.getObserved())
-            .build();
-
-    orderDto.getProducts().forEach(productDto -> order.getOrderedProducts().add(
-            OrderProduct.builder().price(productDto.getPrice()).amount(productDto.getAmount())
-                    .product(productMapper.mapToProduct(productDto))
-                    .order(order).build()
-    ));
+    //FIXME create new OrderItemDto(productId, amount) instead of ProductDto and adjust this function
+    createOrderDto.getProducts().forEach(productDto -> {
+      order.getOrderedProducts().add(
+              OrderProduct.builder().price(productDto.getPrice()).amount(productDto.getAmount())
+                      .product(productMapper.mapToProduct(productDto))
+                      .order(order).build()
+      );
+      order.setTotalPrice(order.getTotalPrice() + (productDto.getPrice() * productDto.getAmount()));
+    });
 
     return order;
   }
