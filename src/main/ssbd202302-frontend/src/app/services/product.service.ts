@@ -33,4 +33,8 @@ export class ProductService {
   public retrieveAllProducts(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product`);
   }
+
+  public retrieveProduct(id: string): Observable<Product> {
+    return this.httpClient.get<Product>(`${environment.apiBaseUrl}/product/id/` + id);
+  }
 }

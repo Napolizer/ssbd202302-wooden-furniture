@@ -67,6 +67,7 @@ import { AddProductGroupComponent } from './components/add-product-group/add-pro
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
 
 @NgModule({
   declarations: [
@@ -108,6 +109,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     AddProductGroupComponent,
     EmployeePageComponent,
     ProductPageComponent,
+    SingleProductPageComponent,
   ],
   imports: [
     BrowserModule,

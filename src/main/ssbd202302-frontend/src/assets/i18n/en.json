@@ -326,5 +326,13 @@
   "ARMCHAIR": "Armchair",
   "TABLE": "Table",
   "ROUND_TABLE": "Round table",
-  "RECTANGULAR_TABLE": "Rectangular table"
+  "RECTANGULAR_TABLE": "Rectangular table",
+
+  "product.available.true": "Product is available in ",
+  "product.available.false": "Product is currently unavailable.",
+  "product.order.now": "you can add it to your cart",
+  "product.amounts": "pieces",
+  "product.rating": "Average Rating: ",
+  "product.choose.color": "Choose color",
+  "product.choose.size": "Choose size"
 }

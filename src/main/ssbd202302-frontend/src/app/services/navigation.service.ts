@@ -73,4 +73,8 @@ export class NavigationService {
   redirectToChangeAccountGroupPage(id: string): Promise<boolean> {
     return this.router.navigate(['/account-role-change/' + id])
   }
+
+  redirectToSingleProductPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/product/' + id])
+  }
 }

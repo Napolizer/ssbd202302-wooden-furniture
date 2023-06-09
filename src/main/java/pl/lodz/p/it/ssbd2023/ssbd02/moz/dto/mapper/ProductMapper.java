@@ -31,8 +31,7 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(ProductGroupMapper.mapToProductGroupInfoDto(product.getProductGroup()))
               .build();
     } else {
       return ProductDto.builder()
@@ -46,22 +45,10 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(ProductGroupMapper.mapToProductGroupInfoDto(product.getProductGroup()))
               .build();
     }
   }
-
-  public ProductGroupInfoDto mapToProductGroupInfoDto(ProductGroup productGroup) {
-    return ProductGroupInfoDto.builder()
-            .id(productGroup.getId())
-            .name(productGroup.getName())
-            .averageRating(productGroup.getAverageRating())
-            .archive(productGroup.getArchive())
-            .build();
-  }
-
-
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()
         .id(productDto.getId())

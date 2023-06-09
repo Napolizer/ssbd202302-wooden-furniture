@@ -324,5 +324,13 @@
   "ARMCHAIR": "Fotel",
   "TABLE": "Stół",
   "ROUND_TABLE": "Stół okrągły",
-  "RECTANGULAR_TABLE": "Stół prostokątny"
+  "RECTANGULAR_TABLE": "Stół prostokątny",
+
+  "product.available.true": "Produkt jest dostępny w ilości ",
+  "product.available.false": "Produkt jest niedostępny.",
+  "product.order.now": "możesz go dodać do koszyka",
+  "product.amounts": "sztuk",
+  "product.rating": "Średnia ocena: ",
+  "product.choose.color": "Wybierz kolor",
+  "product.choose.size": "Wybierz rozmiar"
 }
