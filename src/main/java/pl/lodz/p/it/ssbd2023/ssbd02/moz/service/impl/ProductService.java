@@ -80,12 +80,14 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     Product product = productFacade.findById(id)
             .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
 
-    if (!product.getArchive().equals(false)) {
-      throw ApplicationExceptionFactory.createIllegalProductStateChangeException();
+    if (product.getArchive()) {
+      throw ApplicationExceptionFactory.createIllegalProductArchiveException();
     }
 
     product.setArchive(true);
-    return productFacade.update(product);
+    Product productAfterUpdate = productFacade.update(product);
+
+    return productAfterUpdate;
   }
 
   @Override
