@@ -4,6 +4,7 @@ import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 
@@ -14,7 +15,7 @@ public interface ProductGroupEndpointOperations {
 
   ProductGroupInfoDto archive(Long id);
 
-  ProductGroupInfoDto update(Long id, ProductGroup entity);
+  ProductGroupInfoDto editProductGroupName(Long id, EditProductGroupDto editProductGroupDto);
 
   Optional<ProductGroupInfoDto> find(Long id);
 

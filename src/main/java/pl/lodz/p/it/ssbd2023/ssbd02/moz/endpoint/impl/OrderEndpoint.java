@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -43,8 +44,12 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<OrderDto> findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+    return repeatTransactionWithOptimistic(() -> orderService.findByState(orderState))
+        .stream()
+        .map(orderMapper::mapToOrderDto)
+        .toList();
   }
 
   @Override
@@ -71,18 +76,30 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<OrderDto> findAll() {
-    throw new UnsupportedOperationException();
+    return repeatTransactionWithOptimistic(() -> orderService.findAll())
+        .stream()
+        .map(orderMapper::mapToOrderDto)
+        .toList();
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<OrderDto> findAllPresent() {
-    throw new UnsupportedOperationException();
+    return repeatTransactionWithOptimistic(() -> orderService.findAllPresent())
+        .stream()
+        .map(orderMapper::mapToOrderDto)
+        .toList();
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<OrderDto> findAllArchived() {
-    throw new UnsupportedOperationException();
+    return repeatTransactionWithOptimistic(() -> orderService.findAllArchived())
+        .stream()
+        .map(orderMapper::mapToOrderDto)
+        .toList();
   }
 
   @Override
@@ -114,6 +131,15 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @Override
   public List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<OrderDto> findDeliveredCustomerOrders(Long accountId) {
+    return orderService.findDeliveredCustomerOrders(accountId).stream()
+            .map(orderMapper::mapToOrderDto)
+            .toList();
   }
 
   @Override

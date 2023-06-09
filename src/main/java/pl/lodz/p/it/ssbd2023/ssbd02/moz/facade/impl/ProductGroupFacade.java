@@ -15,6 +15,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
@@ -70,5 +71,13 @@ public class ProductGroupFacade extends AbstractFacade<ProductGroup>
   @PermitAll
   public List<ProductGroup> findAll() {
     return super.findAll();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public ProductGroup update(ProductGroup entity) {
+    ProductGroup productGroup = super.update(entity);
+    em.flush();
+    return productGroup;
   }
 }

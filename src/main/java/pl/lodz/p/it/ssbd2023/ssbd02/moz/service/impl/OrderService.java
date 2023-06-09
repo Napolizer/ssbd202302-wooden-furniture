@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -43,8 +44,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<Order> findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+    return orderFacade.findByState(orderState);
   }
 
   @Override
@@ -70,18 +72,21 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<Order> findAll() {
-    throw new UnsupportedOperationException();
+    return orderFacade.findAll();
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<Order> findAllPresent() {
-    throw new UnsupportedOperationException();
+    return orderFacade.findAllPresent();
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public List<Order> findAllArchived() {
-    throw new UnsupportedOperationException();
+    return orderFacade.findAllArchived();
   }
 
   @Override
@@ -140,5 +145,11 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @Override
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<Order> findDeliveredCustomerOrders(Long accountId) {
+    return orderFacade.findDeliveredCustomerOrders(accountId);
   }
 }

@@ -25,6 +25,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
@@ -91,16 +92,22 @@ public class ProductController {
             .entity(productGroupEndpoint.create(productGroupCreateDto)).build();
   }
 
-  @POST
+  @PUT
   @Path("/group/archive/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
   public Response archiveProductGroup(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+    return Response.ok(productGroupEndpoint.archive(id)).build();
   }
 
   @PUT
   @Path("/group/id/{id}")
-  public Response updateProductGroup(@PathParam("id") Long id, ProductGroup entity) {
-    throw new UnsupportedOperationException();
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response editProductGroupName(@PathParam("id") Long id,
+                                       @NotNull @Valid EditProductGroupDto editProductGroupDto) {
+    return Response.ok(productGroupEndpoint.editProductGroupName(id, editProductGroupDto)).build();
   }
 
   @GET

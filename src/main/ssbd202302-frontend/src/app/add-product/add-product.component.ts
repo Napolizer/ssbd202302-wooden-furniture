@@ -190,7 +190,6 @@ export class AddProductComponent implements OnInit {
     this.loading = true;
     const productCreate: ProductCreate = {
       amount: this.addProductForm.value['quantity']!,
-      available: true,
       color: this.addProductForm.value['color']!,
       furnitureWidth: parseInt(this.addProductForm.value['furnitureWidth']!),
       furnitureHeight: this.addProductForm.value['furnitureHeight']!,
@@ -282,7 +281,7 @@ export class AddProductComponent implements OnInit {
         if (message) {
           if (message.includes('dimensions')) {
             this.addProductForm
-              .get('furnitureWidth') 
+              .get('furnitureWidth')
               ?.setErrors({ incorrect: true });
             this.addProductForm
               .get('furnitureHeight')

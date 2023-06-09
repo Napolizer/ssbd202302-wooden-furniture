@@ -34,6 +34,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyObservedException
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyRatedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
@@ -304,5 +306,14 @@ public final class ApplicationExceptionFactory {
 
   public static ProductGroupNotFoundException createProductGroupNotFoundException() {
     return new ProductGroupNotFoundException();
+  }
+
+  public static ProductGroupAlreadyArchivedException createProductGroupAlreadyArchivedException() {
+    return new ProductGroupAlreadyArchivedException();
+  }
+
+  public static ProductAlreadyRatedException createProductAlreadyRatedException() {
+    return new ProductAlreadyRatedException(MessageUtil.MessageKey.PRODUCT_ALREADY_RATED,
+            Response.Status.CONFLICT);
   }
 }

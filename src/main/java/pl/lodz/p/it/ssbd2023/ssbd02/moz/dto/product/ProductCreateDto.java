@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductState;
 
 @Data
 @SuperBuilder
@@ -16,9 +17,6 @@ public class ProductCreateDto {
   @Positive
   @NotNull
   private Double price;
-
-  @NotNull
-  private Boolean available;
 
   @Positive
   @NotNull

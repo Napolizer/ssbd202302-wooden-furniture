@@ -1,162 +1,202 @@
 <app-spinner [loading]="loading"></app-spinner>
-<div class="page-container">
-  <div class="panel" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
-    <form *ngIf="!loading" class="form-container" [formGroup]="accountForm">
-      <mat-card class="profile-card">
-        <mat-icon class="icon-back" (click)="onBackClicked()">exit_to_app</mat-icon>
-        <ul class="breadcrumb-list">
-          <li *ngFor="let breadcrumb of breadcrumbsData">{{ breadcrumb }}</li>
-        </ul>
-        <mat-card-header>
-          <mat-card-title>{{account.login}}</mat-card-title>
-          <mat-card-subtitle>ID: {{account.id}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="profile-container">
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.firstName' | translate}}</p>
-                <p class="content">{{account.firstName}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.lastName' | translate}}</p>
-                <p class="content">{{account.lastName}}</p>
-                <div class="border"></div>
+<div class="container" [attr.data-bs-theme]="'dark'" [@loadedUnloadedForm]="{value: getFormAnimationState()}">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card border-dark" [style]="getCardStyling()">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img src="assets/images/profile-picture.png" alt="Admin" class="rounded-circle" width="150">
+              <div class="mt-3">
+                <h4 class="mb-0">{{account.firstName + ' ' + account.lastName}}</h4>
+                <p class="text-secondary">ID: {{account.id}}</p>
+                <p class="text-muted font-size-sm">{{account.email}}</p>
               </div>
             </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.email' | translate}}</p>
-                <p class="content">{{account.email}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.country' | translate}}</p>
-                <p class="content">{{account.address?.country ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.city' | translate}}</p>
-                <p class="content">{{account.address?.city ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.postalCode' | translate}}</p>
-                <p class="content">{{account.address?.postalCode ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.street' | translate}}</p>
-                <p class="content">{{account.address?.street ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.streetNumber' | translate}}</p>
-                <p class="content">{{account.address?.streetNumber ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.locale' | translate}}</p>
-                <p class="content">{{account.locale}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.archive' | translate}}</p>
-                <p class="content">{{account.archive.toString() | translate}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.accountState' | translate}}</p>
-                <p class="content">{{getAccountState() | translate}}</p>
-                <mat-card-actions>
-              <button mat-raised-button color="warn" (click)="confirmBlock()" [disabled]="!isBlocked()">{{'account.block' | translate}}
-                <mat-icon>lock</mat-icon>
-              </button>
-              <button mat-raised-button color="success" (click)="confirmUnblock()" [disabled]="isBlocked()">{{'account.activate' | translate}}
-                <mat-icon>lock_open</mat-icon>
-              </button>
-                </mat-card-actions>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.roles' | translate}}</p>
-                <p class="content">{{getRoles()}}</p>
-                <div class="border"></div>
-                <mat-card-actions>
-                  <button mat-raised-button color="success" (click)="redirectToAddAccountRolesPage()">{{'account.addrole' | translate}}
-                    <mat-icon>thumb_up</mat-icon>
-                  </button>
-                  <button mat-raised-button color="warn" (click)="redirectToRemoveAccountRolesPage()">{{'account.removerole' | translate}}
-                    <mat-icon>thumb_down</mat-icon>
-                  </button>
-                  <button mat-raised-button color="primary" class= "right-button" (click)="redirectToChangeAccountRolesPage()">{{'account.changerole' | translate}}
-                    <mat-icon>compare_arrows</mat-icon>
-                  </button>
-                </mat-card-actions>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.lastLogin' | translate}}</p>
-                <p class="content">{{formatDate(account.lastLogin)}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.lastFailedLogin' | translate}}</p>
-                <p class="content">{{formatDate(account.lastFailedLogin)}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.failedLogins' | translate}}</p>
-                <p class="content">{{account.failedLoginCounter ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry">
-                <p class="title">{{'account.lastLoginIp' | translate}}</p>
-                <p class="content">{{account.lastLoginIpAddress ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry">
-                <p class="title">{{'account.lastFailedLoginIp' | translate}}</p>
-                <p class="content">{{account.lastFailedLoginIpAddress ?? '-'}}</p>
-                <div class="border"></div>
-              </div>
-              <div class="entry" *ngIf="account.timeZone">
-                <p class="title">{{'account.timezone' | translate}}</p>
-                <p class="content">{{account.timeZone}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="entry" *ngIf="account.blockadeEnd">
-                <p class="title">{{'account.blockadeEnd' | translate}}</p>
-                <p class="content">{{account.blockadeEnd}}</p>
-                <div class="border"></div>
-              </div>
-            </div>
-            <mat-card-actions>
-              <div class="button-group">
-                <button mat-raised-button color="primary" (click)="openAdminEditAccountDialog()">{{'account.edit' | translate}}</button>
-                <button mat-raised-button *ngIf="isUserNormalType()" color="primary" (click)="openChangeEmailDialog()">{{'change.email.button' | translate}}</button>
-                <button mat-raised-button *ngIf="isUserNormalType()" color="primary" class= "right-button" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
-              </div>
-            </mat-card-actions>
           </div>
-        </mat-card-content>
-      </mat-card>
-    </form>
+        </div>
+        <div class="card border-dark mt-3">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
+              <h6 class="mb-0">{{'account.lastLogin' | translate}}</h6>
+              <span class="text-secondary">{{formatDate(account.lastLogin)}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
+              <h6 class="mb-0">{{'account.lastFailedLogin' | translate}}</h6>
+              <span class="text-secondary">{{formatDate(account.lastFailedLogin)}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
+              <h6 class="mb-0">{{'account.failedLogins' | translate}}</h6>
+              <span class="text-secondary">{{account.failedLoginCounter}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
+              <h6 class="mb-0">{{'account.lastLoginIp' | translate}}</h6>
+              <span class="text-secondary">{{account.lastLoginIpAddress ?? '-'}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
+              <h6 class="mb-0">{{'account.lastFailedLoginIp' | translate}}</h6>
+              <span class="text-secondary">{{account.lastFailedLoginIpAddress ?? '-'}}</span>
+            </li>
+            <li *ngIf="account.blockadeEnd" class="list-group-item d-flex justify-content-between align-items-center flex-wrap" [style]="getCardStyling()">
+              <h6 class="mb-0">{{'account.blockadeEnd' | translate}}</h6>
+              <span class="text-secondary">{{account.blockadeEnd}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card border-dark mb-3" [style]="getCardStyling()">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">{{'first.name' | translate}}</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{account.firstName}}
+              </div>
+            </div>
+            <hr class="mt-2">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">{{'last.name' | translate}}</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{account.lastName}}
+              </div>
+            </div>
+            <hr class="mt-2">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">{{'email' | translate}}</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{account.email}}
+              </div>
+            </div>
+            <hr class="mt-2">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">{{'account.locale' | translate}}</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{account.locale}}
+              </div>
+            </div>
+            <hr class="mt-2">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">{{'account.timezone' | translate}}</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{account.timeZone}}
+              </div>
+            </div>
+            <hr class="mt-2">
+            <div class="row">
+              <div class="col-sm-12">
+                <button mat-button color="primary" (click)="openAdminEditAccountDialog()">{{'account.edit' | translate}}</button>
+                <button *ngIf="isUserNormalType()" mat-button color="primary" (click)="openChangeEmailDialog()">{{'change.email.button' | translate}}</button>
+                <button *ngIf="isUserNormalType()" mat-button color="primary" (click)="confirmChangePassword()">{{'change.password.button' | translate}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gutters-sm">
+          <div class="col-sm-6 mb-3">
+            <div class="card border-dark h-auto" [style]="getCardStyling()">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <h3 class="d-flex align-items-center mb-3"><i class="material-icons">home</i>
+                      <div class="mx-2">{{'account.address.information' | translate}}</div>
+                    </h3>
+                    <small class="d-flex align-items-center">
+                      {{'account.country' | translate}}:
+                      <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                        {{account.address.country}}
+                      </p>
+                    </small>
+                    <small class="d-flex align-items-center">
+                      {{'account.city' | translate}}:
+                      <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                        {{account.address.city}}
+                      </p>
+                    </small>
+                    <small class="d-flex align-items-center">
+                      {{'account.street' | translate}}:
+                      <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                        {{account.address.street}}
+                      </p>
+                    </small>
+                    <small class="d-flex align-items-center">
+                      {{'account.streetNumber' | translate}}:
+                      <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                        {{account.address.streetNumber}}
+                      </p>
+                    </small>
+                    <small class="d-flex align-items-center">
+                      {{'account.postalCode' | translate}}:
+                      <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                        {{account.address.postalCode}}
+                      </p>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 mb-3">
+            <div class="card border-dark h-auto" [style]="getCardStyling()">
+              <div class="card-body">
+                <h3 class="d-flex align-items-center mb-3"><i class="material-icons">account_circle</i><div class="mx-2">{{'account.state.information' | translate}}</div></h3>
+                <small class="d-flex align-items-center">
+                  {{'account.roles' | translate}}:
+                  <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                    {{getRoles()}}
+                  </p>
+                </small>
+                <small class="d-flex align-items-center">
+                  {{'account.accountState' | translate}}:
+                  <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                    {{getAccountState() | translate}}
+                  </p>
+                </small>
+                <small class="d-flex align-items-center">
+                  {{'account.archive' | translate}}:
+                  <p class="flex-grow-1 text-secondary mb-0 mx-2">
+                    {{account.archive.toString() | translate}}
+                  </p>
+                </small>
+                <div class="row">
+                  <div class="col-sm-12 text-center">
+                    <button *ngIf="canAddRole()" mat-button color="primary" (click)="redirectToAddAccountRolesPage()">
+                      <mat-icon>add</mat-icon>
+                      {{'account.addrole' | translate}}
+                    </button>
+                    <button *ngIf="canRemoveRole()" mat-button color="primary" (click)="redirectToRemoveAccountRolesPage()">
+                      <mat-icon>remove</mat-icon>
+                      {{'account.removerole' | translate}}
+                    </button>
+                    <button *ngIf="canChangeRole()" mat-button color="primary" (click)="redirectToChangeAccountRolesPage()">
+                      <mat-icon>compare_arrows</mat-icon>
+                      {{'account.changerole' | translate}}
+                    </button>
+                    <button *ngIf="isBlocked()" mat-button color="primary" (click)="confirmBlock()">
+                      <mat-icon>lock</mat-icon>
+                      {{'account.block' | translate}}
+                    </button>
+                    <button *ngIf="!isBlocked()" mat-button color="primary" (click)="confirmUnblock()">
+                      <mat-icon>lock_open</mat-icon>
+                      {{'account.activate' | translate}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

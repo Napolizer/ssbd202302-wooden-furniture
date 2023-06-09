@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -39,13 +40,48 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<Order> findAll() {
+    return getEntityManager()
+        .createQuery("SELECT entity FROM sales_order entity", Order.class)
+        .getResultList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
   public List<Order> findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+    return getEntityManager().createNamedQuery(Order.FIND_BY_STATE, Order.class)
+        .setParameter("orderState", orderState)
+        .getResultList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<Order> findAllPresent() {
+    return getEntityManager()
+        .createQuery("SELECT entity FROM sales_order entity WHERE entity.archive = false", Order.class)
+        .getResultList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<Order> findAllArchived() {
+    return getEntityManager()
+        .createQuery("SELECT entity FROM sales_order entity WHERE entity.archive = true", Order.class)
+        .getResultList();
   }
 
   @Override
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<Order> findDeliveredCustomerOrders(Long accountId) {
+    return getEntityManager().createNamedQuery(Order.FIND_CLIENTS_DELIVERED_ORDERS, Order.class)
+            .setParameter("id", accountId)
+            .getResultList();
   }
 
   @Override

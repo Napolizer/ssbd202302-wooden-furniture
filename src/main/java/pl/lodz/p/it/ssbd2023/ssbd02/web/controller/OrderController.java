@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -16,6 +17,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
@@ -37,9 +39,10 @@ public class OrderController {
   }
 
   @GET
-  @Path("/state")
-  public Response findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+  @Path("/state/{state}")
+  @RolesAllowed(EMPLOYEE)
+  public Response findByState(@PathParam("state") OrderState orderState) {
+    return Response.ok(orderEndpoint.findByState(orderState)).build();
   }
 
   @POST
@@ -67,27 +70,30 @@ public class OrderController {
 
   @GET
   @Path("/id/{id}")
-  public Response find(Long id) {
+  public Response find(@PathParam("id") Long id) {
     throw new UnsupportedOperationException();
   }
 
   @GET
+  @RolesAllowed(EMPLOYEE)
   public Response findAll() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAll()).build();
   }
 
 
   @GET
   @Path("/present")
+  @RolesAllowed(EMPLOYEE)
   public Response findAllPresent() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAllPresent()).build();
   }
 
 
   @GET
   @Path("/archived")
+  @RolesAllowed(EMPLOYEE)
   public Response findAllArchived() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAllArchived()).build();
   }
 
 
@@ -134,5 +140,13 @@ public class OrderController {
   @Path("/statistics")
   public Response getStatistics(TimePeriodDto timePeriod) {
     throw new UnsupportedOperationException();
+  }
+
+  @GET
+  @Path("/delivered/account/{id}")
+  @RolesAllowed(CLIENT)
+  public Response findDeliveredCustomerOrders(@PathParam("id") Long id) {
+    List<OrderDto> clientOrders = orderEndpoint.findDeliveredCustomerOrders(id);
+    return Response.ok(clientOrders).build();
   }
 }

@@ -1,6 +1,5 @@
 export interface ProductCreate {
     amount: number,
-    available: boolean,
     color: string,
     furnitureWidth: number,
     furnitureHeight: number,

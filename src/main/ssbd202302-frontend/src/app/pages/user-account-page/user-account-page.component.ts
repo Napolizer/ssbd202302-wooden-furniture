@@ -26,12 +26,10 @@ import { MatDialog } from '@angular/material/dialog';
     trigger('loadedUnloadedForm', [
       state('loaded', style({
         opacity: 1,
-        backgroundColor: "rgba(221, 221, 221, 1)"
       })),
       state('unloaded', style({
         opacity: 0,
-        paddingTop: "80px",
-        backgroundColor: "rgba(0, 0, 0, 0)"
+        paddingTop: "20px",
       })),
       transition('loaded => unloaded', [
         animate('0.5s ease-in')
@@ -307,5 +305,27 @@ export class UserAccountPageComponent implements OnInit {
         this.navigationService.redirectToAccountPage(this.id);
       }
     });
+  }
+
+  getCardStyling(): any {
+    return {
+      'background-color': document.body.classList.contains('dark-mode') ? '#424242' : '#fafafa'
+    };
+  }
+
+  canAddRole(): boolean {
+    return (this.account.roles.length < 2 && !this.isAdmin());
+  }
+
+  canChangeRole(): boolean {
+    return this.account.roles.length < 2;
+  }
+
+  canRemoveRole(): boolean {
+    return this.account.roles.length > 1;
+  }
+
+  isAdmin(): boolean {
+    return this.account.roles.includes("administrator")
   }
 }
