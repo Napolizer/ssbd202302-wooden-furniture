@@ -25,6 +25,7 @@ import { EmployeePageComponent } from './pages/employee-page/employee-page.compo
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import {ClientPageComponent} from "./pages/client-page/client-page.component";
 import {ClientOrdersPageComponent} from "./pages/client-orders-page/client-orders-page.component";
+import {ClientRatesPageComponent} from "./pages/client-rates-page/client-rates-page.component";
 
 const routes: Routes = [
   {
@@ -92,6 +93,14 @@ const routes: Routes = [
   {
     path: 'client/orders',
     component: ClientOrdersPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.CLIENT],
+    }
+  },
+  {
+    path: 'client/orders/rates',
+    component: ClientRatesPageComponent,
     canActivate: [AuthGuard],
     data: {
       roles: [Role.CLIENT],

@@ -383,5 +383,6 @@
   "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
   "products.size": "Number of products",
-  "products.total.price": "Total price"
+  "products.total.price": "Total price",
+  "order.client.product.rate": "Rate your product"
 }

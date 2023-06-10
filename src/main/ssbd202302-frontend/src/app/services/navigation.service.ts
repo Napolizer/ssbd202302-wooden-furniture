@@ -81,4 +81,8 @@ export class NavigationService {
   public redirectToClientOrdersPage(): Promise<boolean> {
     return this.router.navigate(['/client/orders']);
   }
+
+  public redirectToRatePage(): Promise<boolean> {
+    return this.router.navigate(['/client/orders/rates']);
+  }
 }

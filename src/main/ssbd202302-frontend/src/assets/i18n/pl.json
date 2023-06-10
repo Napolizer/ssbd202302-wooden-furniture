@@ -379,5 +379,6 @@
   "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
   "products.size": "Liczba produktów",
-  "products.total.price": "Cena całkowita"
+  "products.total.price": "Cena całkowita",
+  "order.client.product.rate": "Oceń twój produkt"
 }

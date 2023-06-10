@@ -71,6 +71,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { ClientPageComponent } from './pages/client-page/client-page.component';
 import { ClientOrdersPageComponent } from './pages/client-orders-page/client-orders-page.component';
 import { AddProductComponent } from './add-product/add-product.component';
+import { ClientRatesPageComponent } from './pages/client-rates-page/client-rates-page.component';
 
 @NgModule({
   declarations: [
@@ -115,6 +116,7 @@ import { AddProductComponent } from './add-product/add-product.component';
     ProductPageComponent,
     ClientPageComponent,
     ClientOrdersPageComponent,
+    ClientRatesPageComponent,
   ],
   imports: [
     BrowserModule,
