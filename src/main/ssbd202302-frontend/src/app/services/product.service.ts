@@ -83,4 +83,8 @@ export class ProductService {
   public retrieveProduct(id: string): Observable<Product> {
     return this.httpClient.get<Product>(`${environment.apiBaseUrl}/product/id/` + id);
   }
+
+  public retrieveProductsGroups(productId: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product`);
+  }
 }

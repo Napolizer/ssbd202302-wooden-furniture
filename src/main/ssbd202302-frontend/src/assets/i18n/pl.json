@@ -367,11 +367,13 @@
   "product.color.white": "Biały",
 
   "product.available.true": "Produkt jest dostępny w ilości ",
-  "product.available.false": "Produkt jest niedostępny.",
+  "product.available.false": "Brak produktu w magazynie.",
   "product.order.now": "możesz go dodać do koszyka",
   "product.amounts": "sztuk",
   "product.rating": "Średnia ocena: ",
   "product.choose.color": "Wybierz kolor",
   "product.choose.size": "Wybierz rozmiar",
-  "product.add.to.cart": "Dodaj do koszyka"
+  "product.add.to.cart": "Dodaj do koszyka",
+  "product.sold.out": "Produkt wyprzedany",
+  "product.withdrawn": "Produkt został wycofany ze sprzedaży"
 }

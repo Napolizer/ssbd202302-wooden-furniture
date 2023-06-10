@@ -355,13 +355,15 @@
   "RECTANGULAR_TABLE": "Rectangular table",
 
   "product.available.true": "Product is available in ",
-  "product.available.false": "Product is currently unavailable.",
+  "product.available.false": "Out of stock.",
   "product.order.now": "you can add it to your cart",
   "product.amounts": "pieces",
   "product.rating": "Average Rating: ",
   "product.choose.color": "Choose color",
   "product.choose.size": "Choose size",
   "product.add.to.cart": "Add to cart",
+  "product.sold.out": "Product sold out",
+  "product.withdrawn": "The product has been withdrawn from sale",
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
