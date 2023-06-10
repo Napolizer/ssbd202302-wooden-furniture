@@ -26,4 +26,7 @@ public class ProductGroupInfoDto {
 
   @NotNull
   private Boolean archive;
+
+  @NotNull
+  private String hash;
 }
