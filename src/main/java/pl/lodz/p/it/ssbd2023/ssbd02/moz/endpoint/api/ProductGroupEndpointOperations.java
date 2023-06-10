@@ -13,7 +13,7 @@ public interface ProductGroupEndpointOperations {
 
   ProductGroupInfoDto create(ProductGroupCreateDto entity);
 
-  ProductGroupInfoDto archive(Long id);
+  ProductGroupInfoDto archive(Long id, String hash);
 
   ProductGroupInfoDto editProductGroupName(Long id, EditProductGroupDto editProductGroupDto);
 

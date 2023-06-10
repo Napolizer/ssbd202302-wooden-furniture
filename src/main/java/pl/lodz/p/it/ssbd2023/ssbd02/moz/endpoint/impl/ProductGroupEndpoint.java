@@ -49,8 +49,8 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductGroupInfoDto archive(Long id) {
-    ProductGroup productGroup = repeatTransactionWithOptimistic(() -> productGroupService.archive(id));
+  public ProductGroupInfoDto archive(Long id, String hash) {
+    ProductGroup productGroup = repeatTransactionWithOptimistic(() -> productGroupService.archive(id, hash));
     return ProductGroupMapper.mapToProductGroupInfoDto(productGroup);
   }
 

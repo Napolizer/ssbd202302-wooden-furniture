@@ -107,8 +107,8 @@ public class ProductController {
   @Path("/group/archive/id/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(EMPLOYEE)
-  public Response archiveProductGroup(@PathParam("id") Long id) {
-    return Response.ok(productGroupEndpoint.archive(id)).build();
+  public Response archiveProductGroup(@PathParam("id") Long id, @NotNull String hash) {
+    return Response.ok(productGroupEndpoint.archive(id, hash)).build();
   }
 
   @PUT
