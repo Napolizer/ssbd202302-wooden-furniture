@@ -267,6 +267,7 @@
   "exception.image.required": "Product must have an image",
   "exception.moz.product.not.found": "Product not found",
 
+
   "role.administrator": "Administrator",
   "role.employee": "Employee",
   "role.sales_rep": "Sales Representative",
@@ -276,6 +277,7 @@
   "toolbar.home": "Home Page",
   "toolbar.adminPanel": "Admin Panel",
   "toolbar.employeePanel": "Employee Panel",
+  "toolbar.clientPanel": "Client Panel",
   "toolbar.myAccount": "My Account",
   "toolbar.logout": "Logout",
   "toolbar.logout.success.message": "You have been logged out",
@@ -353,6 +355,12 @@
   "TABLE": "Table",
   "ROUND_TABLE": "Round table",
   "RECTANGULAR_TABLE": "Rectangular table",
+  "CREATED": "Created",
+  "COMPLETED": "Completed",
+  "IN_DELIVERY": "In delivery",
+  "DELIVERED": "Delivered",
+  "CANCELLED": "Cancelled",
+
 
   "product.available.true": "Product is available in ",
   "product.available.false": "Out of stock.",
@@ -377,6 +385,14 @@
   "product.color.green": "Green",
   "product.color.blue": "Blue",
   "product.color.brown": "Brown",
-  "product.color.white": "White"
+  "product.color.white": "White",
 
+  "order.show": "Show oder",
+  "order.client.observe": "Observe order",
+  "order.client.observe.button": "Observe",
+  "order.state": "Order state",
+  "order.client.already.observed": "Already observed",
+  "orders.client": "Your orders",
+  "products.size": "Number of products",
+  "products.total.price": "Total price"
 }

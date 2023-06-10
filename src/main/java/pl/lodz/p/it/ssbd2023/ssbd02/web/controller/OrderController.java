@@ -17,6 +17,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.security.Principal;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
@@ -31,6 +32,9 @@ public class OrderController {
 
   @Inject
   private OrderEndpointOperations orderEndpoint;
+
+  @Inject
+  private Principal principal;
 
   @GET
   @Path("/account/login/{login}")
@@ -143,10 +147,10 @@ public class OrderController {
   }
 
   @GET
-  @Path("/delivered/account/{id}")
+  @Path("/customer")
   @RolesAllowed(CLIENT)
-  public Response findDeliveredCustomerOrders(@PathParam("id") Long id) {
-    List<OrderDto> clientOrders = orderEndpoint.findDeliveredCustomerOrders(id);
+  public Response findCustomerOrders() {
+    List<OrderDto> clientOrders = orderEndpoint.findByAccountLogin(principal.getName());
     return Response.ok(clientOrders).build();
   }
 }

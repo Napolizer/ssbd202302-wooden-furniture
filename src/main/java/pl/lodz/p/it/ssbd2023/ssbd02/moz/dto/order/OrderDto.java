@@ -25,6 +25,8 @@ public class OrderDto {
   @Builder.Default
   private List<OrderProductDto> orderProductList = new ArrayList<>();
 
+  private String orderState;
+
   @Capitalized
   private String recipientFirstName;
 

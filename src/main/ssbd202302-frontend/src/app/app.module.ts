@@ -68,6 +68,8 @@ import { AddProductGroupComponent } from './components/add-product-group/add-pro
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { ClientPageComponent } from './pages/client-page/client-page.component';
+import { ClientOrdersPageComponent } from './pages/client-orders-page/client-orders-page.component';
 import { AddProductComponent } from './add-product/add-product.component';
 import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
 
@@ -112,6 +114,8 @@ import { SingleProductPageComponent } from './pages/single-product-page/single-p
     EmployeePageComponent,
     AddProductComponent,
     ProductPageComponent,
+    ClientPageComponent,
+    ClientOrdersPageComponent,
     SingleProductPageComponent,
   ],
   imports: [

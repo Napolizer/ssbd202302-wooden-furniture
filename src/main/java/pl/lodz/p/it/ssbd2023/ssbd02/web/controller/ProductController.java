@@ -22,11 +22,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
+import javax.print.attribute.standard.Media;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
@@ -48,13 +50,6 @@ public class ProductController {
 
   @Inject
   private ProductGroupEndpointOperations productGroupEndpoint;
-
-
-  @PUT
-  @Path("/archive/id/{id}")
-  public Response archive(@PathParam("id") Long id, UpdateProductDto entity) {
-    throw new UnsupportedOperationException();
-  }
 
   @PUT
   @Path("/id/{id}")
@@ -124,6 +119,30 @@ public class ProductController {
   public Response editProductGroupName(@PathParam("id") Long id,
                                        @NotNull @Valid EditProductGroupDto editProductGroupDto) {
     return Response.ok(productGroupEndpoint.editProductGroupName(id, editProductGroupDto)).build();
+  }
+
+  @PUT
+  @Path("/editProduct/id/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response editProduct(@PathParam("id") Long id,
+                                     @NotNull @Valid EditProductDto editProductDto) {
+    return Response.ok(productEndpoint.editProduct(id, editProductDto)).build();
+  }
+
+  @GET
+  @Path("/group/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllProductsByProductGroupId(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findAllByProductGroupId(id)).build();
+  }
+
+  @GET
+  @Path("/category/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllProductsByCategoryId(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findAllByCategoryId(id)).build();
   }
 
   @GET

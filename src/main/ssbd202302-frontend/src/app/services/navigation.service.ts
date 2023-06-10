@@ -26,6 +26,10 @@ export class NavigationService {
     return this.router.navigate(['/employee']);
   }
 
+  public redirectToClientPage(): Promise<boolean> {
+    return this.router.navigate(['/client']);
+  }
+
   public redirectToOwnAccountPage(): Promise<boolean> {
     return this.router.navigate(['/self']);
   }
@@ -72,6 +76,10 @@ export class NavigationService {
 
   redirectToChangeAccountGroupPage(id: string): Promise<boolean> {
     return this.router.navigate(['/account-role-change/' + id])
+  }
+
+  public redirectToClientOrdersPage(): Promise<boolean> {
+    return this.router.navigate(['/client/orders']);
   }
 
   redirectToSingleProductPage(id: string): Promise<boolean> {

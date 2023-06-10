@@ -1,0 +1,64 @@
+<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
+<div>
+  <br>
+  <div class="page-container top-container">
+    <br>
+    <div class="page-container">
+      <div fxLayout="row" fxLayoutAlign="center center" class="content" [@loadedUnloadedList]="{value: getListAnimationState()}">
+        <mat-card class="card" >
+          <h3 class="accounts">{{'orders.client' | translate}}</h3>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+            <button mat-button color="primary" class="resetButton" (click)="onResetClicked()">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="example-container mat-elevation-z8">
+              <mat-table #table [dataSource]="dataSource" matSort *ngIf="shouldDisplayTable()">
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'Id' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order"> {{order.id}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="productsNumber">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.size' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">
+                    {{ calculateTotalQuantity(order) }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="totalPrice">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.total.price' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">
+                    {{ order.totalPrice + ' zł' }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="orderState">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'order.state' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{order.orderState | translate}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="show">
+                  <mat-header-cell *matHeaderCellDef>{{'order.show' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">
+                    <mat-icon class="show" (click)="showOrder()">remove_red_eye</mat-icon>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="observe">
+                  <mat-header-cell *matHeaderCellDef>{{'order.client.observe' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">
+                    <button mat-button color="primary" class="my-button" (click)="observeOrder()" *ngIf="canObserve(order)">
+                      {{'order.client.observe.button' | translate}}
+                    </button>
+                    <button mat-button color="primary" *ngIf="order.observed">
+                      {{'order.client.already.observed' | translate}}
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
