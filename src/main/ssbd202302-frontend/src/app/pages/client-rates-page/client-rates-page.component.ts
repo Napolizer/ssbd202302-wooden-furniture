@@ -6,6 +6,9 @@ import {ProductService} from "../../services/product.service";
 import {NavigationEnd, Router} from "@angular/router";
 import {OrderProduct} from "../../interfaces/orderProduct";
 import {OrderProductWithRate} from "../../interfaces/orderProductWithRate";
+import {RateService} from "../../services/rate.service";
+import {Rate} from "../../interfaces/rate";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-client-rates-page',
@@ -43,7 +46,11 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   currentPage = 1; // Current page number
   pagedProducts: OrderProductWithRate[] = []; // Paged products to display
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private rateService: RateService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.router.events.pipe(takeUntil(this.destroy)).subscribe((val) => {
@@ -52,6 +59,10 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.loadClientProducts();
+  }
+
+  loadClientProducts(): void {
     this.productService
       .retrieveClientProducts()
       .pipe(tap(() => (this.loading = true)), takeUntil(this.destroy))
@@ -137,8 +148,23 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   }
 
   createRate(orderProduct: OrderProductWithRate): void {
-    orderProduct.oldRate = orderProduct.rate;
-    alert("Create");
+    const rate: Rate = {
+      rate: orderProduct.rate,
+      productId: orderProduct.product.productGroup.id
+    }
+    this.rateService.createRate(rate)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (rate: Rate) => {
+          this.loading = false;
+          this.loadClientProducts();
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          orderProduct.rate = orderProduct.oldRate;
+          alert("Sth gone wrong")
+        },
+      });
   }
 
   updateRate(orderProduct: OrderProductWithRate): void {

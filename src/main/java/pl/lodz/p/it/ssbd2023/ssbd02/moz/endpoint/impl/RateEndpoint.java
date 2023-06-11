@@ -2,26 +2,38 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.RateMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateInputDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.RateEndpointOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.RateServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.NEVER)
-public class RateEndpoint implements RateEndpointOperations {
+@Interceptors({
+    GenericServiceExceptionsInterceptor.class,
+    LoggerInterceptor.class
+})
+@DenyAll
+public class RateEndpoint extends AbstractEndpoint implements RateEndpointOperations {
 
   @Inject
   private RateServiceOperations rateService;
+
+  @Inject
+  private ProductGroupServiceOperations productGroupService;
 
   @Override
   @RolesAllowed(CLIENT)
@@ -32,13 +44,10 @@ public class RateEndpoint implements RateEndpointOperations {
   @Override
   @RolesAllowed(CLIENT)
   public RateDto create(String login, RateInputDto entity) {
-    Rate rate = rateService.create(login, entity.getRate(), entity.getProductId());
-    return RateMapper.matToRateDto(rate);
-  }
+    Rate rate = repeatTransactionWithOptimistic(() -> productGroupService
+            .rateProductGroup(login, entity.getRate(), entity.getProductId()));
 
-  @Override
-  public RateDto archive(Long id, RateDto entity) {
-    throw new UnsupportedOperationException();
+    return RateMapper.matToRateDto(rate);
   }
 
   @Override
@@ -49,32 +58,7 @@ public class RateEndpoint implements RateEndpointOperations {
   }
 
   @Override
-  public Optional<RateDto> find(Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<RateDto> findAll() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<RateDto> findAllPresent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<RateDto> findAllArchived() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<RateDto> findAllByValue(Integer value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<RateDto> findAllByPersonId(Long personId) {
-    throw new UnsupportedOperationException();
+  protected boolean isLastTransactionRollback() {
+    return rateService.isLastTransactionRollback();
   }
 }

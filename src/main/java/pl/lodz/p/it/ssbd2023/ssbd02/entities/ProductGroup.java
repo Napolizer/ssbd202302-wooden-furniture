@@ -33,6 +33,7 @@ import lombok.experimental.SuperBuilder;
 public class ProductGroup extends AbstractEntity {
 
   public static final String FIND_BY_ID = "ProductGroup.findById";
+  public static final String GET_AVG_RATE = "ProductGroup.getAverageRate";
 
   @Column(nullable = false, unique = true)
   private String name;
@@ -53,4 +54,11 @@ public class ProductGroup extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
+
+  public void updateAverageRating() {
+    this.averageRating = rates.stream()
+            .mapToDouble(Rate::getValue)
+            .average()
+            .orElse(0.0);
+  }
 }

@@ -4,6 +4,7 @@ import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 
 @Local
@@ -24,5 +25,7 @@ public interface ProductGroupServiceOperations {
   List<ProductGroup> findAllPresent();
 
   List<ProductGroup> findAllArchived();
+
+  Rate rateProductGroup(String login, Integer rateValue, Long productId);
 
 }
