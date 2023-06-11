@@ -250,7 +250,7 @@ public class ProductController {
   @RolesAllowed(CLIENT)
   @Produces(MediaType.APPLICATION_JSON)
   public Response findClientProducts() {
-    List<OrderProductDto> clientProducts =
+    List<OrderProductWithRateDto> clientProducts =
             productEndpoint.findAllProductsBelongingToAccount(principal.getName());
     return Response.ok(clientProducts).build();
   }

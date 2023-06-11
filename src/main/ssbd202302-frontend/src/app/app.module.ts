@@ -74,6 +74,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import { ClientRatesPageComponent } from './pages/client-rates-page/client-rates-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -161,7 +162,8 @@ import { ClientRatesPageComponent } from './pages/client-rates-page/client-rates
     MatRippleModule,
     MatPaginatorModule,
     MatSortModule,
-    MatGridListModule
+    MatGridListModule,
+    NgbModule
   ],
   providers: [
     DatePipe,

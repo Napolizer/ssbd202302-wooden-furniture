@@ -163,10 +163,10 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(CLIENT)
-  public List<OrderProductDto> findAllProductsBelongingToAccount(String login) {
+  public List<OrderProductWithRateDto> findAllProductsBelongingToAccount(String login) {
     return repeatTransactionWithoutOptimistic(() ->
             productService.findAllProductsBelongingToAccount(login)).stream()
-            .map(orderProductMapper::mapToDto)
+            .map(orderProductMapper::mapToOrderProductWithRateDto)
             .toList();
   }
 

@@ -43,5 +43,5 @@ public interface ProductEndpointOperations {
 
   Product deArchive(Long productId);
 
-  List<OrderProductDto> findAllProductsBelongingToAccount(String login);
+  List<OrderProductWithRateDto> findAllProductsBelongingToAccount(String login);
 }

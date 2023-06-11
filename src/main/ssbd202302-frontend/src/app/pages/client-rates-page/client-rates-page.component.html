@@ -25,14 +25,17 @@
           <mat-card-subtitle>
             <strong>Amount: {{ orderProduct.amount }},-</strong>
           </mat-card-subtitle>
+<!--          <div class="star-rating">-->
+<!--            <ng-container *ngFor="let star of getStarArray(orderProduct.product.productGroup.averageRating)">-->
+<!--              <mat-icon class="star-icon">{{star}}</mat-icon>-->
+<!--            </ng-container>-->
+<!--          </div>-->
+<!--          <span class="d-inline-block g-color-primary rating">-->
+<!--            Average Rating: {{orderProduct.product.productGroup.averageRating}}-->
+<!--          </span>-->
           <div class="star-rating">
-            <ng-container *ngFor="let star of getStarArray(orderProduct.product.productGroup.averageRating)">
-              <mat-icon class="star-icon">{{star}}</mat-icon>
-            </ng-container>
+            <ngb-rating [max]="5" [(rate)]="orderProduct.rate" [readonly]="false"></ngb-rating>
           </div>
-          <span class="d-inline-block g-color-primary rating">
-            Average Rating: {{orderProduct.product.productGroup.averageRating}}
-          </span>
         </mat-card-content>
       </mat-card>
       <mat-divider class="divider" *ngIf="(i + 1) % 4 !== 0"></mat-divider>

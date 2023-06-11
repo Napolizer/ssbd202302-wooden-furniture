@@ -38,6 +38,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   isAscending: boolean = true;
   pageSize = 8; // Number of products per page
   pageSizeOptions: number[] = [4, 8, 12];
+  starRating = 2;
   currentPage = 1; // Current page number
   pagedProducts: OrderProduct[] = []; // Paged products to display
 
