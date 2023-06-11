@@ -1,30 +1,46 @@
 <mat-grid-list class="mat-list" cols="4"gutterSize="15px" rowHeight="300px">
-  <mat-grid-tile *ngFor="let product of pagedProducts; let i = index;">
-    <a href="#" class="no-hover-underline">
+  <mat-grid-tile *ngFor="let orderProduct of pagedProducts; let i = index;">
       <mat-card>
         <mat-card-header>
-          <mat-card-title><img class="d-inline-block img-fluid mb-4" [src]="product.imageUrl" alt="zdjecie"></mat-card-title>
+          <mat-card-title>
+            <img class="d-inline-block img-fluid mb-4"
+                 [src]="orderProduct.product.imageUrl"
+                 alt="zdjecie">
+          </mat-card-title>
         </mat-card-header>
         <mat-card-content class="content-left">
-          <mat-card-title>{{ product.productGroup.name }}</mat-card-title>
-          <mat-card-subtitle>ID: {{ product.id }}</mat-card-subtitle>
-          <!--        <mat-card-subtitle>{{product.productGroup.category.name}}, {{product.furnitureDimensions.width}}m x {{product.furnitureDimensions.depth}}m x {{product.furnitureDimensions.height}}m</mat-card-subtitle>-->
-          <mat-card-subtitle><strong>Price: {{ product.price }},-</strong></mat-card-subtitle>
+          <mat-card-title>{{ orderProduct.product.productGroup.name }}</mat-card-title>
+          <mat-card-subtitle>ID: {{ orderProduct.product.id }}</mat-card-subtitle>
+          <mat-card-subtitle>
+            {{getProductColor(orderProduct.product.color.toString()) | translate}}
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            {{ orderProduct.product.furnitureDimensions.width }}m x
+            {{ orderProduct.product.furnitureDimensions.depth }}m x
+            {{ orderProduct.product.furnitureDimensions.height }}m
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            <strong>Price: {{ orderProduct.price }},-</strong>
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            <strong>Amount: {{ orderProduct.amount }},-</strong>
+          </mat-card-subtitle>
           <div class="star-rating">
-            <ng-container *ngFor="let star of getStarArray(product.productGroup.averageRating)">
+            <ng-container *ngFor="let star of getStarArray(orderProduct.product.productGroup.averageRating)">
               <mat-icon class="star-icon">{{star}}</mat-icon>
             </ng-container>
           </div>
-          <span class="d-inline-block g-color-primary rating">Average Rating: {{product.productGroup.averageRating}}</span>
+          <span class="d-inline-block g-color-primary rating">
+            Average Rating: {{orderProduct.product.productGroup.averageRating}}
+          </span>
         </mat-card-content>
       </mat-card>
       <mat-divider class="divider" *ngIf="(i + 1) % 4 !== 0"></mat-divider>
-    </a>
   </mat-grid-tile>
 </mat-grid-list>
 
 <mat-paginator
-  [length]="products.length"
+  [length]="orderProducts.length"
   [pageSize]="pageSize"
   [pageSizeOptions]="pageSizeOptions"
   (page)="onPageChange($event)"

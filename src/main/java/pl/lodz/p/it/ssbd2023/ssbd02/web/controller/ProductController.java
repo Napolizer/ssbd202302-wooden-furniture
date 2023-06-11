@@ -29,14 +29,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.file.FileUtils;
@@ -257,7 +250,7 @@ public class ProductController {
   @RolesAllowed(CLIENT)
   @Produces(MediaType.APPLICATION_JSON)
   public Response findClientProducts() {
-    List<ProductDto> clientProducts =
+    List<OrderProductDto> clientProducts =
             productEndpoint.findAllProductsBelongingToAccount(principal.getName());
     return Response.ok(clientProducts).build();
   }

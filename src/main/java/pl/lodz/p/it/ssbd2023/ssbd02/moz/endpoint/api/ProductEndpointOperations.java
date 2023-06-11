@@ -5,11 +5,7 @@ import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 
 @Local
 public interface ProductEndpointOperations {
@@ -47,5 +43,5 @@ public interface ProductEndpointOperations {
 
   Product deArchive(Long productId);
 
-  List<ProductDto> findAllProductsBelongingToAccount(String login);
+  List<OrderProductDto> findAllProductsBelongingToAccount(String login);
 }

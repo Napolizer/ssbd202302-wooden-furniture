@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {Product} from "../../interfaces/product";
 import {Subject, takeUntil, tap} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {ProductService} from "../../services/product.service";
 import {NavigationEnd, Router} from "@angular/router";
+import {OrderProduct} from "../../interfaces/orderProduct";
 
 @Component({
   selector: 'app-client-rates-page',
@@ -30,16 +30,16 @@ import {NavigationEnd, Router} from "@angular/router";
 })
 export class ClientRatesPageComponent implements OnInit, OnDestroy {
 
-  products: Product[] = [];
+  orderProducts: OrderProduct[] = [];
   destroy = new Subject<boolean>();
   loading = true;
-  dataSource = new MatTableDataSource<Product>(this.products);
+  dataSource = new MatTableDataSource<OrderProduct>(this.orderProducts);
   sortedProducts: any[] = []; // Array to store the sorted products
   isAscending: boolean = true;
   pageSize = 8; // Number of products per page
   pageSizeOptions: number[] = [4, 8, 12];
   currentPage = 1; // Current page number
-  pagedProducts: Product[] = []; // Paged products to display
+  pagedProducts: OrderProduct[] = []; // Paged products to display
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -54,13 +54,13 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
       .retrieveClientProducts()
       .pipe(tap(() => (this.loading = true)), takeUntil(this.destroy))
       .subscribe((products) => {
-        this.products = products.map((product) => ({
-          ...product,
-          image: this.getImageSrc(product.imageUrl),
+        this.orderProducts = products.map((orderProduct) => ({
+          ...orderProduct,
+          image: this.getImageSrc(orderProduct.product.imageUrl),
         }));
 
         this.loading = false;
-        console.log(this.products);
+        console.log(this.orderProducts);
         this.updatePagedProducts();
       });
   }
@@ -74,7 +74,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   updatePagedProducts(): void {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.pagedProducts = this.products.slice(startIndex, endIndex);
+    this.pagedProducts = this.orderProducts.slice(startIndex, endIndex);
   }
 
   ngOnDestroy(): void {
@@ -105,6 +105,25 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
     }
 
     return starArray;
+  }
+
+  getProductColor(color: string): string {
+    switch (color) {
+      case 'RED':
+        return 'product.color.red';
+      case 'BLACK':
+        return 'product.color.black';
+      case 'GREEN':
+        return 'product.color.green';
+      case 'BLUE':
+        return 'product.color.blue';
+      case 'BROWN':
+        return 'product.color.brown';
+      case 'WHITE':
+        return 'product.color.white';
+      default:
+        return '';
+    }
   }
 
 }

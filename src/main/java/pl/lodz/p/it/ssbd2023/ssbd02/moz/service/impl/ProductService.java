@@ -190,10 +190,9 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
   @Override
   @RolesAllowed(CLIENT)
-  public List<Product> findAllProductsBelongingToAccount(String login) {
+  public List<OrderProduct> findAllProductsBelongingToAccount(String login) {
     return orderFacade.findByAccountLogin(login).stream()
             .flatMap(o -> o.getOrderedProducts().stream())
-            .map(OrderProduct::getProduct)
             .toList();
   }
 }

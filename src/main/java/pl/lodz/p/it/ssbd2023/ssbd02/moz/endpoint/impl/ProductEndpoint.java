@@ -17,12 +17,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -43,6 +40,9 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Inject
   private ProductMapper productMapper;
+
+  @Inject
+  private OrderProductMapper orderProductMapper;
 
   @PermitAll
   public List<ProductDto> findAll() {
@@ -163,10 +163,10 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(CLIENT)
-  public List<ProductDto> findAllProductsBelongingToAccount(String login) {
+  public List<OrderProductDto> findAllProductsBelongingToAccount(String login) {
     return repeatTransactionWithoutOptimistic(() ->
             productService.findAllProductsBelongingToAccount(login)).stream()
-            .map(productMapper::mapToProductDto)
+            .map(orderProductMapper::mapToDto)
             .toList();
   }
 
