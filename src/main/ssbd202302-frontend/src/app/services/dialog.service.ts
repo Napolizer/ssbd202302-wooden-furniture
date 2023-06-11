@@ -108,7 +108,7 @@ export class DialogService {
     return this.matDialog.open(AddProductComponent, {
       disableClose: true,
       width: '1100px',
-      height: '750px',
+      height: '755px',
       autoFocus: false,
     });
   }
