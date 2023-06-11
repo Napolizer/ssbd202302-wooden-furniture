@@ -5,6 +5,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ProductService} from "../../services/product.service";
 import {NavigationEnd, Router} from "@angular/router";
 import {OrderProduct} from "../../interfaces/orderProduct";
+import {OrderProductWithRate} from "../../interfaces/orderProductWithRate";
 
 @Component({
   selector: 'app-client-rates-page',
@@ -30,7 +31,7 @@ import {OrderProduct} from "../../interfaces/orderProduct";
 })
 export class ClientRatesPageComponent implements OnInit, OnDestroy {
 
-  orderProducts: OrderProduct[] = [];
+  orderProducts: OrderProductWithRate[] = [];
   destroy = new Subject<boolean>();
   loading = true;
   dataSource = new MatTableDataSource<OrderProduct>(this.orderProducts);
@@ -40,7 +41,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   pageSizeOptions: number[] = [4, 8, 12];
   starRating = 2;
   currentPage = 1; // Current page number
-  pagedProducts: OrderProduct[] = []; // Paged products to display
+  pagedProducts: OrderProductWithRate[] = []; // Paged products to display
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -125,6 +126,24 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
       default:
         return '';
     }
+  }
+
+  onRateChange(orderProduct: OrderProductWithRate): void {
+    if (orderProduct.oldRate === 0) {
+      this.createRate(orderProduct);
+    } else {
+      this.updateRate(orderProduct);
+    }
+  }
+
+  createRate(orderProduct: OrderProductWithRate): void {
+    orderProduct.oldRate = orderProduct.rate;
+    alert("Create");
+  }
+
+  updateRate(orderProduct: OrderProductWithRate): void {
+    orderProduct.oldRate = orderProduct.rate;
+    alert("Update");
   }
 
 }

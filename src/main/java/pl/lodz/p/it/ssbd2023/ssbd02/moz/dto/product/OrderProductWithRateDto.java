@@ -20,6 +20,7 @@ public class OrderProductWithRateDto {
   @Positive
   private Double price;
   private Integer rate;
+  private Integer oldRate;
   @NotNull
   @Valid
   private ProductDto product;

@@ -1,7 +1,9 @@
 import {Product} from "./product";
 
-export interface OrderProduct {
+export interface OrderProductWithRate {
   amount: number,
+  rate: number,
+  oldRate: number,
   price: number,
   product: Product
 }

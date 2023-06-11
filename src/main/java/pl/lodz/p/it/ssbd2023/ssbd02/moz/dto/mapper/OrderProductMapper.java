@@ -23,9 +23,12 @@ public class OrderProductMapper {
 
 
   public OrderProductWithRateDto mapToOrderProductWithRateDto(OrderProduct orderProduct) {
+    Integer rate = getRateFromOrderProduct(orderProduct);
+
     return OrderProductWithRateDto.builder()
             .amount(orderProduct.getAmount())
-            .rate(getRateFromOrderProduct(orderProduct))
+            .rate(rate)
+            .oldRate(rate)
             .price(orderProduct.getPrice())
             .product(productMapper.mapToProductDto(orderProduct.getProduct()))
             .build();

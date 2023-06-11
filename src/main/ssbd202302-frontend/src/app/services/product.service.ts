@@ -10,6 +10,7 @@ import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
 import {OrderProduct} from "../interfaces/orderProduct";
+import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
 
 @Injectable({
   providedIn: 'root',
@@ -39,8 +40,8 @@ export class ProductService {
     return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product`);
   }
 
-  public retrieveClientProducts(): Observable<OrderProduct[]> {
-    return this.httpClient.get<OrderProduct[]>(
+  public retrieveClientProducts(): Observable<OrderProductWithRate[]> {
+    return this.httpClient.get<OrderProductWithRate[]>(
       `${environment.apiBaseUrl}/product/client`,
       {
         headers: {

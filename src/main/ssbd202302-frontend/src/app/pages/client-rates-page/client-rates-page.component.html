@@ -34,7 +34,11 @@
 <!--            Average Rating: {{orderProduct.product.productGroup.averageRating}}-->
 <!--          </span>-->
           <div class="star-rating">
-            <ngb-rating [max]="5" [(rate)]="orderProduct.rate" [readonly]="false"></ngb-rating>
+            <ngb-rating
+              [max]="5" [(rate)]="orderProduct.rate"
+              [readonly]="false"
+              (rateChange)="onRateChange(orderProduct)"
+            ></ngb-rating>
           </div>
         </mat-card-content>
       </mat-card>
