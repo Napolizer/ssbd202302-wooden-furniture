@@ -104,4 +104,28 @@ export class ProductService {
       }
     );
   }
+
+  public archiveProduct(productId: string): Observable<Product> {
+    return this.httpClient.patch<Product>(
+      `${environment.apiBaseUrl}/product/archive/` + productId,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
+
+  public deArchiveProduct(productId: string): Observable<Product> {
+    return this.httpClient.patch<Product>(
+      `${environment.apiBaseUrl}/product/dearchive/` + productId,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
 }

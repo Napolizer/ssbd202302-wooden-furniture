@@ -27,6 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.RemoveAccessLevelException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.mok.UnknownErrorException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.IllegalProductArchiveException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.IllegalProductDeArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.InvalidOrderStateTransitionException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyCancelledException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredException;
@@ -325,11 +326,15 @@ public final class ApplicationExceptionFactory {
             Response.Status.NOT_FOUND);
   }
 
-  public static IllegalProductArchiveException createIllegalProductArchiveException() {
-    return new IllegalProductArchiveException();
+  public static IllegalProductDeArchiveException createIllegalProductDeArchiveException() {
+    return new IllegalProductDeArchiveException();
   }
 
   public static InvalidOrderStateTransitionException createInvalidOrderStateTransitionException() {
     return new InvalidOrderStateTransitionException();
+  }
+
+  public static IllegalProductArchiveException createIllegalProductArchiveException() {
+    return new IllegalProductArchiveException();
   }
 }

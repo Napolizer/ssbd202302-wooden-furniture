@@ -274,6 +274,8 @@
   "exception.invalid.image.file.format": "Wybrany plik nie jest obrazem, wybierz inny plik",
   "exception.image.required": "Produkt musi zawierać zdjęcie",
   "exception.moz.product.not.found": "Produkt nie istnieje",
+  "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
+  "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -405,5 +407,8 @@
   "product.name": "Model",
   "product.price": "Cena",
   "product.image": "Zdjęcie",
-  "product.edit": "Edytuj produkt"
+  "product.edit": "Edytuj produkt",
+
+  "archive.success": "Pomyślnie zarchiwizowano produkt",
+  "dearchive.success": "Pomyślnie zdearchiwizowano produkt"
 }

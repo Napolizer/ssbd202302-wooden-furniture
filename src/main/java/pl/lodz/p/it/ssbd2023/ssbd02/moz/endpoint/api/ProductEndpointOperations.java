@@ -44,4 +44,6 @@ public interface ProductEndpointOperations {
   List<ProductDto> findAllByCategoryId(Long categoryId);
 
   EditProductDto editProduct(Long id, EditProductDto editProductDto);
+
+  Product deArchive(Long productId);
 }

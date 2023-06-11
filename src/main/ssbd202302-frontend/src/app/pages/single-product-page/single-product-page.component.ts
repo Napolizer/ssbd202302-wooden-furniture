@@ -10,6 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
 import { first, takeUntil, combineLatest, map, Subject } from 'rxjs';
 import { Role } from 'src/app/enums/role';
@@ -63,7 +64,8 @@ export class SingleProductPageComponent implements OnInit {
     private translate: TranslateService,
     private navigationService: NavigationService,
     private dialogService: DialogService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -188,5 +190,63 @@ export class SingleProductPageComponent implements OnInit {
         void this.navigationService.redirectToSingleProductPage(this.product.id.toString());
       }
     });
+  }
+
+  archiveProduct(): void {
+    this.productService.archiveProduct(this.product.id.toString())
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe( {
+        next: () => {
+        this.product.archive = true;
+        this.translate.get('archive.success')
+          .pipe(takeUntil(this.destroy))
+          .subscribe(msg => {
+            this.alertService.success(msg)
+            void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
+          });
+        },
+        error: e => {
+          combineLatest([
+            this.translate.get('exception.occurred'),
+            this.translate.get(e.error.message || 'exception.unknown')
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
+            title: data[0],
+            message: data[1]
+          })))
+            .subscribe(data => {
+              this.alertService.danger(`${data.title}: ${data.message}`);
+              void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
+            });
+        }
+      });
+  }
+
+  deArchiveProduct(): void {
+    this.productService.deArchiveProduct(this.product.id.toString())
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe( {
+        next: () => {
+        this.product.archive = true;
+        this.translate.get('dearchive.success')
+          .pipe(takeUntil(this.destroy))
+          .subscribe(msg => {
+            this.alertService.success(msg)
+            void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
+          });
+        },
+        error: e => {
+          combineLatest([
+            this.translate.get('exception.occurred'),
+            this.translate.get(e.error.message || 'exception.unknown')
+          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
+            title: data[0],
+            message: data[1]
+          })))
+            .subscribe(data => {
+              this.alertService.danger(`${data.title}: ${data.message}`);
+              void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
+            });
+        }
+      });
   }
 }
