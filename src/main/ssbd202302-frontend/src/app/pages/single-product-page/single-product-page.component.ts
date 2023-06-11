@@ -5,7 +5,10 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { first, takeUntil, combineLatest, map, Subject } from 'rxjs';
@@ -44,6 +47,12 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class SingleProductPageComponent implements OnInit {
   product: Product;
+  productsByProductGroup: Product[] = [];
+  productsByCategory: Product[] = [];
+  displayedColumns: string[] = ['image', 'name', 'price', 'color', 'amount', 'rating'];
+  dataSource = new MatTableDataSource<Product>();
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   id = '';
   destroy = new Subject<boolean>();
   loading = true;
@@ -65,7 +74,29 @@ export class SingleProductPageComponent implements OnInit {
       .subscribe({
         next: (product) => {
           this.product = product;
-          console.log(this.product);
+          this.productService
+            .retrieveProductsByGivenProductGroup(
+              this.product.productGroup.id.toString()
+            )
+            .pipe(first(), takeUntil(this.destroy))
+            .subscribe({
+              next: (productsByProductGroup) => {
+                this.productsByProductGroup = productsByProductGroup;
+                this.productService
+                  .retrieveProductsByGivenCategory(
+                    this.product.productGroup.category.id.toString()
+                  )
+                  .pipe(first(), takeUntil(this.destroy))
+                  .subscribe({
+                    next: (productsByCategory) => {
+                      this.productsByCategory = productsByCategory;
+                      console.log(this.productsByCategory)
+                      this.dataSource = new MatTableDataSource<Product>(this.productsByCategory);
+                      this.dataSource.paginator = this.paginator;
+                    },
+                  });
+              },
+            });
           this.loading = false;
         },
       });
@@ -101,12 +132,18 @@ export class SingleProductPageComponent implements OnInit {
   }
 
   handleAddToCartButton(productId: number): void {
+    console.log(productId);
     if (!this.authenticationService.isCurrentRole(Role.CLIENT)) {
       void this.navigationService.redirectToRegisterPage();
       //add popup
     } else {
       //handle addtocart logic
     }
+  }
+
+  handleChooseColorButton(productId: string): void {
+    console.log(productId);
+    void this.navigationService.redirectToSingleProductPage(productId);
   }
 
   isUserGuestOrClient(): boolean {
@@ -116,8 +153,8 @@ export class SingleProductPageComponent implements OnInit {
     );
   }
 
-  getProductColor(): string {
-    switch (this.product.color) {
+  getProductColor(color: string): string {
+    switch (color) {
       case 'RED':
         return 'product.color.red';
       case 'BLACK':
@@ -133,5 +170,12 @@ export class SingleProductPageComponent implements OnInit {
       default:
         return '';
     }
+  }
+  redirectToSingleProductPage(id: string): void {
+    void this.navigationService.redirectToSingleProductPage(id);
+  }
+
+  isUserEmployee(): boolean {
+    return this.authenticationService.isCurrentRole(Role.EMPLOYEE);
   }
 }

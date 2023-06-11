@@ -364,14 +364,14 @@
 
   "product.available.true": "Product is available in ",
   "product.available.false": "Out of stock.",
-  "product.order.now": "you can add it to your cart",
-  "product.amounts": "pieces",
+  "product.amounts": "piece",
   "product.rating": "Average Rating: ",
   "product.choose.color": "Choose color",
   "product.choose.size": "Choose size",
   "product.add.to.cart": "Add to cart",
   "product.sold.out": "Product sold out",
   "product.withdrawn": "The product has been withdrawn from sale",
+  "product.name": "Model",
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
@@ -380,6 +380,7 @@
   "product.wood.type.jungle": "Jungle wood",
   "product.wood.type.acacia": "Acacia",
 
+  "product.color": "Color",
   "product.color.black": "Black",
   "product.color.red": "Red",
   "product.color.green": "Green",
@@ -393,6 +394,12 @@
   "order.state": "Order state",
   "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
-  "products.size": "Number of products",
-  "products.total.price": "Total price"
+  "products.size": "Number of available products",
+  "products.total.price": "Total price",
+  "product.available": "Product is available",
+  "product.unavailable": "Product is unavailable",
+  "product.check.others.from.category": "Check other products from category",
+  "product.price": "Price",
+  "product.image": "Image",
+  "product.edit": "Edit product"
 }

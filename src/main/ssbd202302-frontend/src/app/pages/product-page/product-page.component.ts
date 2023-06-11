@@ -119,6 +119,25 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     return starArray;
   }
 
+  getProductColor(color: string): string {
+    switch (color) {
+      case 'RED':
+        return 'product.color.red';
+      case 'BLACK':
+        return 'product.color.black';
+      case 'GREEN':
+        return 'product.color.green';
+      case 'BLUE':
+        return 'product.color.blue';
+      case 'BROWN':
+        return 'product.color.brown';
+      case 'WHITE':
+        return 'product.color.white';
+      default:
+        return '';
+    }
+  }
+
   redirectToSingleProductPage(id: string): void {
     void this.navigationService.redirectToSingleProductPage(id);
   }

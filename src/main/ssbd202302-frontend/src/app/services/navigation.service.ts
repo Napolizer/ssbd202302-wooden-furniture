@@ -85,4 +85,8 @@ export class NavigationService {
   redirectToSingleProductPage(id: string): Promise<boolean> {
     return this.router.navigate(['/product/' + id])
   }
+
+  redirectToProductsPage(): Promise<boolean> {
+    return this.router.navigate(['/products'])
+  }
 }

@@ -91,6 +91,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToRegisterPage();
   }
 
+  redirectToProductsPage(): void {
+    void this.navigationService.redirectToProductsPage();
+  }
+
   isUserLoggedIn(): boolean {
     return this.authenticationService.isUserLoggedIn();
   }

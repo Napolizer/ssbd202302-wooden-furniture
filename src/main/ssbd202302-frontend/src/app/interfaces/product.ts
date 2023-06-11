@@ -16,4 +16,5 @@ export interface Product {
     weightInPackage: number,
     woodType: string;
     productGroup: ProductGroupInfo;
+    hash: string;
 }

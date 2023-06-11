@@ -88,7 +88,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @PermitAll
   public ProductDto find(Long productId) {
     return repeatTransactionWithoutOptimistic(() -> productService.find(productId))
-      .map(productMapper::mapToProductDto)
+      .map(productMapper::mapToSingleProductDto)
       .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
   }
 
