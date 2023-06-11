@@ -126,7 +126,7 @@ public class OrderController {
 
 
   @PUT
-  @Path("/state/{id}/state")
+  @Path("/state/{id}")
   @RolesAllowed(EMPLOYEE)
   public Response changeOrderState(@PathParam("id") Long id, @NotNull @Valid ChangeOrderStateDto dto) {
     return Response.ok(orderEndpoint.changeOrderState(id, dto.getState(), dto.getHash())).build();

@@ -221,7 +221,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       throw new OptimisticLockException();
     }
     order.setOrderState(state);
-    orderFacade.update(order);
+    order = orderFacade.update(order);
 
     if (order.getObserved()) {
       mailService.sendEmailAboutChangingOrderState(order.getAccount().getEmail(), order.getAccount().getLocale());

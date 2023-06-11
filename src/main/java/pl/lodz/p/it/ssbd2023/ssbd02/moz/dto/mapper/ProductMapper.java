@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Stateful;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
@@ -12,7 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
-@Stateless
+@Stateful
 public class ProductMapper {
 
 
