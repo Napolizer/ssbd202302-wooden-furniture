@@ -38,13 +38,9 @@ public class MOZ10IT {
         "CREATED,COMPLETED",
         "CREATED,IN_DELIVERY",
         "CREATED,DELIVERED",
-        "CREATED,CANCELLED",
         "COMPLETED,IN_DELIVERY",
         "COMPLETED,DELIVERED",
-        "COMPLETED,CANCELLED",
         "IN_DELIVERY,DELIVERED",
-        "IN_DELIVERY,CANCELLED",
-        "DELIVERED,CANCELLED",
     })
     @Order(1)
     void shouldProperlyChangeOrderState(OrderState initialState, OrderState newState) {
@@ -73,10 +69,6 @@ public class MOZ10IT {
     @DisplayName("should fail to change state to forbidden one")
     @ParameterizedTest(name = "initialState, newState {0}, {1}")
     @CsvSource({
-        "CANCELLED,DELIVERED",
-        "CANCELLED,IN_DELIVERY",
-        "CANCELLED,COMPLETED",
-        "CANCELLED,CREATED",
         "DELIVERED,IN_DELIVERY",
         "DELIVERED,COMPLETED",
         "DELIVERED,CREATED",
@@ -110,7 +102,6 @@ public class MOZ10IT {
         "COMPLETED",
         "IN_DELIVERY",
         "DELIVERED",
-        "CANCELLED",
     })
     @Order(2)
     void shouldFailToChangeStateToTheSameOne(OrderState initialState) {
@@ -265,6 +256,32 @@ public class MOZ10IT {
           .put("/order/state/%s".formatted(order.getId()))
           .then()
           .statusCode(403);
+    }
+    @DisplayName("should fail to cancel order")
+    @ParameterizedTest(name = "initialState, newState {0}, {1}")
+    @CsvSource({
+        "CREATED,CANCELLED",
+        "COMPLETED,CANCELLED",
+        "IN_DELIVERY,CANCELLED",
+        "DELIVERED,CANCELLED",
+    })
+    @Order(9)
+    void shouldFailToCancelOrder(OrderState initialState, OrderState newState) {
+      OrderDto order = OrderUtil.createOrder(initialState);
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "state": "%s",
+              "hash": "%s"
+            }
+            """.formatted(newState, order.getHash()))
+          .when()
+          .put("/order/state/%s".formatted(order.getId()))
+          .then()
+          .statusCode(400)
+          .body("message", equalTo("exception.moz.invalid.order.state.transition"));
     }
   }
 }

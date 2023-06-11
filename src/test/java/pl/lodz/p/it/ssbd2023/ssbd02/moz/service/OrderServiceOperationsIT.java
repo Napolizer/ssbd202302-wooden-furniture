@@ -124,9 +124,9 @@ public class OrderServiceOperationsIT {
     utx.commit();
 
     employee.call(() -> {
-      Order updatedOrder = service.changeOrderState(order.getId(), CANCELLED, CryptHashUtils.hashVersion(order.getSumOfVersions()));
+      Order updatedOrder = service.changeOrderState(order.getId(), DELIVERED, CryptHashUtils.hashVersion(order.getSumOfVersions()));
 
-      List<OrderState> invalidStates = List.of(CREATED, COMPLETED, IN_DELIVERY, DELIVERED, CANCELLED);
+      List<OrderState> invalidStates = List.of(CREATED, COMPLETED, IN_DELIVERY, DELIVERED);
 
       for (OrderState invalidState : invalidStates) {
         assertThrows(InvalidOrderStateTransitionException.class, () -> {
@@ -185,6 +185,23 @@ public class OrderServiceOperationsIT {
   void shouldFailToChangeOrderStateAsGuest() {
     assertThrows(EJBAccessException.class, () -> {
       service.changeOrderState(1L, IN_DELIVERY, "hash");
+    });
+  }
+
+  @Test
+  void shouldFailToChangeStateToCancelled() throws Exception {
+    utx.begin();
+    Order order = orderFactory.create("user123");
+    utx.commit();
+
+    employee.call(() -> {
+      Optional<Order> orderOptional = service.find(order.getId());
+      assertThat(orderOptional.isPresent(), equalTo(true));
+      assertThat(orderOptional.get().getOrderState(), equalTo(CREATED));
+
+      assertThrows(InvalidOrderStateTransitionException.class, () -> {
+        service.changeOrderState(order.getId(), CANCELLED, CryptHashUtils.hashVersion(order.getSumOfVersions()));
+      });
     });
   }
 }

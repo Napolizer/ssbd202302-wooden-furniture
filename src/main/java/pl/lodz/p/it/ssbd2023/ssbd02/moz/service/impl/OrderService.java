@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CANCELLED;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -181,7 +182,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       throw ApplicationExceptionFactory.createOrderAlreadyInDeliveryException();
     } else if (order.getOrderState().equals(OrderState.DELIVERED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyDeliveredException();
-    } else if (order.getOrderState().equals(OrderState.CANCELLED)) {
+    } else if (order.getOrderState().equals(CANCELLED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyCancelledException();
     }
 
@@ -189,7 +190,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       throw new OptimisticLockException();
     }
 
-    order.setOrderState(OrderState.CANCELLED);
+    order.setOrderState(CANCELLED);
     return orderFacade.update(order);
   }
 
@@ -214,7 +215,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @RolesAllowed(EMPLOYEE)
   public Order changeOrderState(Long id, OrderState state, String hash) {
     Order order = orderFacade.find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
-    if (state.ordinal() <= order.getOrderState().ordinal()) {
+    if (state.ordinal() <= order.getOrderState().ordinal() || state.equals(CANCELLED)) {
       throw ApplicationExceptionFactory.createInvalidOrderStateTransitionException();
     }
     if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
