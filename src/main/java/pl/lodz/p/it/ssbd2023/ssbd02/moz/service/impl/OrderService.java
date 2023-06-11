@@ -18,7 +18,7 @@ import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
@@ -66,20 +66,20 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @RolesAllowed(CLIENT)
   public Order create(Order order, String login, Map<Long, Integer> orderedProductsMap) {
     Double totalPrice = 0.0;
-    List<OrderProduct> orderProducts = new ArrayList<>();
+    List<OrderedProduct> orderedProducts = new ArrayList<>();
 
     for (Long productId : orderedProductsMap.keySet()) {
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
 
-      OrderProduct orderProduct = OrderProduct.builder()
+      OrderedProduct orderedProduct = OrderedProduct.builder()
           .amount(orderedProductsMap.get(productId))
           .price(product.getPrice())
           .product(product)
           .order(order)
           .build();
-      orderProducts.add(orderProduct);
-      totalPrice += orderProduct.getPrice() * orderedProductsMap.get(productId);
+      orderedProducts.add(orderedProduct);
+      totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
 
       //TODO edit products amount in database
       //TODO make impossible to create order for employee that changed these products recently
@@ -101,7 +101,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     order.setDeliveryAddress(address);
     order.setTotalPrice(totalPrice);
     order.setAccount(account);
-    order.setOrderedProducts(orderProducts);
+    order.setOrderedProducts(orderedProducts);
     order.setOrderState(OrderState.CREATED);
     return orderFacade.create(order);
   }
@@ -110,20 +110,20 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @RolesAllowed(CLIENT)
   public Order createWithGivenShippingData(Order order, String login, Map<Long, Integer> orderedProductsMap) {
     Double totalPrice = 0.0;
-    List<OrderProduct> orderProducts = new ArrayList<>();
+    List<OrderedProduct> orderedProducts = new ArrayList<>();
 
     for (Long productId : orderedProductsMap.keySet()) {
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
 
-      OrderProduct orderProduct = OrderProduct.builder()
+      OrderedProduct orderedProduct = OrderedProduct.builder()
           .amount(orderedProductsMap.get(productId))
           .price(product.getPrice())
           .product(product)
           .order(order)
           .build();
-      orderProducts.add(orderProduct);
-      totalPrice += orderProduct.getPrice() * orderedProductsMap.get(productId);
+      orderedProducts.add(orderedProduct);
+      totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
 
       //TODO edit products amount in database
       //TODO make impossible to create order for employee that changed these products recently
@@ -133,7 +133,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
     order.setTotalPrice(totalPrice);
     order.setAccount(account);
-    order.setOrderedProducts(orderProducts);
+    order.setOrderedProducts(orderedProducts);
     order.setOrderState(OrderState.CREATED);
     return orderFacade.create(order);
   }

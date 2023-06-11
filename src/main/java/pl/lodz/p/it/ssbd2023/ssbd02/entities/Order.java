@@ -55,7 +55,7 @@ public class Order extends AbstractEntity {
   private OrderState orderState;
 
   @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  private List<OrderProduct> orderedProducts = new ArrayList<>();
+  private List<OrderedProduct> orderedProducts = new ArrayList<>();
 
   @Column(nullable = false, name = "total_price", updatable = false)
   private Double totalPrice;
@@ -80,7 +80,7 @@ public class Order extends AbstractEntity {
 
   public Long getSumOfVersions() {
     Long sumOfProductsVersions = 0L;
-    for (OrderProduct product : this.getOrderedProducts()) {
+    for (OrderedProduct product : this.getOrderedProducts()) {
       sumOfProductsVersions += product.getVersion();
     }
     return this.getVersion() + sumOfProductsVersions + this.getDeliveryAddress().getVersion()
