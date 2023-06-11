@@ -1,8 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
-
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -28,6 +25,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
+
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -154,6 +153,15 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
     Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
             ProductMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
     return productMapper.mapToProductDto(product);
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<ProductDto> findAllProductsBelongingToAccount(String login) {
+    return repeatTransactionWithoutOptimistic(() ->
+            productService.findAllProductsBelongingToAccount(login)).stream()
+            .map(productMapper::mapToProductDto)
+            .toList();
   }
 
   @Override

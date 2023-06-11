@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
@@ -13,12 +14,16 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
+
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
@@ -41,6 +46,9 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
   @Inject
   private ProductGroupFacadeOperations productGroupFacade;
+
+  @Inject
+  private OrderFacadeOperations orderFacade;
 
   @Inject
   private GoogleServiceOperations googleService;
@@ -164,5 +172,14 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
     product.update(productWithChanges);
     return productFacade.update(product);
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<Product> findAllProductsBelongingToAccount(String login) {
+    return orderFacade.findByAccountLogin(login).stream()
+            .flatMap(o -> o.getOrderedProducts().stream())
+            .map(OrderProduct::getProduct)
+            .toList();
   }
 }

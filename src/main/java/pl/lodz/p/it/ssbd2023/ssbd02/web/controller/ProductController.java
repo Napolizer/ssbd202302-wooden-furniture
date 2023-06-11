@@ -1,8 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
-
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -21,6 +18,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.List;
 import javax.print.attribute.standard.Media;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -41,6 +39,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.file.FileUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.FormDataMapper;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
+
 @Path("/product")
 @Interceptors({SimpleLoggerInterceptor.class})
 public class ProductController {
@@ -50,6 +50,9 @@ public class ProductController {
 
   @Inject
   private ProductGroupEndpointOperations productGroupEndpoint;
+
+  @Inject
+  private Principal principal;
 
   @PUT
   @Path("/id/{id}")
@@ -232,5 +235,15 @@ public class ProductController {
   public Response findAllByPrice(@QueryParam("minPrice") Double minPrice,
                                  @QueryParam("maxPrice") Double maxPrice) {
     throw new UnsupportedOperationException();
+  }
+
+  @GET
+  @Path("/client")
+  @RolesAllowed(CLIENT)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findClientProducts() {
+    List<ProductDto> clientProducts =
+            productEndpoint.findAllProductsBelongingToAccount(principal.getName());
+    return Response.ok(clientProducts).build();
   }
 }

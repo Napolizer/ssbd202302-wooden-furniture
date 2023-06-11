@@ -44,4 +44,6 @@ public interface ProductEndpointOperations {
   List<ProductDto> findAllByCategoryId(Long categoryId);
 
   ProductDto editProduct(Long id, EditProductDto editProductDto);
+
+  List<ProductDto> findAllProductsBelongingToAccount(String login);
 }
