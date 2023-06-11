@@ -1,0 +1,97 @@
+<h1 mat-dialog-title>{{ "edit.product" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <form
+    class="form-container"
+    [formGroup]="editProductForm"
+    (ngSubmit)="confirmSave()"
+  >
+    <div class="form">
+      <app-spinner [loading]="loading"></app-spinner>
+      <div class="input-container">
+        <mat-form-field
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewPrice" | translate }}</mat-label>
+          <input
+            matInput
+            #price
+            value="{{ editableProduct.price }}"
+            type="nubmer"
+            formControlName="price"
+            min="0.01"
+            required
+          />
+          <mat-error
+            *ngIf="editProductForm.get('price')?.hasError('max')"
+            >{{ "edit.validity.price.max" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editProductForm.get('price')?.hasError('pattern')"
+            >{{
+              "edit.validity.price" | translate
+            }}</mat-error
+          >
+          <mat-error
+            *ngIf="editProductForm.get('price')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="input-container">
+        <mat-form-field
+          appearance="fill"
+          class="input"
+        >
+          <mat-label>{{ "edit.enterNewAmount" | translate }}</mat-label>
+          <input
+            matInput
+            #price
+            value="{{ editableProduct.amount }}"
+            type="nubmer"
+            formControlName="amount"
+            min="0"
+            required
+          />
+          <mat-error
+            *ngIf="editProductForm.get('amount')?.hasError('min')"
+            >{{
+              "edit.validity.amount.min" | translate
+            }}</mat-error
+          >
+          <mat-error
+            *ngIf="editProductForm.get('amount')?.hasError('max')"
+            >{{ "edit.validity.amount.max" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="editProductForm.get('amount')?.hasError('required')"
+            >{{ "register.validity.required" | translate }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="input-container"></div>
+      <div class="input-reset">
+        <button
+          type="button"
+          mat-button
+          color="primary"
+          class="reset-button"
+          (click)="onResetClicked()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      <div class="button-container">
+        <button mat-button type="button" mat-dialog-close>
+          {{ "change.email.back" | translate }}
+        </button>
+      </div>
+      <div class="button-container">
+        <button mat-button type="submit">
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

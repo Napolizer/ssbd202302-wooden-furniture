@@ -150,10 +150,10 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductDto editProduct(Long id, EditProductDto editProductDto) {
+  public EditProductDto editProduct(Long id, EditProductDto editProductDto) {
     Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
             ProductMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
-    return productMapper.mapToProductDto(product);
+    return productMapper.mapToEditProductDto(product);
   }
 
   @Override

@@ -178,4 +178,15 @@ export class SingleProductPageComponent implements OnInit {
   isUserEmployee(): boolean {
     return this.authenticationService.isCurrentRole(Role.EMPLOYEE);
   }
+
+  openEditProductDialog(): void {
+    this.dialogService.openEditProductDialog(this.product)
+    .afterClosed()
+    .pipe(first(), takeUntil(this.destroy))
+    .subscribe((result) => {
+      if (result === 'success') {
+        void this.navigationService.redirectToSingleProductPage(this.product.id.toString());
+      }
+    });
+  }
 }

@@ -1,5 +1,6 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, NavigationEnd } from '@angular/router';
 import { tap, takeUntil, Subject } from 'rxjs';
@@ -34,12 +35,12 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
   loading = true;
   dataSource = new MatTableDataSource<Product>(this.products);
-  sortedProducts: any[] = []; // Array to store the sorted products
+  sortedProducts: any[] = [];
   isAscending: boolean = true;
-  pageSize = 8; // Number of products per page
+  pageSize = 8;
   pageSizeOptions: number[] = [4, 8, 12];
-  currentPage = 1; // Current page number
-  pagedProducts: Product[] = []; // Paged products to display
+  currentPage = 1;
+  pagedProducts: Product[] = [];
 
   constructor(private productService: ProductService, private router: Router, private navigationService: NavigationService) {}
 
@@ -76,22 +77,6 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
-  }
-
-  sortByPrice(sortOrder: string) {
-    switch (sortOrder) {
-      case 'default':
-        this.sortedProducts = this.products.slice(); // Copy the original products array
-        break;
-      case 'ascending':
-        this.sortedProducts = this.products.slice().sort((a, b) => a.price - b.price);
-        this.isAscending = true;
-        break;
-      case 'descending':
-        this.sortedProducts = this.products.slice().sort((a, b) => b.price - a.price);
-        this.isAscending = false;
-        break;
-    }
   }
 
   shouldDisplaySpinner(): boolean {

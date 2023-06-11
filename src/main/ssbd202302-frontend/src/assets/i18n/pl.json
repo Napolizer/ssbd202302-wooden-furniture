@@ -192,6 +192,14 @@
   "edit.postalCode.validity.patternMismatch": "Kod pocztowy musi mieć format xx-xxx, gdzie x jest cyfrą",
   "edit.streetNumber.validity.patternMismatch": "Numer ulicy musi być liczbą całkowitą dodatnią mniejszą niż 10000",
   "edit.success": "Pomyślnie zmieniono dane konta!",
+  "edit.product":"Edytuj produkt",
+  "edit.validity.price": "Cena musi być liczbą dodatnią, musi mieć 2 liczby po kropce",
+  "edit.enterNewPrice": "Podaj nową cenę",
+  "edit.product.success": "Pomyślnie zmieniono dane produktu!",
+  "edit.validity.price.max": "Maksymalna cena jaką można nadać produktowi to 9999999.00",
+  "edit.validity.amount.min": "Minimalna ilość to 0",
+  "edit.validity.amount.max": "Maksymalna ilość to 9999999",
+  "edit.enterNewAmount": "Podaj nową ilość produktu",
 
   "save": "Zapisz",
   "reset": "Resetuj",
@@ -219,6 +227,7 @@
   "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
+  "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
