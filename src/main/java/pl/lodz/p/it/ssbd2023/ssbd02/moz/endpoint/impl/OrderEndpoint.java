@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
@@ -51,10 +52,10 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public List<OrderDto> findByState(OrderState orderState) {
+  public List<OrderDetailsDto> findByState(OrderState orderState) {
     return repeatTransactionWithOptimistic(() -> orderService.findByState(orderState))
         .stream()
-        .map(orderMapper::mapToOrderDto)
+        .map(orderMapper::mapToOrderDetailsDto)
         .toList();
   }
 
@@ -94,28 +95,28 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public List<OrderDto> findAll() {
+  public List<OrderDetailsDto> findAll() {
     return repeatTransactionWithOptimistic(() -> orderService.findAll())
         .stream()
-        .map(orderMapper::mapToOrderDto)
+        .map(orderMapper::mapToOrderDetailsDto)
         .toList();
   }
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public List<OrderDto> findAllPresent() {
+  public List<OrderDetailsDto> findAllPresent() {
     return repeatTransactionWithOptimistic(() -> orderService.findAllPresent())
         .stream()
-        .map(orderMapper::mapToOrderDto)
+        .map(orderMapper::mapToOrderDetailsDto)
         .toList();
   }
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public List<OrderDto> findAllArchived() {
+  public List<OrderDetailsDto> findAllArchived() {
     return repeatTransactionWithOptimistic(() -> orderService.findAllArchived())
         .stream()
-        .map(orderMapper::mapToOrderDto)
+        .map(orderMapper::mapToOrderDetailsDto)
         .toList();
   }
 

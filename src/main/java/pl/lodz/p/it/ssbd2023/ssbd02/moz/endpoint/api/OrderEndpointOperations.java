@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 
@@ -14,7 +15,7 @@ public interface OrderEndpointOperations {
 
   List<OrderDto> findByAccountLogin(String login);
 
-  List<OrderDto> findByState(OrderState orderState);
+  List<OrderDetailsDto> findByState(OrderState orderState);
 
   OrderDto create(CreateOrderDto entity, String login);
 
@@ -24,11 +25,11 @@ public interface OrderEndpointOperations {
 
   Optional<OrderDto> find(Long id);
 
-  List<OrderDto> findAll();
+  List<OrderDetailsDto> findAll();
 
-  List<OrderDto> findAllPresent();
+  List<OrderDetailsDto> findAllPresent();
 
-  List<OrderDto> findAllArchived();
+  List<OrderDetailsDto> findAllArchived();
 
   OrderDto cancelOrder(OrderDto orderDto);
 
