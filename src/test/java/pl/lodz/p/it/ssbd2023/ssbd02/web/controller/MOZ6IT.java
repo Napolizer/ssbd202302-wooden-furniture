@@ -42,6 +42,20 @@ public class MOZ6IT {
           .then()
           .statusCode(200)
           .body("name", equalTo("Zmieniona"));
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .contentType("application/json")
+          .body("""
+            {
+              "name": "HarmonyHaven Double Bed",
+              "hash": "$hash"
+            }
+          """.replace("$hash", CryptHashUtils.hashVersion(2L)))
+          .when()
+          .put("/product/group/id/50")
+          .then()
+          .statusCode(200)
+          .body("name", equalTo("HarmonyHaven Double Bed"));
     }
   }
 
