@@ -56,11 +56,11 @@ export class ProductService {
     return this.httpClient.post<Product>(
       `${environment.apiBaseUrl}/product/new-image`,
       formData,
-      { 
+      {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,
         },
-        observe: 'response' 
+        observe: 'response'
       }
     );
 
@@ -70,13 +70,25 @@ export class ProductService {
     return this.httpClient.post<Product>(
       `${environment.apiBaseUrl}/product/existing-image`,
       product,
-      {         
+      {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,
         },
-        observe: 'response' 
+        observe: 'response'
       }
     );
   }
 
+
+  public retrieveProduct(id: string): Observable<Product> {
+    return this.httpClient.get<Product>(`${environment.apiBaseUrl}/product/id/` + id);
+  }
+
+  public retrieveProductsByGivenProductGroup(productGroupId: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product/group/id/` + productGroupId);
+  }
+
+  public retrieveProductsByGivenCategory(productCategoryId: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product/category/id/` + productCategoryId);
+  }
 }

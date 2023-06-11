@@ -81,4 +81,12 @@ export class NavigationService {
   public redirectToClientOrdersPage(): Promise<boolean> {
     return this.router.navigate(['/client/orders']);
   }
+
+  redirectToSingleProductPage(id: string): Promise<boolean> {
+    return this.router.navigate(['/product/' + id])
+  }
+
+  redirectToProductsPage(): Promise<boolean> {
+    return this.router.navigate(['/products'])
+  }
 }

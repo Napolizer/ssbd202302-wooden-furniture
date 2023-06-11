@@ -3,7 +3,12 @@
 
 .no-hover-underline 
   text-decoration: none
-  color: inherit
+  cursor: pointer
+
+
+.no-hover-underline:hover 
+  text-decoration: none
+
 
 .mat-list   
     margin-right:10%
@@ -11,4 +16,26 @@
     margin-top:20px
 
 .mat-paginator 
+    margin-top: 20px
     margin-right:10%
+    margin-left:10%
+
+::ng-deep .mat-card-header .mat-card-header-text 
+  margin: 0
+
+
+.green-circle 
+  display: inline-block
+  width: 15px
+  height: 15px
+  background-color: green
+  border-radius: 50%
+  margin-right: 5px
+
+.red-circle 
+  display: inline-block
+  width: 15px
+  height: 15px
+  background-color: red
+  border-radius: 50%
+  margin-right: 5px

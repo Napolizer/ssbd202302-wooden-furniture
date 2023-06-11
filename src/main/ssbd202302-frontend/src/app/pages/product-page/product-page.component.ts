@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router, NavigationEnd } from '@angular/router';
 import { tap, takeUntil, Subject } from 'rxjs';
 import { Product } from 'src/app/interfaces/product';
+import { NavigationService } from 'src/app/services/navigation.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -40,7 +41,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   currentPage = 1; // Current page number
   pagedProducts: Product[] = []; // Paged products to display
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService, private router: Router, private navigationService: NavigationService) {}
 
   ngOnInit(): void {
     this.router.events.pipe(takeUntil(this.destroy)).subscribe((val) => {
@@ -53,11 +54,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       .retrieveAllProducts()
       .pipe(tap(() => (this.loading = true)), takeUntil(this.destroy))
       .subscribe((products) => {
-        this.products = products.map((product) => ({
-          ...product,
-          image: this.getImageSrc(product.imageUrl),
-        }));
-
+        this.products = products;
         this.loading = false;
         console.log(this.products);
         this.updatePagedProducts();
@@ -97,22 +94,6 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  base64ToByteArray(base64String: string): Uint8Array {
-    const binaryString = atob(base64String);
-    const length = binaryString.length;
-    const byteArray = new Uint8Array(length);
-
-    for (let i = 0; i < length; i++) {
-      byteArray[i] = binaryString.charCodeAt(i);
-    }
-
-    return byteArray;
-  }
-
-  getImageSrc(image: string): string {
-    return 'data:image/jpeg;base64,' + image;
-  }
-
   shouldDisplaySpinner(): boolean {
     return this.loading;
   }
@@ -136,5 +117,28 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     }
 
     return starArray;
+  }
+
+  getProductColor(color: string): string {
+    switch (color) {
+      case 'RED':
+        return 'product.color.red';
+      case 'BLACK':
+        return 'product.color.black';
+      case 'GREEN':
+        return 'product.color.green';
+      case 'BLUE':
+        return 'product.color.blue';
+      case 'BROWN':
+        return 'product.color.brown';
+      case 'WHITE':
+        return 'product.color.white';
+      default:
+        return '';
+    }
+  }
+
+  redirectToSingleProductPage(id: string): void {
+    void this.navigationService.redirectToSingleProductPage(id);
   }
 }
