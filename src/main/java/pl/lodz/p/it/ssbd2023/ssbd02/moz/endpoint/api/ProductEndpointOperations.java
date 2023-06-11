@@ -43,7 +43,9 @@ public interface ProductEndpointOperations {
 
   List<ProductDto> findAllByCategoryId(Long categoryId);
 
-  ProductDto editProduct(Long id, EditProductDto editProductDto);
+  EditProductDto editProduct(Long id, EditProductDto editProductDto);
+
+  Product deArchive(Long productId);
 
   List<ProductDto> findAllProductsBelongingToAccount(String login);
 }

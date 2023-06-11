@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
@@ -31,6 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -38,8 +42,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperati
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.file.FileUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.FormDataMapper;
-
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
 
 @Path("/product")
 @Interceptors({SimpleLoggerInterceptor.class})
@@ -73,6 +75,18 @@ public class ProductController {
     ).build();
   }
 
+  @PATCH
+  @Path("/dearchive/{productId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response deArchiveProduct(@PathParam("productId") Long productId) {
+    productEndpoint.deArchive(productId);
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "moz.product.dearchive.successful")
+                    .build()
+    ).build();
+  }
 
   @POST
   @Path("/new-image")
@@ -110,8 +124,9 @@ public class ProductController {
   @Path("/group/archive/id/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(EMPLOYEE)
-  public Response archiveProductGroup(@PathParam("id") Long id) {
-    return Response.ok(productGroupEndpoint.archive(id)).build();
+  public Response archiveProductGroup(@PathParam("id") Long id,
+                                      @NotNull @Valid ProductGroupArchiveDto productGroupArchiveDto) {
+    return Response.ok(productGroupEndpoint.archive(id, productGroupArchiveDto)).build();
   }
 
   @PUT

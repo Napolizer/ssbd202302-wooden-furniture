@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -25,8 +28,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
-
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -79,6 +80,11 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
     return repeatTransactionWithOptimistic(() -> productService.archive(id));
   }
 
+  @RolesAllowed(EMPLOYEE)
+  public Product deArchive(Long id) {
+    return repeatTransactionWithOptimistic(() -> productService.deArchive(id));
+  }
+
   @Override
   public ProductDto update(Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
@@ -87,7 +93,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @PermitAll
   public ProductDto find(Long productId) {
     return repeatTransactionWithoutOptimistic(() -> productService.find(productId))
-      .map(productMapper::mapToProductDto)
+      .map(productMapper::mapToSingleProductDto)
       .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
   }
 
@@ -149,10 +155,10 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductDto editProduct(Long id, EditProductDto editProductDto) {
+  public EditProductDto editProduct(Long id, EditProductDto editProductDto) {
     Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
             ProductMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
-    return productMapper.mapToProductDto(product);
+    return productMapper.mapToEditProductDto(product);
   }
 
   @Override

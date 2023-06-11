@@ -192,6 +192,14 @@
   "edit.postalCode.validity.patternMismatch": "Kod pocztowy musi mieć format xx-xxx, gdzie x jest cyfrą",
   "edit.streetNumber.validity.patternMismatch": "Numer ulicy musi być liczbą całkowitą dodatnią mniejszą niż 10000",
   "edit.success": "Pomyślnie zmieniono dane konta!",
+  "edit.product":"Edytuj produkt",
+  "edit.validity.price": "Cena musi być liczbą dodatnią, musi mieć 2 liczby po kropce",
+  "edit.enterNewPrice": "Podaj nową cenę",
+  "edit.product.success": "Pomyślnie zmieniono dane produktu!",
+  "edit.validity.price.max": "Maksymalna cena jaką można nadać produktowi to 9999999.00",
+  "edit.validity.amount.min": "Minimalna ilość to 0",
+  "edit.validity.amount.max": "Maksymalna ilość to 9999999",
+  "edit.enterNewAmount": "Podaj nową ilość produktu",
 
   "save": "Zapisz",
   "reset": "Resetuj",
@@ -219,6 +227,7 @@
   "dialog.refresh.token":"Twoja sesja wkrótce wygaśnie. Czy chcesz ją przedłużyć?",
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
+  "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -265,6 +274,8 @@
   "exception.invalid.image.file.format": "Wybrany plik nie jest obrazem, wybierz inny plik",
   "exception.image.required": "Produkt musi zawierać zdjęcie",
   "exception.moz.product.not.found": "Produkt nie istnieje",
+  "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
+  "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -365,6 +376,7 @@
   "product.wood.type.jungle": "Drewno tropikalne",
   "product.wood.type.acacia": "Akacja",
 
+  "product.color": "Kolor",
   "product.color.black": "Czarny",
   "product.color.red": "Czerwony",
   "product.color.green": "Zielony",
@@ -378,7 +390,26 @@
   "order.state": "Stan zamówienia",
   "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
-  "products.size": "Liczba produktów",
+  "order.client.product.rate": "Oceń twój produkt",
+  "products.size": "Liczba dostępnych produktów",
   "products.total.price": "Cena całkowita",
-  "order.client.product.rate": "Oceń twój produkt"
+
+  "product.available.true": "Produkt jest dostępny w ilości ",
+  "product.available.false": "Brak produktu w magazynie.",
+  "product.amounts": "sztuk",
+  "product.rating": "Średnia ocena: ",
+  "product.choose.color": "Wybierz kolor",
+  "product.choose.size": "Wybierz rozmiar",
+  "product.add.to.cart": "Dodaj do koszyka",
+  "product.sold.out": "Produkt wyprzedany",
+  "product.withdrawn": "Produkt został wycofany ze sprzedaży",
+  "product.available": "Produkt jest dostępny",
+  "product.check.others.from.category": "Sprawdź inne produkty z kategorii",
+  "product.name": "Model",
+  "product.price": "Cena",
+  "product.image": "Zdjęcie",
+  "product.edit": "Edytuj produkt",
+
+  "archive.success": "Pomyślnie zarchiwizowano produkt",
+  "dearchive.success": "Pomyślnie zdearchiwizowano produkt"
 }

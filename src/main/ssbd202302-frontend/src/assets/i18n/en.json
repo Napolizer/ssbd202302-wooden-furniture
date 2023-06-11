@@ -192,6 +192,14 @@
   "edit.postalCode.validity.patternMismatch": "Postal code must be in format xx-xxx, where x is a digit",
   "edit.streetNumber.validity.patternMismatch": "Street number must be positive lower than 10000",
   "edit.success": "Successfully edited account!",
+  "edit.product":"Edit product",
+  "edit.validity.price": "Price must be greater than 0, must end with 2 digits after dot",
+  "edit.enterNewPrice": "Enter new price",
+  "edit.product.success": "Successfully edited product!",
+  "edit.validity.price.max": "Max price is 9999999.00",
+  "edit.validity.amount.min": "Minimum amount is 0",
+  "edit.validity.amount.max": "Maximum amount is 9999999",
+  "edit.enterNewAmount": "Podaj nową ilość produktu",
 
   "save": "Save",
   "reset": "Reset",
@@ -219,6 +227,7 @@
   "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
   "dialog.add.product.message": "Are you sure you want to add new product?",
+  "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -266,6 +275,8 @@
   "exception.invalid.image.file.format": "The selected file is not a valid image, please upload an image file",
   "exception.image.required": "Product must have an image",
   "exception.moz.product.not.found": "Product not found",
+  "exception.moz.product.change.state.archive": "Product is already archived",
+  "exception.moz.product.change.state.dearchive": "Product is already dearchived",
 
 
   "role.administrator": "Administrator",
@@ -362,6 +373,17 @@
   "CANCELLED": "Cancelled",
 
 
+  "product.available.true": "Product is available in ",
+  "product.available.false": "Out of stock.",
+  "product.amounts": "piece",
+  "product.rating": "Average Rating: ",
+  "product.choose.color": "Choose color",
+  "product.choose.size": "Choose size",
+  "product.add.to.cart": "Add to cart",
+  "product.sold.out": "Product sold out",
+  "product.withdrawn": "The product has been withdrawn from sale",
+  "product.name": "Model",
+
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
   "product.wood.type.dark.oak": "Dark oak",
@@ -369,6 +391,7 @@
   "product.wood.type.jungle": "Jungle wood",
   "product.wood.type.acacia": "Acacia",
 
+  "product.color": "Color",
   "product.color.black": "Black",
   "product.color.red": "Red",
   "product.color.green": "Green",
@@ -382,7 +405,16 @@
   "order.state": "Order state",
   "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
-  "products.size": "Number of products",
+  "order.client.product.rate": "Rate your product",
+  "products.size": "Number of available products",
   "products.total.price": "Total price",
-  "order.client.product.rate": "Rate your product"
+  "product.available": "Product is available",
+  "product.unavailable": "Product is unavailable",
+  "product.check.others.from.category": "Check other products from category",
+  "product.price": "Price",
+  "product.image": "Image",
+  "product.edit": "Edit product",
+
+  "archive.success": "Product archivized successfully",
+  "dearchive.success": "Product dearchivized successfully"
 }

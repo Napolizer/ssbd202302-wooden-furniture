@@ -55,9 +55,13 @@ public class ProductGroupService extends AbstractService implements ProductGroup
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductGroup archive(Long id) {
+  public ProductGroup archive(Long id, String hash) {
     ProductGroup productGroup = productGroupFacade.findById(id)
         .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+    if (!CryptHashUtils.verifyVersion(productGroup.getVersion(), hash)) {
+      throw new OptimisticLockException();
+    }
 
     if (!productGroup.getArchive().equals(false)) {
       throw ApplicationExceptionFactory.createProductGroupAlreadyArchivedException();

@@ -6,7 +6,7 @@ import {ProductGroupInfo} from "./product.group.info"
 export interface Product {
     id: number,
     amount: number,
-    available: boolean,
+    archive: boolean,
     color: string,
     furnitureDimensions: FurnitureDimensions,
     packageDimensions: PackageDimensions,
@@ -16,4 +16,5 @@ export interface Product {
     weightInPackage: number,
     woodType: string;
     productGroup: ProductGroupInfo;
+    hash: string;
 }

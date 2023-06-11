@@ -14,7 +14,6 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
-
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
@@ -93,6 +92,21 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     }
 
     product.setArchive(true);
+    Product productAfterUpdate = productFacade.update(product);
+
+    return productAfterUpdate;
+  }
+
+  @RolesAllowed(EMPLOYEE)
+  public Product deArchive(Long id) {
+    Product product = productFacade.findById(id)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+    if (!product.getArchive()) {
+      throw ApplicationExceptionFactory.createIllegalProductDeArchiveException();
+    }
+
+    product.setArchive(false);
     Product productAfterUpdate = productFacade.update(product);
 
     return productAfterUpdate;
