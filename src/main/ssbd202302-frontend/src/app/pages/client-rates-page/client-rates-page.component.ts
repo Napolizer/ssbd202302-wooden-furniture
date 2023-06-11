@@ -37,7 +37,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   orderProducts: OrderProductWithRate[] = [];
   destroy = new Subject<boolean>();
   loading = true;
-  dataSource = new MatTableDataSource<OrderProduct>(this.orderProducts);
+  dataSource = new MatTableDataSource<OrderProductWithRate>(this.orderProducts);
   sortedProducts: any[] = []; // Array to store the sorted products
   isAscending: boolean = true;
   pageSize = 8; // Number of products per page

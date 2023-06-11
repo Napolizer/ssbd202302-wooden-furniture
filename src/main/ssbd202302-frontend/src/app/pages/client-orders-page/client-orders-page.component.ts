@@ -113,7 +113,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   calculateTotalQuantity(order: any): number {
     let total = 0;
-    for (const product of order.orderProductList) {
+    for (const product of order.orderedProducts) {
       total += product.amount;
     }
     return total;

@@ -14,8 +14,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
@@ -190,7 +189,7 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
   @Override
   @RolesAllowed(CLIENT)
-  public List<OrderProduct> findAllProductsBelongingToAccount(String login) {
+  public List<OrderedProduct> findAllProductsBelongingToAccount(String login) {
     return orderFacade.findByAccountLogin(login).stream()
             .flatMap(o -> o.getOrderedProducts().stream())
             .toList();

@@ -4,11 +4,12 @@ import {OrderProduct} from "./orderProduct";
 
 export interface ClientOrder {
   id: number,
-  orderProductList: OrderProduct[],
+  orderedProducts: OrderProduct[],
   orderState: string,
   recipientFirstName: string,
   recipientLastName: string,
   recipientAddress: Address,
   hash: string,
-  observed: boolean
+  observed: boolean,
+  totalPrice: number
 }

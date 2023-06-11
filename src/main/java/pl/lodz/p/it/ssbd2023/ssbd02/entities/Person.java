@@ -35,4 +35,8 @@ public class Person extends AbstractEntity {
     this.lastName = person.lastName != null ? person.lastName : lastName;
     this.address.update(person.getAddress());
   }
+
+  public Long getSumOfVersions() {
+    return this.getVersion() + this.getAddress().getVersion();
+  }
 }

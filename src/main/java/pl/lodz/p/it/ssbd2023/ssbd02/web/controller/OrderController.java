@@ -15,8 +15,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
@@ -54,9 +56,11 @@ public class OrderController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response create(@NotNull @Valid CreateOrderDto createOrderDto) {
+  public Response create(@NotNull @Valid CreateOrderDto createOrderDto,
+                         @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
     return Response.status(Response.Status.CREATED)
-        .entity(orderEndpoint.create(createOrderDto)).build();
+        .entity(orderEndpoint.create(createOrderDto, login)).build();
   }
 
   @PUT

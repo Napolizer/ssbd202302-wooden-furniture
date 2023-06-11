@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
     @Index(name = "sales_order_product_product_id", columnList = "product_id"),
     @Index(name = "sales_order_product_order_id", columnList = "order_id"),
 })
-public class OrderProduct extends AbstractEntity {
+public class OrderedProduct extends AbstractEntity {
 
   @Column(nullable = false, name = "amount", updatable = false)
   private Integer amount;
@@ -33,7 +33,7 @@ public class OrderProduct extends AbstractEntity {
   @JoinColumn(name = "order_id", nullable = false, updatable = false)
   private Order order;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToOne(cascade = {CascadeType.MERGE})
   @JoinColumn(name = "product_id", nullable = false, updatable = false)
   private Product product;
 

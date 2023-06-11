@@ -3,26 +3,26 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 
 @Stateless
 public class OrderProductMapper {
+
   @Inject
   private ProductMapper productMapper;
 
-  public OrderProductDto mapToDto(OrderProduct orderProduct) {
+  public OrderProductDto mapToDto(OrderedProduct orderedProduct) {
     return OrderProductDto.builder()
-      .amount(orderProduct.getAmount())
-      .price(orderProduct.getPrice())
-      .product(productMapper.mapToProductDto(orderProduct.getProduct()))
+      .amount(orderedProduct.getAmount())
+      .productId(orderedProduct.getProduct().getId())
       .build();
   }
 
 
-  public OrderProductWithRateDto mapToOrderProductWithRateDto(OrderProduct orderProduct) {
+  public OrderProductWithRateDto mapToOrderProductWithRateDto(OrderedProduct orderProduct) {
     Integer rate = getRateFromOrderProduct(orderProduct);
 
     return OrderProductWithRateDto.builder()
@@ -34,7 +34,7 @@ public class OrderProductMapper {
             .build();
   }
 
-  private Integer getRateFromOrderProduct(OrderProduct orderProduct) {
+  private Integer getRateFromOrderProduct(OrderedProduct orderProduct) {
     Account account = orderProduct.getOrder().getAccount();
 
     return orderProduct.getProduct().getProductGroup().getRates().stream()

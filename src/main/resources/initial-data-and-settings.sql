@@ -12,11 +12,11 @@ GRANT SELECT ON TABLE sales_order TO ssbd02mok;
 
 GRANT SELECT ON TABLE access_level TO ssbd02moz;
 GRANT SELECT ON TABLE account TO ssbd02moz;
-GRANT SELECT ON TABLE address TO ssbd02moz;
 GRANT SELECT ON TABLE category TO ssbd02moz;
 GRANT SELECT ON TABLE client TO ssbd02moz;
 GRANT SELECT ON TABLE image TO ssbd02moz;
 GRANT SELECT ON TABLE person TO ssbd02moz;
+GRANT SELECT,INSERT,UPDATE ON TABLE address TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE image TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE product TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE product_group TO ssbd02moz;
@@ -350,7 +350,7 @@ INSERT INTO product (id, amount, archive, color, created_at, image_id, price, up
 INSERT INTO product (id, amount, archive, color, created_at, image_id, price, updated_at, version, weight, weight_in_package, wood_type, furniture_width, furniture_height, furniture_depth, package_width, package_height, package_depth, created_by, updated_by, product_group_id) VALUES (111, 0, true, 'BLACK', now(), (SELECT id FROM image WHERE url = 'https://storage.googleapis.com/furniture-store-images/111.jpg'), 3299.99, NULL, 1, 40.3, 44.1, 'DARK_OAK', 137, 36, 190, 141, 40, 195, (SELECT id FROM account WHERE login = 'employee'), NULL, (SELECT id FROM product_group WHERE name = 'HarmonyHaven Double Bed'));
 INSERT INTO product (id, amount, archive, color, created_at, image_id, price, updated_at, version, weight, weight_in_package, wood_type, furniture_width, furniture_height, furniture_depth, package_width, package_height, package_depth, created_by, updated_by, product_group_id) VALUES (112, 0, true, 'RED', now(), (SELECT id FROM image WHERE url = 'https://storage.googleapis.com/furniture-store-images/112.jpg'), 3299.99, NULL, 1, 40.3, 44.1, 'DARK_OAK', 137, 36, 190, 141, 40, 195, (SELECT id FROM account WHERE login = 'employee'), NULL, (SELECT id FROM product_group WHERE name = 'HarmonyHaven Double Bed'));
 
-INSERT INTO sales_order (id, archive, created_at, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_id, updated_by, delivery_address_id) VALUES (1, false, now(), false, 'CREATED', 13199.96, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM person WHERE first_name = 'Adam'), NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
+INSERT INTO sales_order (id, archive, created_at, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (1, false, now(), false, 'CREATED', 13199.96, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Adam', 'Mickiewicz', NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (1, 4, false, now(), 3299.99, NULL, 1, (SELECT id FROM account WHERE login = 'client'), 1, 111, NULL);
-INSERT INTO sales_order (id, archive, created_at, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_id, updated_by, delivery_address_id) VALUES (2, true, now(), false, 'DELIVERED', 6599.98, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM person WHERE first_name = 'Steve'), NULL, (SELECT id FROM address WHERE street = 'Politechniki'));
+INSERT INTO sales_order (id, archive, created_at, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (2, true, now(), false, 'DELIVERED', 6599.98, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Steve', 'Jobs', NULL, (SELECT id FROM address WHERE street = 'Politechniki'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (2, 2, false, now(), 3299.99, NULL, 1, (SELECT id FROM account WHERE login = 'client'), 2, 112, NULL);

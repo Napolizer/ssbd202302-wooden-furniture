@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api;
 import jakarta.ejb.Local;
 import java.util.List;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
@@ -47,5 +47,5 @@ public interface ProductServiceOperations {
 
   Product deArchive(Long productId);
 
-  List<OrderProduct> findAllProductsBelongingToAccount(String login);
+  List<OrderedProduct> findAllProductsBelongingToAccount(String login);
 }
