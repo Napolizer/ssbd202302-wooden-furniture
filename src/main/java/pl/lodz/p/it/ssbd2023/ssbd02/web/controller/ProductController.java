@@ -71,6 +71,18 @@ public class ProductController {
     ).build();
   }
 
+  @PATCH
+  @Path("/dearchive/{productId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response deArchiveProduct(@PathParam("productId") Long productId) {
+    productEndpoint.deArchive(productId);
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "moz.product.dearchive.successful")
+                    .build()
+    ).build();
+  }
 
   @POST
   @Path("/new-image")

@@ -7,19 +7,20 @@
       </div>
       <div class="col-md-8 product-info">
         <div class="product-group-container">
-        <p>
-          <strong>{{ product.productGroup.name }}</strong>
-        </p>
-        <div *ngIf="isUserEmployee()" class="edit-product">
-          <button 
-          mat-button [matMenuTriggerFor]="menu"
-            mat-mini-fab
-            color="primary"
-            aria-label="Example icon button with a menu icon"
-          >
-            <mat-icon>menu</mat-icon>
-          </button>
-        </div>
+          <p>
+            <strong>{{ product.productGroup.name }}</strong>
+          </p>
+          <div *ngIf="isUserEmployee()" class="edit-product">
+            <button
+              mat-button
+              [matMenuTriggerFor]="menu"
+              mat-mini-fab
+              color="primary"
+              aria-label="Example icon button with a menu icon"
+            >
+              <mat-icon>menu</mat-icon>
+            </button>
+          </div>
         </div>
         <p>
           {{ product.productGroup.category.name | translate }},
@@ -194,13 +195,14 @@
         mat-cell
         *matCellDef="let element"
       >
-        <ng-container *ngIf="element.amount > 0">
+        <ng-container *ngIf="!element.archive && element.amount > 0">
           <span class="green-circle"></span>
+          {{ element.amount }}
         </ng-container>
-        <ng-container *ngIf="element.amount == 0">
+        <ng-container *ngIf="element.archive || element.amount == 0">
           <span class="red-circle"></span>
+          0
         </ng-container>
-        {{ element.amount }}
       </td>
     </ng-container>
 
@@ -235,8 +237,12 @@
     <mat-icon>edit</mat-icon>
     <span>Edytuj produkt</span>
   </button>
-  <button mat-menu-item [disabled]="product.archive">
+  <button mat-menu-item [disabled]="product.archive" (click)="archiveProduct()">
     <mat-icon>query_builder</mat-icon>
     <span>Zarchiwizuj produkt</span>
+  </button>
+  <button mat-menu-item [disabled]="!product.archive" (click)="deArchiveProduct()">
+    <mat-icon>query_builder</mat-icon>
+    <span>Odarchiwizuj produkt</span>
   </button>
 </mat-menu>

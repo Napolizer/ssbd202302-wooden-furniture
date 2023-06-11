@@ -80,6 +80,11 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
     return repeatTransactionWithOptimistic(() -> productService.archive(id));
   }
 
+  @RolesAllowed(EMPLOYEE)
+  public Product deArchive(Long id) {
+    return repeatTransactionWithOptimistic(() -> productService.deArchive(id));
+  }
+
   @Override
   public ProductDto update(Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
