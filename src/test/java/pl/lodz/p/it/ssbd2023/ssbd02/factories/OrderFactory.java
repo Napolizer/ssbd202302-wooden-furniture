@@ -9,7 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 
 @Stateless
@@ -30,14 +30,15 @@ public class OrderFactory {
     Order order = Order.builder()
         .archive(archive)
         .orderState(CREATED)
-        .recipient(account.getPerson())
+        .recipientFirstName(account.getPerson().getFirstName())
+        .recipientLastName(account.getPerson().getLastName())
         .deliveryAddress(account.getPerson().getAddress())
         .account(account)
         .totalPrice(100.0)
         .build();
     Product product = productFactory.create(login);
     order.setOrderedProducts(List.of(
-            OrderProduct.builder()
+            OrderedProduct.builder()
                     .product(product)
                     .order(order)
                     .price(product.getPrice())
@@ -48,7 +49,7 @@ public class OrderFactory {
   }
 
   public void clean() throws Exception {
-    em.createQuery("DELETE FROM OrderProduct").executeUpdate();
+    em.createQuery("DELETE FROM OrderedProduct").executeUpdate();
     em.createQuery("DELETE FROM sales_order").executeUpdate();
     productFactory.clean();
     accountFactory.clean();

@@ -90,7 +90,8 @@ public class OrderFacadeOperationsIT {
       assertThat(order.getId(), notNullValue());
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
       assertThat(order.getOrderedProducts().size(), equalTo(1));
-      assertThat(order.getRecipient(), notNullValue());
+      assertThat(order.getRecipientFirstName(), notNullValue());
+      assertThat(order.getRecipientLastName(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
       assertThat(order.getOrderedProducts(), notNullValue());
@@ -158,7 +159,8 @@ public class OrderFacadeOperationsIT {
       assertThat(order.getId(), notNullValue());
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
       assertThat(order.getOrderedProducts().size(), equalTo(1));
-      assertThat(order.getRecipient(), notNullValue());
+      assertThat(order.getRecipientFirstName(), notNullValue());
+      assertThat(order.getRecipientLastName(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
       assertThat(order.getOrderedProducts(), notNullValue());
@@ -227,7 +229,8 @@ public class OrderFacadeOperationsIT {
       assertThat(order.getArchive(), equalTo(true));
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
       assertThat(order.getOrderedProducts().size(), equalTo(1));
-      assertThat(order.getRecipient(), notNullValue());
+      assertThat(order.getRecipientFirstName(), notNullValue());
+      assertThat(order.getRecipientLastName(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
       assertThat(order.getOrderedProducts(), notNullValue());
@@ -299,7 +302,8 @@ public class OrderFacadeOperationsIT {
       assertThat(order.getArchive(), equalTo(true));
       assertThat(order.getOrderState(), equalTo(order.getOrderState()));
       assertThat(order.getOrderedProducts().size(), equalTo(1));
-      assertThat(order.getRecipient(), notNullValue());
+      assertThat(order.getRecipientFirstName(), notNullValue());
+      assertThat(order.getRecipientLastName(), notNullValue());
       assertThat(order.getDeliveryAddress(), notNullValue());
       assertThat(order.getAccount(), notNullValue());
       assertThat(order.getOrderedProducts(), notNullValue());

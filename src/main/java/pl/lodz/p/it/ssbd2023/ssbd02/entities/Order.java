@@ -55,16 +55,18 @@ public class Order extends AbstractEntity {
   private OrderState orderState;
 
   @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  private List<OrderProduct> orderedProducts = new ArrayList<>();
+  private List<OrderedProduct> orderedProducts = new ArrayList<>();
 
   @Column(nullable = false, name = "total_price", updatable = false)
   private Double totalPrice;
 
-  @ManyToOne
-  @JoinColumn(name = "recipient_id", nullable = false, updatable = false)
-  private Person recipient;
+  @Column(name = "recipient_first_name", nullable = false, updatable = false)
+  private String recipientFirstName;
 
-  @OneToOne
+  @Column(name = "recipient_last_name", nullable = false, updatable = false)
+  private String recipientLastName;
+
+  @OneToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "delivery_address_id", nullable = false, updatable = false)
   private Address deliveryAddress;
 
@@ -78,10 +80,10 @@ public class Order extends AbstractEntity {
 
   public Long getSumOfVersions() {
     Long sumOfProductsVersions = 0L;
-    for (OrderProduct product : this.getOrderedProducts()) {
+    for (OrderedProduct product : this.getOrderedProducts()) {
       sumOfProductsVersions += product.getVersion();
     }
-    return this.getVersion() + sumOfProductsVersions + this.getRecipient().getVersion()
-        + this.getDeliveryAddress().getVersion() + this.getAccount().getSumOfVersions();
+    return this.getVersion() + sumOfProductsVersions + this.getDeliveryAddress().getVersion()
+        + this.getAccount().getSumOfVersions();
   }
 }
