@@ -33,7 +33,7 @@ public class OrderProduct extends AbstractEntity {
   @JoinColumn(name = "order_id", nullable = false, updatable = false)
   private Order order;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToOne(cascade = {CascadeType.MERGE})
   @JoinColumn(name = "product_id", nullable = false, updatable = false)
   private Product product;
 

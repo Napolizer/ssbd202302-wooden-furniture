@@ -23,7 +23,7 @@ public class OrderDto {
 
   @NotNull
   @Builder.Default
-  private List<OrderProductDto> orderProductList = new ArrayList<>();
+  private List<OrderProductDto> orderedProducts = new ArrayList<>();
 
   private String orderState;
 

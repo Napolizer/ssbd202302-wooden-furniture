@@ -60,11 +60,13 @@ public class Order extends AbstractEntity {
   @Column(nullable = false, name = "total_price", updatable = false)
   private Double totalPrice;
 
-  @ManyToOne
-  @JoinColumn(name = "recipient_id", nullable = false, updatable = false)
-  private Person recipient;
+  @Column(name = "recipient_first_name", nullable = false, updatable = false)
+  private String recipientFirstName;
 
-  @OneToOne
+  @Column(name = "recipient_last_name", nullable = false, updatable = false)
+  private String recipientLastName;
+
+  @OneToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "delivery_address_id", nullable = false, updatable = false)
   private Address deliveryAddress;
 
@@ -81,7 +83,7 @@ public class Order extends AbstractEntity {
     for (OrderProduct product : this.getOrderedProducts()) {
       sumOfProductsVersions += product.getVersion();
     }
-    return this.getVersion() + sumOfProductsVersions + this.getRecipient().getVersion()
-        + this.getDeliveryAddress().getVersion() + this.getAccount().getSumOfVersions();
+    return this.getVersion() + sumOfProductsVersions + this.getDeliveryAddress().getVersion()
+        + this.getAccount().getSumOfVersions();
   }
 }

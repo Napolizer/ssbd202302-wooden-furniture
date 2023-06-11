@@ -11,14 +11,22 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderProduct;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
@@ -37,6 +45,10 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   private OrderFacadeOperations orderFacade;
   @Inject
   private MailServiceOperations mailService;
+  @Inject
+  private AccountServiceOperations accountService;
+  @Inject
+  private ProductServiceOperations productService;
 
   @Override
   @RolesAllowed(CLIENT)
@@ -52,7 +64,76 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order create(Order order) {
+  public Order create(Order order, String login, Map<Long, Integer> orderedProductsMap) {
+    Double totalPrice = 0.0;
+    List<OrderProduct> orderProducts = new ArrayList<>();
+
+    for (Long productId : orderedProductsMap.keySet()) {
+      Product product = productService.find(productId)
+          .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+      OrderProduct orderProduct = OrderProduct.builder()
+          .amount(orderedProductsMap.get(productId))
+          .price(product.getPrice())
+          .product(product)
+          .order(order)
+          .build();
+      orderProducts.add(orderProduct);
+      totalPrice += orderProduct.getPrice() * orderedProductsMap.get(productId);
+
+      //TODO edit products amount in database
+      //TODO make impossible to create order for employee that changed these products recently
+    }
+
+    Account account = accountService.getAccountByLogin(login)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    Address address = Address.builder()
+            .country(account.getPerson().getAddress().getCountry())
+            .city(account.getPerson().getAddress().getCity())
+            .street(account.getPerson().getAddress().getStreet())
+            .streetNumber(account.getPerson().getAddress().getStreetNumber())
+            .postalCode(account.getPerson().getAddress().getPostalCode())
+            .build();
+
+    order.setRecipientFirstName(account.getPerson().getFirstName());
+    order.setRecipientLastName(account.getPerson().getLastName());
+    order.setDeliveryAddress(address);
+    order.setTotalPrice(totalPrice);
+    order.setAccount(account);
+    order.setOrderedProducts(orderProducts);
+    order.setOrderState(OrderState.CREATED);
+    return orderFacade.create(order);
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public Order createWithGivenShippingData(Order order, String login, Map<Long, Integer> orderedProductsMap) {
+    Double totalPrice = 0.0;
+    List<OrderProduct> orderProducts = new ArrayList<>();
+
+    for (Long productId : orderedProductsMap.keySet()) {
+      Product product = productService.find(productId)
+          .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+      OrderProduct orderProduct = OrderProduct.builder()
+          .amount(orderedProductsMap.get(productId))
+          .price(product.getPrice())
+          .product(product)
+          .order(order)
+          .build();
+      orderProducts.add(orderProduct);
+      totalPrice += orderProduct.getPrice() * orderedProductsMap.get(productId);
+
+      //TODO edit products amount in database
+      //TODO make impossible to create order for employee that changed these products recently
+    }
+    Account account = accountService.getAccountByLogin(login)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    order.setTotalPrice(totalPrice);
+    order.setAccount(account);
+    order.setOrderedProducts(orderProducts);
     order.setOrderState(OrderState.CREATED);
     return orderFacade.create(order);
   }

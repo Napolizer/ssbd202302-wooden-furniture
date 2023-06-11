@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -18,8 +17,5 @@ public class OrderProductDto {
   private Integer amount;
   @NotNull
   @Positive
-  private Double price;
-  @NotNull
-  @Valid
-  private ProductDto product;
+  private Long productId;
 }
