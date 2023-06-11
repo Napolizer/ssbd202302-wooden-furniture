@@ -149,8 +149,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
   public Optional<Order> find(Long id) {
-    throw new UnsupportedOperationException();
+    return orderFacade.find(id);
   }
 
   @Override
@@ -210,10 +211,14 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
-  public Order changeOrderState(Long id, OrderState state) {
-    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
-    if (state.ordinal() < order.getOrderState().ordinal()) {
+  @RolesAllowed(EMPLOYEE)
+  public Order changeOrderState(Long id, OrderState state, String hash) {
+    Order order = orderFacade.find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+    if (state.ordinal() <= order.getOrderState().ordinal()) {
       throw ApplicationExceptionFactory.createInvalidOrderStateTransitionException();
+    }
+    if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
     }
     order.setOrderState(state);
     orderFacade.update(order);
@@ -221,7 +226,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     if (order.getObserved()) {
       mailService.sendEmailAboutChangingOrderState(order.getAccount().getEmail(), order.getAccount().getLocale());
     }
-    throw new UnsupportedOperationException();
+    return order;
   }
 
   @Override

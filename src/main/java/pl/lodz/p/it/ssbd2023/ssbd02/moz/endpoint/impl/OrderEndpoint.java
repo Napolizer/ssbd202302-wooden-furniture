@@ -136,8 +136,10 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public OrderDto changeOrderState(Long id, OrderState state) {
-    return orderMapper.mapToOrderDto(orderService.changeOrderState(id, state));
+  @RolesAllowed(EMPLOYEE)
+  public OrderDto changeOrderState(Long id, OrderState state, String hash) {
+    return orderMapper.mapToOrderDto(
+        repeatTransactionWithoutOptimistic(() -> orderService.changeOrderState(id, state, hash)));
   }
 
   @Override

@@ -22,6 +22,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ChangeOrderStateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
@@ -125,9 +126,10 @@ public class OrderController {
 
 
   @PUT
-  @Path("/state/{id}/state/{state}")
-  public Response changeOrderState(@PathParam("id") Long id, @PathParam("state") OrderState state) {
-    return Response.ok(orderEndpoint.changeOrderState(id, state)).build();
+  @Path("/state/{id}/state")
+  @RolesAllowed(EMPLOYEE)
+  public Response changeOrderState(@PathParam("id") Long id, @NotNull @Valid ChangeOrderStateDto dto) {
+    return Response.ok(orderEndpoint.changeOrderState(id, dto.getState(), dto.getHash())).build();
   }
 
   @POST

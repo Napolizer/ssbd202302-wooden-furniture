@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
+import static jakarta.transaction.Transactional.TxType.REQUIRES_NEW;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
@@ -11,7 +12,9 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
@@ -77,6 +80,13 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   @Override
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  @Transactional(REQUIRES_NEW)
+  public Optional<Order> find(Long id) {
+    return Optional.ofNullable(getEntityManager().find(Order.class, id));
   }
 
   @Override

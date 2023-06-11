@@ -34,7 +34,7 @@ public interface OrderEndpointOperations {
 
   OrderDto observeOrder(OrderDto orderDto);
 
-  OrderDto changeOrderState(Long id, OrderState state);
+  OrderDto changeOrderState(Long id, OrderState state, String hash);
 
   void generateReport();
 
