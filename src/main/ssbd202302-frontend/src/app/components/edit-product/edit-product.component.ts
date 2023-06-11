@@ -157,6 +157,7 @@ export class EditProductComponent implements OnInit {
       .subscribe(() => {
         this.loading = false;
         this.dialogRef.close('error');
+        void this.navigationService.redirectToSingleProductPage(this.id)
       });
   }
 
