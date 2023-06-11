@@ -1,10 +1,10 @@
 import {Product} from "./product";
 import {Address} from "./address";
-import {OrderProduct} from "./orderProduct";
+import {OrderedProduct} from "./orderedProduct";
 
 export interface ClientOrder {
   id: number,
-  orderProductList: OrderProduct[],
+  orderProductList: OrderedProduct[],
   orderState: string,
   recipientFirstName: string,
   recipientLastName: string,

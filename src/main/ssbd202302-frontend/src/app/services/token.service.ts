@@ -12,7 +12,7 @@ import {Constants} from "../utils/constants";
 export class TokenService {
   private timeoutId: any;
 
-  constructor(
+  private constructor(
       private localStorageService: LocalStorageService
   ) { }
 
@@ -21,7 +21,7 @@ export class TokenService {
     this.localStorageService.remove(environment.tokenKey);
     this.localStorageService.remove(environment.refreshTokenKey);
     this.localStorageService.remove(environment.accountTypeKey);
-    this.localStorageService.remove(environment.currentRoleKey);
+    this.localStorageService.set(environment.currentRoleKey, "guest");
     this.localStorageService.remove(environment.timeoutKey);
     this.localStorageService.remove(environment.localeKey);
     this.clearTimeout()

@@ -7,6 +7,8 @@ import {RefreshTokenService} from "./services/refresh-token.service";
 import {LocalStorageService} from "./services/local-storage.service";
 import {environment} from "../environments/environment";
 import {AuthenticationService} from "./services/authentication.service";
+import {AccountService} from "./services/account.service";
+import {CartService} from "./services/cart.service";
 
 @Component({
   selector: 'app-root',
@@ -22,7 +24,9 @@ export class AppComponent {
     private tokenServce: TokenService,
     private refreshTokenService: RefreshTokenService,
     private localStorageService: LocalStorageService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private accountService: AccountService,
+    private cartService: CartService
   ) {
     this.matIconRegistry.addSvgIcon('google-logo',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/google-logo.svg'))
@@ -30,6 +34,13 @@ export class AppComponent {
 
     if (authenticationService.isUserLoggedIn()) {
       translate.use(this.localStorageService.get(environment.localeKey)!);
+      this.accountService.retrieveOwnAccount()
+        .subscribe(account => {
+          this.cartService.setLocalStorageKey(account.login + "-cart-products");
+          if (this.localStorageService.get(this.cartService.getLocalStorageKey()) !== null) {
+            this.cartService.setCart(JSON.parse(this.localStorageService.get(this.cartService.getLocalStorageKey())!));
+          }
+        });
     }
 
     translate.onLangChange.subscribe(() => {
@@ -47,6 +58,8 @@ export class AppComponent {
 
     if (this.authenticationService.isUserLoggedIn()) {
       this.authenticationService.showWarningIfSessionExpired();
+    } else {
+      this.localStorageService.set(environment.currentRoleKey, "guest")
     }
   }
 }

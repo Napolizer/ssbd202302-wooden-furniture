@@ -415,5 +415,8 @@
   "product.edit": "Edit product",
 
   "archive.success": "Product archivized successfully",
-  "dearchive.success": "Product dearchivized successfully"
+  "dearchive.success": "Product dearchivized successfully",
+
+  "cart.user.not.logged.in.error.message": "You have to log in to add product to cart",
+  "cart.amount.error.message": "Impossible to add more products to cart than available amount"
 }

@@ -39,7 +39,7 @@ public class OrderedProduct extends AbstractEntity {
 
   @Override
   public String toString() {
-    return "OrderProduct{"
+    return "OrderedProduct{"
         + "amount=" + amount
         + ", price=" + price
         + '}';
