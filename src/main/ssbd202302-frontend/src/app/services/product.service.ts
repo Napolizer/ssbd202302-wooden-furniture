@@ -8,6 +8,7 @@ import { ProductGroup } from '../interfaces/product.group';
 import { Product } from '../interfaces/product';
 import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
+import { EditProduct } from '../interfaces/edit.product';
 
 @Injectable({
   providedIn: 'root',
@@ -90,5 +91,17 @@ export class ProductService {
 
   public retrieveProductsByGivenCategory(productCategoryId: string): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product/category/id/` + productCategoryId);
+  }
+
+  public editProduct(productId: string, editedProduct: EditProduct): Observable<EditProduct> {
+    return this.httpClient.put<EditProduct>(
+      `${environment.apiBaseUrl}/product/editProduct/id/` + productId,
+      editedProduct,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
   }
 }

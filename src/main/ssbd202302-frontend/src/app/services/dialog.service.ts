@@ -12,6 +12,8 @@ import { ChangeOwnPasswordComponent } from '../pages/change-own-password/change-
 import { CreateAccountComponent } from '../pages/create-account/create-account.component';
 import { AddProductGroupComponent } from '../components/add-product-group/add-product-group.component';
 import { AddProductComponent } from '../add-product/add-product.component';
+import { EditProductComponent } from '../components/edit-product/edit-product.component';
+import { Product } from '../interfaces/product';
 
 @Injectable({
   providedIn: 'root'
@@ -108,6 +110,16 @@ export class DialogService {
       width: '1100px',
       height: '750px',
       autoFocus: false,
+    });
+  }
+
+  openEditProductDialog(product: Product): MatDialogRef<EditProductComponent> {
+    return this.matDialog.open(EditProductComponent, {
+      disableClose: true,
+      width: '800px',
+      height: '500px',
+      autoFocus: false,
+      data: { product }
     });
   }
 }

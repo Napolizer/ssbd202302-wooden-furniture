@@ -116,4 +116,11 @@ public class ProductMapper {
   }
 
 
+  public EditProductDto mapToEditProductDto(Product product) {
+    return EditProductDto.builder()
+            .price(product.getPrice())
+            .amount(product.getAmount())
+            .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
+            .build();
+  }
 }

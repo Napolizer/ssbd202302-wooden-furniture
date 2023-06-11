@@ -72,6 +72,7 @@ import { ClientPageComponent } from './pages/client-page/client-page.component';
 import { ClientOrdersPageComponent } from './pages/client-orders-page/client-orders-page.component';
 import { AddProductComponent } from './add-product/add-product.component';
 import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
+import { EditProductComponent } from './components/edit-product/edit-product.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import { SingleProductPageComponent } from './pages/single-product-page/single-p
     ClientPageComponent,
     ClientOrdersPageComponent,
     SingleProductPageComponent,
+    EditProductComponent,
   ],
   imports: [
     BrowserModule,

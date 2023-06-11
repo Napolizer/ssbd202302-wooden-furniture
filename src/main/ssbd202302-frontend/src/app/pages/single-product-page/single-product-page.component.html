@@ -10,7 +10,7 @@
         <p>
           <strong>{{ product.productGroup.name }}</strong>
         </p>
-        <div *ngIf="isUserEmployee()" class="edit-product">{{ "product.edit" | translate }}
+        <div *ngIf="isUserEmployee()" class="edit-product">
           <button 
           mat-button [matMenuTriggerFor]="menu"
             mat-mini-fab
@@ -231,12 +231,12 @@
 </div>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item>
-    <mat-icon>dialpad</mat-icon>
-    <span>Zarchiwizuj produkt</span>
-  </button>
-  <button mat-menu-item disabled>
-    <mat-icon>voicemail</mat-icon>
+  <button mat-menu-item (click)="openEditProductDialog()">
+    <mat-icon>edit</mat-icon>
     <span>Edytuj produkt</span>
+  </button>
+  <button mat-menu-item [disabled]="product.archive">
+    <mat-icon>query_builder</mat-icon>
+    <span>Zarchiwizuj produkt</span>
   </button>
 </mat-menu>

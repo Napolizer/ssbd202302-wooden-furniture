@@ -192,6 +192,14 @@
   "edit.postalCode.validity.patternMismatch": "Postal code must be in format xx-xxx, where x is a digit",
   "edit.streetNumber.validity.patternMismatch": "Street number must be positive lower than 10000",
   "edit.success": "Successfully edited account!",
+  "edit.product":"Edit product",
+  "edit.validity.price": "Price must be greater than 0, must end with 2 digits after dot",
+  "edit.enterNewPrice": "Enter new price",
+  "edit.product.success": "Successfully edited product!",
+  "edit.validity.price.max": "Max price is 9999999.00",
+  "edit.validity.amount.min": "Minimum amount is 0",
+  "edit.validity.amount.max": "Maximum amount is 9999999",
+  "edit.enterNewAmount": "Podaj nową ilość produktu",
 
   "save": "Save",
   "reset": "Reset",
@@ -219,6 +227,7 @@
   "dialog.refresh.token":"Your session will expire soon. Do you want to extend it?",
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
   "dialog.add.product.message": "Are you sure you want to add new product?",
+  "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
