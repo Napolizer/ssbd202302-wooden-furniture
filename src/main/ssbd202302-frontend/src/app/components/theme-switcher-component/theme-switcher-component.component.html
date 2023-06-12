@@ -1,17 +1,9 @@
 <div class="flex-container mt-2 mx-2">
-  <div class="mb-0 theme-text mt-2">{{'dark.mode' | translate}}</div>
   <mat-slide-toggle
-    class="mx-1 mt-0 mb-3"
+    #darkModeSwitch
+    class="mx-1 mt-3 mb-3"
     [color]="'accent'"
     [checked]="isChecked()"
     (change)="onThemeClick(this.changeMode.mode === 'LIGHT' ? 'DARK' : 'LIGHT')">
   </mat-slide-toggle>
 </div>
-<!--  <mat-menu class = "menu" #switchTheme [overlapTrigger]="false" yPosition="below">-->
-<!--    <mat-list role="list">-->
-<!--      <mat-list-item role="listitem" class="white">Light</mat-list-item>-->
-<!--      <mat-list-item role="listitem" class="black">Dark</mat-list-item>-->
-<!--    </mat-list>-->
-<!--    <button class = "theme-button" (click)="onThemeClick('LIGHT')"><span class="theme-circle white"></span></button>-->
-<!--    <button class = "theme-button" (click)="onThemeClick('DARK')"><span class="theme-circle black"></span></button>-->
-<!--  </mat-menu>-->

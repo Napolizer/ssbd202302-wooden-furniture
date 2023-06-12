@@ -94,6 +94,14 @@
                   <hr class="mt-2">
                   <div class="row">
                     <div class="col-sm-12">
+                      <button
+                        mat-button
+                        color="primary"
+                        class="resetButton"
+                        (click)="onResetClicked()"
+                      >
+                        <mat-icon>refresh</mat-icon>
+                      </button>
                       <button mat-button color="primary" (click)="openEditAccountDialog()">{{'account.edit' | translate}}</button>
                       <button *ngIf="isUserNormalType()" mat-button color="primary" (click)="openChangeEmailDialog()">{{'change.email.button' | translate}}</button>
                       <button *ngIf="isUserNormalType()" mat-button color="primary" (click)="openChangePasswordDialog()">{{'change.password.button' | translate}}</button>
