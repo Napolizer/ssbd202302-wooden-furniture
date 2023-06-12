@@ -3,6 +3,7 @@ import {OrderedProduct} from "../interfaces/orderedProduct";
 import {LocalStorageService} from "./local-storage.service";
 import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,10 @@ export class CartService {
     private localStorageService: LocalStorageService,
     private translate: TranslateService,
     private alertService: AlertService,
-  ) {}
+
+  ) {
+
+  }
 
   setLocalStorageKey(localStorageKey: string) {
     this.localStorageKey = localStorageKey;

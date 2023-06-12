@@ -1,61 +1,91 @@
 <app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
-<div class="container">
-  <h1 class="cart-header">{{"cart" | translate}}</h1>
-  <mat-grid-list class="mat-list" cols="1" rowHeight="350px">
-    <mat-grid-tile class="mat-tiles" *ngFor="let orderedProduct of orderedProducts;">
-      <mat-card class="orderedProduct-card">
-        <mat-card-content class="orderedProduct-card-content">
-          <img
-            mat-card-xl-image
-            [src]="orderedProduct.product.imageUrl"
-            alt="image"
-            (click)="redirectToSingleProductPage(orderedProduct.product.id.toString())">
-          <div class="orderedProduct-info-div">
-            <mat-card-title class="product-group-name" (click)="redirectToSingleProductPage(orderedProduct.product.id.toString())">
-              {{ orderedProduct.product.productGroup.name }}
-            </mat-card-title>
-            <mat-card-subtitle>
-              {{ "product.color" | translate }}: {{ getProductColor(orderedProduct.product.color.toString()) | translate }}
-            </mat-card-subtitle>
-            <mat-card-subtitle>
-              {{ "product.dimensions" | translate }}: {{ orderedProduct.product.furnitureDimensions.width }}m x
-              {{ orderedProduct.product.furnitureDimensions.depth }}m x
-              {{ orderedProduct.product.furnitureDimensions.height }}m
-            </mat-card-subtitle>
-            <mat-card-subtitle>
-              {{ "product.package.dimensions" | translate }}: {{ orderedProduct.product.packageDimensions.width }}m x
-              {{ orderedProduct.product.packageDimensions.depth }}m x
-              {{ orderedProduct.product.packageDimensions.height }}m
-            </mat-card-subtitle>
-            <mat-card-subtitle>
-              <strong>{{ "product.price" | translate }}: {{ orderedProduct.product.price }}</strong>
-            </mat-card-subtitle>
-            <mat-card-subtitle>
-              {{ "product.available.number.of.pieces" | translate }}: {{ orderedProduct.product.amount }}
-            </mat-card-subtitle>
-            <mat-card-subtitle>
-              {{ "product.chosen.number.of.pieces" | translate }}:
-            </mat-card-subtitle>
-            <div class="input-group w-50">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)">-</button>
+<div class="container"
+[@loadedUnloadedList]="{ value: getListAnimationState() }">
+  <div class="row">
+    <div class="col-8">
+      <h1 class="cart-header text-start">{{"cart" | translate}}</h1>
+      <mat-grid-list class="mat-list text-start" cols="1" rowHeight="350px">
+        <mat-grid-tile class="mat-tile text-start" *ngFor="let orderedProduct of orderedProducts;">
+          <div class="mat-card-inside-tile">
+          <mat-card class="orderedProduct-card">
+            <mat-card-content class="orderedProduct-card-content">
+              <img
+                mat-card-xl-image
+                [src]="orderedProduct.product.imageUrl"
+                alt="image"
+                (click)="redirectToSingleProductPage(orderedProduct.product.id.toString())">
+              <div class="orderedProduct-info-div">
+                <mat-card-title class="product-group-name" (click)="redirectToSingleProductPage(orderedProduct.product.id.toString())">
+                  {{ orderedProduct.product.productGroup.name }}
+                </mat-card-title>
+                <mat-card-subtitle>
+                  {{ "product.color" | translate }}: {{ getProductColor(orderedProduct.product.color.toString()) | translate }}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  {{ "product.dimensions" | translate }}: {{ orderedProduct.product.furnitureDimensions.width }}m x
+                  {{ orderedProduct.product.furnitureDimensions.depth }}m x
+                  {{ orderedProduct.product.furnitureDimensions.height }}m
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  {{ "product.package.dimensions" | translate }}: {{ orderedProduct.product.packageDimensions.width }}m x
+                  {{ orderedProduct.product.packageDimensions.depth }}m x
+                  {{ orderedProduct.product.packageDimensions.height }}m
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  <strong>{{ "product.price" | translate }}: {{ orderedProduct.product.price }}</strong>
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  {{ "product.available.number.of.pieces" | translate }}: {{ orderedProduct.product.amount }}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  {{ "product.chosen.number.of.pieces" | translate }}:
+                </mat-card-subtitle>
+                <div class="input-group w-50">
+                  <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)">-</button>
+                  </div>
+                  <input
+                    name="amountInput"
+                    required
+                    type="number"
+                    class="form-control text-center"
+                    [(ngModel)]="orderedProduct.amount"
+                    min="1"
+                    [max]="orderedProduct.product.amount"
+                    (change)="validateChangedAmount(orderedProduct); updateTotalPrice()"/>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)">+</button>
+                  </div>
+                </div>
               </div>
-              <input
-                name="amountInput"
-                required
-                type="number"
-                class="form-control text-center"
-                [(ngModel)]="orderedProduct.amount"
-                min="1"
-                [max]="orderedProduct.product.amount"
-                (change)="validateChangedAmount(orderedProduct)"/>
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)">+</button>
-              </div>
-            </div>
+            </mat-card-content>
+          </mat-card>
           </div>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+    <div class="col-4">
+      <div class="position-fixed mt-5">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{"summary" | translate}}</mat-card-title>
+            <mat-card-subtitle>
+              {{"products.total.price" | translate }}:
+              <strong>
+                {{ this.totalPrice.toFixed(2) }}
+              </strong>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <button
+              mat-raised-button
+              color="primary">
+              {{ "cart.make.order" | translate }}
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
 </div>

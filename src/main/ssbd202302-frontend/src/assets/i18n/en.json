@@ -422,8 +422,11 @@
   "dearchive.success": "Product dearchivized successfully",
 
   "cart": "Cart",
+  "cart.make.order": "Make order",
   "cart.user.not.logged.in.error.message": "You have to log in to add product to cart",
   "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",
   "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
-  "cart.add.product.success": "Product added to cart"
+  "cart.add.product.success": "Product added to cart",
+
+  "summary": "Summary"
 }

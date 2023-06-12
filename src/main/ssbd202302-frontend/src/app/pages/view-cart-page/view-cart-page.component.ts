@@ -1,14 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Product} from "../../interfaces/product";
-import {Subject, takeUntil} from "rxjs";
+import {pipe, Subject, takeUntil} from "rxjs";
 import {CartService} from "../../services/cart.service";
 import {OrderedProduct} from "../../interfaces/orderedProduct";
 import {NavigationService} from "../../services/navigation.service";
 import {ProductService} from "../../services/product.service";
 import {TranslateService} from "@ngx-translate/core";
 import {AlertService} from "@full-fledged/alerts";
-import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'view-cart-page',
@@ -37,6 +36,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
   products: Product[];
   destroy = new Subject<boolean>();
   loading = true;
+  totalPrice: number = 0.0;
 
   constructor(
     private cartService: CartService,
@@ -48,9 +48,10 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const sleep = (ms: number | undefined) => new Promise(r => setTimeout(r, ms));
+    await sleep(1000);
     this.orderedProducts = this.cartService.getCart();
-    console.log(this.orderedProducts)
     this.orderedProducts.forEach(orderedProduct => {
       this.productService.retrieveProduct(orderedProduct.product.id.toString())
         .pipe(takeUntil(this.destroy))
@@ -59,6 +60,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           orderedProduct.product = product;
         })
     })
+    this.updateTotalPrice();
     this.loading = false;
   }
 
@@ -106,6 +108,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           return
         } else {
           product.amount -= 1;
+          this.updateTotalPrice();
           return;
         }
       }
@@ -125,6 +128,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           return;
         } else {
           product.amount += 1;
+          this.updateTotalPrice();
           return;
         }
       }
@@ -150,5 +154,17 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
         })
     }
   }
+
+  updateTotalPrice() {
+    this.totalPrice = 0.0;
+    this.orderedProducts.forEach(orderedProduct => {
+      this.totalPrice += orderedProduct.product.price * orderedProduct.amount;
+    })
+  }
+
+  getListAnimationState(): string {
+    return this.loading ? 'unloaded' : 'loaded';
+  }
+
 
 }
