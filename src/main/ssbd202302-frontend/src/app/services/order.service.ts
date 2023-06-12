@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {TokenService} from "./token.service";
 import {Observable} from "rxjs";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {ClientOrder} from "../interfaces/client.order";
+import {TokenService} from "./token.service";
+import {OrderDetailsDto} from "../interfaces/order.details.dto";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClientOrderService {
+export class OrderService {
 
   constructor(
     private httpClient: HttpClient,
     private tokenService: TokenService
   ) { }
 
-  public getAllClientOrders(): Observable<ClientOrder[]> {
-    return this.httpClient.get<ClientOrder[]>(
-      `${environment.apiBaseUrl}/order/customer`,
+  public getOrders(): Observable<OrderDetailsDto[]> {
+    return this.httpClient.get<OrderDetailsDto[]>(
+      `${environment.apiBaseUrl}/order`,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,
-        },
+        }
       }
     );
   }

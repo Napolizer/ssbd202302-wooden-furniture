@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {OrderedProduct} from "../interfaces/orderedProduct";
+import {OrderedProduct} from "../interfaces/ordered.product";
 import {LocalStorageService} from "./local-storage.service";
 import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
