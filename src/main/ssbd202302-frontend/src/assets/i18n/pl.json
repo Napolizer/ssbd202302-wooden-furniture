@@ -410,5 +410,8 @@
   "product.edit": "Edytuj produkt",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
-  "dearchive.success": "Pomyślnie zdearchiwizowano produkt"
+  "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
+
+  "cart.user.not.logged.in.error.message": "Musisz się zalogować aby dodać produkt do koszyka",
+  "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka"
 }

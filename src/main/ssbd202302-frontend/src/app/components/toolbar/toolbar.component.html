@@ -104,6 +104,15 @@
   >
     <mat-icon>language</mat-icon>
   </button>
+  <button
+    *ngIf="isUserLoggedIn()"
+    class="account"
+    mat-icon-button
+    matTooltip="View Cart"
+    (click)="redirectToMainPage()"
+    >
+      <mat-icon [matBadge]="countProductsInCart()" [matBadgeHidden]="countProductsInCart() === 0">shopping_cart</mat-icon>
+  </button>
   <mat-menu #switchAccessLevel [overlapTrigger]="false" yPosition="below">
     <button
       *ngIf="isUserInGroup('ADMINISTRATOR')"

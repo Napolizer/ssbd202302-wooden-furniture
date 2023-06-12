@@ -1,6 +1,6 @@
 import {Product} from "./product";
 
-export interface OrderProduct {
+export interface OrderedProduct {
   amount: number,
   price: number,
   product: Product

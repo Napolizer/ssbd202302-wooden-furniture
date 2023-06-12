@@ -73,6 +73,7 @@ import { ClientOrdersPageComponent } from './pages/client-orders-page/client-ord
 import { AddProductComponent } from './add-product/add-product.component';
 import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
 import { EditProductComponent } from './components/edit-product/edit-product.component';
+import {MatBadgeModule} from "@angular/material/badge";
 
 @NgModule({
   declarations: [
@@ -120,47 +121,48 @@ import { EditProductComponent } from './components/edit-product/edit-product.com
     SingleProductPageComponent,
     EditProductComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatStepperModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    NgxDropzoneModule,
-    FormsModule,
-    AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-    ReactiveFormsModule,
-    MatListModule,
-    MatSidenavModule,
-    MatExpansionModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatMenuModule,
-    MatCardModule,
-    MatCheckboxModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    MatProgressSpinnerModule,
-    MatDialogModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatRippleModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatGridListModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatInputModule,
+        MatSlideToggleModule,
+        MatFormFieldModule,
+        MatStepperModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        NgxDropzoneModule,
+        FormsModule,
+        AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
+        ReactiveFormsModule,
+        MatListModule,
+        MatSidenavModule,
+        MatExpansionModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatCardModule,
+        MatCheckboxModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        MatProgressSpinnerModule,
+        MatDialogModule,
+        MatAutocompleteModule,
+        MatTableModule,
+        MatRippleModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatGridListModule,
+        MatBadgeModule
+    ],
   providers: [
     DatePipe,
     ThemeSwitcherComponentComponent
