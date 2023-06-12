@@ -20,7 +20,7 @@ import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ProductService } from 'src/app/services/product.service';
 import {LocalStorageService} from "../../services/local-storage.service";
-import {OrderedProduct} from "../../interfaces/orderedProduct";
+import {OrderedProduct} from "../../interfaces/ordered.product";
 import {environment} from "../../../environments/environment";
 import {CartService} from "../../services/cart.service";
 
