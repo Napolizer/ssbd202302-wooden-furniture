@@ -1,6 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.microshed.testing.SharedContainerConfig;
@@ -16,6 +23,8 @@ import java.io.File;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
@@ -64,7 +73,19 @@ public class MOZ5IT {
 							.post("/product/existing-image")
 							.then()
 							.log().all()
-							.statusCode(201);
+							.statusCode(201)
+							.body("amount", equalTo(productCreateDto.getAmount()))
+							.body("archive", equalTo(false))
+							.body("furnitureDimensions.depth", equalTo(productCreateDto.getFurnitureDepth()))
+							.body("furnitureDimensions.height", equalTo(productCreateDto.getFurnitureHeight()))
+							.body("furnitureDimensions.width", equalTo(productCreateDto.getFurnitureWidth()))
+							.body("packageDimensions.depth", equalTo(productCreateDto.getPackageDepth()))
+							.body("packageDimensions.height", equalTo(productCreateDto.getPackageHeight()))
+							.body("packageDimensions.width", equalTo(productCreateDto.getPackageWidth()))
+							.body("imageUrl", is(notNullValue()))
+							.body("productGroup.id", equalTo(productCreateDto.getProductGroupId().intValue()))
+							.body("color", equalTo(productCreateDto.getColor()))
+							.body("woodType", equalTo(productCreateDto.getWoodType()));
 
 		}
 
