@@ -3,7 +3,8 @@
 [@loadedUnloadedList]="{ value: getListAnimationState() }">
   <div class="row">
     <div class="col-8">
-      <h1 class="cart-header text-start">{{"cart" | translate}}</h1>
+      <h1 *ngIf="orderedProducts.length > 0" class="cart-header text-start">{{"cart" | translate}}</h1>
+      <h1 *ngIf="orderedProducts.length === 0" class="cart-header text-start">{{"cart.empty" | translate}}</h1>
       <mat-grid-list class="mat-list text-start" cols="1" rowHeight="350px">
         <mat-grid-tile class="mat-tile text-start" *ngFor="let orderedProduct of orderedProducts;">
           <div class="mat-card-inside-tile">

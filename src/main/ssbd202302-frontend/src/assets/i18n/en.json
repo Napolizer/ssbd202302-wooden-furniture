@@ -422,6 +422,7 @@
   "dearchive.success": "Product dearchivized successfully",
 
   "cart": "Cart",
+  "cart.empty": "Cart is empty",
   "cart.make.order": "Make order",
   "cart.user.not.logged.in.error.message": "You have to log in to add product to cart",
   "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",

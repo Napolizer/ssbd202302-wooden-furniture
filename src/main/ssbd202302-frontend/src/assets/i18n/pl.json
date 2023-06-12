@@ -417,6 +417,7 @@
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
 
   "cart": "Koszyk",
+  "cart.empty": "Koszyk jest pusty",
   "cart.make.order": "Złóż zamówienie",
   "cart.user.not.logged.in.error.message": "Musisz się zalogować aby dodać produkt do koszyka",
   "cart.max.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka niż dostępna liczba sztuk",
