@@ -413,10 +413,21 @@
   "product.price": "Price",
   "product.image": "Image",
   "product.edit": "Edit product",
+  "product.dimensions": "Dimensions",
+  "product.package.dimensions": "Package dimensions",
+  "product.chosen.number.of.pieces": "Chosen number of pieces",
+  "product.available.number.of.pieces": "Available number of pieces",
 
   "archive.success": "Product archivized successfully",
   "dearchive.success": "Product dearchivized successfully",
 
+  "cart": "Cart",
+  "cart.empty": "Cart is empty",
+  "cart.make.order": "Make order",
   "cart.user.not.logged.in.error.message": "You have to log in to add product to cart",
-  "cart.amount.error.message": "Impossible to add more products to cart than available amount"
+  "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",
+  "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
+  "cart.add.product.success": "Product added to cart",
+
+  "summary": "Summary"
 }

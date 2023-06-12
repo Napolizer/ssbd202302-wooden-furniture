@@ -152,9 +152,7 @@ export class SingleProductPageComponent implements OnInit {
         price: product.price,
         product: product,
       }
-      //handle addtocart logic
       this.cartService.addToCart(orderedProduct);
-      console.log(this.cartService.getCart());
     }
   }
 
