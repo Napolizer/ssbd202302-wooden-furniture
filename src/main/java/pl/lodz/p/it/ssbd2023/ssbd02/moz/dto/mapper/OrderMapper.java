@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
@@ -65,6 +66,25 @@ public class OrderMapper {
         .recipientLastName(order.getRecipientLastName())
         .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
+        .observed(order.getObserved())
+        .totalPrice(order.getTotalPrice())
+        .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
+        .build();
+  }
+
+  public OrderDetailsDto mapToOrderDetailsDto(Order order) {
+    List<OrderProductDto> orderProductDtoList = new ArrayList<>();
+    order.getOrderedProducts().forEach(
+        orderProduct -> orderProductDtoList.add(orderProductMapper.mapToDto(orderProduct)));
+    return OrderDetailsDto.builder()
+        .id(order.getId())
+        .orderedProducts(orderProductDtoList)
+        .orderState(order.getOrderState().name())
+        .recipientFirstName(order.getRecipientFirstName())
+        .recipientLastName(order.getRecipientLastName())
+        .accountId(order.getAccount().getId())
+        .accountLogin(order.getAccount().getLogin())
+        .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .observed(order.getObserved())
         .totalPrice(order.getTotalPrice())
         .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
