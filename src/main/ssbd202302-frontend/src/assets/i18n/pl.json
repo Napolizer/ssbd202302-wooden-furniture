@@ -229,6 +229,7 @@
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
+  "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -277,6 +278,7 @@
   "exception.moz.product.not.found": "Produkt nie istnieje",
   "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
   "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
+  "exception.moz.invalid.order.state.transition": "Niepoprawna zmiana stanu zamówienia",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -323,6 +325,7 @@
   "select.role": "Wybierz Rolę",
   "current.role": "Obecna Rola",
   "current.roles": "Obecne Role",
+  "current.order.state": "Obecny Stan Zamówienia",
 
   "block.success": "Pomyślnie zablokowano konto",
   "activate.success": "Pomyślnie odblokowano konto",
@@ -386,10 +389,18 @@
   "product.color.brown": "Brązowy",
   "product.color.white": "Biały",
 
+  "order.change.state.success": "Stan zamówienia został pomyślnie zmieniony",
+  "order.change.state": "Zmień stan zamówienia",
+  "select.order.state": "Wybierz stan zamówienia",
   "order.show": "Wyświetl zamówienie",
   "order.client.observe": "Obserwuj zamówienie",
   "order.client.observe.button": "Obserwuj",
   "order.state": "Stan zamówienia",
+  "order.state.created": "Stworzone",
+  "order.state.completed": "Skompletowane",
+  "order.state.in.delivery": "W dostawie",
+  "order.state.delivered": "Dostarczone",
+  "order.state.cancelled": "Anulowane",
   "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
   "products.amount": "Liczba produktów",
@@ -421,5 +432,6 @@
   "orders": "Zamówienia",
   "total.price": "Cena całkowita",
   "recipient.first.name": "Imię odbiorcy",
-  "recipient.last.name": "Nazwisko odbiorcy"
+  "recipient.last.name": "Nazwisko odbiorcy",
+  "recipient.full.name": "Imię i nazwisko odbiorcy",
 }

@@ -229,6 +229,7 @@
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
   "dialog.add.product.message": "Are you sure you want to add new product?",
   "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
+  "dialog.change.order.state.message": "Are you sure you want to change order state?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -278,6 +279,7 @@
   "exception.moz.product.not.found": "Product not found",
   "exception.moz.product.change.state.archive": "Product is already archived",
   "exception.moz.product.change.state.dearchive": "Product is already dearchived",
+  "exception.moz.invalid.order.state.transition": "Invalid order state transition",
 
 
   "role.administrator": "Administrator",
@@ -326,6 +328,7 @@
   "select.role": "Select Role",
   "current.role": "Current Role",
   "current.roles": "Current Roles",
+  "current.order.state": "Current Order State",
 
   "block.success": "Account blocked successfully",
   "activate.success": "Account activated successfully",
@@ -401,10 +404,18 @@
   "product.color.brown": "Brown",
   "product.color.white": "White",
 
+  "order.change.state.success": "Order state changed successfully",
+  "order.change.state": "Change order state",
+  "select.order.state": "Select order state",
   "order.show": "Show oder",
   "order.client.observe": "Observe order",
   "order.client.observe.button": "Observe",
   "order.state": "Order state",
+  "order.state.created": "Created",
+  "order.state.completed": "Completed",
+  "order.state.in.delivery": "In delivery",
+  "order.state.delivered": "Delivered",
+  "order.state.cancelled": "Cancelled",
   "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
   "products.amount": "Number of products",
@@ -427,5 +438,6 @@
   "orders": "Orders",
   "total.price": "Total price",
   "recipient.first.name": "Recipient first name",
-  "recipient.last.name": "Recipient last name"
+  "recipient.last.name": "Recipient last name",
+  "recipient.full.name": "Recipient full name"
 }

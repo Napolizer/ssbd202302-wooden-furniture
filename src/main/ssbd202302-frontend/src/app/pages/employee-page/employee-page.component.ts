@@ -42,7 +42,7 @@ export class EmployeePageComponent implements OnInit {
   listLoading = false;
   searchPhrase: string = '';
   fullNames: string[] = [];
-  displayedColumns = ['id', 'orderState', 'recipient', 'address', 'productsAmount',  'accountLogin', 'totalPrice'];
+  displayedColumns = ['id', 'orderState', 'recipient', 'address', 'productsAmount',  'accountLogin', 'totalPrice', 'action'];
   dataSource = new MatTableDataSource<OrderDetailsDto>(this.orders);
   destroy = new Subject<boolean>();
 
