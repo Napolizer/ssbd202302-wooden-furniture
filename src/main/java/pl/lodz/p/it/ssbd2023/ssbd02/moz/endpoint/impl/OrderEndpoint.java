@@ -21,7 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
@@ -63,7 +63,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @RolesAllowed(CLIENT)
   public OrderDto create(CreateOrderDto createOrderDto, String login) {
     Map<Long, Integer> orderedProductsMap = new HashMap<>();
-    for (OrderProductDto orderedProduct : createOrderDto.getProducts()) {
+    for (OrderedProductDto orderedProduct : createOrderDto.getProducts()) {
       orderedProductsMap.put(orderedProduct.getProductId(), orderedProduct.getAmount());
     }
     Order created;

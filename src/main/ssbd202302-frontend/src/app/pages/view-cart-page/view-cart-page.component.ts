@@ -49,15 +49,13 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
   }
 
     ngOnInit(): void {
-    // const sleep = (ms: number | undefined) => new Promise(r => setTimeout(r, ms));
-    // await sleep(1000);
-    if (!this.cartService.isDone) {
-      this.cartService.isDoneObservable.subscribe(() => {
+      if (!this.cartService.isDone) {
+        this.cartService.isDoneObservable.subscribe(() => {
+          this.setUpOrderedProducts();
+        })
+      } else {
         this.setUpOrderedProducts();
-      })
-    } else {
-      this.setUpOrderedProducts();
-    }
+      }
 
   }
 

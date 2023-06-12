@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class OrderDto {
 
   @NotNull
   @Builder.Default
-  private List<OrderProductDto> orderedProducts = new ArrayList<>();
+  private List<OrderedProductDto> orderedProducts = new ArrayList<>();
 
   private String orderState;
 
