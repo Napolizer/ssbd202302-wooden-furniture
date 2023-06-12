@@ -47,10 +47,15 @@ export class CartService {
     } else {
       this.products.push(addedProduct);
       this.saveCart();
+      this.translate.get("cart.add.product.success")
+        .subscribe(msg => {
+          this.alertService.success(msg);
+        })
     }
   }
 
   clearCart(): void {
+    this.localStorageService.remove(this.localStorageKey);
     this.products = [];
     this.saveCart();
   }
@@ -65,6 +70,7 @@ export class CartService {
 
   setCart(orderedProducts: OrderedProduct[]) {
     this.products = orderedProducts;
+    this.saveCart();
   }
 
   isProductInCart(checkedProduct: OrderedProduct): boolean {

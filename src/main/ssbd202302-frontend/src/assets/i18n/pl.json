@@ -408,10 +408,17 @@
   "product.price": "Cena",
   "product.image": "Zdjęcie",
   "product.edit": "Edytuj produkt",
+  "product.dimensions": "Wymiary",
+  "product.package.dimensions": "Wymiary paczki",
+  "product.chosen.number.of.pieces": "Wybrana liczba sztuk",
+  "product.available.number.of.pieces": "Dostępna liczba sztuk",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
 
+  "cart": "Koszyk",
   "cart.user.not.logged.in.error.message": "Musisz się zalogować aby dodać produkt do koszyka",
-  "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka"
+  "cart.max.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka niż dostępna liczba sztuk",
+  "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
+  "cart.add.product.success": "Produkt dodany do koszyka"
 }

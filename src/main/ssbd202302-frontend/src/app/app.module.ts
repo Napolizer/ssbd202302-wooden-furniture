@@ -74,6 +74,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import {MatBadgeModule} from "@angular/material/badge";
+import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import {MatBadgeModule} from "@angular/material/badge";
     ClientOrdersPageComponent,
     SingleProductPageComponent,
     EditProductComponent,
+    ViewCartPageComponent,
   ],
     imports: [
         BrowserModule,
