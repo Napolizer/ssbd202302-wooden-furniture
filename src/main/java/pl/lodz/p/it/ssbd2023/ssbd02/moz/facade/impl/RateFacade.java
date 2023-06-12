@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,14 +27,16 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
   }
 
   @Override
+  @RolesAllowed(CLIENT)
   public Rate create(Rate entity) {
-    em.persist(entity.getPerson());
+    em.persist(entity.getAccount());
     return super.create(entity);
   }
 
   @Override
-  public void delete(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public void delete(Rate rate) {
+    em.remove(em.merge(rate));
   }
 
   @Override

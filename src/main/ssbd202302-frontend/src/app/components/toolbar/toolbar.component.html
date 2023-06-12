@@ -1,11 +1,19 @@
 <mat-toolbar [ngStyle]="getToolbarColor()">
-  <button *ngIf="isUserLoggedIn()" mat-icon-button matTooltip="Menu" [matMenuTriggerFor]="mainMenu">
+  <button
+    *ngIf="isUserLoggedIn()"
+    mat-icon-button
+    matTooltip="Menu"
+    [matMenuTriggerFor]="mainMenu"
+  >
     <mat-icon>menu</mat-icon>
   </button>
-  <span class= "breadcrumb mb-0 mx-1" *ngFor="let breadcrumb of breadcrumbs; let last = last">
+  <span
+    class="breadcrumb mb-0 mx-1"
+    *ngFor="let breadcrumb of breadcrumbs; let last = last"
+  >
     <ng-container *ngIf="!last">
-      <a (click)="navigateBreadcrumb(breadcrumb)" style="all: unset;">
-      {{ breadcrumb | translate}} /
+      <a (click)="navigateBreadcrumb(breadcrumb)" style="all: unset">
+        {{ breadcrumb | translate }} /
       </a>
     </ng-container>
     <ng-container *ngIf="last">
@@ -13,74 +21,200 @@
     </ng-container>
   </span>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">
-    <button mat-menu-item routerLink="#" *ngIf="isUserAdmin()" (click)="redirectToAdminPage()">
-      <mat-icon>admin_panel_settings</mat-icon><span>{{'toolbar.adminPanel' | translate}}</span>
+    <button
+      mat-menu-item
+      routerLink="#"
+      *ngIf="isUserAdmin()"
+      (click)="redirectToAdminPage()"
+    >
+      <mat-icon>admin_panel_settings</mat-icon
+      ><span>{{ "toolbar.adminPanel" | translate }}</span>
     </button>
-    <button mat-menu-item routerLink="#" *ngIf="isUserEmployee()" (click)="redirectToEmployeePage()">
-      <mat-icon>work</mat-icon><span>{{'toolbar.employeePanel' | translate}}</span>
+    <button
+      mat-menu-item
+      routerLink="#"
+      *ngIf="isUserEmployee()"
+      (click)="redirectToEmployeePage()"
+    >
+      <mat-icon>work</mat-icon
+      ><span>{{ "toolbar.employeePanel" | translate }}</span>
+    </button>
+    <button
+      mat-menu-item
+      routerLink="#"
+      *ngIf="isUserClient()"
+      (click)="redirectToClientPage()"
+    >
+      <mat-icon>accessibility</mat-icon
+      ><span>{{ "toolbar.clientPanel" | translate }}</span>
     </button>
   </mat-menu>
   <span class="toolbar-right title">
-    <div class="title-text" (click)="redirectToMainPage()">{{'shop.title' | translate}}</div>
+    <div class="title-text" (click)="redirectToMainPage()">
+      {{ "shop.title" | translate }}
+    </div>
   </span>
   <span class="toolbar-item-spacer"></span>
+  <button
+    mat-button
+    color="secondary"
+    type="submit"
+    class="login-button"
+    (click)="redirectToProductsPage()"
+    matTooltip=Products
+  >
+    <mat-icon>store</mat-icon>
+  </button>
   <app-theme-switcher-component></app-theme-switcher-component>
-  <button *ngIf="!isUserLoggedIn()" mat-button color="secondary" type="submit" class="login-button" (click)="redirectToRegisterPage()">{{'register.button.sign' | translate}}</button>
-  <button *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()" mat-button color="secondary" type="submit" class="login-button" (click)="redirectToLoginPage()">{{'login.login' | translate}}</button>
-  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="Switch Access Level" [matMenuTriggerFor]="switchAccessLevel">
+  <button
+    *ngIf="!isUserLoggedIn()"
+    mat-button
+    color="secondary"
+    type="submit"
+    class="login-button"
+    (click)="redirectToRegisterPage()"
+  >
+    {{ "register.button.sign" | translate }}
+  </button>
+  <button
+    *ngIf="!isUserLoggedIn() && !isCurrentlyOnLoginPage()"
+    mat-button
+    color="secondary"
+    type="submit"
+    class="login-button"
+    (click)="redirectToLoginPage()"
+  >
+    {{ "login.login" | translate }}
+  </button>
+  <button
+    *ngIf="isUserLoggedIn()"
+    class="account"
+    mat-icon-button
+    matTooltip="Switch Access Level"
+    [matMenuTriggerFor]="switchAccessLevel"
+  >
     <mat-icon>autorenew</mat-icon>
   </button>
-  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="Change language" [matMenuTriggerFor]="changeLocale">
+  <button
+    *ngIf="isUserLoggedIn()"
+    class="account"
+    mat-icon-button
+    matTooltip="Change language"
+    [matMenuTriggerFor]="changeLocale"
+  >
     <mat-icon>language</mat-icon>
   </button>
+  <button
+    *ngIf="isUserLoggedIn()"
+    class="account"
+    mat-icon-button
+    matTooltip="View Cart"
+    (click)="redirectToMainPage()"
+    >
+      <mat-icon [matBadge]="countProductsInCart()" [matBadgeHidden]="countProductsInCart() === 0">shopping_cart</mat-icon>
+  </button>
   <mat-menu #switchAccessLevel [overlapTrigger]="false" yPosition="below">
-  <button *ngIf="isUserInGroup('ADMINISTRATOR')" class = "administrator" mat-menu-item routerLink="#" (click)="switchRole('ADMINISTRATOR')">
-    <mat-icon>security</mat-icon><span>{{'role.administrator' | translate}}</span>
-  </button>
-  <button *ngIf="isUserInGroup('EMPLOYEE')" class = "employee" mat-menu-item routerLink="#" (click)="switchRole('EMPLOYEE')">
-    <mat-icon>person</mat-icon><span>{{'role.employee' | translate}}</span>
-  </button>
-  <button *ngIf="isUserInGroup('SALES_REP')" class = "sales_rep" mat-menu-item routerLink="#" (click)="switchRole('SALES_REP')">
-    <mat-icon>shopping_cart</mat-icon><span>{{'role.sales_rep' | translate}}</span>
-  </button>
-  <button *ngIf="isUserInGroup('CLIENT')" class = "client" mat-menu-item routerLink="#" (click)="switchRole('CLIENT')">
-    <mat-icon>person_pin</mat-icon><span>{{'role.client' | translate}}</span>
-  </button>
+    <button
+      *ngIf="isUserInGroup('ADMINISTRATOR')"
+      class="administrator"
+      mat-menu-item
+      routerLink="#"
+      (click)="switchRole('ADMINISTRATOR')"
+    >
+      <mat-icon>security</mat-icon
+      ><span>{{ "role.administrator" | translate }}</span>
+    </button>
+    <button
+      *ngIf="isUserInGroup('EMPLOYEE')"
+      class="employee"
+      mat-menu-item
+      routerLink="#"
+      (click)="switchRole('EMPLOYEE')"
+    >
+      <mat-icon>person</mat-icon><span>{{ "role.employee" | translate }}</span>
+    </button>
+    <button
+      *ngIf="isUserInGroup('SALES_REP')"
+      class="sales_rep"
+      mat-menu-item
+      routerLink="#"
+      (click)="switchRole('SALES_REP')"
+    >
+      <mat-icon>shopping_cart</mat-icon
+      ><span>{{ "role.sales_rep" | translate }}</span>
+    </button>
+    <button
+      *ngIf="isUserInGroup('CLIENT')"
+      class="client"
+      mat-menu-item
+      routerLink="#"
+      (click)="switchRole('CLIENT')"
+    >
+      <mat-icon>person_pin</mat-icon
+      ><span>{{ "role.client" | translate }}</span>
+    </button>
   </mat-menu>
-  <button *ngIf="isUserLoggedIn()" class="account" mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+  <button
+    *ngIf="isUserLoggedIn()"
+    class="account"
+    mat-icon-button
+    matTooltip="My Account"
+    [matMenuTriggerFor]="userAccountMenu"
+  >
     <mat-icon>account_circle</mat-icon>
   </button>
 
   <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
     <button mat-menu-item routerLink="#" (click)="redirectToAccountPage()">
-      <mat-icon>person</mat-icon><span>{{'toolbar.myAccount' | translate}}</span>
+      <mat-icon>person</mat-icon
+      ><span>{{ "toolbar.myAccount" | translate }}</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="#" (click)="logout()">
-      <mat-icon>exit_to_app</mat-icon>{{'toolbar.logout' | translate}}
+      <mat-icon>exit_to_app</mat-icon>{{ "toolbar.logout" | translate }}
     </button>
   </mat-menu>
 
   <mat-menu #changeLocale [overlapTrigger]="false" yPosition="below">
-    <button mat-menu-item [disabled]="getCurrentLocale() === 'en'" (click)="changeLocaleToEnglish()">
-      <mat-icon *ngIf="getCurrentLocale() === 'en'; else radioUnchecked">radio_button_checked</mat-icon>
+    <button
+      mat-menu-item
+      [disabled]="getCurrentLocale() === 'en'"
+      (click)="changeLocaleToEnglish()"
+    >
+      <mat-icon *ngIf="getCurrentLocale() === 'en'; else radioUnchecked"
+        >radio_button_checked</mat-icon
+      >
       <ng-template #radioUnchecked>
         <mat-icon>radio_button_unchecked</mat-icon>
       </ng-template>
-      <span>{{'change.locale.english' | translate}}</span>
+      <span>{{ "change.locale.english" | translate }}</span>
     </button>
-    <button mat-menu-item [disabled]="getCurrentLocale() === 'pl'" (click)="changeLocaleToPolish()">
-      <mat-icon *ngIf="getCurrentLocale() === 'pl'; else radioUnchecked">radio_button_checked</mat-icon>
+    <button
+      mat-menu-item
+      [disabled]="getCurrentLocale() === 'pl'"
+      (click)="changeLocaleToPolish()"
+    >
+      <mat-icon *ngIf="getCurrentLocale() === 'pl'; else radioUnchecked"
+        >radio_button_checked</mat-icon
+      >
       <ng-template #radioUnchecked>
         <mat-icon>radio_button_unchecked</mat-icon>
       </ng-template>
-      <span>{{'change.locale.polish' | translate}}</span>
+      <span>{{ "change.locale.polish" | translate }}</span>
     </button>
   </mat-menu>
 </mat-toolbar>
-<div class="line" [ngStyle]="{
-  'background-color': isCurrentGroup('ADMINISTRATOR') ? 'grey' :
-                      (isCurrentGroup('EMPLOYEE') ? 'green' :
-                      (isCurrentGroup('SALES_REP') ? 'yellow' :
-                      (isCurrentGroup('CLIENT')  ? 'pink' : '')))}"
+<div
+  class="line"
+  [ngStyle]="{
+    'background-color': isCurrentGroup('ADMINISTRATOR')
+      ? 'grey'
+      : isCurrentGroup('EMPLOYEE')
+      ? 'green'
+      : isCurrentGroup('SALES_REP')
+      ? 'yellow'
+      : isCurrentGroup('CLIENT')
+      ? 'pink'
+      : ''
+  }"
 ></div>

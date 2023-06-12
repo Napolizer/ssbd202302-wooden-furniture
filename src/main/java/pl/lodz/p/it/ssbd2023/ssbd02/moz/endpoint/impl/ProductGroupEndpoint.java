@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
@@ -17,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.CategoryMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductGroupMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
@@ -47,8 +49,11 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
   }
 
   @Override
-  public ProductGroupInfoDto archive(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public ProductGroupInfoDto archive(Long id, ProductGroupArchiveDto productGroupArchiveDto) {
+    ProductGroup productGroup = repeatTransactionWithOptimistic(() ->
+        productGroupService.archive(id, productGroupArchiveDto.getHash()));
+    return ProductGroupMapper.mapToProductGroupInfoDto(productGroup);
   }
 
   @Override
@@ -65,8 +70,10 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
   }
 
   @Override
+  @PermitAll
   public List<ProductGroupInfoDto> findAll() {
-    throw new UnsupportedOperationException();
+    return repeatTransactionWithoutOptimistic(() -> productGroupService.findAll()).stream()
+            .map(ProductGroupMapper::mapToProductGroupInfoDto).toList();
   }
 
   @Override

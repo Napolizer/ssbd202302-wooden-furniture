@@ -1,0 +1,18 @@
+<div>
+  <br />
+  <div class="page-container top-container">
+    <br />
+    <div class="page-container">
+      <div
+        class="content"
+        [@loadedUnloadedList]="{ value: getFormAnimationState() }"
+      >
+        <mat-card class="card">
+          <button mat-menu-item routerLink="#"  (click)="redirectToClientOrdersPage()">
+            <mat-icon>reorder</mat-icon><span>{{'orders.client' | translate}}</span>
+          </button>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

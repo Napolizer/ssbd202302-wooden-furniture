@@ -19,4 +19,10 @@ public interface ProductFacadeOperations extends Facade<Product> {
   List<Product> findAllByPrice(Double minPrice, Double maxPrice);
 
   Optional<Product> findById(Long id);
+
+  List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType);
+
+  List<Product> findAllByProductGroup(Long productGroupId);
+
+  List<Product> findAllByCategory(Long categoryId);
 }

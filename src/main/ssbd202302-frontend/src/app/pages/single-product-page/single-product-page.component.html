@@ -1,0 +1,248 @@
+<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
+<mat-card>
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-4">
+        <img class="img-fluid" [src]="product.imageUrl" alt="Product Image" />
+      </div>
+      <div class="col-md-8 product-info">
+        <div class="product-group-container">
+          <p>
+            <strong>{{ product.productGroup.name }}</strong>
+          </p>
+          <div *ngIf="isUserEmployee()" class="edit-product">
+            <button
+              mat-button
+              [matMenuTriggerFor]="menu"
+              mat-mini-fab
+              color="primary"
+              aria-label="Example icon button with a menu icon"
+            >
+              <mat-icon>menu</mat-icon>
+            </button>
+          </div>
+        </div>
+        <p>
+          {{ product.productGroup.category.name | translate }},
+          {{ product.furnitureDimensions.width }}m x
+          {{ product.furnitureDimensions.depth }}m x
+          {{ product.furnitureDimensions.height }}m
+        </p>
+        <p class="price">
+          <strong>{{ product.price }},-</strong>
+        </p>
+        <p>{{ getProductColor(product.color.toString()) | translate }}</p>
+        <div class="star-rating">
+          <ng-container
+            *ngFor="
+              let star of getStarArray(product.productGroup.averageRating)
+            "
+          >
+            <mat-icon class="star-icon">{{ star }}</mat-icon>
+          </ng-container>
+        </div>
+        <p class="d-inline-block g-color-primary rating">
+          {{ "product.rating" | translate }}
+          {{ product.productGroup.averageRating }}
+        </p>
+        <div
+          *ngIf="!product.archive && product.amount > 0"
+          class="available-message"
+        >
+          <span class="green-circle"></span>
+          {{ "product.available.true" | translate }} {{ product.amount }}
+          {{ "product.amounts" | translate }}
+        </div>
+        <div
+          *ngIf="product.archive && product.amount > 0"
+          class="unavailable-message"
+        >
+          <span class="red-circle"></span>
+          {{ "product.available.false" | translate }}
+        </div>
+        <div
+          *ngIf="!product.archive && product.amount == 0"
+          class="unavailable-message"
+        >
+          <span class="red-circle"></span>
+          {{ "product.sold.out" | translate }}
+        </div>
+        <div
+          *ngIf="product.archive && product.amount == 0"
+          class="unavailable-message"
+        >
+          <span class="red-circle"></span>
+          {{ "product.withdrawn" | translate }}
+        </div>
+        <div>
+          <div>
+            <mat-form-field>
+              <mat-label>{{
+                getProductColor(product.color.toString()) | translate
+              }}</mat-label>
+              <mat-select>
+                <mat-option
+                  *ngFor="
+                    let productColorByProductGroup of productsByProductGroup
+                  "
+                  [value]="
+                    getProductColor(productColorByProductGroup.color.toString())
+                  "
+                  [disabled]="product.color == productColorByProductGroup.color"
+                  (click)="
+                    handleChooseColorButton(
+                      productColorByProductGroup.id.toString()
+                    )
+                  "
+                >
+                  {{
+                    getProductColor(productColorByProductGroup.color.toString())
+                      | translate
+                  }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div>
+              <div *ngIf="isUserGuestOrClient() && product.amount > 0">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="handleAddToCartButton(product)"
+                >
+                  <mat-icon>add_shopping_cart</mat-icon>
+                  {{ "product.add.to.cart" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-card-title>
+    <br /><br />
+    <p>
+      {{ "product.check.others.from.category" | translate }}
+      {{ product.productGroup.category.name | translate }}
+    </p>
+  </mat-card-title>
+</mat-card>
+
+<div>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef>Image</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        (click)="redirectToSingleProductPage(element.id)"
+        class="highlight-row"
+      >
+        <img mat-card-lg-image [src]="element.imageUrl" alt="zdjecie" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "product.name" | translate }}
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        (click)="redirectToSingleProductPage(element.id)"
+        class="highlight-row"
+      >
+        {{ element.productGroup.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "product.price" | translate }}
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        (click)="redirectToSingleProductPage(element.id)"
+        class="highlight-row"
+      >
+        {{ element.price }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="color">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "product.color" | translate }}
+      </th>
+      <td
+        (click)="redirectToSingleProductPage(element.id)"
+        class="highlight-row"
+        mat-cell
+        *matCellDef="let element"
+      >
+        {{ getProductColor(element.color.toString()) | translate }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "products.size" | translate }}
+      </th>
+      <td
+        (click)="redirectToSingleProductPage(element.id)"
+        class="highlight-row"
+        mat-cell
+        *matCellDef="let element"
+      >
+        <ng-container *ngIf="!element.archive && element.amount > 0">
+          <span class="green-circle"></span>
+          {{ element.amount }}
+        </ng-container>
+        <ng-container *ngIf="element.archive || element.amount == 0">
+          <span class="red-circle"></span>
+          0
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ "product.rating" | translate }}
+      </th>
+      <td
+        (click)="redirectToSingleProductPage(element.id)"
+        class="highlight-row"
+        mat-cell
+        *matCellDef="let element"
+      >
+        {{ element.productGroup.averageRating }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[10, 20, 30]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+  >
+  </mat-paginator>
+</div>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="openEditProductDialog()">
+    <mat-icon>edit</mat-icon>
+    <span>Edytuj produkt</span>
+  </button>
+  <button mat-menu-item [disabled]="product.archive" (click)="archiveProduct()">
+    <mat-icon>query_builder</mat-icon>
+    <span>Zarchiwizuj produkt</span>
+  </button>
+  <button mat-menu-item [disabled]="!product.archive" (click)="deArchiveProduct()">
+    <mat-icon>query_builder</mat-icon>
+    <span>Odarchiwizuj produkt</span>
+  </button>
+</mat-menu>

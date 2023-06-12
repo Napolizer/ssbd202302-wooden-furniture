@@ -1,9 +1,11 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, NavigationEnd } from '@angular/router';
 import { tap, takeUntil, Subject } from 'rxjs';
 import { Product } from 'src/app/interfaces/product';
+import { NavigationService } from 'src/app/services/navigation.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -33,14 +35,14 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   destroy = new Subject<boolean>();
   loading = true;
   dataSource = new MatTableDataSource<Product>(this.products);
-  sortedProducts: any[] = []; // Array to store the sorted products
+  sortedProducts: any[] = [];
   isAscending: boolean = true;
-  pageSize = 8; // Number of products per page
+  pageSize = 8;
   pageSizeOptions: number[] = [4, 8, 12];
-  currentPage = 1; // Current page number
-  pagedProducts: Product[] = []; // Paged products to display
+  currentPage = 1;
+  pagedProducts: Product[] = [];
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService, private router: Router, private navigationService: NavigationService) {}
 
   ngOnInit(): void {
     this.router.events.pipe(takeUntil(this.destroy)).subscribe((val) => {
@@ -53,11 +55,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       .retrieveAllProducts()
       .pipe(tap(() => (this.loading = true)), takeUntil(this.destroy))
       .subscribe((products) => {
-        this.products = products.map((product) => ({
-          ...product,
-          image: this.getImageSrc(product.imageUrl),
-        }));
-
+        this.products = products;
         this.loading = false;
         console.log(this.products);
         this.updatePagedProducts();
@@ -79,38 +77,6 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
-  }
-
-  sortByPrice(sortOrder: string) {
-    switch (sortOrder) {
-      case 'default':
-        this.sortedProducts = this.products.slice(); // Copy the original products array
-        break;
-      case 'ascending':
-        this.sortedProducts = this.products.slice().sort((a, b) => a.price - b.price);
-        this.isAscending = true;
-        break;
-      case 'descending':
-        this.sortedProducts = this.products.slice().sort((a, b) => b.price - a.price);
-        this.isAscending = false;
-        break;
-    }
-  }
-
-  base64ToByteArray(base64String: string): Uint8Array {
-    const binaryString = atob(base64String);
-    const length = binaryString.length;
-    const byteArray = new Uint8Array(length);
-
-    for (let i = 0; i < length; i++) {
-      byteArray[i] = binaryString.charCodeAt(i);
-    }
-
-    return byteArray;
-  }
-
-  getImageSrc(image: string): string {
-    return 'data:image/jpeg;base64,' + image;
   }
 
   shouldDisplaySpinner(): boolean {
@@ -136,5 +102,28 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     }
 
     return starArray;
+  }
+
+  getProductColor(color: string): string {
+    switch (color) {
+      case 'RED':
+        return 'product.color.red';
+      case 'BLACK':
+        return 'product.color.black';
+      case 'GREEN':
+        return 'product.color.green';
+      case 'BLUE':
+        return 'product.color.blue';
+      case 'BROWN':
+        return 'product.color.brown';
+      case 'WHITE':
+        return 'product.color.white';
+      default:
+        return '';
+    }
+  }
+
+  redirectToSingleProductPage(id: string): void {
+    void this.navigationService.redirectToSingleProductPage(id);
   }
 }

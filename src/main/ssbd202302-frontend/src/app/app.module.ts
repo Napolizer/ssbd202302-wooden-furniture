@@ -39,6 +39,7 @@ import { ForbiddenPageComponent } from './pages/forbidden-page/forbidden-page.co
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { UserAccountPageComponent } from './pages/user-account-page/user-account-page.component';
 import {DatePipe} from "@angular/common";
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { AddAccountRoleComponent } from './pages/add-account-role-page/add-account-role.component';
 import { RemoveAccountRolePageComponent } from './pages/remove-account-role-page/remove-account-role-page.component';
@@ -67,6 +68,12 @@ import { AddProductGroupComponent } from './components/add-product-group/add-pro
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { ClientPageComponent } from './pages/client-page/client-page.component';
+import { ClientOrdersPageComponent } from './pages/client-orders-page/client-orders-page.component';
+import { AddProductComponent } from './add-product/add-product.component';
+import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
+import { EditProductComponent } from './components/edit-product/edit-product.component';
+import {MatBadgeModule} from "@angular/material/badge";
 
 @NgModule({
   declarations: [
@@ -107,48 +114,55 @@ import { MatGridListModule } from '@angular/material/grid-list';
     EditAccountComponent,
     AddProductGroupComponent,
     EmployeePageComponent,
+    AddProductComponent,
     ProductPageComponent,
+    ClientPageComponent,
+    ClientOrdersPageComponent,
+    SingleProductPageComponent,
+    EditProductComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatStepperModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    FormsModule,
-    AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-    ReactiveFormsModule,
-    MatListModule,
-    MatSidenavModule,
-    MatExpansionModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatMenuModule,
-    MatCardModule,
-    MatCheckboxModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    MatProgressSpinnerModule,
-    MatDialogModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatRippleModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatGridListModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatInputModule,
+        MatSlideToggleModule,
+        MatFormFieldModule,
+        MatStepperModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        NgxDropzoneModule,
+        FormsModule,
+        AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
+        ReactiveFormsModule,
+        MatListModule,
+        MatSidenavModule,
+        MatExpansionModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatCardModule,
+        MatCheckboxModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        MatProgressSpinnerModule,
+        MatDialogModule,
+        MatAutocompleteModule,
+        MatTableModule,
+        MatRippleModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatGridListModule,
+        MatBadgeModule
+    ],
   providers: [
     DatePipe,
     ThemeSwitcherComponentComponent

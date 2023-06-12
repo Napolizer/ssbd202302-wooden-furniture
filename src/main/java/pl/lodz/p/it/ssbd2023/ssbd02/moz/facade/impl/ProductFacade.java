@@ -21,12 +21,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.ProductFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({
     GenericFacadeExceptionsInterceptor.class,
+    ProductFacadeExceptionsInterceptor.class,
     LoggerInterceptor.class
 })
 @DenyAll
@@ -99,5 +101,31 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
     } catch (PersistenceException e) {
       return Optional.empty();
     }
+  }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType) {
+    return em.createNamedQuery(Product.FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE, Product.class)
+            .setParameter("productGroupId", productGroupId)
+            .setParameter("color", color)
+            .setParameter("woodType", woodType)
+            .getResultList();
+  }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByProductGroup(Long productGroupId) {
+    return em.createNamedQuery(Product.FIND_ALL_BY_PRODUCT_GROUP_ID, Product.class)
+            .setParameter("productGroupId", productGroupId)
+            .getResultList();
+  }
+
+  @Override
+  @PermitAll
+  public List<Product> findAllByCategory(Long categoryId) {
+    return em.createNamedQuery(Product.FIND_ALL_BY_CATEGORY_ID, Product.class)
+            .setParameter("categoryId", categoryId)
+            .getResultList();
   }
 }

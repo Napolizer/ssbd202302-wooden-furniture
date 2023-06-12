@@ -1,12 +1,21 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.RateFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.RateServiceOperations;
 
@@ -16,15 +25,41 @@ public class RateService implements RateServiceOperations {
 
   @Inject
   private RateFacadeOperations rateFacade;
+  @Inject
+  private ProductFacadeOperations productFacade;
+  @Inject
+  private AccountFacadeOperations accountFacade;
 
   @Override
-  public void delete(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public void delete(Long id, String login) {
+    Rate rate = rateFacade.find(id)
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+    if (!rate.getAccount().getLogin().equals(login)) {
+      throw ApplicationExceptionFactory.createRateNotFoundException();
+    }
+    rateFacade.delete(rate);
   }
 
   @Override
-  public Rate create(Rate entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public Rate create(String login, Integer rateValue, Long productId) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    Product product = productFacade.findById(productId)
+            .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+    ProductGroup productGroup = product.getProductGroup();
+
+    boolean doesProductHaveRateFromThisAccount = productGroup.getRates().stream()
+            .anyMatch(rate -> rate.getAccount().equals(account));
+
+    if (!doesProductHaveRateFromThisAccount) {
+      return rateFacade.create(new Rate(rateValue, account));
+    } else {
+      throw ApplicationExceptionFactory.createProductAlreadyRatedException();
+    }
   }
 
   @Override
@@ -33,8 +68,21 @@ public class RateService implements RateServiceOperations {
   }
 
   @Override
-  public Rate update(Long id, Rate entity) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(CLIENT)
+  public Rate update(Long id, Integer newRate, String login) {
+    accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    Rate rate = rateFacade.find(id)
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+
+    if (!rate.getAccount().getLogin().equals(login)) {
+      //throw if rate isn't assigned by this account
+      throw ApplicationExceptionFactory.createRateNotFoundException();
+    }
+
+    rate.setValue(newRate);
+    return rateFacade.update(rate);
   }
 
   @Override

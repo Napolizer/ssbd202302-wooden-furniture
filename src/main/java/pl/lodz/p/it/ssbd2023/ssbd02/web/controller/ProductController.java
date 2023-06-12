@@ -1,14 +1,17 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.json.Json;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -19,15 +22,18 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
+import javax.print.attribute.standard.Media;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -46,30 +52,59 @@ public class ProductController {
   @Inject
   private ProductGroupEndpointOperations productGroupEndpoint;
 
-
-  @PUT
-  @Path("/archive/id/{id}")
-  public Response archive(@PathParam("id") Long id, UpdateProductDto entity) {
-    throw new UnsupportedOperationException();
-  }
-
   @PUT
   @Path("/id/{id}")
   public Response update(@PathParam("id") Long id, UpdateProductDto entity) {
     throw new UnsupportedOperationException();
   }
 
+  @PATCH
+  @Path("/archive/{productId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response archiveProduct(@PathParam("productId") Long productId) {
+    productEndpoint.archive(productId);
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "moz.product.archive.successful")
+                    .build()
+    ).build();
+  }
+
+  @PATCH
+  @Path("/dearchive/{productId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response deArchiveProduct(@PathParam("productId") Long productId) {
+    productEndpoint.deArchive(productId);
+    return Response.ok(
+            Json.createObjectBuilder()
+                    .add("message", "moz.product.dearchive.successful")
+                    .build()
+    ).build();
+  }
+
   @POST
+  @Path("/new-image")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(EMPLOYEE)
-  public Response createProduct(@FormDataParam("product") FormDataBodyPart product,
+  public Response createProductWithNewImage(@FormDataParam("product") FormDataBodyPart product,
                          @FormDataParam("image") InputStream fileInputStream,
                          @FormDataParam("image") FormDataContentDisposition fileMetaData) {
     ProductCreateDto productCreateDto =
             FormDataMapper.mapFormDataBodyPartToProductCreateDto(product);
     byte[] image = FileUtils.readImageFromFileInputStream(fileInputStream, fileMetaData);
+    return Response.status(Response.Status.CREATED).entity(
+            productEndpoint.createProductWithNewImage(productCreateDto, image, fileMetaData.getFileName())).build();
+  }
+
+  @POST
+  @Path("/existing-image")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response createProductWithExistingImage(@NotNull @Valid ProductCreateWithImageDto productCreateWithImageDto) {
     return Response.status(Response.Status.CREATED)
-            .entity(productEndpoint.create(productCreateDto, image, fileMetaData.getFileName())).build();
+            .entity(productEndpoint.createProductWithExistingImage(productCreateWithImageDto)).build();
   }
 
   @POST
@@ -81,10 +116,13 @@ public class ProductController {
             .entity(productGroupEndpoint.create(productGroupCreateDto)).build();
   }
 
-  @POST
+  @PUT
   @Path("/group/archive/id/{id}")
-  public Response archiveProductGroup(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response archiveProductGroup(@PathParam("id") Long id,
+                                      @NotNull @Valid ProductGroupArchiveDto productGroupArchiveDto) {
+    return Response.ok(productGroupEndpoint.archive(id, productGroupArchiveDto)).build();
   }
 
   @PUT
@@ -95,6 +133,30 @@ public class ProductController {
   public Response editProductGroupName(@PathParam("id") Long id,
                                        @NotNull @Valid EditProductGroupDto editProductGroupDto) {
     return Response.ok(productGroupEndpoint.editProductGroupName(id, editProductGroupDto)).build();
+  }
+
+  @PUT
+  @Path("/editProduct/id/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response editProduct(@PathParam("id") Long id,
+                                     @NotNull @Valid EditProductDto editProductDto) {
+    return Response.ok(productEndpoint.editProduct(id, editProductDto)).build();
+  }
+
+  @GET
+  @Path("/group/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllProductsByProductGroupId(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findAllByProductGroupId(id)).build();
+  }
+
+  @GET
+  @Path("/category/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllProductsByCategoryId(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findAllByCategoryId(id)).build();
   }
 
   @GET
@@ -111,6 +173,17 @@ public class ProductController {
   public Response findAll() {
     List<ProductDto> productDtoList = productEndpoint.findAll();
     return Response.ok(productDtoList).build();
+  }
+
+  @GET
+  @Path("/search")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findAllByProductGroupColorAndWoodType(
+          @QueryParam("productGroupId") Long productGroupId,
+          @QueryParam("color") String color,
+          @QueryParam("woodType") String woodType) {
+    return Response.ok(productEndpoint.findAllByProductGroupColorAndWoodType(productGroupId, color, woodType))
+            .build();
   }
 
   @GET
@@ -133,8 +206,9 @@ public class ProductController {
 
   @GET
   @Path("/group")
+  @Produces(MediaType.APPLICATION_JSON)
   public Response findAllGroups() {
-    throw new UnsupportedOperationException();
+    return Response.ok(productGroupEndpoint.findAll()).build();
   }
 
   @GET

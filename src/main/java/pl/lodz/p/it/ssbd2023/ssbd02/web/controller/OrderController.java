@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -14,9 +15,14 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import java.security.Principal;
+import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ChangeOrderStateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
@@ -30,6 +36,9 @@ public class OrderController {
   @Inject
   private OrderEndpointOperations orderEndpoint;
 
+  @Inject
+  private Principal principal;
+
   @GET
   @Path("/account/login/{login}")
   public Response findByAccountLogin(@PathParam("login") String login) {
@@ -37,9 +46,10 @@ public class OrderController {
   }
 
   @GET
-  @Path("/state")
-  public Response findByState(OrderState orderState) {
-    throw new UnsupportedOperationException();
+  @Path("/state/{state}")
+  @RolesAllowed(EMPLOYEE)
+  public Response findByState(@PathParam("state") OrderState orderState) {
+    return Response.ok(orderEndpoint.findByState(orderState)).build();
   }
 
   @POST
@@ -47,9 +57,11 @@ public class OrderController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response create(@NotNull @Valid CreateOrderDto createOrderDto) {
+  public Response create(@NotNull @Valid CreateOrderDto createOrderDto,
+                         @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
     return Response.status(Response.Status.CREATED)
-        .entity(orderEndpoint.create(createOrderDto)).build();
+        .entity(orderEndpoint.create(createOrderDto, login)).build();
   }
 
   @PUT
@@ -67,27 +79,30 @@ public class OrderController {
 
   @GET
   @Path("/id/{id}")
-  public Response find(Long id) {
+  public Response find(@PathParam("id") Long id) {
     throw new UnsupportedOperationException();
   }
 
   @GET
+  @RolesAllowed(EMPLOYEE)
   public Response findAll() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAll()).build();
   }
 
 
   @GET
   @Path("/present")
+  @RolesAllowed(EMPLOYEE)
   public Response findAllPresent() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAllPresent()).build();
   }
 
 
   @GET
   @Path("/archived")
+  @RolesAllowed(EMPLOYEE)
   public Response findAllArchived() {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.findAllArchived()).build();
   }
 
 
@@ -112,8 +127,9 @@ public class OrderController {
 
   @PUT
   @Path("/state/{id}")
-  public Response changeStateOfOrder(@PathParam("id") Long id, OrderState state) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public Response changeOrderState(@PathParam("id") Long id, @NotNull @Valid ChangeOrderStateDto dto) {
+    return Response.ok(orderEndpoint.changeOrderState(id, dto.getState(), dto.getHash())).build();
   }
 
   @POST
@@ -134,5 +150,13 @@ public class OrderController {
   @Path("/statistics")
   public Response getStatistics(TimePeriodDto timePeriod) {
     throw new UnsupportedOperationException();
+  }
+
+  @GET
+  @Path("/customer")
+  @RolesAllowed(CLIENT)
+  public Response findCustomerOrders() {
+    List<OrderDto> clientOrders = orderEndpoint.findByAccountLogin(principal.getName());
+    return Response.ok(clientOrders).build();
   }
 }

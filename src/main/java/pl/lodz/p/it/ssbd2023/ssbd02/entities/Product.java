@@ -15,6 +15,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,18 +31,34 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @AllArgsConstructor
 @Entity
 @Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
-                  @Index(name = "product_image_id", columnList = "image_id")})
+                  @Index(name = "product_image_id", columnList = "image_id")},
+       uniqueConstraints = { @UniqueConstraint(name = "product_details",
+               columnNames = {"product_group_id",
+                              "color",
+                              "wood_type",
+                              "weight",
+                              "furniture_width",
+                              "furniture_height",
+                              "furniture_depth" }) })
 @NamedQueries({
     @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
         query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
     @NamedQuery(name = Product.FIND_ALL_BY_COLOR,
         query = "SELECT product FROM Product product WHERE product.color = :color"),
     @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
-        query = "SELECT product FROM Product product WHERE product.available = true"),
+        query = "SELECT product FROM Product product WHERE product.archive = false"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
         query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
     @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
-        query = "SELECT product FROM Product product WHERE product.id = :id")
+        query = "SELECT product FROM Product product WHERE product.id = :id"),
+    @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE,
+        query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId "
+                + "AND (:color IS NULL OR product.color = :color) "
+                + "AND (:woodType IS NULL OR product.woodType = :woodType)"),
+    @NamedQuery(name = Product.FIND_ALL_BY_CATEGORY_ID,
+        query = "SELECT product FROM Product product WHERE product.productGroup.category.id = :categoryId"),
+    @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_ID,
+        query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId")
 })
 public class Product extends AbstractEntity {
   public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
@@ -49,12 +66,13 @@ public class Product extends AbstractEntity {
   public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
   public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
   public static final String FIND_BY_PRODUCT_ID = "Product.findByProductId";
+  public static final String
+          FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE = "Product.findAllByProductGroupColorAndWoodType";
+  public static final String FIND_ALL_BY_PRODUCT_GROUP_ID = "Product.findAllByProductGroupId";
+  public static final String FIND_ALL_BY_CATEGORY_ID = "Product.findAllByCategoryId";
 
   @Column(nullable = false)
   private Double price;
-
-  @Column(nullable = false)
-  private Boolean available;
 
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "image_id", nullable = false)
@@ -98,4 +116,13 @@ public class Product extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "product_group_id", nullable = false)
   private ProductGroup productGroup;
+
+  public Long getSumOfVersions() {
+    return this.getVersion();
+  }
+
+  public void update(Product product) {
+    this.price = product.price != null ? product.price : price;
+    this.amount = product.amount != null ? product.amount : amount;
+  }
 }

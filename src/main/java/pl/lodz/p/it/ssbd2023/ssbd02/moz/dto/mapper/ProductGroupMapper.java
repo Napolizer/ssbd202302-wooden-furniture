@@ -9,6 +9,9 @@ public final class ProductGroupMapper {
             .averageRating(productGroup.getAverageRating())
             .name(productGroup.getName())
             .archive(productGroup.getArchive())
-            .category(CategoryMapper.mapToCategoryDto(productGroup.getCategory())).build();
+            .category(CategoryMapper.mapToCategoryDto(productGroup.getCategory()))
+            .hash(productGroup.getVersion().toString())
+            .build();
   }
+
 }

@@ -1,28 +1,26 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
-import jakarta.ejb.Stateless;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
+import jakarta.ejb.Stateful;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
-@Stateless
+@Stateful
 public class ProductMapper {
 
 
   public ProductDto mapToProductDto(Product product) {
-    if (product.getImage() != null) {
-      return ProductDto.builder()
+    return ProductDto.builder()
               .id(product.getId())
               .price(product.getPrice())
-              .available(product.getAvailable())
+              .archive(product.getArchive())
               .imageUrl(product.getImage().getUrl())
               .weight(product.getWeight())
               .amount(product.getAmount())
@@ -31,42 +29,41 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
+              .productGroup(ProductGroupMapper.mapToProductGroupInfoDto(product.getProductGroup()))
               .build();
-    } else {
-      return ProductDto.builder()
-              .id(product.getId())
-              .price(product.getPrice())
-              .available(product.getAvailable())
-              .weight(product.getWeight())
-              .amount(product.getAmount())
-              .weightInPackage(product.getWeightInPackage())
-              .furnitureDimensions(product.getFurnitureDimensions())
-              .packageDimensions(product.getPackageDimensions())
-              .color(product.getColor())
-              .woodType(product.getWoodType())
-              .productGroup(mapToProductGroupInfoDto(product.getProductGroup())
-              )
-              .build();
-    }
   }
 
-  public ProductGroupInfoDto mapToProductGroupInfoDto(ProductGroup productGroup) {
-    return ProductGroupInfoDto.builder()
-            .id(productGroup.getId())
-            .name(productGroup.getName())
-            .averageRating(productGroup.getAverageRating())
-            .archive(productGroup.getArchive())
+  public ProductDto mapToSingleProductDto(Product product) {
+    return ProductDto.builder()
+            .id(product.getId())
+            .price(product.getPrice())
+            .archive(product.getArchive())
+            .imageUrl(product.getImage().getUrl())
+            .weight(product.getWeight())
+            .amount(product.getAmount())
+            .weightInPackage(product.getWeightInPackage())
+            .furnitureDimensions(product.getFurnitureDimensions())
+            .packageDimensions(product.getPackageDimensions())
+            .color(product.getColor())
+            .woodType(product.getWoodType())
+            .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
+            .productGroup(ProductGroupMapper.mapToProductGroupInfoDto(product.getProductGroup()))
             .build();
   }
 
+  public static Product mapEditProductDtoToProduct(EditProductDto editProductDto) {
+
+    return Product.builder()
+            .price(editProductDto.getPrice())
+            .amount(editProductDto.getAmount())
+            .build();
+  }
 
   public Product mapToProduct(ProductDto productDto) {
     return Product.builder()
         .id(productDto.getId())
         .price(productDto.getPrice())
-        .available(productDto.getAvailable())
+        .archive(productDto.getArchive())
         .weight(productDto.getWeight())
         .amount(productDto.getAmount())
         .weightInPackage(productDto.getWeightInPackage())
@@ -77,10 +74,10 @@ public class ProductMapper {
         .build();
   }
 
-  public Product mapToProduct(ProductCreateDto productCreateDto) {
+  public static Product mapToProduct(ProductCreateDto productCreateDto) {
     return Product.builder()
             .price(productCreateDto.getPrice())
-            .available(productCreateDto.getAvailable())
+            .archive(false)
             .weight(productCreateDto.getWeight())
             .amount(productCreateDto.getAmount())
             .weightInPackage(productCreateDto.getWeightInPackage())
@@ -97,20 +94,33 @@ public class ProductMapper {
   }
 
   public static Color mapToColor(String color) {
+    if (color == null || color.equals("")) {
+      return null;
+    }
     try {
       return Color.valueOf(color.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidColorException();
     }
   }
 
   public static WoodType mapToWoodType(String woodType) {
+    if (woodType == null || woodType.equals("")) {
+      return null;
+    }
     try {
       return WoodType.valueOf(woodType.toUpperCase());
     } catch (Exception e) {
-      throw ApplicationExceptionFactory.createProductCreateDtoValidationException();
+      throw ApplicationExceptionFactory.createInvalidWoodTypeException();
     }
   }
 
 
+  public EditProductDto mapToEditProductDto(Product product) {
+    return EditProductDto.builder()
+            .price(product.getPrice())
+            .amount(product.getAmount())
+            .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
+            .build();
+  }
 }

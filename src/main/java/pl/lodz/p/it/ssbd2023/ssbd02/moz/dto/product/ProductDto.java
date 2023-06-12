@@ -18,7 +18,7 @@ public class ProductDto {
   private Long id;
   @NotNull
   private Double price;
-  private Boolean available;
+  private Boolean archive;
   @NotNull
   private String imageUrl;
   @NotNull
@@ -37,5 +37,7 @@ public class ProductDto {
   private WoodType woodType;
   @NotNull
   private ProductGroupInfoDto productGroup;
+  @NotNull
+  private String hash;
 }
 

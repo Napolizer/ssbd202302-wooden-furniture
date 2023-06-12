@@ -14,6 +14,7 @@ import {environment} from "../../../environments/environment";
 import {DialogService} from "../../services/dialog.service";
 import {AccountService} from "../../services/account.service";
 import {RefreshTokenService} from "../../services/refresh-token.service";
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-login-page',
@@ -58,6 +59,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private refreshTokenService: RefreshTokenService,
     private accountService: AccountService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -105,6 +107,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           this.tokenService.saveTimeout(this.tokenService.getRefreshTokenTime()!);
           this.localStorageService.set(environment.currentRoleKey, this.tokenService.getTokenData()?.roles[0] ?? '')
           this.authenticationService.showWarningIfSessionExpired();
+
           this.translate.get('login.success')
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
@@ -116,8 +119,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           }, this.tokenService.getRefreshTokenTime()!);
           this.accountService.retrieveOwnAccount()
             .subscribe(account => {
-              console.log(account)
               this.localStorageService.set(environment.localeKey, account.locale);
+              this.cartService.clearProducts();
+              this.cartService.setLocalStorageKey(account.login + "-cart-products");
+              if (this.localStorageService.get(this.cartService.getLocalStorageKey()) !== null) {
+                this.cartService.setCart(JSON.parse(this.localStorageService.get(this.cartService.getLocalStorageKey())!));
+              }
             });
         },
         error: e => {

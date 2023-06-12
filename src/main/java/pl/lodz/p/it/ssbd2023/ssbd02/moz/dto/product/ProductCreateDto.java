@@ -3,22 +3,19 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProductCreateDto {
 
   @Positive
   @NotNull
   private Double price;
-
-  @NotNull
-  private Boolean available;
 
   @Positive
   @NotNull
@@ -34,27 +31,27 @@ public class ProductCreateDto {
 
   @Positive
   @NotNull
-  private Double furnitureWidth;
+  private Integer furnitureWidth;
 
   @Positive
   @NotNull
-  private Double furnitureHeight;
+  private Integer furnitureHeight;
 
   @Positive
   @NotNull
-  private Double furnitureDepth;
+  private Integer furnitureDepth;
 
   @Positive
   @NotNull
-  private Double packageWidth;
+  private Integer packageWidth;
 
   @Positive
   @NotNull
-  private Double packageHeight;
+  private Integer packageHeight;
 
   @Positive
   @NotNull
-  private Double packageDepth;
+  private Integer packageDepth;
 
   @NotNull
   private String color;

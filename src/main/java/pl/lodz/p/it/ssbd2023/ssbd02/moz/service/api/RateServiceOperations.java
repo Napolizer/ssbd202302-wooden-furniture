@@ -9,13 +9,13 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 @Local
 public interface RateServiceOperations {
 
-  void delete(Long id);
+  void delete(Long id, String login);
 
-  Rate create(Rate entity);
+  Rate create(String login, Integer rateValue, Long productId);
 
   Rate archive(Long id, Rate entity);
 
-  Rate update(Long id, Rate entity);
+  Rate update(Long id, Integer rateNewValue, String login);
 
   Optional<Rate> find(Long id);
 
