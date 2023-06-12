@@ -39,6 +39,8 @@ export class AppComponent {
           if (this.localStorageService.get(this.cartService.getLocalStorageKey()) !== null) {
             this.cartService.setCart(JSON.parse(this.localStorageService.get(this.cartService.getLocalStorageKey())!));
           }
+          this.cartService.isDoneObservable.next(true);
+          this.cartService.isDone = true;
         });
     }
 

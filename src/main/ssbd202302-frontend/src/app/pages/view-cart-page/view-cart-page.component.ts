@@ -1,7 +1,7 @@
 import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Product} from "../../interfaces/product";
-import {pipe, Subject, takeUntil} from "rxjs";
+import {combineLatest, map, pipe, Subject, takeUntil, timer} from "rxjs";
 import {CartService} from "../../services/cart.service";
 import {OrderedProduct} from "../../interfaces/orderedProduct";
 import {NavigationService} from "../../services/navigation.service";
@@ -48,20 +48,17 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
 
   }
 
-  async ngOnInit(): Promise<void> {
-    const sleep = (ms: number | undefined) => new Promise(r => setTimeout(r, ms));
-    await sleep(1000);
-    this.orderedProducts = this.cartService.getCart();
-    this.orderedProducts.forEach(orderedProduct => {
-      this.productService.retrieveProduct(orderedProduct.product.id.toString())
-        .pipe(takeUntil(this.destroy))
-        .subscribe(product => {
-          this.products.push(product);
-          orderedProduct.product = product;
-        })
-    })
-    this.updateTotalPrice();
-    this.loading = false;
+    ngOnInit(): void {
+    // const sleep = (ms: number | undefined) => new Promise(r => setTimeout(r, ms));
+    // await sleep(1000);
+    if (!this.cartService.isDone) {
+      this.cartService.isDoneObservable.subscribe(() => {
+        this.setUpOrderedProducts();
+      })
+    } else {
+      this.setUpOrderedProducts();
+    }
+
   }
 
   ngOnDestroy(): void {
@@ -75,6 +72,24 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
 
   redirectToSingleProductPage(productId: string) {
     void this.navigationService.redirectToSingleProductPage(productId);
+  }
+
+  setUpOrderedProducts() {
+    combineLatest([this.cartService.getCart(), timer(1000)])
+      .pipe(takeUntil(this.destroy), map(obj => obj[0]))
+      .subscribe(orderedProducts => {
+        this.orderedProducts = orderedProducts;
+        this.orderedProducts.forEach(orderedProduct => {
+          this.productService.retrieveProduct(orderedProduct.product.id.toString())
+            .pipe(takeUntil(this.destroy))
+            .subscribe(product => {
+              this.products.push(product);
+              orderedProduct.product = product;
+            })
+        })
+        this.updateTotalPrice();
+        this.loading = false;
+      });
   }
 
   getProductColor(color: string): string {
@@ -164,6 +179,10 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
 
   getListAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
+  }
+
+  getTotalAmount(): number {
+    return this.cartService.getTotalAmountOfProducts();
   }
 
 
