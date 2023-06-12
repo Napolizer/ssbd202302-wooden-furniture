@@ -52,10 +52,11 @@ public class RateController {
   }
 
   @PUT
-  @Path("/id/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response changeRate(@PathParam("id") Long id, @NotNull @Valid RateInputDto entity) {
-    RateDto updatedRate = rateEndpoint.update(id, entity, principal.getName());
+  public Response changeRate(@NotNull @Valid RateInputDto rate) {
+    RateDto updatedRate = rateEndpoint.update(principal.getName(), rate);
     return Response.ok(updatedRate).build();
   }
 }

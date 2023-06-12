@@ -13,7 +13,7 @@ public interface RateEndpointOperations {
 
   RateDto create(String login, RateInputDto entity);
 
-  RateDto update(Long id, RateInputDto entity, String login);
+  RateDto update(String login, RateInputDto entity);
 
 
 }

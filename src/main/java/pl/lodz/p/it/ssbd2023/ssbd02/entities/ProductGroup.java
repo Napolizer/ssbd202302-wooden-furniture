@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -46,7 +47,7 @@ public class ProductGroup extends AbstractEntity {
   @Builder.Default
   private List<Product> products = new ArrayList<>();
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.MERGE)
   @JoinColumn(name = "product_group_id", nullable = false)
   @Builder.Default
   private List<Rate> rates = new ArrayList<>();

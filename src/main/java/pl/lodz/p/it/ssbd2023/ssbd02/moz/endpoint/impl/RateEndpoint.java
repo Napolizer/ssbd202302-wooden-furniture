@@ -52,8 +52,10 @@ public class RateEndpoint extends AbstractEndpoint implements RateEndpointOperat
 
   @Override
   @RolesAllowed(CLIENT)
-  public RateDto update(Long id, RateInputDto entity, String login) {
-    Rate updatedRate = rateService.update(id, entity.getRate(), login);
+  public RateDto update(String login, RateInputDto entity) {
+    Rate updatedRate = repeatTransactionWithOptimistic(() -> productGroupService
+            .changeRateOnProductGroup(login, entity.getRate(), entity.getProductId()));
+
     return RateMapper.matToRateDto(updatedRate);
   }
 

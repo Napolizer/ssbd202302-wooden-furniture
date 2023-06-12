@@ -116,11 +116,11 @@ public class ProductGroupService extends AbstractService implements ProductGroup
 
   @Override
   @RolesAllowed(CLIENT)
-  public Rate rateProductGroup(String login, Integer rateValue, Long productId) {
+  public Rate rateProductGroup(String login, Integer rateValue, Long productGroupId) {
     Account account = accountFacade.findByLogin(login)
             .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
-    ProductGroup productGroup = productGroupFacade.findById(productId)
+    ProductGroup productGroup = productGroupFacade.findById(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
 
 
@@ -137,5 +137,28 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     } else {
       throw ApplicationExceptionFactory.createProductAlreadyRatedException();
     }
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public Rate changeRateOnProductGroup(String login, Integer rateValue, Long productGroupId) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    ProductGroup productGroup = productGroupFacade.findById(productGroupId)
+            .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+
+    Rate clientRate = productGroup.getRates().stream()
+            .filter(rate -> rate.getAccount().equals(account))
+            .findFirst()
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+
+    clientRate.setValue(rateValue);
+    productGroup.updateAverageRating();
+
+    productGroupFacade.update(productGroup);
+
+    return clientRate;
   }
 }

@@ -26,4 +26,16 @@ export class RateService {
       }
     )
   }
+
+  public changeRate(rate: Rate): Observable<Rate> {
+    return this.httpClient.put<Rate>(
+      `${environment.apiBaseUrl}/rate`,
+      rate,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    )
+  }
 }

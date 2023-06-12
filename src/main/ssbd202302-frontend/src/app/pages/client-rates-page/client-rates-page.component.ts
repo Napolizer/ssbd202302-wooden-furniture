@@ -169,7 +169,24 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
 
   updateRate(orderProduct: OrderProductWithRate): void {
     orderProduct.oldRate = orderProduct.rate;
-    alert("Update");
+
+    const rate: Rate = {
+      rate: orderProduct.rate,
+      productId: orderProduct.product.productGroup.id
+    }
+    this.rateService.changeRate(rate)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (rate: Rate) => {
+          this.loading = false;
+          this.loadClientProducts();
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          orderProduct.rate = orderProduct.oldRate;
+          alert("Sth gone wrong")
+        },
+      });
   }
 
 }

@@ -26,6 +26,7 @@ public interface ProductGroupServiceOperations {
 
   List<ProductGroup> findAllArchived();
 
-  Rate rateProductGroup(String login, Integer rateValue, Long productId);
+  Rate rateProductGroup(String login, Integer rateValue, Long productGroupId);
 
+  Rate changeRateOnProductGroup(String login, Integer rateValue, Long productGroupId);
 }
