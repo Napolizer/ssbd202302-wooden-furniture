@@ -132,6 +132,7 @@
   "add.product.drop.upload.label": "Przeciągnij obraz tutaj, aby go dodać",
   "add.product.drop.fill.label": "Dodaj szczegóły mebla aby dodać obraz",
   "add.product.success": "Produkt został pomyślnie dodany",
+  "add.product.use.existing": "Użyj istniejący obraz produktu",
 
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",

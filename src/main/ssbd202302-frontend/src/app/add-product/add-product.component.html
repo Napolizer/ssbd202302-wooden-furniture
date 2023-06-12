@@ -339,15 +339,6 @@
             >
           </mat-form-field>
         </div>
-
-        <div class="button-container">
-          <button mat-button type="button" mat-dialog-close>
-            {{ "add.product.group.back" | translate }}
-          </button>
-          <button mat-button type="submit" (click)="onConfirm()">
-            {{ "add.product.group.confirm" | translate }}
-          </button>
-        </div>
       </div>
     </form>
   </div>
@@ -449,5 +440,22 @@
         (error)="handleMissingImage()"
       />
     </div>
+    <div class="checkbox-container">
+      <mat-checkbox
+        color="primary"
+        *ngIf="this.displayedImage && allSelected"
+        [checked]="!this.imageUpload"
+        (change)="this.imageUpload = !this.imageUpload"
+        >{{ "add.product.use.existing" | translate }}</mat-checkbox
+      >
+    </div>
+  </div>
+  <div class="button-container">
+    <button mat-button type="button" mat-dialog-close>
+      {{ "add.product.group.back" | translate }}
+    </button>
+    <button mat-button type="submit" (click)="onConfirm()">
+      {{ "add.product.group.confirm" | translate }}
+    </button>
   </div>
 </div>
