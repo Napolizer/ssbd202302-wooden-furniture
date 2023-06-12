@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from "../../services/account.service";
-import {combineLatest, first, map, Subject, takeUntil} from "rxjs";
+import {combineLatest, first, map, Subject, takeUntil, timer} from "rxjs";
 import {FormControl, FormGroup} from "@angular/forms";
 import {Account} from "../../interfaces/account";
 import {animate, state, style, transition, trigger} from "@angular/animations";
@@ -157,5 +157,18 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     return {
       'background-color': document.body.classList.contains('dark-mode') ? '#424242' : '#fafafa'
     };
+  }
+
+  onResetClicked(): void {
+    this.loading = true;
+      combineLatest([
+        this.accountService.retrieveOwnAccount(),
+        timer(2000)
+      ])
+      .pipe(first(), takeUntil(this.destroy), map(data => data[0]))
+      .subscribe(account => {
+        this.account = account;
+        this.loading = false;
+      });
   }
 }
