@@ -2,7 +2,9 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CANCELLED;
+import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.DELIVERED;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -240,4 +242,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  @RolesAllowed(SALES_REP)
+  public List<Order> findAllOrdersDone() {
+    return orderFacade.findByState(DELIVERED);
+  }
 }

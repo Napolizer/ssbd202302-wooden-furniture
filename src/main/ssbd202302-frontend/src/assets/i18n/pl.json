@@ -298,6 +298,7 @@
   "toolbar.settings": "Ustawienia",
   "toolbar.createAccount": "Utwórz Konto",
   "toolbar.account": "Konto Użytkownika",
+  "toolbar.doneOrders": "Zamówienia zrealizowane",
 
   "auth.token.expired": "Twój token wygasł",
   "auth.not.authenticated": "Nie jesteś zalogowany",
@@ -390,6 +391,9 @@
   "product.color.brown": "Brązowy",
   "product.color.white": "Biały",
 
+  "order.account.id": "ID Zamawiającego",
+  "order.id": "ID Zamówienia",
+  "order.size": "Ilość zamówionych produktów",
   "order.change.state.success": "Stan zamówienia został pomyślnie zmieniony",
   "order.change.state": "Zmień stan zamówienia",
   "select.order.state": "Wybierz stan zamówienia",
@@ -404,6 +408,7 @@
   "order.state.cancelled": "Anulowane",
   "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
+  "orders.done": "Zamówienia zrealizowane",
   "products.amount": "Liczba produktów",
   "order.client.product.rate": "Oceń twój produkt",
   "products.size": "Liczba dostępnych produktów",
@@ -428,6 +433,7 @@
   "product.package.dimensions": "Wymiary paczki",
   "product.chosen.number.of.pieces": "Wybrana liczba sztuk",
   "product.available.number.of.pieces": "Dostępna liczba sztuk",
+  "product.id": "ID Produktu",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
@@ -448,5 +454,5 @@
   "total.price": "Cena całkowita",
   "recipient.first.name": "Imię odbiorcy",
   "recipient.last.name": "Nazwisko odbiorcy",
-  "recipient.full.name": "Imię i nazwisko odbiorcy",
+  "recipient.full.name": "Imię i nazwisko odbiorcy"
 }

@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -28,7 +29,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
-
 
 @Path("/order")
 public class OrderController {
@@ -105,6 +105,13 @@ public class OrderController {
     return Response.ok(orderEndpoint.findAllArchived()).build();
   }
 
+  @GET
+  @Path("/done")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(SALES_REP)
+  public Response findAllOrdersDone() {
+    return Response.ok(orderEndpoint.findAllOrdersDone()).build();
+  }
 
   @PUT
   @Path("/cancel")

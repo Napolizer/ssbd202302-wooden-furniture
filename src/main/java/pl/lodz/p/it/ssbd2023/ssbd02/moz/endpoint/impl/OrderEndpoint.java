@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -151,6 +152,15 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @Override
   public List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @RolesAllowed(SALES_REP)
+  public List<OrderDetailsDto> findAllOrdersDone() {
+    return repeatTransactionWithOptimistic(() -> orderService.findAllOrdersDone())
+            .stream()
+            .map(orderMapper::mapToOrderDetailsDto)
+            .toList();
   }
 
   @Override

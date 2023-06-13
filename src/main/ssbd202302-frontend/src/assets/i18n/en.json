@@ -300,6 +300,7 @@
   "toolbar.settings": "Settings",
   "toolbar.createAccount": "Create Account",
   "toolbar.account": "Account",
+  "toolbar.doneOrders": "Done orders",
 
   "auth.token.expired": "Your token has expired",
   "auth.not.authenticated": "You are not authenticated",
@@ -389,6 +390,7 @@
   "product.sold.out": "Product sold out",
   "product.withdrawn": "The product has been withdrawn from sale",
   "product.name": "Model",
+  "product.id": "Product ID",
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
@@ -405,6 +407,9 @@
   "product.color.brown": "Brown",
   "product.color.white": "White",
 
+  "order.account.id": "Orderer ID",
+  "order.id": "Order ID",
+  "order.size": "Amount of products ordered",
   "order.change.state.success": "Order state changed successfully",
   "order.change.state": "Change order state",
   "select.order.state": "Select order state",
@@ -419,6 +424,7 @@
   "order.state.cancelled": "Cancelled",
   "order.client.already.observed": "Already observed",
   "orders.client": "Your orders",
+  "orders.done": "Done orders",
   "products.amount": "Number of products",
   "order.client.product.rate": "Rate your product",
   "products.size": "Number of available products",

@@ -102,6 +102,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToViewCartPage();
   }
 
+  redirectToDoneOrdersPage(): void {
+    void this.navigationService.redirectToDoneOrdersPage();
+  }
+
   isUserLoggedIn(): boolean {
     return this.authenticationService.isUserLoggedIn();
   }
@@ -116,6 +120,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isUserClient(): boolean {
     return this.authenticationService.isCurrentRole(Role.CLIENT);
+  }
+
+  isUserSalesRep(): boolean {
+    return this.authenticationService.isCurrentRole(Role.SALES_REP);
   }
 
   isCurrentlyOnLoginPage(): boolean {

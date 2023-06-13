@@ -8,7 +8,7 @@ import {
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '@full-fledged/alerts';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,10 +19,10 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ProductService } from 'src/app/services/product.service';
-import {LocalStorageService} from "../../services/local-storage.service";
-import {OrderedProduct} from "../../interfaces/ordered.product";
-import {environment} from "../../../environments/environment";
-import {CartService} from "../../services/cart.service";
+import { LocalStorageService } from '../../services/local-storage.service';
+import { OrderedProduct } from '../../interfaces/ordered.product';
+import { environment } from '../../../environments/environment';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-single-product-page',
@@ -54,7 +54,15 @@ export class SingleProductPageComponent implements OnInit {
   product: Product;
   productsByProductGroup: Product[] = [];
   productsByCategory: Product[] = [];
-  displayedColumns: string[] = ['image', 'name', 'price', 'color', 'amount', 'rating'];
+  displayedColumns: string[] = [
+    'image',
+    'name',
+    'price',
+    'color',
+    'amount',
+    'rating',
+  ];
+  productData: string[] = [];
   dataSource = new MatTableDataSource<Product>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -82,6 +90,7 @@ export class SingleProductPageComponent implements OnInit {
       .subscribe({
         next: (product) => {
           this.product = product;
+          this.setProductData(product);
           this.productService
             .retrieveProductsByGivenProductGroup(
               this.product.productGroup.id.toString()
@@ -98,7 +107,9 @@ export class SingleProductPageComponent implements OnInit {
                   .subscribe({
                     next: (productsByCategory) => {
                       this.productsByCategory = productsByCategory;
-                      this.dataSource = new MatTableDataSource<Product>(this.productsByCategory);
+                      this.dataSource = new MatTableDataSource<Product>(
+                        this.productsByCategory
+                      );
                       this.dataSource.paginator = this.paginator;
                     },
                   });
@@ -140,18 +151,19 @@ export class SingleProductPageComponent implements OnInit {
 
   handleAddToCartButton(product: Product): void {
     if (this.authenticationService.isCurrentRole(Role.GUEST)) {
-      this.translate.get("cart.user.not.logged.in.error.message")
+      this.translate
+        .get('cart.user.not.logged.in.error.message')
         .pipe(takeUntil(this.destroy))
-        .subscribe(msg => {
+        .subscribe((msg) => {
           this.alertService.danger(msg);
           void this.navigationService.redirectToLoginPage();
-        })
+        });
     } else {
       let orderedProduct: OrderedProduct = {
         amount: 1,
         price: product.price,
         product: product,
-      }
+      };
       this.cartService.addToCart(orderedProduct);
     }
   }
@@ -194,71 +206,112 @@ export class SingleProductPageComponent implements OnInit {
   }
 
   openEditProductDialog(): void {
-    this.dialogService.openEditProductDialog(this.product)
-    .afterClosed()
-    .pipe(first(), takeUntil(this.destroy))
-    .subscribe((result) => {
-      if (result === 'success') {
-        void this.navigationService.redirectToSingleProductPage(this.product.id.toString());
-      }
-    });
+    this.dialogService
+      .openEditProductDialog(this.product)
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+          void this.navigationService.redirectToSingleProductPage(
+            this.product.id.toString()
+          );
+        }
+      });
   }
 
   archiveProduct(): void {
-    this.productService.archiveProduct(this.product.id.toString())
+    this.productService
+      .archiveProduct(this.product.id.toString())
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe( {
+      .subscribe({
         next: () => {
-        this.product.archive = true;
-        this.translate.get('archive.success')
-          .pipe(takeUntil(this.destroy))
-          .subscribe(msg => {
-            this.alertService.success(msg)
-            void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
-          });
+          this.product.archive = true;
+          this.translate
+            .get('archive.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToSingleProductPage(
+                this.product.id.toString()
+              );
+            });
         },
-        error: e => {
+        error: (e) => {
           combineLatest([
             this.translate.get('exception.occurred'),
-            this.translate.get(e.error.message || 'exception.unknown')
-          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
-            title: data[0],
-            message: data[1]
-          })))
-            .subscribe(data => {
+            this.translate.get(e.error.message || 'exception.unknown'),
+          ])
+            .pipe(
+              first(),
+              takeUntil(this.destroy),
+              map((data) => ({
+                title: data[0],
+                message: data[1],
+              }))
+            )
+            .subscribe((data) => {
               this.alertService.danger(`${data.title}: ${data.message}`);
-              void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
+              void this.navigationService.redirectToSingleProductPage(
+                this.product.id.toString()
+              );
             });
-        }
+        },
       });
   }
 
   deArchiveProduct(): void {
-    this.productService.deArchiveProduct(this.product.id.toString())
+    this.productService
+      .deArchiveProduct(this.product.id.toString())
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe( {
+      .subscribe({
         next: () => {
-        this.product.archive = true;
-        this.translate.get('dearchive.success')
-          .pipe(takeUntil(this.destroy))
-          .subscribe(msg => {
-            this.alertService.success(msg)
-            void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
-          });
+          this.product.archive = true;
+          this.translate
+            .get('dearchive.success')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToSingleProductPage(
+                this.product.id.toString()
+              );
+            });
         },
-        error: e => {
+        error: (e) => {
           combineLatest([
             this.translate.get('exception.occurred'),
-            this.translate.get(e.error.message || 'exception.unknown')
-          ]).pipe(first(), takeUntil(this.destroy), map(data => ({
-            title: data[0],
-            message: data[1]
-          })))
-            .subscribe(data => {
+            this.translate.get(e.error.message || 'exception.unknown'),
+          ])
+            .pipe(
+              first(),
+              takeUntil(this.destroy),
+              map((data) => ({
+                title: data[0],
+                message: data[1],
+              }))
+            )
+            .subscribe((data) => {
               this.alertService.danger(`${data.title}: ${data.message}`);
-              void this.navigationService.redirectToSingleProductPage(this.product.id.toString())
+              void this.navigationService.redirectToSingleProductPage(
+                this.product.id.toString()
+              );
             });
-        }
+        },
       });
+  }
+  setProductData(product: Product): void {
+    this.productData = [
+      product.productGroup.name,
+      product.price.toString() + ',-',
+      product.color,
+      product.productGroup.category.name,
+      product.furnitureDimensions.width.toString() +
+        ' ' +
+        product.furnitureDimensions.height.toString() +
+        ' ' +
+        product.furnitureDimensions.height.toString() +
+        ' [m]',
+      product.amount.toString(),
+      product.productGroup.averageRating.toString(),
+    ];
   }
 }
