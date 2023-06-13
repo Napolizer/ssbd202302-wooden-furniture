@@ -50,7 +50,7 @@ public class ProductGroup extends AbstractEntity {
   @Builder.Default
   private List<Product> products = new ArrayList<>();
 
-  @OneToMany(cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "productGroup")
   @JoinColumn(name = "product_group_id", nullable = false)
   @Builder.Default
   private List<Rate> rates = new ArrayList<>();

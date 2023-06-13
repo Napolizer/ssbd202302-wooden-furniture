@@ -46,7 +46,7 @@ public class RateController {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response create(RateInputDto rate) {
+  public Response create(@NotNull @Valid RateInputDto rate) {
     RateDto rateDto = rateEndpoint.create(principal.getName(), rate);
     return Response.ok(rateDto).build();
   }

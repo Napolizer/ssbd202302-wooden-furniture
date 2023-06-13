@@ -280,6 +280,7 @@
   "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
   "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
   "exception.moz.invalid.order.state.transition": "Niepoprawna zmiana stanu zamówienia",
+  "exception.moz.rate.notfound": "Nie znaleziono oceny",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

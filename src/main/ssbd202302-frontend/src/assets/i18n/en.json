@@ -281,6 +281,7 @@
   "exception.moz.product.change.state.archive": "Product is already archived",
   "exception.moz.product.change.state.dearchive": "Product is already dearchived",
   "exception.moz.invalid.order.state.transition": "Invalid order state transition",
+  "exception.moz.rate.notfound": "Rate not found",
 
 
   "role.administrator": "Administrator",
