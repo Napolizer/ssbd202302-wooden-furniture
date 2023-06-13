@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
@@ -89,8 +91,11 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public Optional<OrderDto> find(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public OrderDto find(Long id) {
+    return repeatTransactionWithOptimistic(() -> orderService.find(id))
+        .map(orderMapper::mapToOrderDto)
+        .orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
   }
 
   @Override

@@ -80,8 +80,10 @@ public class OrderController {
 
   @GET
   @Path("/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
   public Response find(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.find(id)).build();
   }
 
   @GET

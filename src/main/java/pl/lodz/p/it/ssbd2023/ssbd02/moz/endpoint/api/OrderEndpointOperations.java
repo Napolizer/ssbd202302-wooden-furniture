@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api;
 
 import jakarta.ejb.Local;
 import java.util.List;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
@@ -23,7 +22,7 @@ public interface OrderEndpointOperations {
 
   OrderDto update(Long id, UpdateOrderDto entity);
 
-  Optional<OrderDto> find(Long id);
+  OrderDto find(Long id);
 
   List<OrderDetailsDto> findAll();
 
