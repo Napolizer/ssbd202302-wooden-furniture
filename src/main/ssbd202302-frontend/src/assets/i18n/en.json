@@ -216,6 +216,7 @@
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
   "dialog.admin.edit.account.message": "Are you sure you want to edit this account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
+  "dialog.create.order.message": "Are you sure you want to create order?",
   "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
   "dialog.github.register.message": "Are you sure you want to link your Github account with account in our system?",
@@ -406,6 +407,7 @@
   "order.client.observe.button": "Observe",
   "order.state": "Order state",
   "order.client.already.observed": "Already observed",
+  "order.create.success": "Successfully created order",
   "orders.client": "Your orders",
   "products.amount": "Number of products",
   "products.size": "Number of available products",
@@ -431,12 +433,16 @@
   "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",
   "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
   "cart.add.product.success": "Product added to cart",
+  "cart.other.shipment.data.checkbox": "Do you want to provide other shipment data?",
 
-  "summary": "Summary"
+  "summary": "Summary",
 
   "address": "Address",
   "orders": "Orders",
   "total.price": "Total price",
   "recipient.first.name": "Recipient first name",
-  "recipient.last.name": "Recipient last name"
+  "recipient.last.name": "Recipient last name",
+
+  "exception.moz.product.updated.by": "Impossible to make order, because one of the product was edited by this user recently",
+  "exception.moz.product.created.by": "Impossible to make order, because one of the product was created by this user recently"
 }

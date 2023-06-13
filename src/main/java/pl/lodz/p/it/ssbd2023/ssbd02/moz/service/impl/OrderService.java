@@ -72,6 +72,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     Double totalPrice = 0.0;
     List<OrderedProduct> orderedProducts = new ArrayList<>();
 
+    Account account = accountService.getAccountByLogin(login)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
     for (Long productId : orderedProductsMap.keySet()) {
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
@@ -89,14 +92,22 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       orderedProducts.add(orderedProduct);
       totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
 
-      //TODO edit products amount in database
-      product.setAmount(product.getAmount() - orderedProduct.getAmount());
-      productFacade.update(product);
-      //TODO make impossible to create order for employee that changed these products recently
-    }
+      if (product.getCreatedBy() != null) {
+        if (product.getCreatedBy().getLogin().equals(login) && product.getUpdatedBy() == null) {
+          throw ApplicationExceptionFactory.createProductCreatedByException();
+        }
+      }
 
-    Account account = accountService.getAccountByLogin(login)
-        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+      if (product.getUpdatedBy() != null) {
+        if (product.getUpdatedBy().getLogin().equals(login)) {
+          throw ApplicationExceptionFactory.createProductUpdatedByException();
+        }
+      }
+
+      product.setAmount(product.getAmount() - orderedProduct.getAmount());
+      product.setIsUpdatedBySystem(true);
+      productFacade.update(product);
+    }
 
     Address address = Address.builder()
             .country(account.getPerson().getAddress().getCountry())

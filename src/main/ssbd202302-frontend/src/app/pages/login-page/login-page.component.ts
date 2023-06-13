@@ -122,9 +122,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
               this.localStorageService.set(environment.localeKey, account.locale);
               this.cartService.clearProducts();
               this.cartService.setLocalStorageKey(account.login + "-cart-products");
-              if (this.localStorageService.get(this.cartService.getLocalStorageKey()) !== null) {
-                this.cartService.setCart(JSON.parse(this.localStorageService.get(this.cartService.getLocalStorageKey())!));
-              }
+              this.cartService.getProductsFromLocalStorage();
             });
         },
         error: e => {

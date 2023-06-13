@@ -216,6 +216,7 @@
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
   "dialog.admin.edit.account.message": "Czy na pewno chcesz zmienić dane tego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
+  "dialog.create.order.message": "Czy na pewno chcesz złożyć zamówienie?",
   "dialog.edit.locale": "Czy na pewno chcesz zmienić język?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",
   "dialog.github.register.message": "Czy na pewno chcesz powiązać swoje konto Github z kontem w naszym systemie?",
@@ -391,6 +392,7 @@
   "order.client.observe.button": "Obserwuj",
   "order.state": "Stan zamówienia",
   "order.client.already.observed": "Już obserwowane",
+  "order.create.success": "Pomyślnie złożono zamówienie",
   "orders.client": "Twoje zamówienia",
   "products.amount": "Liczba produktów",
   "products.size": "Liczba dostępnych produktów",
@@ -425,6 +427,7 @@
   "cart.max.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka niż dostępna liczba sztuk",
   "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
   "cart.add.product.success": "Produkt dodany do koszyka",
+  "cart.other.shipment.data.checkbox": "Czy chcesz podać inne dane do wysyłki?",
 
   "summary": "Podsumowanie",
 
@@ -432,5 +435,8 @@
   "orders": "Zamówienia",
   "total.price": "Cena całkowita",
   "recipient.first.name": "Imię odbiorcy",
-  "recipient.last.name": "Nazwisko odbiorcy"
+  "recipient.last.name": "Nazwisko odbiorcy",
+
+  "exception.moz.product.updated.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów był ostatnio edytowany przez tego użytkownika",
+  "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika"
 }

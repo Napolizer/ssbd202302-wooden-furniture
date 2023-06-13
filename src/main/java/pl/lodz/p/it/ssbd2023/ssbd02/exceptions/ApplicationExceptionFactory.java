@@ -39,10 +39,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyRatedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductCreatedByException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductUpdatedByException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.RateNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -341,5 +343,13 @@ public final class ApplicationExceptionFactory {
 
   public static InvalidProductAmountException createInvalidProductAmountException() {
     return new InvalidProductAmountException();
+  }
+
+  public static ProductUpdatedByException createProductUpdatedByException() {
+    return new ProductUpdatedByException();
+  }
+
+  public static ProductCreatedByException createProductCreatedByException() {
+    return new ProductCreatedByException();
   }
 }

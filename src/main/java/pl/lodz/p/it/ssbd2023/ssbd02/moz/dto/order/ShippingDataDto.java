@@ -22,5 +22,5 @@ public class ShippingDataDto {
 
   @Valid
   @NotNull
-  private AddressDto address;
+  private AddressDto recipientAddress;
 }

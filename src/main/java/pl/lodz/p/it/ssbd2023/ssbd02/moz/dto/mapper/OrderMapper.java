@@ -32,13 +32,13 @@ public class OrderMapper {
         .shippingData(ShippingDataDto.builder()
             .recipientFirstName(order.getRecipientFirstName())
             .recipientLastName(order.getRecipientLastName())
-            .address(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
+            .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
             .build())
         .build();
   }
 
   public Order mapToOrder(CreateOrderDto createOrderDto) {
-    Address address = addressMapper.mapToAddress(createOrderDto.getShippingData().getAddress());
+    Address address = addressMapper.mapToAddress(createOrderDto.getShippingData().getRecipientAddress());
 
     return Order.builder()
             .recipientFirstName(createOrderDto.getShippingData().getRecipientFirstName())
@@ -65,7 +65,7 @@ public class OrderMapper {
         .recipientFirstName(order.getRecipientFirstName())
         .recipientLastName(order.getRecipientLastName())
         .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
-        .account(accountMapper.mapToAccountWithoutSensitiveDataDto(order.getAccount()))
+        .accountLogin(order.getAccount().getLogin())
         .observed(order.getObserved())
         .totalPrice(order.getTotalPrice())
         .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
