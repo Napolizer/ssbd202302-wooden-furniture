@@ -129,6 +129,14 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
+  @RolesAllowed(EMPLOYEE)
+  public OrderDto cancelOrderAsEmployee(Long id, String hash) {
+    Order order = repeatTransactionWithOptimistic(
+        () -> orderService.cancelOrderAsEmployee(id, hash));
+    return orderMapper.mapToOrderDto(order);
+  }
+
+  @Override
   @RolesAllowed(CLIENT)
   public OrderDto observeOrder(OrderDto orderDto) {
     Order order = repeatTransactionWithOptimistic(
