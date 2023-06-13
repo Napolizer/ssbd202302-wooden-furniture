@@ -17,12 +17,14 @@ public class AppContainerConfig implements SharedContainerConfiguration {
       .withFileSystemBind("Docker/docker-entrypoint-initdb.d", "/docker-entrypoint-initdb.d", BindMode.READ_ONLY);
 
   @Container
-  public static ApplicationContainer container = new ApplicationContainer()
+  public static ApplicationContainer container = new PayaraApplicationContainer()
       .withNetworkAliases("app")
       .withAppContextRoot("/api/v1")
+      .withFileSystemBind("./target/jacoco-agent", "/jacoco-agent")
       .withEnv("DB_HOST", "db")
       .withEnv("MAIL_MAIL", System.getenv("MAIL_MAIL"))
       .withEnv("MAIL_PASSWORD", System.getenv("MAIL_PASSWORD"))
+      .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/jacoco-agent/org.jacoco.agent-runtime.jar=destfile=/jacoco-agent/jacoco-it.exec")
       .withReadinessPath("/api/v1/health")
       .dependsOn(postgres)
       .withStartupTimeout(Duration.ofMinutes(2));
