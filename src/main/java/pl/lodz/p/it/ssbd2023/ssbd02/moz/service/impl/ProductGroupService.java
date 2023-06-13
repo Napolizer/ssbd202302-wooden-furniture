@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.RateFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
@@ -40,6 +41,9 @@ public class ProductGroupService extends AbstractService implements ProductGroup
 
   @Inject
   private ProductGroupFacadeOperations productGroupFacade;
+
+  @Inject
+  private RateFacadeOperations rateFacade;
 
   @Inject
   private AccountFacadeOperations accountFacade;
@@ -160,5 +164,27 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     productGroupFacade.update(productGroup);
 
     return clientRate;
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public void removeRateFromProductGroup(String login, Long productGroupId) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    ProductGroup productGroup = productGroupFacade.findById(productGroupId)
+            .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+
+    Rate clientRate = productGroup.getRates().stream()
+            .filter(rate -> rate.getAccount().equals(account))
+            .findFirst()
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+
+    rateFacade.delete(clientRate);
+
+    productGroup.getRates().remove(clientRate);
+    productGroup.updateAverageRating();
+    productGroupFacade.update(productGroup);
   }
 }

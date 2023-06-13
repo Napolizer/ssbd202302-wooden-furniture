@@ -454,5 +454,6 @@
   "total.price": "Total price",
   "recipient.first.name": "Recipient first name",
   "recipient.last.name": "Recipient last name",
-  "recipient.full.name": "Recipient full name"
+  "recipient.full.name": "Recipient full name",
+  "rate.remove": "Remove your rate"
 }

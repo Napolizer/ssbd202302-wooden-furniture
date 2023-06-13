@@ -37,8 +37,10 @@ public class RateEndpoint extends AbstractEndpoint implements RateEndpointOperat
 
   @Override
   @RolesAllowed(CLIENT)
-  public void delete(Long id, String login) {
-    rateService.delete(id, login);
+  public void delete(String login, Long productGroupId) {
+    repeatTransactionWithOptimistic(() -> productGroupService
+            .removeRateFromProductGroup(login, productGroupId));
+    ;
   }
 
   @Override

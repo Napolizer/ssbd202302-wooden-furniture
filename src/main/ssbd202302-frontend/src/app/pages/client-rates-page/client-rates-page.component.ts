@@ -188,4 +188,21 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  removeRating(orderProduct: OrderProductWithRate): void {
+    orderProduct.rate = 0;
+    this.rateService.removeRate(orderProduct.product.productGroup.id)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (rate: Rate) => {
+          this.loading = false;
+          this.loadClientProducts();
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          orderProduct.rate = orderProduct.oldRate;
+          alert("Sth gone wrong")
+        },
+      });
+  }
+
 }

@@ -35,10 +35,10 @@ public class RateController {
 
 
   @DELETE
-  @Path("id")
+  @Path("/id/{productGroupId}")
   @RolesAllowed(CLIENT)
-  public Response delete(Long id) {
-    rateEndpoint.delete(id, principal.getName());
+  public Response delete(@PathParam("productGroupId") Long productGroupId) {
+    rateEndpoint.delete(principal.getName(), productGroupId);
     return Response.noContent().build();
   }
 
