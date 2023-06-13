@@ -114,12 +114,12 @@
                 </ng-container>
                 <ng-container matColumnDef="show">
                   <mat-header-cell *matHeaderCellDef>{{
-                    "account.show" | translate
+                    "order.show" | translate
                   }}</mat-header-cell>
-                  <mat-cell *matCellDef="let account">
+                  <mat-cell *matCellDef="let order">
                     <mat-icon
                       class="show"
-                      (click)="redirectToAccountPage(account.id)"
+                      (click)="redirectToOrderPage(order)"
                       >remove_red_eye</mat-icon
                     >
                   </mat-cell>

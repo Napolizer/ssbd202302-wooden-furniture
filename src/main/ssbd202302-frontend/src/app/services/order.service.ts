@@ -40,4 +40,19 @@ export class OrderService {
       }
     );
   }
+
+  public cancelOrderAsEmployee(order: OrderDetailsDto): Observable<OrderDetailsDto> {
+    return this.httpClient.put<OrderDetailsDto>(
+      `${environment.apiBaseUrl}/order/employee/cancel`,
+      {
+        id: order.id,
+        hash: order.hash
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
 }
