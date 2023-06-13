@@ -89,4 +89,8 @@ export class NavigationService {
   redirectToProductsPage(): Promise<boolean> {
     return this.router.navigate(['/products'])
   }
+
+  redirectToViewCartPage(): Promise<boolean> {
+    return this.router.navigate(['/cart'])
+  }
 }
