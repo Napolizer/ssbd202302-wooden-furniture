@@ -13,20 +13,7 @@ public interface RateEndpointOperations {
 
   RateDto create(String login, RateInputDto entity);
 
-  RateDto archive(Long id, RateDto entity);
+  RateDto update(String login, RateInputDto entity);
 
-  RateDto update(Long id, RateInputDto entity, String login);
-
-  Optional<RateDto> find(Long id);
-
-  List<RateDto> findAll();
-
-  List<RateDto> findAllPresent();
-
-  List<RateDto> findAllArchived();
-
-  List<RateDto> findAllByValue(Integer value);
-
-  List<RateDto> findAllByPersonId(Long personId);
 
 }

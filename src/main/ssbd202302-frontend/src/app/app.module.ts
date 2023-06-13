@@ -73,6 +73,8 @@ import { ClientOrdersPageComponent } from './pages/client-orders-page/client-ord
 import { AddProductComponent } from './add-product/add-product.component';
 import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
 import { EditProductComponent } from './components/edit-product/edit-product.component';
+import { ClientRatesPageComponent } from './pages/client-rates-page/client-rates-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatBadgeModule} from "@angular/material/badge";
 import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
 import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
@@ -126,49 +128,51 @@ import { ChangeOrderStateComponent } from './components/change-order-state/chang
     ViewCartPageComponent,
     EmployeeActionsMenuComponent,
     ChangeOrderStateComponent,
+    ClientRatesPageComponent,
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        MatInputModule,
-        MatSlideToggleModule,
-        MatFormFieldModule,
-        MatStepperModule,
-        MatIconModule,
-        MatButtonModule,
-        MatSelectModule,
-        NgxDropzoneModule,
-        FormsModule,
-        AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
-        ReactiveFormsModule,
-        MatListModule,
-        MatSidenavModule,
-        MatExpansionModule,
-        MatToolbarModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatCardModule,
-        MatCheckboxModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        MatProgressSpinnerModule,
-        MatDialogModule,
-        MatAutocompleteModule,
-        MatTableModule,
-        MatRippleModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatGridListModule,
-        MatBadgeModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatStepperModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    NgxDropzoneModule,
+    FormsModule,
+    AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
+    ReactiveFormsModule,
+    MatListModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatCardModule,
+    MatCheckboxModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatRippleModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatGridListModule,
+    NgbModule,
+    MatBadgeModule
+  ],
   providers: [
     DatePipe,
     ThemeSwitcherComponentComponent

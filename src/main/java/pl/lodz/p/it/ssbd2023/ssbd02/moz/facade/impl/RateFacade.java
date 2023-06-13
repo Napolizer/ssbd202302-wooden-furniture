@@ -14,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 @Stateless
 public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperations {
 
-  @PersistenceContext(unitName = "ssbd02mokPU")
+  @PersistenceContext(unitName = "ssbd02mozPU")
   private EntityManager em;
 
   public RateFacade() {
@@ -29,8 +29,9 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
   @Override
   @RolesAllowed(CLIENT)
   public Rate create(Rate entity) {
-    em.persist(entity.getAccount());
-    return super.create(entity);
+    Rate rate = super.create(entity);
+    em.flush();
+    return rate;
   }
 
   @Override

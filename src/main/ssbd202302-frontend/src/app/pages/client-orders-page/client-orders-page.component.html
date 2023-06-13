@@ -57,6 +57,12 @@
               </mat-table>
             </div>
           </mat-card-content>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+            <button mat-button color="primary" class="resetButton" (click)="redirectToRatePage()">
+              <mat-icon>favorite</mat-icon>
+              {{'order.client.product.rate' | translate}}
+            </button>
+          </mat-card-title>
         </mat-card>
       </div>
     </div>
