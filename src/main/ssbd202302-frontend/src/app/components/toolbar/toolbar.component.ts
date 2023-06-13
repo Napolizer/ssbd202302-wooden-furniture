@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ThemeSwitcherComponentComponent } from '../theme-switcher-component/theme-switcher-component.component';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -42,7 +43,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private localStorageService: LocalStorageService,
     private overlay: OverlayContainer,
-    private breadcrumbService: BreadcrumbsService
+    private breadcrumbService: BreadcrumbsService,
+    private cartService: CartService
   ) {
   }
 
@@ -93,6 +95,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   redirectToProductsPage(): void {
     void this.navigationService.redirectToProductsPage();
+  }
+
+  redirectToViewCartPage(): void {
+    this.breadcrumbs = ['toolbar.home', 'cart'];
+    void this.navigationService.redirectToViewCartPage();
   }
 
   isUserLoggedIn(): boolean {
@@ -332,5 +339,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         : 'linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%)'
       )
     };
+  }
+
+  countProductsInCart(): number {
+    return this.cartService.getTotalAmountOfProducts();
   }
 }

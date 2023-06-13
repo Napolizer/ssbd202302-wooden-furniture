@@ -20,6 +20,19 @@ public class AccountUtil {
         .path("id");
   }
 
+  public static String getAccount(String login) {
+    return given()
+        .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
+        .header(acceptLanguageHeader)
+        .when()
+        .get("/account/login/" + login)
+        .then()
+        .statusCode(200)
+        .extract()
+        .body()
+        .asPrettyString();
+  }
+
   public static int registerUser(String login) {
     given()
         .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))

@@ -60,7 +60,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @RolesAllowed(EMPLOYEE)
   public ProductDto createProductWithNewImage(ProductCreateDto productCreateDto, byte[] image, String fileName) {
     Product product = ProductMapper.mapToProduct(productCreateDto);
-    return productMapper.mapToProductDto(
+    return productMapper.mapToSingleProductDto(
             repeatTransactionWithOptimistic(() ->
                     productService.createProductWithNewImage(
                             product,
@@ -72,7 +72,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @RolesAllowed(EMPLOYEE)
   public ProductDto createProductWithExistingImage(ProductCreateWithImageDto productCreateWithImageDto) {
     Product product = ProductMapper.mapToProduct(productCreateWithImageDto);
-    return productMapper.mapToProductDto(
+    return productMapper.mapToSingleProductDto(
             repeatTransactionWithOptimistic(() ->
                     productService.createProductWithExistingImage(
                             product,

@@ -75,6 +75,10 @@ import { SingleProductPageComponent } from './pages/single-product-page/single-p
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import { ClientRatesPageComponent } from './pages/client-rates-page/client-rates-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatBadgeModule} from "@angular/material/badge";
+import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
+import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
+import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
 
 @NgModule({
   declarations: [
@@ -121,6 +125,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ClientOrdersPageComponent,
     SingleProductPageComponent,
     EditProductComponent,
+    ViewCartPageComponent,
+    EmployeeActionsMenuComponent,
+    ChangeOrderStateComponent,
     ClientRatesPageComponent,
   ],
   imports: [
@@ -163,7 +170,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatPaginatorModule,
     MatSortModule,
     MatGridListModule,
-    NgbModule
+    NgbModule,
+    MatBadgeModule
   ],
   providers: [
     DatePipe,

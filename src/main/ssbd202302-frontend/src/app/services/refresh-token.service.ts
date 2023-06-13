@@ -37,6 +37,7 @@ export class RefreshTokenService {
                 this.accountService.generateTokenFromRefresh(this.tokenService.getRefreshToken()!)
                   .pipe(first())
                   .subscribe(token => {
+                    this.authenticationService.clearExpiredSessionWarning();
                     this.tokenService.saveToken(token);
                     this.tokenService.saveTimeout(this.tokenService.getRefreshTokenTime()!);
                     this.tokenService.setTimeout(() => {

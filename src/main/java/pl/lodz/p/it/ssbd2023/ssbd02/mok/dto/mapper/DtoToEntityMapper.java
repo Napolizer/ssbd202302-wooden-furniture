@@ -63,7 +63,7 @@ public final class DtoToEntityMapper {
 
   public static TimeZone mapStringToTimeZone(String timeZone) {
     try {
-      return TimeZone.valueOf(timeZone);
+      return TimeZone.valueOf(timeZone.toUpperCase().replace('/', '_'));
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidTimeZoneException();
     }

@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Stateful;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
@@ -8,7 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 
-@Stateless
+@Stateful
 public class OrderProductMapper {
 
   @Inject

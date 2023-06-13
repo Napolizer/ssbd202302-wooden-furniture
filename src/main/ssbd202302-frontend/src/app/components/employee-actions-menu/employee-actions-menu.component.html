@@ -1,0 +1,11 @@
+<div class="action" [matMenuTriggerFor]="actionMenu">
+  {{'action' | translate}}
+  <mat-menu #actionMenu="matMenu">
+    <button mat-menu-item (click)="openChangeRoleDialog(order)">
+      <mat-icon>lock_outline</mat-icon>
+      <span>{{'order.change.state' | translate}}</span>
+    </button>
+  </mat-menu>
+</div>
+
+

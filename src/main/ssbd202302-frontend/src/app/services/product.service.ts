@@ -9,7 +9,6 @@ import { Product } from '../interfaces/product';
 import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
-import {OrderProduct} from "../interfaces/orderProduct";
 import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
 
 @Injectable({

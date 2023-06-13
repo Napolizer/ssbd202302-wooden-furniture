@@ -45,8 +45,7 @@
       *ngIf="isUserClient()"
       (click)="redirectToClientPage()"
     >
-      <mat-icon>accessibility</mat-icon
-      ><span>{{ "toolbar.clientPanel" | translate }}</span>
+      <mat-icon>accessibility</mat-icon><span>{{ "toolbar.clientPanel" | translate }}</span>
     </button>
   </mat-menu>
   <span class="toolbar-right title">
@@ -55,6 +54,7 @@
     </div>
   </span>
   <span class="toolbar-item-spacer"></span>
+  <app-theme-switcher-component></app-theme-switcher-component>
   <button
     mat-button
     color="secondary"
@@ -65,7 +65,6 @@
   >
     <mat-icon>store</mat-icon>
   </button>
-  <app-theme-switcher-component></app-theme-switcher-component>
   <button
     *ngIf="!isUserLoggedIn()"
     mat-button
@@ -103,6 +102,15 @@
     [matMenuTriggerFor]="changeLocale"
   >
     <mat-icon>language</mat-icon>
+  </button>
+  <button
+    *ngIf="isUserLoggedIn()"
+    class="account"
+    mat-icon-button
+    matTooltip="View Cart"
+    (click)="redirectToViewCartPage()"
+    >
+      <mat-icon [matBadge]="countProductsInCart()" [matBadgeHidden]="countProductsInCart() === 0">shopping_cart</mat-icon>
   </button>
   <mat-menu #switchAccessLevel [overlapTrigger]="false" yPosition="below">
     <button

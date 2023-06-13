@@ -19,6 +19,10 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ProductService } from 'src/app/services/product.service';
+import {LocalStorageService} from "../../services/local-storage.service";
+import {OrderedProduct} from "../../interfaces/ordered.product";
+import {environment} from "../../../environments/environment";
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-single-product-page',
@@ -65,7 +69,9 @@ export class SingleProductPageComponent implements OnInit {
     private navigationService: NavigationService,
     private dialogService: DialogService,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private localStorageService: LocalStorageService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +98,6 @@ export class SingleProductPageComponent implements OnInit {
                   .subscribe({
                     next: (productsByCategory) => {
                       this.productsByCategory = productsByCategory;
-                      console.log(this.productsByCategory)
                       this.dataSource = new MatTableDataSource<Product>(this.productsByCategory);
                       this.dataSource.paginator = this.paginator;
                     },
@@ -133,18 +138,25 @@ export class SingleProductPageComponent implements OnInit {
     return starArray;
   }
 
-  handleAddToCartButton(productId: number): void {
-    console.log(productId);
-    if (!this.authenticationService.isCurrentRole(Role.CLIENT)) {
-      void this.navigationService.redirectToRegisterPage();
-      //add popup
+  handleAddToCartButton(product: Product): void {
+    if (this.authenticationService.isCurrentRole(Role.GUEST)) {
+      this.translate.get("cart.user.not.logged.in.error.message")
+        .pipe(takeUntil(this.destroy))
+        .subscribe(msg => {
+          this.alertService.danger(msg);
+          void this.navigationService.redirectToLoginPage();
+        })
     } else {
-      //handle addtocart logic
+      let orderedProduct: OrderedProduct = {
+        amount: 1,
+        price: product.price,
+        product: product,
+      }
+      this.cartService.addToCart(orderedProduct);
     }
   }
 
   handleChooseColorButton(productId: string): void {
-    console.log(productId);
     void this.navigationService.redirectToSingleProductPage(productId);
   }
 

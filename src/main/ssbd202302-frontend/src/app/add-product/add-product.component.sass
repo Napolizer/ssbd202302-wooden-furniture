@@ -34,9 +34,6 @@
                 margin-top: 10px
                 width: 49%
 
-        .button-container
-            text-align: right
-
 
         .furniture-dimensions-label
             margin-top: 11%
@@ -110,14 +107,24 @@
                     padding: 0 !important
                     width: 100% !important
                     height: 100% !important
-
-
             img
                 width: 100%
                 height: auto
 
+        mat-checkbox
+            margin-top: 1%
+            margin-left: 1%
+            width: 100%
+            text-align: left
+
+    .button-container
+        width: 100%
+        text-align: center
+        margin-bottom: 0px
+
+
 button
-    margin-top: 40px
+    margin-top: 25px
     margin-bottom: 5px
     margin-right: 15px
     font-size: 18px
@@ -127,13 +134,16 @@ mat-divider
 
 
 @media(max-width: 900px)
-    .right-panel
+    .center-panel
         display: none
 
-    .left-panel
-        width: 100%
-        flex: 2
+    .right-panel
+        width: 100% !important
 
-        .input
-            width: 70%
+    .left-panel
+        width: 100% !important
+
+img
+    width: 100% !important
+    height: 400px !important
 

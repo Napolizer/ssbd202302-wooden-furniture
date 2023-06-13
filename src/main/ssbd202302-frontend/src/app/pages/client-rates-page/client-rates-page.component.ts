@@ -4,7 +4,6 @@ import {Subject, takeUntil, tap} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {ProductService} from "../../services/product.service";
 import {NavigationEnd, Router} from "@angular/router";
-import {OrderProduct} from "../../interfaces/orderProduct";
 import {OrderProductWithRate} from "../../interfaces/orderProductWithRate";
 import {RateService} from "../../services/rate.service";
 import {Rate} from "../../interfaces/rate";

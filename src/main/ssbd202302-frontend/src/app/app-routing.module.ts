@@ -18,15 +18,16 @@ import {ChangeAccountRolePageComponent} from "./pages/change-account-role-page/c
 import {ConfirmEmailChangeComponent} from './pages/confirm-email-change/confirm-email-change.component';
 import {ConfirmAccountComponent} from './pages/confirm-account/confirm-account.component';
 import {ChangePasswordConfirmComponent} from "./pages/change-password-confirm/change-password-confirm.component";
-import { GoogleRedirectComponent } from './pages/google-redirect/google-redirect.component';
-import { AccountType } from './enums/account.type';
+import {GoogleRedirectComponent} from './pages/google-redirect/google-redirect.component';
+import {AccountType} from './enums/account.type';
 import {GithubRedirectComponent} from "./pages/github-redirect/github-redirect.component";
-import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
-import { ProductPageComponent } from './pages/product-page/product-page.component';
-import { SingleProductPageComponent } from './pages/single-product-page/single-product-page.component';
+import {EmployeePageComponent} from './pages/employee-page/employee-page.component';
+import {ProductPageComponent} from './pages/product-page/product-page.component';
+import {SingleProductPageComponent} from './pages/single-product-page/single-product-page.component';
 import {ClientPageComponent} from "./pages/client-page/client-page.component";
 import {ClientOrdersPageComponent} from "./pages/client-orders-page/client-orders-page.component";
 import {ClientRatesPageComponent} from "./pages/client-rates-page/client-rates-page.component";
+import {ViewCartPageComponent} from "./pages/view-cart-page/view-cart-page.component";
 
 const routes: Routes = [
   {
@@ -212,6 +213,14 @@ const routes: Routes = [
   {
     path:'product/:id',
     component:SingleProductPageComponent
+  },
+  {
+    path:'cart',
+    component:ViewCartPageComponent,
+    canActivate:[AuthGuard],
+    data: {
+      roles: [Role.CLIENT]
+    }
   },
   // IMPORTANT: this route must be the last one
   {

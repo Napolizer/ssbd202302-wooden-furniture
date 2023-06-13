@@ -709,9 +709,9 @@ public class MOK1IT {
 		@DisplayName("Should fail to register account with invalid timezones")
 		@ParameterizedTest(name = "timeZone: {0}")
 		@CsvSource({
-						"EUROPE/WARSAW",
-						"Europe/Warsaw",
-						"Europe-Warsaw",
+						"EUROPE/WARS",
+						"Euroe/Warsaw",
+						"Epe-Warsaw",
 		})
 		void shouldFailToRegisterAccountWithInvalidTimeZones(String timeZone) {
 			AccountRegisterDto account = InitData.getAccountToRegister();
