@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
@@ -15,6 +16,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 
 public class InitData {
 
@@ -187,6 +190,32 @@ public class InitData {
             .streetNumber(55)
             .postalCode("93-539")
             .hash(retrieveVersion(login))
+            .build();
+  }
+
+  public static ProductCreateWithImageDto getProductToCreate() {
+    return ProductCreateWithImageDto.builder()
+            .productGroupId(1L)
+            .amount(10)
+            .color("BROWN")
+            .price(4999.99)
+            .weight(9.5)
+            .weightInPackage(10.5)
+            .furnitureDepth(150)
+            .furnitureHeight(150)
+            .furnitureWidth(150)
+            .packageDepth(150)
+            .packageWidth(150)
+            .packageHeight(150)
+            .woodType("BIRCH")
+            .imageProductId(1L)
+            .build();
+  }
+
+  public static ProductGroupCreateDto getProductGroupToCreate() {
+    return ProductGroupCreateDto.builder()
+            .name("Test product group")
+            .categoryName(CategoryName.DESK.name())
             .build();
   }
 
