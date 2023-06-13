@@ -69,6 +69,13 @@ public class ProductGroupFacade extends AbstractFacade<ProductGroup>
   }
 
   @Override
+  public Double getAverageRate(Long productGroupId) {
+    return em.createNamedQuery(ProductGroup.GET_AVG_RATE, Double.class)
+            .setParameter("productGroupId", productGroupId)
+            .getSingleResult();
+  }
+
+  @Override
   @PermitAll
   public List<ProductGroup> findAll() {
     return super.findAll();

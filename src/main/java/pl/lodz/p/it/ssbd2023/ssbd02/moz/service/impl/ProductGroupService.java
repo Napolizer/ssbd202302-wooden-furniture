@@ -134,7 +134,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     if (!doesProductHaveRateFromThisAccount) {
       Rate rate = new Rate(rateValue, account);
       productGroup.getRates().add(rate);
-      productGroup.updateAverageRating();
+      productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
 
       productGroupFacade.update(productGroup);
       return rate;
@@ -159,7 +159,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
             .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
 
     clientRate.setValue(rateValue);
-    productGroup.updateAverageRating();
+    productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
 
     productGroupFacade.update(productGroup);
 
@@ -184,7 +184,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     rateFacade.delete(clientRate);
 
     productGroup.getRates().remove(clientRate);
-    productGroup.updateAverageRating();
+    productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
     productGroupFacade.update(productGroup);
   }
 }
