@@ -33,6 +33,8 @@ public interface OrderEndpointOperations {
 
   OrderDto cancelOrder(OrderDto orderDto);
 
+  OrderDto cancelOrderAsEmployee(Long id, String hash);
+
   OrderDto observeOrder(OrderDto orderDto);
 
   OrderDto changeOrderState(Long id, OrderState state, String hash);
