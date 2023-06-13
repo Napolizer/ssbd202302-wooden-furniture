@@ -75,6 +75,8 @@ import { SingleProductPageComponent } from './pages/single-product-page/single-p
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
+import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
+import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
 
 @NgModule({
   declarations: [
@@ -122,6 +124,8 @@ import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.com
     SingleProductPageComponent,
     EditProductComponent,
     ViewCartPageComponent,
+    EmployeeActionsMenuComponent,
+    ChangeOrderStateComponent,
   ],
     imports: [
         BrowserModule,

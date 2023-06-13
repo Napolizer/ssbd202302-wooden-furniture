@@ -25,4 +25,19 @@ export class OrderService {
       }
     );
   }
+
+  public changeOrderState(order: OrderDetailsDto, newState: string): Observable<OrderDetailsDto> {
+    return this.httpClient.put<OrderDetailsDto>(
+      `${environment.apiBaseUrl}/order/state/${order.id}`,
+      {
+        state: newState.toUpperCase(),
+        hash: order.hash
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
 }
