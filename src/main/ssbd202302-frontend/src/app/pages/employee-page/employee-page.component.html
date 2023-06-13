@@ -1,19 +1,162 @@
+<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
 <div>
   <br />
   <div class="page-container top-container">
     <br />
     <div class="page-container">
       <div
+        fxLayout="row"
+        fxLayoutAlign="center center"
         class="content"
-        [@loadedUnloadedList]="{ value: getFormAnimationState() }"
+        [@loadedUnloadedList]="{ value: getListAnimationState() }"
       >
         <mat-card class="card">
-            <button button="submit" mat-stroked-button color="primary" (click)="openAddProductGroupDialog()">
-                <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product.group' | translate}}
+          <h3 class="accounts">{{ "orders" | translate }}</h3>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+            <mat-form-field class="filter">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let fullName of fullNames"
+                  [value]="fullName"
+                >
+                  {{ fullName }}
+                </mat-option>
+              </mat-autocomplete>
+              <input
+                matInput
+                class="search-input"
+                placeholder="{{ 'search' | translate }}"
+                [(ngModel)]="searchPhrase"
+              />
+              <button
+                mat-raised-button
+                color="primary"
+                class="searchButton"
+                (click)="onSearchClicked()"
+              >
+                <mat-icon>search</mat-icon>
               </button>
-              <button button="submit" mat-stroked-button color="primary" (click)="openAddProductDialog()">
-                <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product' | translate}}
-              </button>
+            </mat-form-field>
+            <button
+              mat-button
+              color="primary"
+              class="resetButton"
+              (click)="onResetClicked()"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="example-container mat-elevation-z8">
+              <mat-table
+                #table
+                [dataSource]="dataSource"
+                matSort
+                *ngIf="shouldDisplayTable()"
+                (matSortChange)="onSortClicked($event)"
+              >
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "id" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">
+                    {{ order.id }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="orderState">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "order.state" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{
+                    order.orderState
+                  }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="recipient">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "recipient.first.name" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{
+                    getRecipientName(order)
+                  }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "address" | translate
+                    }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{
+                    getAddress(order)
+                    }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="productsAmount">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "products.amount" | translate
+                    }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{
+                    getProductsAmount(order)
+                    }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="accountLogin">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "login" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{
+                    order.accountLogin
+                  }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="totalPrice">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                    "total.price" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let order">{{
+                    order.totalPrice
+                  }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="show">
+                  <mat-header-cell *matHeaderCellDef>{{
+                    "account.show" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">
+                    <mat-icon
+                      class="show"
+                      (click)="redirectToAccountPage(account.id)"
+                      >remove_red_eye</mat-icon
+                    >
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef>{{
+                    "perform.action" | translate
+                  }}</mat-header-cell>
+                  <mat-cell *matCellDef="let account">
+                    <app-admin-actions-menu
+                      [account]="account"
+                      (loadingChanged)="listLoading = $event.valueOf()"
+                    ></app-admin-actions-menu>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></mat-row>
+              </mat-table>
+              <mat-paginator
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+                aria-label="Select page of periodic elements"
+              >
+              </mat-paginator>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="card">
+          <button button="submit" mat-stroked-button color="primary" (click)="openAddProductGroupDialog()">
+            <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product.group' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openAddProductDialog()">
+            <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product' | translate}}
+          </button>
         </mat-card>
       </div>
     </div>

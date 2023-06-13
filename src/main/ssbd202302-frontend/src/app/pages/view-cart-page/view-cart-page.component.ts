@@ -3,7 +3,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Product} from "../../interfaces/product";
 import {combineLatest, map, pipe, Subject, takeUntil, timer} from "rxjs";
 import {CartService} from "../../services/cart.service";
-import {OrderedProduct} from "../../interfaces/orderedProduct";
+import {OrderedProduct} from "../../interfaces/ordered.product";
 import {NavigationService} from "../../services/navigation.service";
 import {ProductService} from "../../services/product.service";
 import {TranslateService} from "@ngx-translate/core";

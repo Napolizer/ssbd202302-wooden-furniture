@@ -3,6 +3,7 @@
 
   "page.title": "SSBD02",
 
+  "login": "login",
   "login.title": "Meble Drewniane",
   "login.subtitle": "Logowanie",
   "login.enterLogin": "Podaj swój login",
@@ -340,6 +341,7 @@
   "employee.add.product": "Dodaj produkt",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
+  "paginator.ordersPerPage": "Liczba zamówień na stronę",
   "paginator.firstPageLabel": "Pierwsza strona",
   "paginator.lastPageLabel": "Ostatnia strona",
   "paginator.nextPageLabel": "Następna strona",
@@ -391,9 +393,9 @@
   "order.state": "Stan zamówienia",
   "order.client.already.observed": "Już obserwowane",
   "orders.client": "Twoje zamówienia",
+  "products.amount": "Liczba produktów",
   "products.size": "Liczba dostępnych produktów",
   "products.total.price": "Cena całkowita",
-
   "product.available.true": "Produkt jest dostępny w ilości ",
   "product.available.false": "Brak produktu w magazynie.",
   "product.amounts": "sztuk",
@@ -425,5 +427,12 @@
   "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
   "cart.add.product.success": "Produkt dodany do koszyka",
 
-  "summary": "Podsumowanie"
+  "summary": "Podsumowanie",
+  "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka",
+
+  "address": "Adres",
+  "orders": "Zamówienia",
+  "total.price": "Cena całkowita",
+  "recipient.first.name": "Imię odbiorcy",
+  "recipient.last.name": "Nazwisko odbiorcy"
 }

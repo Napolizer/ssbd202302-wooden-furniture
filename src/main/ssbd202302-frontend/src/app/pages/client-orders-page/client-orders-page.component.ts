@@ -3,7 +3,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Account} from "../../interfaces/account";
 import {MatTableDataSource} from "@angular/material/table";
 import {Subject, takeUntil, tap} from "rxjs";
-import {ClientOrder} from "../../interfaces/clientOrder";
+import {ClientOrder} from "../../interfaces/client.order";
 import {AccountService} from "../../services/account.service";
 import {NavigationService} from "../../services/navigation.service";
 import {BreadcrumbsService} from "../../services/breadcrumbs.service";
