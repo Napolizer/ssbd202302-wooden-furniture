@@ -293,6 +293,8 @@
   "exception.moz.order.already.in.delivery": "Nie można zmienić stanu zamówienia, ponieważ jest już w dostawie",
   "exception.moz.order.already.delivered": "Nie można zmienić stanu zamówienia, ponieważ jest już dostarczone",
   "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
+  "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
+
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

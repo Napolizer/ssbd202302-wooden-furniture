@@ -294,6 +294,7 @@
   "exception.moz.order.already.in.delivery": "Order is already in delivery",
   "exception.moz.order.already.delivered": "Order is already delivered",
   "exception.moz.order.already.cancelled": "Order is already cancelled",
+  "exception.moz.product.group.already.archived": "Product group is already archived",
 
 
   "role.administrator": "Administrator",

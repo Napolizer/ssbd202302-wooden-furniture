@@ -17,7 +17,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.CategoryMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductGroupMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
@@ -49,9 +48,9 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductGroupInfoDto archive(Long id, ProductGroupArchiveDto productGroupArchiveDto) {
+  public ProductGroupInfoDto archive(Long id) {
     ProductGroup productGroup = repeatTransactionWithOptimistic(() ->
-        productGroupService.archive(id, productGroupArchiveDto.getHash()));
+        productGroupService.archive(id));
     return ProductGroupMapper.mapToProductGroupInfoDto(productGroup);
   }
 

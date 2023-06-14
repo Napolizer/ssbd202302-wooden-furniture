@@ -34,7 +34,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.UpdateProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
@@ -124,9 +123,8 @@ public class ProductController {
   @Path("/group/archive/id/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(EMPLOYEE)
-  public Response archiveProductGroup(@PathParam("id") Long id,
-                                      @NotNull @Valid ProductGroupArchiveDto productGroupArchiveDto) {
-    return Response.ok(productGroupEndpoint.archive(id, productGroupArchiveDto)).build();
+  public Response archiveProductGroup(@PathParam("id") Long id) {
+    return Response.ok(productGroupEndpoint.archive(id)).build();
   }
 
   @PUT
