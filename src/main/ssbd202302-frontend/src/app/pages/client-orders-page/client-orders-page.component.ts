@@ -156,7 +156,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
   }
 
   canCancel(order: ClientOrder): boolean {
-    return order.orderState == 'CREATED';
+    return (order.orderState === 'CREATED' || order.orderState === 'COMPLETED');
   }
 
   calculateTotalQuantity(order: any): number {

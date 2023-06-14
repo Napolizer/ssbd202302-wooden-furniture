@@ -33,7 +33,9 @@
                 </ng-container>
                 <ng-container matColumnDef="orderState">
                   <mat-header-cell class="justify-content-center" *matHeaderCellDef mat-sort-header>{{'order.state' | translate}}</mat-header-cell>
-                  <mat-cell class="justify-content-center" *matCellDef="let order">{{order.orderState | translate}}</mat-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
+                    {{'order.state.' + order.orderState.toLowerCase().replace('_', '.') | translate}}
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="show">
                   <mat-header-cell class="justify-content-center" *matHeaderCellDef>{{'order.show' | translate}}</mat-header-cell>
