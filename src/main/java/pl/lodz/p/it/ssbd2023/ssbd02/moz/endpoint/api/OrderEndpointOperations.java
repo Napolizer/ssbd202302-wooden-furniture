@@ -7,6 +7,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 
 
@@ -23,7 +24,7 @@ public interface OrderEndpointOperations {
 
   OrderDto update(Long id, UpdateOrderDto entity);
 
-  OrderDto find(Long id);
+  OrderWithProductsDto find(Long id);
 
   List<OrderDetailsDto> findAll();
 

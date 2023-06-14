@@ -11,11 +11,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderedProductDto {
+public class OrderedProductDetailedDto {
   @NotNull
   @Positive
   private Integer amount;
   @NotNull
-  @Positive
-  private Long productId;
+  private Double price;
+  @NotNull
+  private ProductDto product;
 }
