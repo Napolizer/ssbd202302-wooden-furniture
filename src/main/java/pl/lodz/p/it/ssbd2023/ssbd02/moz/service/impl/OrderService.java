@@ -299,6 +299,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @Override
   @RolesAllowed(SALES_REP)
   public byte[] generateReport(LocalDateTime startDate, LocalDateTime endDate, String locale) {
+    if (startDate.isAfter(endDate)) {
+      throw ApplicationExceptionFactory.createInvalidDateException();
+    }
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     List<Object[]> data = orderFacade.findOrderStatsForReport(startDate, endDate);
     String[] headers = {MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_HEADER1),
@@ -317,7 +320,6 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
       CellRangeAddress titleRange = new CellRangeAddress(0, 2, 0, headers.length - 1);
       sheet.addMergedRegion(titleRange);
-
       CellStyle titleStyle = workbook.createCellStyle();
       titleStyle.setAlignment(HorizontalAlignment.CENTER);
       Font titleFont = workbook.createFont();
@@ -332,13 +334,14 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       headerFont.setFontHeightInPoints((short) 13);
       headerFont.setBold(true);
       headerStyle.setFont(headerFont);
+      headerStyle.setBorderBottom(BorderStyle.THIN);
+      headerStyle.setBorderTop(BorderStyle.THIN);
+      headerStyle.setBorderLeft(BorderStyle.THIN);
+      headerStyle.setBorderRight(BorderStyle.THIN);
+
       for (int i = 0; i < headers.length; i++) {
         Cell cell = headerRow.createCell(i);
         cell.setCellValue(headers[i]);
-        headerStyle.setBorderBottom(BorderStyle.THIN);
-        headerStyle.setBorderTop(BorderStyle.THIN);
-        headerStyle.setBorderLeft(BorderStyle.THIN);
-        headerStyle.setBorderRight(BorderStyle.THIN);
         cell.setCellStyle(headerStyle);
       }
 
@@ -370,7 +373,6 @@ public class OrderService extends AbstractService implements OrderServiceOperati
               cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#,##0.00 PLN"));
             }
           }
-
           cellStyle.setBorderBottom(BorderStyle.THIN);
           cellStyle.setBorderTop(BorderStyle.THIN);
           cellStyle.setBorderLeft(BorderStyle.THIN);

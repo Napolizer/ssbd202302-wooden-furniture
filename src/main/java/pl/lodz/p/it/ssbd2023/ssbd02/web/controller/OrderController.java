@@ -149,7 +149,7 @@ public class OrderController {
 
   @GET
   @Path("/report")
-  @Produces({MediaType.APPLICATION_JSON, "application/vnd.ms-excel"})
+  @Produces({"application/vnd.ms-excel", MediaType.APPLICATION_JSON})
   @RolesAllowed(SALES_REP)
   public Response generateReport(@QueryParam("startDate") String startDate,
                                  @QueryParam("endDate") String endDate,
