@@ -1,12 +1,15 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api;
 
 import jakarta.ejb.Local;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 
 
@@ -40,6 +43,8 @@ public interface OrderEndpointOperations {
   OrderDto changeOrderState(Long id, OrderState state, String hash);
 
   byte[] generateReport(String startDate, String endDate, String locale);
+
+  List<OrderStatsDto> findOrderStats(String startDate, String endDate);
 
   List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
 
