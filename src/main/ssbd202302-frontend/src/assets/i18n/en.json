@@ -113,6 +113,14 @@
   "add.product.group.success": "Product group has been successfully added",
   "add.product.group.hint.max.50": "Max 50 characters",
 
+  "archive.product.group.name.label": "Product group name",
+  "archive.product.group.hint.max.50": "Max 50 characters",
+  "archive.product.group.back": "Back",
+  "archive.product.group.confirm": "Archive",
+  "archive.product.group.validity.required": "The field cannot be empty",
+  "archive.product.group.validity.notexisting": "The specified product group does not exist",
+  "archive.product.group.success": "Product group archived successfully",
+
   "add.product.validity.notexisting": "The specified product group does not exist",
   "add.product.category": "Category",
   "add.product.wood.type": "Wood type",
@@ -228,6 +236,7 @@
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
   "dialog.add.product.message": "Are you sure you want to add new product?",
   "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
+  "dialog.archive.product.group": "Are you sure you want to archive this product group?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -340,6 +349,7 @@
 
   "employee.add.product.group": "Add product group",
   "employee.add.product": "Add product",
+  "employee.archive.product.group": "Archive product group",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.firstPageLabel": "First page",

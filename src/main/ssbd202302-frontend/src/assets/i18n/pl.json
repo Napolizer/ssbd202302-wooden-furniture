@@ -113,6 +113,14 @@
   "add.product.group.success": "Grupa produktów została pomyślnie dodana",
   "add.product.group.hint.max.50": "Maksymalnie 50 znaków",
 
+  "archive.product.group.name.label": "Nazwa grupy produktów",
+  "archive.product.group.hint.max.50": "Maksymalnie 50 znaków",
+  "archive.product.group.back": "Powrót",
+  "archive.product.group.confirm": "Zarchiwizuj",
+  "archive.product.group.validity.required": "Pole nie może być puste",
+  "archive.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "archive.product.group.success": "Pomyślnie zarchiwizowano grupę produktów",
+
   "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
   "add.product.category": "Kategoria",
   "add.product.wood.type": "Rodzaj drewna",
@@ -228,6 +236,7 @@
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
+  "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -337,6 +346,7 @@
 
   "employee.add.product.group": "Dodaj grupę produktów",
   "employee.add.product": "Dodaj produkt",
+  "employee.archive.product.group": "Zarchiwizuj grupę produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.firstPageLabel": "Pierwsza strona",

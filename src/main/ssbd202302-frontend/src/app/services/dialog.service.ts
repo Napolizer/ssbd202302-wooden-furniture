@@ -14,6 +14,7 @@ import { AddProductGroupComponent } from '../components/add-product-group/add-pr
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditProductComponent } from '../components/edit-product/edit-product.component';
 import { Product } from '../interfaces/product';
+import {ArchiveProductGroupComponent} from "../components/archive-product-group/archive-product-group.component";
 
 @Injectable({
   providedIn: 'root'
@@ -120,6 +121,14 @@ export class DialogService {
       height: '500px',
       autoFocus: false,
       data: { product }
+    });
+  }
+
+  openArchiveProductGroupDialog(): MatDialogRef<ArchiveProductGroupComponent> {
+    return this.matDialog.open(ArchiveProductGroupComponent, {
+      disableClose: true,
+      width: '700px',
+      height: '300px',
     });
   }
 }

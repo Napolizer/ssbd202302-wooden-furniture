@@ -9,6 +9,7 @@ import { Product } from '../interfaces/product';
 import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
+import {ArchiveProductGroup} from "../interfaces/archive.product.group";
 
 @Injectable({
   providedIn: 'root',
@@ -109,6 +110,18 @@ export class ProductService {
     return this.httpClient.patch<Product>(
       `${environment.apiBaseUrl}/product/archive/` + productId,
       null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
+
+  public archiveProductGroup(productGroupId: string, productGroup: ArchiveProductGroup): Observable<ProductGroup> {
+    return this.httpClient.put<ProductGroup>(
+      `${environment.apiBaseUrl}/product/group/archive/id/` + productGroupId,
+      productGroup,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`

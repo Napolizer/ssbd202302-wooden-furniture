@@ -1,7 +1,8 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { Subject, first, takeUntil } from 'rxjs';
+import {Subject, first, takeUntil, take} from 'rxjs';
 import { DialogService } from 'src/app/services/dialog.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-employee-page',
@@ -29,7 +30,8 @@ export class EmployeePageComponent implements OnInit {
   loaded = false;
   destroy = new Subject<boolean>();
 
-  constructor(private dialogService : DialogService) { }
+  constructor(
+    private dialogService : DialogService) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -69,4 +71,14 @@ export class EmployeePageComponent implements OnInit {
     });
   }
 
+  openArchiveProductGroupDialog() : void {
+    this.dialogService.openArchiveProductGroupDialog()
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+
+        }
+      })
+  }
 }

@@ -8,12 +8,15 @@
         [@loadedUnloadedList]="{ value: getFormAnimationState() }"
       >
         <mat-card class="card">
-            <button button="submit" mat-stroked-button color="primary" (click)="openAddProductGroupDialog()">
-                <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product.group' | translate}}
-              </button>
-              <button button="submit" mat-stroked-button color="primary" (click)="openAddProductDialog()">
-                <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product' | translate}}
-              </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openAddProductGroupDialog()">
+            <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product.group' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openAddProductDialog()">
+            <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openArchiveProductGroupDialog()">
+            <mat-icon style="margin-bottom: 3px;">archive</mat-icon> {{'employee.archive.product.group' | translate}}
+          </button>
         </mat-card>
       </div>
     </div>
