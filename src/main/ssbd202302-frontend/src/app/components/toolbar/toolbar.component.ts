@@ -126,10 +126,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     return this.authenticationService.isCurrentRole(Role.CLIENT);
   }
 
-  isUserSalesRep(): boolean {
-    return this.authenticationService.isCurrentRole(Role.SALES_REP);
-  }
-
   isCurrentlyOnLoginPage(): boolean {
     return this.navigationService.isCurrentlyOnLoginPage();
   }

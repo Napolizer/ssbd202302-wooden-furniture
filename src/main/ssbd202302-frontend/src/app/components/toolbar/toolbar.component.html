@@ -40,15 +40,6 @@
       ><span>{{ "toolbar.employeePanel" | translate }}</span>
     </button>
     <button
-    mat-menu-item
-    routerLink="#"
-    *ngIf="isUserSalesRep()"
-    (click)="openGenerateReportDialog()"
-    >
-      <mat-icon>work</mat-icon
-      ><span>{{ "generate.report.title" | translate }}</span>
-    </button>
-    <button
       mat-menu-item
       routerLink="#"
       *ngIf="isUserClient()"
