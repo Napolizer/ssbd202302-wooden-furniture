@@ -1,4 +1,3 @@
-<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
 <div>
   <br />
   <div class="page-container top-container">
@@ -157,6 +156,9 @@
           </button>
           <button button="submit" mat-stroked-button color="primary" (click)="openAddProductDialog()">
             <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openArchiveProductGroupDialog()">
+            <mat-icon style="margin-bottom: 3px;">archive</mat-icon> {{'employee.archive.product.group' | translate}}
           </button>
         </mat-card>
       </div>

@@ -30,12 +30,6 @@ public class MOZ9IT {
     void shouldProperlyArchiveProductGroup() {
       given()
           .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
-          .contentType("application/json")
-          .body("""
-            {
-              "hash": "$hash"
-            }
-          """.replace("$hash", CryptHashUtils.hashVersion(1L)))
           .when()
           .put("/product/group/archive/id/49")
           .then()
@@ -53,12 +47,6 @@ public class MOZ9IT {
     @Order(1)
     void shouldFailBecauseOfMissingHeader() {
       given()
-          .contentType("application/json")
-          .body("""
-            {
-              "hash": "$hash"
-            }
-          """.replace("$hash", CryptHashUtils.hashVersion(1L)))
           .when()
           .put("/product/group/archive/id/48")
           .then()
@@ -71,12 +59,6 @@ public class MOZ9IT {
     void shouldFailBecauseOfInvalidId() {
       given()
           .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
-          .contentType("application/json")
-          .body("""
-            {
-              "hash": "$hash"
-            }
-          """.replace("$hash", CryptHashUtils.hashVersion(1L)))
           .when()
           .put("/product/group/archive/id/" + Long.MAX_VALUE)
           .then()
@@ -88,12 +70,6 @@ public class MOZ9IT {
     void shouldFailToArchiveProductGroupSecondTime() {
       given()
           .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
-          .contentType("application/json")
-          .body("""
-            {
-              "hash": "$hash"
-            }
-          """.replace("$hash", CryptHashUtils.hashVersion(2L)))
           .when()
           .put("/product/group/archive/id/49")
           .then()

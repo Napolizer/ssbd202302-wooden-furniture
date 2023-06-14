@@ -6,4 +6,5 @@ export interface ProductGroup {
   id: number;
   category: Category;
   averageRating: number;
+  hash: string;
 }
