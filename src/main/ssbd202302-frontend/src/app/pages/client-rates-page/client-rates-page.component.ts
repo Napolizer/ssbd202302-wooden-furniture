@@ -192,7 +192,12 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
         error: (e: HttpErrorResponse) => {
           this.loading = false;
           orderProduct.rate = orderProduct.oldRate;
-          alert("Sth gone wrong")
+          this.translate
+            .get(e.error.message || 'exception.moz.rate.notfound')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
         },
       });
   }

@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Local;
 import jakarta.mail.MessagingException;
 
@@ -30,10 +29,6 @@ public interface MailServiceOperations {
   void sendEmailAboutRemovingNotVerifiedAccount(String to, String locale);
 
   void sendEmailAboutAdminSession(String to, String locale, String ip);
-
-  @PermitAll
-  void sendEmailAboutOrderStateChange(String to, String locale, String orderProducts, String orderOldState,
-                                      String orderNewState);
 
   void sendEmail(String to, String subject, String message) throws MessagingException;
 }

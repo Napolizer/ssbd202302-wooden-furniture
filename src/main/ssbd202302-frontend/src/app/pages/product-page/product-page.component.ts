@@ -37,8 +37,8 @@ export class ProductPageComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<Product>(this.products);
   sortedProducts: any[] = [];
   isAscending: boolean = true;
-  pageSize = 8;
-  pageSizeOptions: number[] = [4, 8, 12];
+  pageSize = 10;
+  pageSizeOptions: number[] = [10, 20, 40];
   currentPage = 1;
   pagedProducts: Product[] = [];
 

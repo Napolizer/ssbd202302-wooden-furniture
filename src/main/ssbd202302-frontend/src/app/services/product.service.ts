@@ -10,6 +10,7 @@ import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
 import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
+import {EditProductGroup} from "../interfaces/edit.product.group";
 
 @Injectable({
   providedIn: 'root',
@@ -123,6 +124,18 @@ export class ProductService {
         }
       }
     );
+  }
+
+  public editProductGroup(productGroupId: string, editedProductGroup: EditProductGroup): Observable<ProductGroup> {
+    return this.httpClient.put<ProductGroup>(
+      `${environment.apiBaseUrl}/product/group/id/` + productGroupId,
+      editedProductGroup,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
   }
 
   public archiveProduct(productId: string): Observable<Product> {

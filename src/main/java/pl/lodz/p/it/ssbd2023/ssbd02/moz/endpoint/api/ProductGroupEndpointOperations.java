@@ -5,6 +5,7 @@ import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoWithoutHashDto;
 
 @Local
 public interface ProductGroupEndpointOperations {
@@ -17,7 +18,7 @@ public interface ProductGroupEndpointOperations {
 
   ProductGroupInfoDto find(Long id);
 
-  List<ProductGroupInfoDto> findAll();
+  List<ProductGroupInfoWithoutHashDto> findAll();
 
   List<ProductGroupInfoDto> findAllPresent();
 

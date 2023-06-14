@@ -16,39 +16,49 @@
             <div class="example-container mat-elevation-z8">
               <mat-table #table [dataSource]="dataSource" matSort *ngIf="shouldDisplayTable()">
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'Id' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order"> {{order.id}}</mat-cell>
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef mat-sort-header>{{'Id' | translate}}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order"> {{order.id}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="productsNumber">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.size' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order">
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef mat-sort-header>{{'products.size' | translate}}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
                     {{ calculateTotalQuantity(order) }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="totalPrice">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'products.total.price' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order">
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef mat-sort-header>{{'products.total.price' | translate}}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
                     {{ order.totalPrice + ' zł' }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="orderState">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'order.state' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order">{{order.orderState | translate}}</mat-cell>
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef mat-sort-header>{{'order.state' | translate}}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
+                    {{'order.state.' + order.orderState.toLowerCase().replace('_', '.') | translate}}
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="show">
-                  <mat-header-cell *matHeaderCellDef>{{'order.show' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order">
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef>{{'order.show' | translate}}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
                     <mat-icon class="show" (click)="showOrder()">remove_red_eye</mat-icon>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="observe">
-                  <mat-header-cell *matHeaderCellDef>{{'order.client.observe' | translate}}</mat-header-cell>
-                  <mat-cell *matCellDef="let order">
-                    <button mat-button color="primary" class="my-button" (click)="onObserveClicked(order)" *ngIf="canObserve(order)">
-                      {{'order.client.observe.button' | translate}}
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef>{{'order.client.observe' | translate}}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
+                    <button mat-button color="primary" (click)="observeOrder(order)" *ngIf="canObserve(order)">
+                      <mat-icon>notifications</mat-icon>
                     </button>
                     <button mat-button color="primary" *ngIf="order.observed">
                       {{'order.client.already.observed' | translate}}
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="cancel">
+                  <mat-header-cell class="justify-content-center" *matHeaderCellDef>{{ "order.cancel" | translate }}</mat-header-cell>
+                  <mat-cell class="justify-content-center" *matCellDef="let order">
+                    <button mat-button color="warn" (click)="onCancelClicked(order)" *ngIf="canCancel(order)">
+                      <mat-icon>highlight_off</mat-icon>
                     </button>
                   </mat-cell>
                 </ng-container>
