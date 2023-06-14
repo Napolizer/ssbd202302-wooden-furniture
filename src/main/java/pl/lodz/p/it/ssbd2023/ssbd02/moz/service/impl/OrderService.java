@@ -194,6 +194,28 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     return orderFacade.update(order);
   }
 
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public Order cancelOrderAsEmployee(Long id, String hash) {
+    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+
+    if (order.getOrderState().equals(OrderState.IN_DELIVERY)) {
+      throw ApplicationExceptionFactory.createOrderAlreadyInDeliveryException();
+    } else if (order.getOrderState().equals(OrderState.DELIVERED)) {
+      throw ApplicationExceptionFactory.createOrderAlreadyDeliveredException();
+    } else if (order.getOrderState().equals(CANCELLED)) {
+      throw ApplicationExceptionFactory.createOrderAlreadyCancelledException();
+    }
+
+    if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
+      throw new OptimisticLockException();
+    }
+
+    order.setOrderState(CANCELLED);
+    return orderFacade.update(order);
+  }
+
   @Override
   @RolesAllowed(CLIENT)
   public Order observeOrder(Long id, String hash) {

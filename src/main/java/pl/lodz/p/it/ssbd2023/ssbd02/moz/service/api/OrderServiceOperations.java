@@ -32,6 +32,8 @@ public interface OrderServiceOperations {
 
   Order cancelOrder(Long id, String hash);
 
+  Order cancelOrderAsEmployee(Long id, String hash);
+
   Order observeOrder(Long id, String hash);
 
   Order changeOrderState(Long id, OrderState state, String hash);
