@@ -41,6 +41,8 @@ public interface OrderServiceOperations {
 
   byte[] generateReport(LocalDateTime startDate, LocalDateTime endDate, String locale);
 
+  List<Object[]> findOrderStats(LocalDateTime startDate, LocalDateTime endDate);
+
   List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
 
   boolean isLastTransactionRollback();

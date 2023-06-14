@@ -179,8 +179,11 @@ public class OrderController {
 
   @GET
   @Path("/statistics")
-  public Response getStatistics(TimePeriodDto timePeriod) {
-    throw new UnsupportedOperationException();
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(SALES_REP)
+  public Response getStatistics(@QueryParam("startDate") String startDate,
+                                @QueryParam("endDate") String endDate) {
+    return Response.ok(orderEndpoint.findOrderStats(startDate, endDate)).build();
   }
 
   @GET
