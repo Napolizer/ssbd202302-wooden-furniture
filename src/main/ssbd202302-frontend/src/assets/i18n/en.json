@@ -517,5 +517,16 @@
   "generate.report.required.date.end": "End date cannot be empty",
   "generate.report.invalid.date.start": "Invalid start date",
   "generate.report.invalid.date.end": "Invalid end date",
-  "generate.report.success": "Sales report has been successfully generated"
+  "generate.report.success": "Sales report has been successfully generated",
+
+  "display.stats.title": "Display stats",
+  "display.stats.start": "Start date",
+  "display.stats.end": "End date",
+  "display.stats.label": "Enter sales period",
+  "display.stats.invalid.date.start": "Invalid start date",
+  "display.stats.invalid.date.end": "Invalid end date",
+  "display.stats.required.date.start": "Start date cannot be empty",
+  "display.stats.required.date.end": "End date cannot be empty",
+  "display.stats.back": "Back",
+  "display.stats.confirm": "Display"
 }

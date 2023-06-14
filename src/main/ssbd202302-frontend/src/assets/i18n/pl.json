@@ -511,5 +511,16 @@
   "generate.report.required.date.end": "Data końcowa nie może być pusta",
   "generate.report.invalid.date.start": "Niepoprawna data początkowa",
   "generate.report.invalid.date.end": "Niepoprawna data końcowa",
-  "generate.report.success": "Raport sprzedażowy został pomyślnie wygenerowany"
+  "generate.report.success": "Raport sprzedażowy został pomyślnie wygenerowany",
+
+  "display.stats.title": "Wyświetl statystyki",
+  "display.stats.start": "Data początkowa",
+  "display.stats.end": "Data końcowa",
+  "display.stats.label": "Podaj okres sprzedaży",
+  "display.stats.invalid.date.start": "Niepoprawna data początkowa",
+  "display.stats.invalid.date.end": "Niepoprawna data końcowa",
+  "display.stats.required.date.start": "Data początkowa nie może być pusta",
+  "display.stats.required.date.end": "Data końcowa nie może być pusta",
+  "display.stats.back": "Powrót",
+  "display.stats.confirm": "Wyświetl"
 }
