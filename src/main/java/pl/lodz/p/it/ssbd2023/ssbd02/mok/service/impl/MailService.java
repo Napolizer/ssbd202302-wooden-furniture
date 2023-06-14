@@ -205,11 +205,15 @@ public class MailService extends AbstractService implements MailServiceOperation
 
   @Override
   @PermitAll
-  public void sendEmailAboutChangingOrderState(String to, String locale) {
+  public void sendEmailAboutOrderStateChange(String to, String locale, String orderedProducts, String orderOldState,
+                                             String orderNewState) {
     try {
       sendEmail(to,
-                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_SUBJECT),
-                MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE)
+          MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_SUBJECT),
+          MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE1)
+              + "\n" + orderedProducts
+              + "\n" + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE2)
+              + " " + orderOldState + " " + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE3) + " " + orderNewState + "."
       );
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);

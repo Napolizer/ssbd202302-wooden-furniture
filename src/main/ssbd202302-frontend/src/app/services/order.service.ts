@@ -6,6 +6,7 @@ import {TokenService} from "./token.service";
 import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {OrderDto} from "../interfaces/order.dto";
 import {CreateOrderDto} from "../interfaces/create.order.dto";
+import {ClientOrder} from "../interfaces/client.order";
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,21 @@ export class OrderService {
   public cancelOrderAsEmployee(order: OrderDetailsDto): Observable<OrderDetailsDto> {
     return this.httpClient.put<OrderDetailsDto>(
       `${environment.apiBaseUrl}/order/employee/cancel`,
+      {
+        id: order.id,
+        hash: order.hash
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public observeOrder(order: ClientOrder): Observable<OrderDetailsDto> {
+    return this.httpClient.put<OrderDetailsDto>(
+      `${environment.apiBaseUrl}/order/observe`,
       {
         id: order.id,
         hash: order.hash

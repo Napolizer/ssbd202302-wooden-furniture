@@ -409,6 +409,8 @@
   "order.state.in.delivery": "W dostawie",
   "order.state.delivered": "Dostarczone",
   "order.state.cancelled": "Anulowane",
+  "order.observe.confirmation": "Czy na pewno chcesz obserwować to zamówienie?",
+  "order.observe.success": "Pomyślnie zaobserwowano zamówienie",
   "order.client.already.observed": "Już obserwowane",
   "order.cancel.confirmation": "Czy na pewno chcesz anulować zamówienie?",
   "order.cancel.success": "Zamówienie zostało anulowane",
