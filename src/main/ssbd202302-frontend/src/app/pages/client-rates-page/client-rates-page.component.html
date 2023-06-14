@@ -1,0 +1,56 @@
+<mat-grid-list class="mat-list" cols="4"gutterSize="15px" rowHeight="600px">
+  <mat-grid-tile *ngFor="let orderProduct of pagedProducts; let i = index;">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <img class="d-inline-block img-fluid mb-4"
+                 [src]="orderProduct.product.imageUrl"
+                 alt="zdjecie">
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="content-left">
+          <mat-card-title>{{ orderProduct.product.productGroup.name }}</mat-card-title>
+          <mat-card-subtitle>ID: {{ orderProduct.product.id }}</mat-card-subtitle>
+          <mat-card-subtitle>
+            {{getProductColor(orderProduct.product.color.toString()) | translate}}
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            {{ orderProduct.product.furnitureDimensions.width }}m x
+            {{ orderProduct.product.furnitureDimensions.depth }}m x
+            {{ orderProduct.product.furnitureDimensions.height }}m
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            {{"product.price" | translate}}: {{ orderProduct.price }}
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            {{"product.amount" | translate}}: {{ orderProduct.amount }}
+          </mat-card-subtitle>
+          <mat-card-subtitle>
+            {{"product.rating" | translate}} {{orderProduct.product.productGroup.averageRating}}
+          </mat-card-subtitle>
+
+          <div>
+            <ngb-rating
+              style="font-size: 30px; line-height: 24px;"
+              [max]="5" [(rate)]="orderProduct.rate"
+              [readonly]="false"
+              (rateChange)="onRateChange(orderProduct)"
+            ></ngb-rating>
+          </div>
+          <div style="margin-top: 20px;display: flex;align-items: center;justify-content: center;">
+            <button (click)="removeRating(orderProduct)">
+              {{"rate.remove" | translate}}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-divider class="divider" *ngIf="(i + 1) % 4 !== 0"></mat-divider>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<mat-paginator
+  [length]="orderProducts.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPageChange($event)"
+></mat-paginator>

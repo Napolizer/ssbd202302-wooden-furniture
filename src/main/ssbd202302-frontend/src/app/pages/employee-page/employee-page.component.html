@@ -52,6 +52,7 @@
                 #table
                 [dataSource]="dataSource"
                 matSort
+                matSortActive="id" matSortDirection="desc"
                 *ngIf="shouldDisplayTable()"
                 (matSortChange)="onSortClicked($event)"
               >
@@ -68,12 +69,12 @@
                     "order.state" | translate
                   }}</mat-header-cell>
                   <mat-cell *matCellDef="let order">{{
-                    order.orderState
+                    'order.state.' + order.orderState.toLowerCase().replace('_', '.') | translate
                   }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="recipient">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>{{
-                    "recipient.first.name" | translate
+                    "recipient.full.name" | translate
                   }}</mat-header-cell>
                   <mat-cell *matCellDef="let order">{{
                     getRecipientName(order)
@@ -113,12 +114,12 @@
                 </ng-container>
                 <ng-container matColumnDef="show">
                   <mat-header-cell *matHeaderCellDef>{{
-                    "account.show" | translate
+                    "order.show" | translate
                   }}</mat-header-cell>
-                  <mat-cell *matCellDef="let account">
+                  <mat-cell *matCellDef="let order">
                     <mat-icon
                       class="show"
-                      (click)="redirectToAccountPage(account.id)"
+                      (click)="redirectToOrderPage(order)"
                       >remove_red_eye</mat-icon
                     >
                   </mat-cell>
@@ -127,11 +128,11 @@
                   <mat-header-cell *matHeaderCellDef>{{
                     "perform.action" | translate
                   }}</mat-header-cell>
-                  <mat-cell *matCellDef="let account">
-                    <app-admin-actions-menu
-                      [account]="account"
+                  <mat-cell *matCellDef="let order">
+                    <app-employee-actions-menu
+                      [order]="order"
                       (loadingChanged)="listLoading = $event.valueOf()"
-                    ></app-admin-actions-menu>
+                    ></app-employee-actions-menu>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row

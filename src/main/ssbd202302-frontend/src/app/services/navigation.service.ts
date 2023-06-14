@@ -93,4 +93,8 @@ export class NavigationService {
   redirectToViewCartPage(): Promise<boolean> {
     return this.router.navigate(['/cart'])
   }
+
+  public redirectToRatePage(): Promise<boolean> {
+    return this.router.navigate(['/client/orders/rates']);
+  }
 }

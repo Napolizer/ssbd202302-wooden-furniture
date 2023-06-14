@@ -10,5 +10,6 @@ export interface ClientOrder {
   recipientLastName: string,
   recipientAddress: Address,
   hash: string,
-  observed: boolean
+  observed: boolean,
+  totalPrice: number
 }

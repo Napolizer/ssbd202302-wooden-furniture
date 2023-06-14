@@ -1,0 +1,23 @@
+<app-spinner [loading]="loading"></app-spinner>
+<div mat-dialog-title>
+  <h1 class="dialog-title">{{'order.change.state' | translate}}</h1>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <h4>{{'current.order.state' | translate}}: {{'order.state.' + getOrder().orderState.toLowerCase().replace('_', '.') | translate}}</h4>
+  <mat-form-field>
+    <mat-label>{{'select.order.state' | translate}}</mat-label>
+    <mat-select [(ngModel)]="chosenOrderState">
+      <mat-option *ngFor="let state of getPossibleOrderStates()" [value]="state">{{'order.state.' + state.toLowerCase().replace('_', '.') | translate}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onCancelClick()">
+    {{ "dialog.confirmation.close" | translate }}
+  </button>
+  <button mat-raised-button (click)="confirmChange(chosenOrderState)" color="primary">
+    {{ "dialog.confirmation.action" | translate }}
+  </button>
+</div>
+

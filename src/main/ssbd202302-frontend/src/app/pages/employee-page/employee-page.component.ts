@@ -42,7 +42,7 @@ export class EmployeePageComponent implements OnInit {
   listLoading = false;
   searchPhrase: string = '';
   fullNames: string[] = [];
-  displayedColumns = ['id', 'orderState', 'recipient', 'address', 'productsAmount',  'accountLogin', 'totalPrice'];
+  displayedColumns = ['id', 'orderState', 'recipient', 'address', 'productsAmount',  'accountLogin', 'totalPrice', 'show', 'action'];
   dataSource = new MatTableDataSource<OrderDetailsDto>(this.orders);
   destroy = new Subject<boolean>();
 
@@ -121,8 +121,8 @@ export class EmployeePageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  redirectToAccountPage(id: string): void {
-    void this.navigationService.redirectToAccountPage(id);
+  redirectToOrderPage(order: OrderDetailsDto): void {
+
   }
 
   onBackClicked(): void {

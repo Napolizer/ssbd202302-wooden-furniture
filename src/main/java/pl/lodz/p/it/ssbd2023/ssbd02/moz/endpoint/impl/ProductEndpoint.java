@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.impl;
 
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
@@ -17,8 +17,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
@@ -44,6 +46,9 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @Inject
   private ProductMapper productMapper;
 
+  @Inject
+  private OrderProductMapper orderProductMapper;
+
   @PermitAll
   public List<ProductDto> findAll() {
     return repeatTransactionWithoutOptimistic(() -> productService.findAll()).stream()
@@ -55,7 +60,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @RolesAllowed(EMPLOYEE)
   public ProductDto createProductWithNewImage(ProductCreateDto productCreateDto, byte[] image, String fileName) {
     Product product = ProductMapper.mapToProduct(productCreateDto);
-    return productMapper.mapToProductDto(
+    return productMapper.mapToSingleProductDto(
             repeatTransactionWithOptimistic(() ->
                     productService.createProductWithNewImage(
                             product,
@@ -67,7 +72,7 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
   @RolesAllowed(EMPLOYEE)
   public ProductDto createProductWithExistingImage(ProductCreateWithImageDto productCreateWithImageDto) {
     Product product = ProductMapper.mapToProduct(productCreateWithImageDto);
-    return productMapper.mapToProductDto(
+    return productMapper.mapToSingleProductDto(
             repeatTransactionWithOptimistic(() ->
                     productService.createProductWithExistingImage(
                             product,
@@ -159,6 +164,15 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
     Product product = repeatTransactionWithoutOptimistic(() -> productService.editProduct(id,
             ProductMapper.mapEditProductDtoToProduct(editProductDto), editProductDto.getHash()));
     return productMapper.mapToEditProductDto(product);
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public List<OrderProductWithRateDto> findAllProductsBelongingToAccount(String login) {
+    return repeatTransactionWithoutOptimistic(() ->
+            productService.findAllProductsBelongingToAccount(login)).stream()
+            .map(orderProductMapper::mapToOrderProductWithRateDto)
+            .toList();
   }
 
   @Override
