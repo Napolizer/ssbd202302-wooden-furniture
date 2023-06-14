@@ -242,6 +242,7 @@
   "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
   "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
   "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
+  "dialog.cart.remove": "Czy na pewno chcesz usunąć produkt z koszyka?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -473,6 +474,7 @@
   "cart.add.product.success": "Produkt dodany do koszyka",
   "cart.other.shipment.data.checkbox": "Czy chcesz podać inne dane do wysyłki?",
   "cart.clear": "Wyczyść koszyk",
+  "cart.remove.product.success": "Pomyślnie usunięto produkt z koszyka",
 
   "summary": "Podsumowanie",
   "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka",
