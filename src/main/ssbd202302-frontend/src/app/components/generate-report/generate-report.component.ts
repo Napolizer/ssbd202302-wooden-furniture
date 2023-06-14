@@ -45,8 +45,6 @@ export class GenerateReportComponent implements OnInit {
   }
 
   handleGenerateReportSuccess(response: Blob): void {
-    console.log(response);
-    this.loading = false;
     const startDate = this.datePipe
       .transform(this.generateReportForm.get('startDate')?.value, 'MM_dd_yyyy')
       ?.toString();
@@ -63,23 +61,25 @@ export class GenerateReportComponent implements OnInit {
       .pipe(takeUntil(this.destroy))
       .subscribe((msg) => {
         this.alertService.success(msg);
+        this.loading = false;
       });
     this.dialogRef.close('success');
   }
 
   handleGenerateReportError(e: HttpErrorResponse): void {
-    this.loading = false;
     const message = e.error.message as string;
     this.translate
       .get(message || 'exception.unknown')
       .pipe(takeUntil(this.destroy))
       .subscribe((msg) => {
         this.alertService.danger(msg);
+        this.loading = false;
       });
   }
 
   onConfirm(): void {
     if (this.generateReportForm.valid) {
+      this.loading = true;
       this.orderService
         .generateSalesReport(
           this.datePipe
