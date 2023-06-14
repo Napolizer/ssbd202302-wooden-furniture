@@ -14,7 +14,7 @@ public interface ProductGroupServiceOperations {
 
   ProductGroup create(ProductGroup entity, CategoryName categoryName);
 
-  ProductGroup archive(Long id, String hash);
+  ProductGroup archive(Long id);
 
   ProductGroup editProductGroupName(Long id, String name, String hash);
 
