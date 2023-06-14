@@ -358,6 +358,7 @@
   "employee.add.product.group": "Dodaj grupę produktów",
   "employee.add.product": "Dodaj produkt",
   "employee.archive.product.group": "Zarchiwizuj grupę produktów",
+  "employee.edit.product.group.name": "Edytuj nazwę grupy produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.ordersPerPage": "Liczba zamówień na stronę",

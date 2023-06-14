@@ -360,6 +360,7 @@
   "employee.add.product.group": "Add product group",
   "employee.add.product": "Add product",
   "employee.archive.product.group": "Archive product group",
+  "employee.edit.product.group.name": "Edit product group name",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.ordersPerPage": "Orders per page",

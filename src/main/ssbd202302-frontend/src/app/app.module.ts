@@ -80,6 +80,7 @@ import { ArchiveProductGroupComponent } from './components/archive-product-group
 import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
 import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
 import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
+import { EditProductGroupNameComponent } from './components/edit-product-group-name/edit-product-group-name.component';
 
 @NgModule({
   declarations: [
@@ -131,6 +132,7 @@ import { ChangeOrderStateComponent } from './components/change-order-state/chang
     ChangeOrderStateComponent,
     ClientRatesPageComponent,
     ArchiveProductGroupComponent,
+    EditProductGroupNameComponent,
   ],
   imports: [
     BrowserModule,
