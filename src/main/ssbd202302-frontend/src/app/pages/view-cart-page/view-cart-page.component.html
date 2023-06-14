@@ -1,10 +1,14 @@
 <app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
-<div class="container"
+<div class="container px-10"
 [@loadedUnloadedList]="{ value: getListAnimationState() }">
   <div class="row">
-    <div class="col-8">
-      <h1 *ngIf="getTotalAmount() > 0" class="cart-header text-start">{{"cart" | translate}}</h1>
-      <h1 *ngIf="getTotalAmount() <= 0" class="cart-header text-start">{{"cart.empty" | translate}}</h1>
+    <div class="col-7">
+      <h1 *ngIf="getTotalAmount() > 0" class="cart-header text-start mt-5">{{"cart" | translate}}</h1>
+      <button class="btn btn-outline-secondary" *ngIf="getTotalAmount() > 0" (click)="clearCart()">
+        <mat-icon>remove_shopping_cart</mat-icon>
+        {{"cart.clear" | translate}}
+      </button>
+      <h1 *ngIf="getTotalAmount() <= 0" class="cart-header text-start mt-5">{{"cart.empty" | translate}}</h1>
       <mat-grid-list class="mat-list text-start" cols="1" rowHeight="350px">
         <mat-grid-tile class="mat-tile text-start" *ngFor="let orderedProduct of orderedProducts;">
           <div class="mat-card-inside-tile">
@@ -41,7 +45,7 @@
                 <mat-card-subtitle>
                   {{ "product.chosen.number.of.pieces" | translate }}:
                 </mat-card-subtitle>
-                <div class="input-group w-50">
+                <div class="input-group w-75">
                   <div class="input-group-prepend">
                     <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)">-</button>
                   </div>
@@ -57,6 +61,9 @@
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)">+</button>
                   </div>
+                  <button mat-button color="primary" (click)="onRemoveFromCartClicked(orderedProduct)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
             </mat-card-content>
@@ -65,25 +72,236 @@
         </mat-grid-tile>
       </mat-grid-list>
     </div>
-    <div class="col-4">
-      <div class="position-fixed mt-5">
-        <mat-card>
-          <mat-card-header>
+    <div class="col-5" *ngIf="getTotalAmount() > 0">
+      <div class="mt-5">
+        <mat-card class="position-fixed summary-card">
+          <mat-card-content>
             <mat-card-title>{{"summary" | translate}}</mat-card-title>
+            <br><br>
             <mat-card-subtitle>
               {{"products.total.price" | translate }}:
               <strong>
                 {{ this.totalPrice.toFixed(2) }}
               </strong>
             </mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <button
-              mat-raised-button
-              color="primary">
-              {{ "cart.make.order" | translate }}
-              <mat-icon>arrow_forward</mat-icon>
-            </button>
+            <mat-card-subtitle>
+              <mat-checkbox
+                color="primary"
+                [(ngModel)]="checked"
+                (ngModelChange)="onCheck()"
+                [ngModelOptions]="{ standalone: true }"
+              >
+                {{ "cart.other.shipment.data.checkbox" | translate }}
+              </mat-checkbox>
+            </mat-card-subtitle>
+            <form [formGroup]="shippingDataForm">
+              <div *ngIf="checked" class="row gy-3">
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.20' | translate }}"
+                    appearance="fill"
+                    >
+                    <mat-label>{{ "register.label.firstName" | translate }}</mat-label>
+                    <input
+                      matInput
+                      #recipientFirstName
+                      type="text"
+                      formControlName="recipientFirstName"
+                      maxlength="20"
+                    />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('recipientFirstName')?.hasError('required')">
+                      {{ "register.validity.required" | translate }}
+                    </mat-error>
+                    <mat-error
+                      *ngIf="shippingDataForm.get('recipientFirstName')?.hasError('pattern')"
+                    >{{
+                      "register.validity.person.patternMismatch" | translate
+                      }}</mat-error
+                    >
+                    <mat-hint align="end">{{ recipientFirstName.value.length }}/20</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.20' | translate }}"
+                    appearance="fill"
+                    >
+                    <mat-label>{{ "register.label.lastName" | translate }}</mat-label>
+                    <input
+                      matInput
+                      #recipientLastName
+                      type="text"
+                      formControlName="recipientLastName"
+                      maxlength="20"
+                    />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('recipientLastName')?.hasError('required')">
+                      {{ "register.validity.required" | translate }}
+                    </mat-error>
+                    <mat-error
+                      *ngIf="shippingDataForm.get('recipientLastName')?.hasError('pattern')"
+                    >{{
+                      "register.validity.person.patternMismatch" | translate
+                      }}</mat-error
+                    >
+                    <mat-hint align="end">{{ recipientLastName.value.length }}/20</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.20' | translate }}"
+                    appearance="fill"
+                    >
+                    <mat-label>{{ "register.label.country" | translate }}</mat-label>
+                    <input
+                      matInput
+                      #country
+                      type="text"
+                      formControlName="country"
+                      maxlength="20"
+                    />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('country')?.hasError('required')">
+                      {{ "register.validity.required" | translate }}
+                    </mat-error>
+                    <mat-error
+                      *ngIf="shippingDataForm.get('country')?.hasError('pattern')"
+                    >{{
+                      "register.validity.person.patternMismatch" | translate
+                      }}</mat-error
+                    >
+                    <mat-hint align="end">{{ country.value.length }}/20</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.20' | translate }}"
+                    appearance="fill"
+                  >
+                    <mat-label>{{ "register.label.city" | translate }}</mat-label>
+                    <input
+                      matInput
+                      #city
+                      type="text"
+                      formControlName="city"
+                      maxlength="20"
+                    />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('city')?.hasError('required')">
+                      {{ "register.validity.required" | translate }}
+                    </mat-error>
+                    <mat-error
+                      *ngIf="shippingDataForm.get('city')?.hasError('pattern')"
+                    >{{
+                      "register.validity.person.patternMismatch" | translate
+                      }}</mat-error
+                    >
+                    <mat-hint align="end">{{ city.value.length }}/20</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.20' | translate }}"
+                    appearance="fill"
+                  >
+                    <mat-label>{{ "register.label.street" | translate }}</mat-label>
+                    <input
+                      matInput
+                      #street
+                      type="text"
+                      formControlName="street"
+                      maxlength="20"
+                    />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('street')?.hasError('required')">
+                      {{ "register.validity.required" | translate }}
+                    </mat-error>
+                    <mat-error
+                      *ngIf="shippingDataForm.get('street')?.hasError('pattern')"
+                    >{{
+                      "register.validity.person.patternMismatch" | translate
+                      }}</mat-error
+                    >
+                    <mat-hint align="end">{{ street.value.length }}/20</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.4' | translate }}"
+                    appearance="fill"
+                  >
+                    <mat-label>
+                      {{ "register.label.streetNumber" | translate}}
+                    </mat-label>
+                    <input
+                    matInput
+                    #streetNumber
+                    type="number"
+                    formControlName="streetNumber"
+                    max="9999"
+                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, 4);"
+                    />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('streetNumber')?.hasError('required')"
+                      >
+                      {{ "register.validity.number.min" | translate }}
+                    </mat-error>
+                    <mat-hint align="end"
+                    >{{ streetNumber.value.length }}/4</mat-hint
+                    >
+                    <mat-error
+                      *ngIf="shippingDataForm.get('streetNumber')?.hasError('min')"
+                    >{{ "register.validity.number.min" | translate }}</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field
+                    hintLabel="{{ 'register.hint.max.6' | translate }}"
+                    appearance="fill"
+                  >
+                    <mat-label>
+                      {{ "register.label.postalCode" | translate}}
+                    </mat-label>
+                    <input
+                      matInput
+                      #postalCode
+                      type="text"
+                      placeholder="00-000"
+                      formControlName="postalCode"
+                      maxlength="6"
+                      />
+                    <mat-error
+                      *ngIf="shippingDataForm.get('postalCode')?.hasError('required')"
+                    >{{ "register.validity.required" | translate }}</mat-error
+                    >
+                    <mat-error
+                      *ngIf="shippingDataForm.get('postalCode')?.hasError('pattern')"
+                    >{{ "register.validity.format" | translate }}</mat-error
+                    >
+                    <mat-hint align="end">{{ postalCode.value.length }}/6</mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <button
+                    mat-raised-button
+                    (click)="onConfirm()"
+                    color="primary">
+                    {{ "cart.make.order" | translate }}
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <button
+                *ngIf="!checked"
+                mat-raised-button
+                (click)="onConfirm()"
+                color="primary">
+                {{ "cart.make.order" | translate }}
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </form>
           </mat-card-content>
         </mat-card>
       </div>

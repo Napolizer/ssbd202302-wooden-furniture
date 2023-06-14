@@ -97,4 +97,8 @@ export class NavigationService {
   public redirectToRatePage(): Promise<boolean> {
     return this.router.navigate(['/client/orders/rates']);
   }
+
+  public redirectToDoneOrdersPage(): Promise<boolean> {
+    return this.router.navigate(['/orders/done']);
+  }
 }

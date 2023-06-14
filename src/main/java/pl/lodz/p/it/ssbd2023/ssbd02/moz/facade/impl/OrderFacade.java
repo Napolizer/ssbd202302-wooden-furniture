@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 import static jakarta.transaction.Transactional.TxType.REQUIRES_NEW;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -13,6 +14,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
@@ -54,7 +56,7 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
-  @RolesAllowed(EMPLOYEE)
+  @RolesAllowed({EMPLOYEE, SALES_REP})
   public List<Order> findByState(OrderState orderState) {
     return getEntityManager().createNamedQuery(Order.FIND_BY_STATE, Order.class)
         .setParameter("orderState", orderState)
@@ -80,6 +82,16 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   @Override
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @RolesAllowed(SALES_REP)
+  public List<Object[]> findOrderStatsForReport(LocalDateTime startDate, LocalDateTime endDate) {
+    return em.createNamedQuery(Order.FIND_ORDER_STATS_FOR_REPORT, Object[].class)
+            .setParameter("startDate", startDate)
+            .setParameter("endDate", endDate)
+            .setParameter("createdState", OrderState.CREATED).getResultList();
+
   }
 
   @Override

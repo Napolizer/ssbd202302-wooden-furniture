@@ -3,7 +3,6 @@
 
   "page.title": "SSBD02",
 
-  "login": "login",
   "login.subtitle": "Login to continue",
   "login.enterLogin": "Enter your login",
   "login.enterPassword": "Enter your password",
@@ -235,6 +234,7 @@
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
   "dialog.admin.edit.account.message": "Are you sure you want to edit this account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
+  "dialog.create.order.message": "Are you sure you want to create order?",
   "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
   "dialog.github.register.message": "Are you sure you want to link your Github account with account in our system?",
@@ -250,6 +250,8 @@
   "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
   "dialog.change.order.state.message": "Are you sure you want to change order state?",
   "dialog.archive.product.group": "Are you sure you want to archive this product group?",
+  "dialog.cart.empty": "Are you sure you want to clear cart?",
+  "dialog.cart.remove": "Are you sure you want to remove item from cart?",
   "dialog.edit.product.group": "Are you sure you want to edit product group name?",
 
   "exception.occurred": "Exception occurred",
@@ -305,6 +307,8 @@
   "exception.moz.order.already.in.delivery": "Order is already in delivery",
   "exception.moz.order.already.delivered": "Order is already delivered",
   "exception.moz.order.already.cancelled": "Order is already cancelled",
+  "exception.moz.rate.notfound": "Rate not found",
+  "exception.moz.invalid.date": "Invalid date",
   "exception.moz.product.group.already.archived": "Product group is already archived",
 
 
@@ -325,6 +329,7 @@
   "toolbar.settings": "Settings",
   "toolbar.createAccount": "Create Account",
   "toolbar.account": "Account",
+  "toolbar.doneOrders": "Done orders",
 
   "auth.token.expired": "Your token has expired",
   "auth.not.authenticated": "You are not authenticated",
@@ -416,6 +421,7 @@
   "product.sold.out": "Product sold out",
   "product.withdrawn": "The product has been withdrawn from sale",
   "product.name": "Model",
+  "product.id": "Product ID",
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
@@ -432,11 +438,15 @@
   "product.color.brown": "Brown",
   "product.color.white": "White",
 
+  "order.account.id": "Orderer ID",
+  "order.id": "Order ID",
+  "order.size": "Amount of products ordered",
   "order.change.state.success": "Order state changed successfully",
   "order.change.state": "Change order state",
   "select.order.state": "Select order state",
   "order.show": "Show oder",
   "order.cancel": "Cancel order",
+  "order.client.cancel.button": "Cancel",
   "order.client.observe": "Observe order",
   "order.client.observe.button": "Observe",
   "order.state": "Order state",
@@ -445,11 +455,15 @@
   "order.state.in.delivery": "In delivery",
   "order.state.delivered": "Delivered",
   "order.state.cancelled": "Cancelled",
+  "order.observe.confirmation": "Are you sure you want to observe this order?",
+  "order.observe.success": "Successfully observed order",
   "order.client.already.observed": "Already observed",
   "order.cancel.confirmation": "Are you sure you want to cancel this order?",
   "order.cancel.success": "Order cancelled successfully",
+  "order.create.success": "Successfully created order",
   "orders.client": "Your orders",
   "products.amount": "Products amount",
+  "orders.done": "Done orders",
   "order.client.product.rate": "Rate your product",
   "products.size": "Number of available products",
   "products.total.price": "Total price",
@@ -475,6 +489,9 @@
   "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",
   "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
   "cart.add.product.success": "Product added to cart",
+  "cart.other.shipment.data.checkbox": "Do you want to provide other shipment data?",
+  "cart.clear": "Clear cart",
+  "cart.remove.product.success": "Product removed from cart successfully",
 
   "summary": "Summary",
   "cart.amount.error.message": "Impossible to add more products to cart than available amount",
@@ -484,5 +501,21 @@
   "total.price": "Total price",
   "recipient.first.name": "Recipient first name",
   "recipient.last.name": "Recipient last name",
-  "recipient.full.name": "Recipient name"
+  "recipient.full.name": "Recipient full name",
+  "rate.remove": "Remove your rate",
+
+  "exception.moz.product.updated.by": "Impossible to make order, because one of the product was edited by this user recently",
+  "exception.moz.product.created.by": "Impossible to make order, because one of the product was created by this user recently",
+
+  "generate.report.title": "Generate sales report",
+  "generate.report.back": "Back",
+  "generate.report.confirm": "Generate",
+  "generate.report.label": "Enter sales period",
+  "generate.report.start": "Start date",
+  "generate.report.end": "End date",
+  "generate.report.required.date.start": "Start date cannot be empty",
+  "generate.report.required.date.end": "End date cannot be empty",
+  "generate.report.invalid.date.start": "Invalid start date",
+  "generate.report.invalid.date.end": "Invalid end date",
+  "generate.report.success": "Sales report has been successfully generated"
 }

@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api;
 
 import jakarta.ejb.Local;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,18 +31,19 @@ public interface OrderServiceOperations {
 
   List<Order> findAllArchived();
 
-  Order cancelOrder(Long id, String hash);
+  Order cancelOrder(Long id, String hash, String login);
 
   Order cancelOrderAsEmployee(Long id, String hash);
 
-  Order observeOrder(Long id, String hash);
+  Order observeOrder(Long id, String hash, String login);
 
   Order changeOrderState(Long id, OrderState state, String hash);
 
-  void generateReport();
+  byte[] generateReport(LocalDateTime startDate, LocalDateTime endDate, String locale);
 
   List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
 
   boolean isLastTransactionRollback();
 
+  List<Order> findAllOrdersDone();
 }

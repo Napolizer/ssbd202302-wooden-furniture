@@ -47,6 +47,14 @@
     >
       <mat-icon>accessibility</mat-icon><span>{{ "toolbar.clientPanel" | translate }}</span>
     </button>
+    <button
+      mat-menu-item
+      routerLink="#"
+      *ngIf="isUserSalesRep()"
+      (click)="redirectToDoneOrdersPage()"
+    >
+      <mat-icon>accessibility</mat-icon><span>{{ "toolbar.doneOrders" | translate }}</span>
+    </button>
   </mat-menu>
   <span class="toolbar-right title">
     <div class="title-text" (click)="redirectToMainPage()">
@@ -104,7 +112,7 @@
     <mat-icon>language</mat-icon>
   </button>
   <button
-    *ngIf="isUserLoggedIn()"
+    *ngIf="isUserLoggedIn() && isUserClient()"
     class="account"
     mat-icon-button
     matTooltip="View Cart"
