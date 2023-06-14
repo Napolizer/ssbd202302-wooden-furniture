@@ -416,6 +416,7 @@
   "select.order.state": "Select order state",
   "order.show": "Show oder",
   "order.cancel": "Cancel order",
+  "order.client.cancel.button": "Cancel",
   "order.client.observe": "Observe order",
   "order.client.observe.button": "Observe",
   "order.state": "Order state",

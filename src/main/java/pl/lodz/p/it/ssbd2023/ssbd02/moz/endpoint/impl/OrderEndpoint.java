@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
@@ -127,9 +128,9 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   @RolesAllowed(CLIENT)
-  public OrderDto cancelOrder(OrderDto orderDto) {
+  public OrderDto cancelOrder(CancelOrderDto cancelOrderDto, String login) {
     Order order = repeatTransactionWithOptimistic(
-        () -> orderService.cancelOrder(orderDto.getId(), orderDto.getHash()));
+        () -> orderService.cancelOrder(cancelOrderDto.getId(), cancelOrderDto.getHash(), login));
     return orderMapper.mapToOrderDto(order);
   }
 
