@@ -44,7 +44,7 @@
                 <ng-container matColumnDef="observe">
                   <mat-header-cell *matHeaderCellDef>{{'order.client.observe' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let order">
-                    <button mat-button color="primary" class="my-button" (click)="observeOrder()" *ngIf="canObserve(order)">
+                    <button mat-button color="primary" class="my-button" (click)="onObserveClicked(order)" *ngIf="canObserve(order)">
                       {{'order.client.observe.button' | translate}}
                     </button>
                     <button mat-button color="primary" *ngIf="order.observed">

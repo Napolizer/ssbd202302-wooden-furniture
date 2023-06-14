@@ -424,6 +424,8 @@
   "order.state.in.delivery": "In delivery",
   "order.state.delivered": "Delivered",
   "order.state.cancelled": "Cancelled",
+  "order.observe.confirmation": "Are you sure you want to observe this order?",
+  "order.observe.success": "Successfully observed order",
   "order.client.already.observed": "Already observed",
   "order.cancel.confirmation": "Are you sure you want to cancel this order?",
   "order.cancel.success": "Order cancelled successfully",

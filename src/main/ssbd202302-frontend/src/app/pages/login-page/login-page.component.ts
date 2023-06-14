@@ -145,6 +145,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: (url) => {
+          this.localStorageService.set(environment.currentRoleKey, 'client')
           window.location.href = url;
         },
         error: () => {
@@ -158,6 +159,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: (url) => {
+          this.localStorageService.set(environment.currentRoleKey, 'client')
           window.location.href = url;
         },
         error: () => {
