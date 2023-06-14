@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
@@ -93,9 +94,9 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public OrderDto find(Long id) {
+  public OrderWithProductsDto find(Long id) {
     return repeatTransactionWithOptimistic(() -> orderService.find(id))
-        .map(orderMapper::mapToOrderDto)
+        .map(orderMapper::mapToOrderWithProductsDto)
         .orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
   }
 

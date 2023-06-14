@@ -1,4 +1,3 @@
-import { Category } from "./category";
 import { FurnitureDimensions } from "./furniture.dimensions";
 import { PackageDimensions } from "./package.dimensions";
 import {ProductGroupInfo} from "./product.group.info"
