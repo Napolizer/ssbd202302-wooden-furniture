@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductGroupMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoWithoutHashDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
@@ -72,9 +73,9 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
 
   @Override
   @PermitAll
-  public List<ProductGroupInfoDto> findAll() {
+  public List<ProductGroupInfoWithoutHashDto> findAll() {
     return repeatTransactionWithoutOptimistic(() -> productGroupService.findAll()).stream()
-            .map(ProductGroupMapper::mapToProductGroupInfoDto).toList();
+            .map(ProductGroupMapper::mapToProductGroupInfoWithoutHashDto).toList();
   }
 
   @Override

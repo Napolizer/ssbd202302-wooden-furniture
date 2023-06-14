@@ -121,6 +121,16 @@
   "archive.product.group.validity.notexisting": "The specified product group does not exist",
   "archive.product.group.success": "Product group archived successfully",
 
+  "edit.product.group.name.label": "Product group name",
+  "edit.product.group.name.hint.max.50": "Max 50 characters",
+  "edit.product.group.validity.required": "The field cannot be empty",
+  "edit.product.group.validity.notexisting": "The specified product group does not exist",
+  "edit.product.group.new.name.label": "New product group name",
+  "edit.product.group.patternMismatch": "Field must start with a capital letter and contain only letters",
+  "edit.product.group.back": "Back",
+  "edit.product.group.confirm": "Edit",
+  "edit.product.group.success": "Product group edited successfully",
+
   "add.product.validity.notexisting": "The specified product group does not exist",
   "add.product.category": "Category",
   "add.product.wood.type": "Wood type",
@@ -242,6 +252,7 @@
   "dialog.archive.product.group": "Are you sure you want to archive this product group?",
   "dialog.cart.empty": "Are you sure you want to clear cart?",
   "dialog.cart.remove": "Are you sure you want to remove item from cart?",
+  "dialog.edit.product.group": "Are you sure you want to edit product group name?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -365,6 +376,7 @@
   "employee.add.product.group": "Add product group",
   "employee.add.product": "Add product",
   "employee.archive.product.group": "Archive product group",
+  "employee.edit.product.group.name": "Edit product group name",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.ordersPerPage": "Orders per page",
