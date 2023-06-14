@@ -9,9 +9,5 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 @Local
 public interface RateServiceOperations {
 
-  void delete(Long id, String login);
-
-  Rate update(Long id, Integer rateNewValue, String login);
-
   boolean isLastTransactionRollback();
 }

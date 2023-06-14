@@ -1,4 +1,13 @@
-<mat-grid-list class="mat-list" cols="4"gutterSize="15px" rowHeight="600px">
+<button
+  mat-button
+  color="primary"
+  class="resetButton moveRight"
+  (click)="onResetClicked()"
+>
+  {{"refresh" | translate}}
+  <mat-icon>refresh</mat-icon>
+</button>
+<mat-grid-list class="mat-list" cols="4" gutterSize="15px" rowHeight="700px">
   <mat-grid-tile *ngFor="let orderProduct of pagedProducts; let i = index;">
       <mat-card>
         <mat-card-header>

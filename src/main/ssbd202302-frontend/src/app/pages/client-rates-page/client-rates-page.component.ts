@@ -41,7 +41,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<OrderProductWithRate>(this.orderProducts);
   sortedProducts: any[] = []; // Array to store the sorted products
   isAscending: boolean = true;
-  pageSize = 8; // Number of products per page
+  pageSize = 4; // Number of products per page
   pageSizeOptions: number[] = [4, 8, 12];
   starRating = 2;
   currentPage = 1; // Current page number
@@ -165,7 +165,12 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
         error: (e: HttpErrorResponse) => {
           this.loading = false;
           orderProduct.rate = orderProduct.oldRate;
-          alert("Sth gone wrong")
+          this.translate
+            .get(e.error.message || 'exception.moz.rate.notfound')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
         },
       });
   }
@@ -214,4 +219,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  onResetClicked() {
+    this.loadClientProducts();
+  }
 }
