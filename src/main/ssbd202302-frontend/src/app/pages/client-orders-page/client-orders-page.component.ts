@@ -40,7 +40,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
   orders: ClientOrder[] = [];
   loading = true;
   listLoading = false;
-  displayedColumns = ['id', 'productsNumber', 'totalPrice', 'orderState', 'show', 'observe'];
+  displayedColumns = ['id', 'productsNumber', 'totalPrice', 'orderState', 'show', 'observe', 'cancel'];
   dataSource = new MatTableDataSource<ClientOrder>(this.orders);
   destroy = new Subject<boolean>();
 
@@ -50,8 +50,8 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
     private breadcrumbsService: BreadcrumbsService,
     private translate: TranslateService,
     private router: Router,
-    private orderService: OrderService,
     private dialogService: DialogService,
+    private orderService: OrderService,
     private alertService: AlertService
   ) { }
 
@@ -155,6 +155,10 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
     return (order.orderState == 'CREATED' || order.orderState == 'IN_DELIVERY') && !order.observed;
   }
 
+  canCancel(order: ClientOrder): boolean {
+    return order.orderState == 'CREATED';
+  }
+
   calculateTotalQuantity(order: any): number {
     let total = 0;
     for (const product of order.orderedProducts) {
@@ -165,5 +169,49 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   redirectToRatePage() {
     this.navigationService.redirectToRatePage();
+  }
+
+  onCancelClicked(order: ClientOrder) {
+        this.translate.get("order.cancel.confirmation")
+          .pipe(takeUntil(this.destroy))
+          .subscribe(msg => {
+            const ref = this.dialogService.openConfirmationDialog(msg, "primary")
+            ref
+              .afterClosed()
+              .pipe(first(), takeUntil(this.destroy))
+              .subscribe((result) => {
+                if (result == 'action') {
+                  this.cancelOrder(order);
+                }
+              });
+          })
+  }
+
+  cancelOrder(order: ClientOrder) {
+    console.log(order)
+    this.loading = true;
+    this.orderService.cancelOrder(order)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.loading = false
+          this.translate.get("order.cancel.success")
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToClientOrdersPage();
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          const message = e.error.message as string;
+          this.translate
+            .get(message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.danger(msg);
+            })
+        }
+      })
   }
 }

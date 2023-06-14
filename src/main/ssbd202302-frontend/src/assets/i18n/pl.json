@@ -413,6 +413,7 @@
   "select.order.state": "Wybierz stan zamówienia",
   "order.show": "Wyświetl",
   "order.cancel": "Anuluj zamówienie",
+  "order.client.cancel.button": "Anuluj",
   "order.client.observe": "Obserwuj zamówienie",
   "order.client.observe.button": "Obserwuj",
   "order.state": "Stan zamówienia",

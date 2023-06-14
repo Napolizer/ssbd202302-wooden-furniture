@@ -201,14 +201,28 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order cancelOrder(Long id, String hash) {
-    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+  public Order cancelOrder(Long id, String hash, String login) {
+    List<Order> clientOrders = findByAccountLogin(login);
+    Order order = Order.builder().build();
+    for (Order clientOrder : clientOrders) {
+      if (clientOrder.getId().equals(id)) {
+        order = clientOrder;
+      }
+    }
+
+    if (order == null) {
+      throw ApplicationExceptionFactory.createOrderNotFoundException();
+    }
 
     if (order.getOrderState().equals(OrderState.IN_DELIVERY)) {
       throw ApplicationExceptionFactory.createOrderAlreadyInDeliveryException();
-    } else if (order.getOrderState().equals(OrderState.DELIVERED)) {
+    }
+
+    if (order.getOrderState().equals(OrderState.DELIVERED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyDeliveredException();
-    } else if (order.getOrderState().equals(CANCELLED)) {
+    }
+
+    if (order.getOrderState().equals(CANCELLED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyCancelledException();
     }
 

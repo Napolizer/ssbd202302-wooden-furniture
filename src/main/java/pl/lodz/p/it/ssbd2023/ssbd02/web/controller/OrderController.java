@@ -115,8 +115,10 @@ public class OrderController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response cancelOrder(@NotNull @Valid OrderDto orderDto) {
-    return Response.ok(orderEndpoint.cancelOrder(orderDto)).build();
+  public Response cancelOrder(@NotNull @Valid CancelOrderDto cancelOrderDto,
+                              @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    return Response.ok(orderEndpoint.cancelOrder(cancelOrderDto, login)).build();
   }
 
   @PUT
