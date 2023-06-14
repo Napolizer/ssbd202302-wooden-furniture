@@ -241,6 +241,7 @@
   "dialog.change.order.state.message": "Are you sure you want to change order state?",
   "dialog.archive.product.group": "Are you sure you want to archive this product group?",
   "dialog.cart.empty": "Are you sure you want to clear cart?",
+  "dialog.cart.remove": "Are you sure you want to remove item from cart?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -477,6 +478,7 @@
   "cart.add.product.success": "Product added to cart",
   "cart.other.shipment.data.checkbox": "Do you want to provide other shipment data?",
   "cart.clear": "Clear cart",
+  "cart.remove.product.success": "Product removed from cart successfully",
 
   "summary": "Summary",
   "cart.amount.error.message": "Impossible to add more products to cart than available amount",
