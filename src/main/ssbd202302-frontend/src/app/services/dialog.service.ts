@@ -15,6 +15,8 @@ import { AddProductComponent } from '../add-product/add-product.component';
 import { EditProductComponent } from '../components/edit-product/edit-product.component';
 import { Product } from '../interfaces/product';
 import {ArchiveProductGroupComponent} from "../components/archive-product-group/archive-product-group.component";
+import {OrderDetailsDto} from "../interfaces/order.details.dto";
+import {ChangeOrderStateComponent} from "../components/change-order-state/change-order-state.component";
 
 @Injectable({
   providedIn: 'root'
@@ -109,7 +111,7 @@ export class DialogService {
     return this.matDialog.open(AddProductComponent, {
       disableClose: true,
       width: '1100px',
-      height: '750px',
+      height: '755px',
       autoFocus: false,
     });
   }
@@ -121,6 +123,12 @@ export class DialogService {
       height: '500px',
       autoFocus: false,
       data: { product }
+    });
+  }
+
+  openChangeOrderStateDialog(order: OrderDetailsDto): MatDialogRef<ChangeOrderStateComponent> {
+    return this.matDialog.open(ChangeOrderStateComponent, {
+      data: {order}
     });
   }
 

@@ -17,6 +17,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -104,6 +105,7 @@ public class Account extends AbstractEntity {
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
   @Builder.Default
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private List<Order> orders = new ArrayList<>();
 
   @Column(name = "new_email")
@@ -125,6 +127,7 @@ public class Account extends AbstractEntity {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @Builder.Default
   @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   @JoinColumn(name = "account_id")
   private List<PasswordHistory> passwordHistory = new ArrayList<>();
 

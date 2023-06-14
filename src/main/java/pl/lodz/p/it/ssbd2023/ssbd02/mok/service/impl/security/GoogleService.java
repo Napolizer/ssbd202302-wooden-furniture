@@ -41,6 +41,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import pl.lodz.p.it.ssbd2023.ssbd02.config.EnvironmentConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Person;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
@@ -59,6 +60,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 public class GoogleService extends AbstractService implements GoogleServiceOperations {
   @Inject
   private AccountFacadeOperations accountFacade;
+
+  @Inject
+  private EnvironmentConfig environmentConfig;
+
   private static final String BASE_URI;
   private static final String TOKEN_URI;
   private static final String VALIDATE_URI;
@@ -221,6 +226,16 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   @RolesAllowed(EMPLOYEE)
   public String saveImageInStorage(byte[] image, String fileName) {
+    String blobName = UUID.randomUUID().toString();
+    BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName)
+            .setContentType(fileName.endsWith(FileUtils.JPG) || fileName.endsWith(FileUtils.JPEG)
+                    ? "image/jpeg" : "image/png")
+            .build();
+
+    if (environmentConfig.isTest()) {
+      return STORAGE_URL + blobName;
+    }
+
     Credentials credentials;
     try {
       credentials = GoogleCredentials
@@ -229,12 +244,6 @@ public class GoogleService extends AbstractService implements GoogleServiceOpera
       throw ApplicationExceptionFactory.createUnknownErrorException(e);
     }
     Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-
-    String blobName = UUID.randomUUID().toString();
-    BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName)
-            .setContentType(fileName.endsWith(FileUtils.JPG) || fileName.endsWith(FileUtils.JPEG)
-                    ? "image/jpeg" : "image/png")
-            .build();
     try {
       storage.create(blobInfo, image);
     } catch (Exception e) {

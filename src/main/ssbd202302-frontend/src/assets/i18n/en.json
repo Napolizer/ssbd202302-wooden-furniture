@@ -3,6 +3,7 @@
 
   "page.title": "SSBD02",
 
+  "login": "login",
   "login.subtitle": "Login to continue",
   "login.enterLogin": "Enter your login",
   "login.enterPassword": "Enter your password",
@@ -140,6 +141,7 @@
   "add.product.drop.upload.label": "Drag and drop here to upload an image",
   "add.product.drop.fill.label": "Add furniture details to upload an image",
   "add.product.success": "Product has been successfully added",
+  "add.product.use.existing": "Use existing product image",
 
   "reset.password.title": "Reset your password",
   "reset.password.newPassword": "New password",
@@ -236,6 +238,7 @@
   "dialog.add.product.group.message": "Are you sure you want to add new product group?",
   "dialog.add.product.message": "Are you sure you want to add new product?",
   "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
+  "dialog.change.order.state.message": "Are you sure you want to change order state?",
   "dialog.archive.product.group": "Are you sure you want to archive this product group?",
 
   "exception.occurred": "Exception occurred",
@@ -286,6 +289,11 @@
   "exception.moz.product.not.found": "Product not found",
   "exception.moz.product.change.state.archive": "Product is already archived",
   "exception.moz.product.change.state.dearchive": "Product is already dearchived",
+  "exception.moz.invalid.order.state.transition": "Invalid order state transition",
+  "exception.moz.order.not.found": "Order not found",
+  "exception.moz.order.already.in.delivery": "Order is already in delivery",
+  "exception.moz.order.already.delivered": "Order is already delivered",
+  "exception.moz.order.already.cancelled": "Order is already cancelled",
 
 
   "role.administrator": "Administrator",
@@ -334,6 +342,7 @@
   "select.role": "Select Role",
   "current.role": "Current Role",
   "current.roles": "Current Roles",
+  "current.order.state": "Current Order State",
 
   "block.success": "Account blocked successfully",
   "activate.success": "Account activated successfully",
@@ -352,6 +361,7 @@
   "employee.archive.product.group": "Archive product group",
 
   "paginator.itemsPerPage": "Items per page",
+  "paginator.ordersPerPage": "Orders per page",
   "paginator.firstPageLabel": "First page",
   "paginator.lastPageLabel": "Last page",
   "paginator.nextPageLabel": "Next page",
@@ -409,24 +419,57 @@
   "product.color.brown": "Brown",
   "product.color.white": "White",
 
+  "order.change.state.success": "Order state changed successfully",
+  "order.change.state": "Change order state",
+  "select.order.state": "Select order state",
   "order.show": "Show oder",
+  "order.cancel": "Cancel order",
   "order.client.observe": "Observe order",
   "order.client.observe.button": "Observe",
   "order.state": "Order state",
+  "order.state.created": "Created",
+  "order.state.completed": "Completed",
+  "order.state.in.delivery": "In delivery",
+  "order.state.delivered": "Delivered",
+  "order.state.cancelled": "Cancelled",
   "order.client.already.observed": "Already observed",
+  "order.cancel.confirmation": "Are you sure you want to cancel this order?",
+  "order.cancel.success": "Order cancelled successfully",
   "orders.client": "Your orders",
+  "products.amount": "Products amount",
+  "order.client.product.rate": "Rate your product",
   "products.size": "Number of available products",
   "products.total.price": "Total price",
   "product.available": "Product is available",
   "product.unavailable": "Product is unavailable",
   "product.check.others.from.category": "Check other products from category",
   "product.price": "Price",
+  "product.amount": "Amount",
   "product.image": "Image",
   "product.edit": "Edit product",
+  "product.dimensions": "Dimensions",
+  "product.package.dimensions": "Package dimensions",
+  "product.chosen.number.of.pieces": "Chosen number of pieces",
+  "product.available.number.of.pieces": "Available number of pieces",
 
   "archive.success": "Product archivized successfully",
   "dearchive.success": "Product dearchivized successfully",
 
+  "cart": "Cart",
+  "cart.empty": "Cart is empty",
+  "cart.make.order": "Make order",
   "cart.user.not.logged.in.error.message": "You have to log in to add product to cart",
-  "cart.amount.error.message": "Impossible to add more products to cart than available amount"
+  "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",
+  "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
+  "cart.add.product.success": "Product added to cart",
+
+  "summary": "Summary",
+  "cart.amount.error.message": "Impossible to add more products to cart than available amount",
+
+  "address": "Address",
+  "orders": "Orders",
+  "total.price": "Total price",
+  "recipient.first.name": "Recipient first name",
+  "recipient.last.name": "Recipient last name",
+  "recipient.full.name": "Recipient name"
 }

@@ -9,6 +9,7 @@ import { Product } from '../interfaces/product';
 import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
+import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
 import {ArchiveProductGroup} from "../interfaces/archive.product.group";
 
 @Injectable({
@@ -37,6 +38,17 @@ export class ProductService {
 
   public retrieveAllProducts(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product`);
+  }
+
+  public retrieveClientProducts(): Observable<OrderProductWithRate[]> {
+    return this.httpClient.get<OrderProductWithRate[]>(
+      `${environment.apiBaseUrl}/product/client`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    );
   }
 
   public retrieveAllProductGroupNames(): Observable<ProductGroup[]> {

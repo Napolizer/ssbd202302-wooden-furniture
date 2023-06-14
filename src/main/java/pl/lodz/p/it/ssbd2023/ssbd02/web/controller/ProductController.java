@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.RolesAllowed;
@@ -21,8 +21,8 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.List;
-import javax.print.attribute.standard.Media;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -30,6 +30,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
@@ -51,6 +52,9 @@ public class ProductController {
 
   @Inject
   private ProductGroupEndpointOperations productGroupEndpoint;
+
+  @Inject
+  private Principal principal;
 
   @PUT
   @Path("/id/{id}")
@@ -246,5 +250,15 @@ public class ProductController {
   public Response findAllByPrice(@QueryParam("minPrice") Double minPrice,
                                  @QueryParam("maxPrice") Double maxPrice) {
     throw new UnsupportedOperationException();
+  }
+
+  @GET
+  @Path("/client")
+  @RolesAllowed(CLIENT)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findClientProducts() {
+    List<OrderProductWithRateDto> clientProducts =
+            productEndpoint.findAllProductsBelongingToAccount(principal.getName());
+    return Response.ok(clientProducts).build();
   }
 }

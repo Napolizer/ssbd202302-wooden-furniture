@@ -97,6 +97,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToProductsPage();
   }
 
+  redirectToViewCartPage(): void {
+    this.breadcrumbs = ['toolbar.home', 'cart'];
+    void this.navigationService.redirectToViewCartPage();
+  }
+
   isUserLoggedIn(): boolean {
     return this.authenticationService.isUserLoggedIn();
   }

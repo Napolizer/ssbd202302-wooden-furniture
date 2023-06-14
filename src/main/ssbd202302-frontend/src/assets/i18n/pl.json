@@ -3,6 +3,7 @@
 
   "page.title": "SSBD02",
 
+  "login": "login",
   "login.title": "Meble Drewniane",
   "login.subtitle": "Logowanie",
   "login.enterLogin": "Podaj swój login",
@@ -140,6 +141,7 @@
   "add.product.drop.upload.label": "Przeciągnij obraz tutaj, aby go dodać",
   "add.product.drop.fill.label": "Dodaj szczegóły mebla aby dodać obraz",
   "add.product.success": "Produkt został pomyślnie dodany",
+  "add.product.use.existing": "Użyj istniejący obraz produktu",
 
   "reset.password.title": "Resetowanie hasła",
   "reset.password.newPassword": "Nowe hasło",
@@ -237,6 +239,7 @@
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
   "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
+  "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -285,6 +288,11 @@
   "exception.moz.product.not.found": "Produkt nie istnieje",
   "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
   "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
+  "exception.moz.invalid.order.state.transition": "Niepoprawna zmiana stanu zamówienia",
+  "exception.moz.order.not.found": "Nie znaleziono zamówienia",
+  "exception.moz.order.already.in.delivery": "Nie można zmienić stanu zamówienia, ponieważ jest już w dostawie",
+  "exception.moz.order.already.delivered": "Nie można zmienić stanu zamówienia, ponieważ jest już dostarczone",
+  "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -331,6 +339,7 @@
   "select.role": "Wybierz Rolę",
   "current.role": "Obecna Rola",
   "current.roles": "Obecne Role",
+  "current.order.state": "Obecny Stan Zamówienia",
 
   "block.success": "Pomyślnie zablokowano konto",
   "activate.success": "Pomyślnie odblokowano konto",
@@ -349,6 +358,7 @@
   "employee.archive.product.group": "Zarchiwizuj grupę produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
+  "paginator.ordersPerPage": "Liczba zamówień na stronę",
   "paginator.firstPageLabel": "Pierwsza strona",
   "paginator.lastPageLabel": "Ostatnia strona",
   "paginator.nextPageLabel": "Następna strona",
@@ -394,15 +404,27 @@
   "product.color.brown": "Brązowy",
   "product.color.white": "Biały",
 
-  "order.show": "Wyświetl zamówienie",
+  "order.change.state.success": "Stan zamówienia został pomyślnie zmieniony",
+  "order.change.state": "Zmień stan zamówienia",
+  "select.order.state": "Wybierz stan zamówienia",
+  "order.show": "Wyświetl",
+  "order.cancel": "Anuluj zamówienie",
   "order.client.observe": "Obserwuj zamówienie",
   "order.client.observe.button": "Obserwuj",
   "order.state": "Stan zamówienia",
+  "order.state.created": "Stworzone",
+  "order.state.completed": "Skompletowane",
+  "order.state.in.delivery": "W dostawie",
+  "order.state.delivered": "Dostarczone",
+  "order.state.cancelled": "Anulowane",
   "order.client.already.observed": "Już obserwowane",
+  "order.cancel.confirmation": "Czy na pewno chcesz anulować zamówienie?",
+  "order.cancel.success": "Zamówienie zostało anulowane",
   "orders.client": "Twoje zamówienia",
+  "products.amount": "Zamówione produkty",
+  "order.client.product.rate": "Oceń twój produkt",
   "products.size": "Liczba dostępnych produktów",
   "products.total.price": "Cena całkowita",
-
   "product.available.true": "Produkt jest dostępny w ilości ",
   "product.available.false": "Brak produktu w magazynie.",
   "product.amounts": "sztuk",
@@ -416,12 +438,32 @@
   "product.check.others.from.category": "Sprawdź inne produkty z kategorii",
   "product.name": "Model",
   "product.price": "Cena",
+  "product.amount": "Ilość sztuk",
   "product.image": "Zdjęcie",
   "product.edit": "Edytuj produkt",
+  "product.dimensions": "Wymiary",
+  "product.package.dimensions": "Wymiary paczki",
+  "product.chosen.number.of.pieces": "Wybrana liczba sztuk",
+  "product.available.number.of.pieces": "Dostępna liczba sztuk",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
 
+  "cart": "Koszyk",
+  "cart.empty": "Koszyk jest pusty",
+  "cart.make.order": "Złóż zamówienie",
   "cart.user.not.logged.in.error.message": "Musisz się zalogować aby dodać produkt do koszyka",
-  "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka"
+  "cart.max.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka niż dostępna liczba sztuk",
+  "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
+  "cart.add.product.success": "Produkt dodany do koszyka",
+
+  "summary": "Podsumowanie",
+  "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka",
+
+  "address": "Adres",
+  "orders": "Zamówienia",
+  "total.price": "Cena całkowita",
+  "recipient.first.name": "Imię odbiorcy",
+  "recipient.last.name": "Nazwisko odbiorcy",
+  "recipient.full.name": "Dane odbiorcy"
 }
