@@ -31,11 +31,11 @@ public interface OrderServiceOperations {
 
   List<Order> findAllArchived();
 
-  Order cancelOrder(Long id, String hash);
+  Order cancelOrder(Long id, String hash, String login);
 
   Order cancelOrderAsEmployee(Long id, String hash);
 
-  Order observeOrder(Long id, String hash);
+  Order observeOrder(Long id, String hash, String login);
 
   Order changeOrderState(Long id, OrderState state, String hash);
 

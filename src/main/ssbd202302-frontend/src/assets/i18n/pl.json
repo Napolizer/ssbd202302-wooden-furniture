@@ -114,6 +114,14 @@
   "add.product.group.success": "Grupa produktów została pomyślnie dodana",
   "add.product.group.hint.max.50": "Maksymalnie 50 znaków",
 
+  "archive.product.group.name.label": "Nazwa grupy produktów",
+  "archive.product.group.hint.max.50": "Maksymalnie 50 znaków",
+  "archive.product.group.back": "Powrót",
+  "archive.product.group.confirm": "Zarchiwizuj",
+  "archive.product.group.validity.required": "Pole nie może być puste",
+  "archive.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "archive.product.group.success": "Pomyślnie zarchiwizowano grupę produktów",
+
   "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
   "add.product.category": "Kategoria",
   "add.product.wood.type": "Rodzaj drewna",
@@ -231,7 +239,9 @@
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
+  "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
   "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
+  "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -286,6 +296,7 @@
   "exception.moz.order.already.delivered": "Nie można zmienić stanu zamówienia, ponieważ jest już dostarczone",
   "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
   "exception.moz.rate.notfound": "Nie znaleziono oceny",
+  "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
   "exception.moz.invalid.date": "Niepoprawna data",
 
   "role.administrator": "Administrator",
@@ -349,6 +360,7 @@
 
   "employee.add.product.group": "Dodaj grupę produktów",
   "employee.add.product": "Dodaj produkt",
+  "employee.archive.product.group": "Zarchiwizuj grupę produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.ordersPerPage": "Liczba zamówień na stronę",
@@ -402,6 +414,7 @@
   "select.order.state": "Wybierz stan zamówienia",
   "order.show": "Wyświetl",
   "order.cancel": "Anuluj zamówienie",
+  "order.client.cancel.button": "Anuluj",
   "order.client.observe": "Obserwuj zamówienie",
   "order.client.observe.button": "Obserwuj",
   "order.state": "Stan zamówienia",
@@ -410,6 +423,8 @@
   "order.state.in.delivery": "W dostawie",
   "order.state.delivered": "Dostarczone",
   "order.state.cancelled": "Anulowane",
+  "order.observe.confirmation": "Czy na pewno chcesz obserwować to zamówienie?",
+  "order.observe.success": "Pomyślnie zaobserwowano zamówienie",
   "order.client.already.observed": "Już obserwowane",
   "order.cancel.confirmation": "Czy na pewno chcesz anulować zamówienie?",
   "order.cancel.success": "Zamówienie zostało anulowane",
@@ -451,6 +466,7 @@
   "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
   "cart.add.product.success": "Produkt dodany do koszyka",
   "cart.other.shipment.data.checkbox": "Czy chcesz podać inne dane do wysyłki?",
+  "cart.clear": "Wyczyść koszyk",
 
   "summary": "Podsumowanie",
   "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka",

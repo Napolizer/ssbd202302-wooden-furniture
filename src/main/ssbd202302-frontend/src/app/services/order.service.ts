@@ -6,6 +6,7 @@ import {TokenService} from "./token.service";
 import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {OrderDto} from "../interfaces/order.dto";
 import {CreateOrderDto} from "../interfaces/create.order.dto";
+import {ClientOrder} from "../interfaces/client.order";
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,36 @@ export class OrderService {
     );
   }
 
+  public observeOrder(order: ClientOrder): Observable<OrderDetailsDto> {
+    return this.httpClient.put<OrderDetailsDto>(
+      `${environment.apiBaseUrl}/order/observe`,
+      {
+        id: order.id,
+        hash: order.hash
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public cancelOrder(order: ClientOrder): Observable<OrderDetailsDto> {
+    return this.httpClient.put<OrderDetailsDto>(
+      `${environment.apiBaseUrl}/order/cancel`,
+      {
+        id: order.id,
+        hash: order.hash
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
   public generateSalesReport(startDate: string, endDate: string, locale: string): Observable<any> {
     return this.httpClient.get<Blob>(
       `${environment.apiBaseUrl}/order/report?startDate=${startDate}&endDate=${endDate}`,
@@ -80,7 +111,7 @@ export class OrderService {
           Authorization: `Bearer ${this.tokenService.getToken()}`,
           'Accept-Language': locale
         },
-        
+
       }
     );
   }

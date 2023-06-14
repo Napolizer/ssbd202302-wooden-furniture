@@ -55,8 +55,6 @@ export class AppComponent {
 
     if (this.authenticationService.isUserLoggedIn()) {
       this.authenticationService.showWarningIfSessionExpired();
-    } else {
-      this.localStorageService.set(environment.currentRoleKey, "guest")
     }
   }
 }

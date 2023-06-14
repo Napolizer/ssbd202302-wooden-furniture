@@ -219,14 +219,28 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order cancelOrder(Long id, String hash) {
-    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+  public Order cancelOrder(Long id, String hash, String login) {
+    List<Order> clientOrders = findByAccountLogin(login);
+    Order order = Order.builder().build();
+    for (Order clientOrder : clientOrders) {
+      if (clientOrder.getId().equals(id)) {
+        order = clientOrder;
+      }
+    }
+
+    if (order == null) {
+      throw ApplicationExceptionFactory.createOrderNotFoundException();
+    }
 
     if (order.getOrderState().equals(OrderState.IN_DELIVERY)) {
       throw ApplicationExceptionFactory.createOrderAlreadyInDeliveryException();
-    } else if (order.getOrderState().equals(OrderState.DELIVERED)) {
+    }
+
+    if (order.getOrderState().equals(OrderState.DELIVERED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyDeliveredException();
-    } else if (order.getOrderState().equals(CANCELLED)) {
+    }
+
+    if (order.getOrderState().equals(CANCELLED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyCancelledException();
     }
 
@@ -262,19 +276,30 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order observeOrder(Long id, String hash) {
-    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+  public Order observeOrder(Long id, String hash, String login) {
+    List<Order> orders = findByAccountLogin(login);
+    Order clientOrder = Order.builder().build();
+    for (Order order : orders) {
+      if (order.getId().equals(id)) {
+        clientOrder = order;
+        break;
+      }
+    }
 
-    if (order.getObserved()) {
+    if (clientOrder == null) {
+      throw ApplicationExceptionFactory.createOrderNotFoundException();
+    }
+
+    if (clientOrder.getObserved()) {
       throw ApplicationExceptionFactory.createOrderAlreadyObservedException();
     }
 
-    if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
+    if (!CryptHashUtils.verifyVersion(clientOrder.getSumOfVersions(), hash)) {
       throw new OptimisticLockException();
     }
 
-    order.setObserved(true);
-    return orderFacade.update(order);
+    clientOrder.setObserved(true);
+    return orderFacade.update(clientOrder);
   }
 
   @Override
@@ -287,11 +312,18 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
       throw new OptimisticLockException();
     }
+    String oldOrderState = order.getOrderState().name();
     order.setOrderState(state);
+    String newOrderState = order.getOrderState().name();
+    StringBuilder orderedProducts = new StringBuilder();
+    for (OrderedProduct orderedProduct : order.getOrderedProducts()) {
+      orderedProducts.append(orderedProduct.getProduct().getProductGroup().getName()).append("\n");
+    }
     order = orderFacade.update(order);
 
     if (order.getObserved()) {
-      mailService.sendEmailAboutChangingOrderState(order.getAccount().getEmail(), order.getAccount().getLocale());
+      mailService.sendEmailAboutOrderStateChange(order.getAccount().getEmail(), order.getAccount().getLocale(),
+          String.valueOf(orderedProducts), oldOrderState, newOrderState);
     }
     return order;
   }

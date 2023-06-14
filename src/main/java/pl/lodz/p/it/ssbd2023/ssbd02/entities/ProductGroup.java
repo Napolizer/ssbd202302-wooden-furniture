@@ -32,7 +32,7 @@ import lombok.experimental.SuperBuilder;
             query = "SELECT productGroup FROM product_group productGroup WHERE productGroup.id = :id"),
     @NamedQuery(name = ProductGroup.GET_AVG_RATE,
                 query = "SELECT AVG(rate.value) FROM product_group productGroup JOIN productGroup.rates rate"
-                        + " WHERE productGroup.id = :productGroupId")
+                + " WHERE productGroup.id = :productGroupId")
 })
 public class ProductGroup extends AbstractEntity {
 

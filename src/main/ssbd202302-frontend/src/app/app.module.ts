@@ -77,6 +77,7 @@ import { EditProductComponent } from './components/edit-product/edit-product.com
 import { ClientRatesPageComponent } from './pages/client-rates-page/client-rates-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatBadgeModule} from "@angular/material/badge";
+import { ArchiveProductGroupComponent } from './components/archive-product-group/archive-product-group.component';
 import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
 import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
 import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
@@ -132,6 +133,7 @@ import { GenerateReportComponent } from './components/generate-report/generate-r
     ChangeOrderStateComponent,
     ClientRatesPageComponent,
     GenerateReportComponent,
+    ArchiveProductGroupComponent,
   ],
   imports: [
     BrowserModule,
