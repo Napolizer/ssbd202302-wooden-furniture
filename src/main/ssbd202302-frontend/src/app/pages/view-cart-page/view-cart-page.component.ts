@@ -58,7 +58,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private alertService: AlertService,
     private dialogService: DialogService,
-    private orderService: OrderService
+    private orderService: OrderService,
   ) {
 
   }
@@ -340,4 +340,41 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearCart(): void {
+    this.translate
+      .get("dialog.cart.empty")
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result === 'action') {
+              this.cartService.clearCart();
+              this.cartService.getProductsFromLocalStorage();
+              this.orderedProducts = this.cartService.getCart();
+            }
+          });
+      });
+  }
+
+  onRemoveFromCartClicked(productToRemove: OrderedProduct): void {
+    this.translate
+      .get("dialog.cart.remove")
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result === 'action') {
+              this.cartService.removeProduct(productToRemove)
+              this.cartService.getProductsFromLocalStorage();
+              this.orderedProducts = this.cartService.getCart();
+            }
+          });
+      });
+  }
 }

@@ -4,6 +4,10 @@
   <div class="row">
     <div class="col-7">
       <h1 *ngIf="getTotalAmount() > 0" class="cart-header text-start mt-5">{{"cart" | translate}}</h1>
+      <button class="btn btn-outline-secondary" *ngIf="getTotalAmount() > 0" (click)="clearCart()">
+        <mat-icon>remove_shopping_cart</mat-icon>
+        {{"cart.clear" | translate}}
+      </button>
       <h1 *ngIf="getTotalAmount() <= 0" class="cart-header text-start mt-5">{{"cart.empty" | translate}}</h1>
       <mat-grid-list class="mat-list text-start" cols="1" rowHeight="350px">
         <mat-grid-tile class="mat-tile text-start" *ngFor="let orderedProduct of orderedProducts;">
@@ -41,7 +45,7 @@
                 <mat-card-subtitle>
                   {{ "product.chosen.number.of.pieces" | translate }}:
                 </mat-card-subtitle>
-                <div class="input-group w-50">
+                <div class="input-group w-75">
                   <div class="input-group-prepend">
                     <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)">-</button>
                   </div>
@@ -57,6 +61,9 @@
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)">+</button>
                   </div>
+                  <button mat-button color="primary" (click)="onRemoveFromCartClicked(orderedProduct)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
             </mat-card-content>

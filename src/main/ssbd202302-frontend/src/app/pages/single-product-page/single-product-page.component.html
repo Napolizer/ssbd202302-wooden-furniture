@@ -3,7 +3,7 @@
   <div class="container mt-4">
     <div class="row">
       <div class="col-md-4">
-        <img class="img-fluid" [src]="product.imageUrl" alt="Product Image" />
+        <img class="img-fluid" [src]="product.imageUrl" onerror="this.src='assets/images/no-product-picture.png'" />
       </div>
       <div class="col-md-8 product-info">
         <div class="product-group-container">
@@ -139,7 +139,7 @@
         (click)="redirectToSingleProductPage(element.id)"
         class="highlight-row"
       >
-        <img mat-card-lg-image [src]="element.imageUrl" alt="zdjecie" />
+        <img mat-card-lg-image [src]="element.imageUrl" onerror="this.src='assets/images/no-product-picture.png'" />
       </td>
     </ng-container>
 
@@ -241,7 +241,11 @@
     <mat-icon>query_builder</mat-icon>
     <span>Zarchiwizuj produkt</span>
   </button>
-  <button mat-menu-item [disabled]="!product.archive" (click)="deArchiveProduct()">
+  <button
+    mat-menu-item
+    [disabled]="!product.archive"
+    (click)="deArchiveProduct()"
+  >
     <mat-icon>query_builder</mat-icon>
     <span>Odarchiwizuj produkt</span>
   </button>

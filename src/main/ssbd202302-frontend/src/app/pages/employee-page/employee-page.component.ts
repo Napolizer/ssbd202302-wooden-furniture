@@ -196,6 +196,18 @@ export class EmployeePageComponent implements OnInit {
         }
       })
   }
+
+  openEditProductGroupNameDialog(): void {
+    this.dialogService.openEditProductGroupNameDialog()
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+
+        }
+      })
+  }
+
   getRecipientName(order: OrderDetailsDto): string {
     return `${order.recipientFirstName} ${order.recipientLastName}`;
   }

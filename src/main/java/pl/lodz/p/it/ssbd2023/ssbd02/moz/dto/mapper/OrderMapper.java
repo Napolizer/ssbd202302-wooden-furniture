@@ -2,10 +2,14 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper;
 
 import jakarta.ejb.Stateful;
 import jakarta.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
@@ -108,5 +112,13 @@ public class OrderMapper {
         .totalPrice(order.getTotalPrice())
         .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
         .build();
+  }
+
+  public static LocalDateTime mapToLocalDateTime(String date) {
+    try {
+      return LocalDate.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy")).atStartOfDay();
+    } catch (Exception e) {
+      throw ApplicationExceptionFactory.createInvalidDateException();
+    }
   }
 }

@@ -1,0 +1,87 @@
+<h1 mat-dialog-title>{{ "employee.edit.product.group.name" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <app-spinner [loading]="loading"></app-spinner>
+
+  <div class="edit-panel">
+    <form class="form-container" [formGroup]="editProductGroupForm">
+      <div class="form">
+        <div class="left-panel">
+          <mat-form-field
+            class="product-group-input"
+            appearance="fill"
+            hintLabel="{{ 'edit.product.group.name.hint.max.50' | translate }}"
+          >
+            <mat-label>{{"edit.product.group.name.label" | translate }}</mat-label>
+            <input
+              type="text"
+              matInput
+              #productGroupName
+              formControlName="productGroupName"
+              [matAutocomplete]="auto"
+              required
+              (ngModelChange)="onSelectNameChange()"
+            />
+            <mat-error *ngIf="editProductGroupForm.get('productGroupName')?.hasError('required')">
+              {{ "edit.product.group.validity.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="editProductGroupForm.get('productGroupName')?.hasError('invalidProductGroup')">
+              {{ "edit.product.group.validity.notexisting" | translate }}
+            </mat-error>
+            <mat-hint align="end">
+              {{ productGroupName.value.length }}/50
+            </mat-hint>
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option
+                *ngFor="let option of filteredOptions | async"
+                [value]="option.name"
+                style="font-size: 15px"
+              >
+                <div style="display: flex; justify-content: space-between">
+                  <span>{{ option.name }}</span>
+                  <small style="font-size: 10px">
+                    {{option.categoryName | translate}}
+                  </small>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="right-panel">
+          <mat-form-field
+            hintLabel="{{ 'edit.product.group.name.hint.max.50' | translate }}"
+            appearance="fill"
+            class="new-name-input"
+          >
+            <mat-label>{{ "edit.product.group.new.name.label" | translate }}</mat-label>
+            <input
+              type="text"
+              matInput
+              #newName
+              formControlName="newName"
+              maxlength="50"
+              required
+            />
+            <mat-error *ngIf="editProductGroupForm.get('newName')?.hasError('required')">
+              {{ "edit.product.group.validity.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="editProductGroupForm.get('newName')?.hasError('pattern')">
+              {{"edit.product.group.patternMismatch" | translate}}
+            </mat-error>
+            <mat-hint align="end">{{ newName.value.length }}/50</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="button-container">
+          <button mat-button type="button" mat-dialog-close>
+            {{ "edit.product.group.back" | translate }}
+          </button>
+          <button mat-button type="submit" (click)="onConfirm()">
+            {{ "edit.product.group.confirm" | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

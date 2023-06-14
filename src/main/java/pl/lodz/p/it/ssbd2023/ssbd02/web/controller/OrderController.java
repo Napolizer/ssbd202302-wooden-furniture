@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -16,6 +18,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
@@ -30,7 +33,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
-
 
 @Path("/order")
 public class OrderController {
@@ -109,6 +111,13 @@ public class OrderController {
     return Response.ok(orderEndpoint.findAllArchived()).build();
   }
 
+  @GET
+  @Path("/done")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(SALES_REP)
+  public Response findAllOrdersDone() {
+    return Response.ok(orderEndpoint.findAllOrdersDone()).build();
+  }
 
   @PUT
   @Path("/cancel")
@@ -149,10 +158,15 @@ public class OrderController {
     return Response.ok(orderEndpoint.changeOrderState(id, dto.getState(), dto.getHash())).build();
   }
 
-  @POST
+  @GET
   @Path("/report")
-  public Response generateReport() {
-    throw new UnsupportedOperationException();
+  @Produces({"application/vnd.ms-excel", MediaType.APPLICATION_JSON})
+  @RolesAllowed(SALES_REP)
+  public Response generateReport(@QueryParam("startDate") String startDate,
+                                 @QueryParam("endDate") String endDate,
+                                 @HeaderParam(HttpHeaders.ACCEPT_LANGUAGE) String locale) {
+    return Response.ok(orderEndpoint.generateReport(startDate, endDate, locale))
+            .header("Content-Disposition", "attachment; filename=report.xlsx").build();
   }
 
   @GET

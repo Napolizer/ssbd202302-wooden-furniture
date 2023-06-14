@@ -122,6 +122,16 @@
   "archive.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
   "archive.product.group.success": "Pomyślnie zarchiwizowano grupę produktów",
 
+  "edit.product.group.name.label": "Nazwa grupy produktów",
+  "edit.product.group.name.hint.max.50": "Maksymalnie 50 znaków",
+  "edit.product.group.validity.required": "Pole nie może być puste",
+  "edit.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "edit.product.group.new.name.label": "Nowa nazwa grupy produktów",
+  "edit.product.group.patternMismatch": "Pole musi zaczynać się od dużej litery i może zawierać tylko litery",
+  "edit.product.group.back": "Powrót",
+  "edit.product.group.confirm": "Edytuj",
+  "edit.product.group.success": "Pomyślnie edytowano grupę produktów",
+
   "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
   "add.product.category": "Kategoria",
   "add.product.wood.type": "Rodzaj drewna",
@@ -241,6 +251,9 @@
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
   "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
   "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
+  "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
+  "dialog.cart.remove": "Czy na pewno chcesz usunąć produkt z koszyka?",
+  "dialog.edit.product.group": "Czy na pewno chcesz zmienić nazwę grupy produktów?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -296,7 +309,7 @@
   "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
   "exception.moz.rate.notfound": "Nie znaleziono oceny",
   "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
-
+  "exception.moz.invalid.date": "Niepoprawna data",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -315,6 +328,7 @@
   "toolbar.settings": "Ustawienia",
   "toolbar.createAccount": "Utwórz Konto",
   "toolbar.account": "Konto Użytkownika",
+  "toolbar.doneOrders": "Zamówienia zrealizowane",
 
   "auth.token.expired": "Twój token wygasł",
   "auth.not.authenticated": "Nie jesteś zalogowany",
@@ -360,6 +374,7 @@
   "employee.add.product.group": "Dodaj grupę produktów",
   "employee.add.product": "Dodaj produkt",
   "employee.archive.product.group": "Zarchiwizuj grupę produktów",
+  "employee.edit.product.group.name": "Edytuj nazwę grupy produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.ordersPerPage": "Liczba zamówień na stronę",
@@ -408,6 +423,9 @@
   "product.color.brown": "Brązowy",
   "product.color.white": "Biały",
 
+  "order.account.id": "ID Zamawiającego",
+  "order.id": "ID Zamówienia",
+  "order.size": "Ilość zamówionych produktów",
   "order.change.state.success": "Stan zamówienia został pomyślnie zmieniony",
   "order.change.state": "Zmień stan zamówienia",
   "select.order.state": "Wybierz stan zamówienia",
@@ -431,6 +449,7 @@
   "order.create.success": "Pomyślnie złożono zamówienie",
   "orders.client": "Twoje zamówienia",
   "products.amount": "Zamówione produkty",
+  "orders.done": "Zamówienia zrealizowane",
   "order.client.product.rate": "Oceń twój produkt",
   "products.size": "Liczba dostępnych produktów",
   "products.total.price": "Cena całkowita",
@@ -454,6 +473,7 @@
   "product.package.dimensions": "Wymiary paczki",
   "product.chosen.number.of.pieces": "Wybrana liczba sztuk",
   "product.available.number.of.pieces": "Dostępna liczba sztuk",
+  "product.id": "ID Produktu",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
@@ -466,6 +486,8 @@
   "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
   "cart.add.product.success": "Produkt dodany do koszyka",
   "cart.other.shipment.data.checkbox": "Czy chcesz podać inne dane do wysyłki?",
+  "cart.clear": "Wyczyść koszyk",
+  "cart.remove.product.success": "Pomyślnie usunięto produkt z koszyka",
 
   "amount": "Ilość",
   "free": "Darmowa",
@@ -483,5 +505,17 @@
   "recipient.full.name": "Imię i nazwisko odbiorcy",
   "rate.remove": "Usuń twoją ocenę",
   "exception.moz.product.updated.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów był ostatnio edytowany przez tego użytkownika",
-  "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika"
+  "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika",
+
+  "generate.report.title": "Wygeneruj raport sprzedażowy",
+  "generate.report.back": "Powrót",
+  "generate.report.confirm": "Generuj",
+  "generate.report.label": "Podaj okres sprzedaży",
+  "generate.report.start": "Data początkowa",
+  "generate.report.end": "Data końcowa",
+  "generate.report.required.date.start": "Data początkowa nie może być pusta",
+  "generate.report.required.date.end": "Data końcowa nie może być pusta",
+  "generate.report.invalid.date.start": "Niepoprawna data początkowa",
+  "generate.report.invalid.date.end": "Niepoprawna data końcowa",
+  "generate.report.success": "Raport sprzedażowy został pomyślnie wygenerowany"
 }

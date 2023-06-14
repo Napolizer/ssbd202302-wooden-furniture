@@ -102,6 +102,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToViewCartPage();
   }
 
+  redirectToDoneOrdersPage(): void {
+    void this.navigationService.redirectToDoneOrdersPage();
+  }
+
   isUserLoggedIn(): boolean {
     return this.authenticationService.isUserLoggedIn();
   }
@@ -114,6 +118,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     return this.authenticationService.isCurrentRole(Role.EMPLOYEE);
   }
 
+  isUserSalesRep(): boolean {
+    return this.authenticationService.isCurrentRole(Role.SALES_REP);
+  }
+
   isUserClient(): boolean {
     return this.authenticationService.isCurrentRole(Role.CLIENT);
   }
@@ -124,6 +132,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isUserNormalType(): boolean {
     return this.tokenService.getAccountType() === AccountType.NORMAL;
+  }
+  
+  openGenerateReportDialog(): void {
+    this.dialogService.openGenerateReportDialog();
   }
 
   switchRole(role: string): void {

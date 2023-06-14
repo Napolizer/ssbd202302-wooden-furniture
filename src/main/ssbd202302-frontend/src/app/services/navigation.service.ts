@@ -98,6 +98,10 @@ export class NavigationService {
     return this.router.navigate(['/client/orders/rates']);
   }
 
+  public redirectToDoneOrdersPage(): Promise<boolean> {
+    return this.router.navigate(['/orders/done']);
+  }
+
   public redirectToEmployeeOrdersPage(orderId: number): Promise<boolean> {
     return this.router.navigate(['/employee/orders/' + orderId]);
   }

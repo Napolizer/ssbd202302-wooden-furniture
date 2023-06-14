@@ -5,18 +5,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.CapitalizedLong;
-import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.ProductGroupName;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.category.CategoryDto;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EditProductGroupDto {
-  @ProductGroupName
+public class ProductGroupInfoWithoutHashDto {
+  @NotNull
+  private Long id;
+
   @NotNull
   private String name;
 
   @NotNull
-  private String hash;
+  private Double averageRating;
+
+  @NotNull
+  private CategoryDto category;
+
+  @NotNull
+  private Boolean archive;
 }

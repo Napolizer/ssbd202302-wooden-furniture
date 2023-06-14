@@ -103,6 +103,31 @@ export class OrderService {
     );
   }
 
+  public generateSalesReport(startDate: string, endDate: string, locale: string): Observable<any> {
+    return this.httpClient.get<Blob>(
+      `${environment.apiBaseUrl}/order/report?startDate=${startDate}&endDate=${endDate}`,
+      {
+        responseType: 'blob' as 'json',
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+          'Accept-Language': locale
+        },
+
+      }
+    );
+  }
+
+  public getDoneOrders(): Observable<OrderDetailsDto[]> {
+    return this.httpClient.get<OrderDetailsDto[]>(
+      `${environment.apiBaseUrl}/order/done`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
   public getOrderAsEmployee(orderId: number): Observable<OrderWithProductsDto> {
     return this.httpClient.get<OrderWithProductsDto>(
       `${environment.apiBaseUrl}/order/id/${orderId}`,
