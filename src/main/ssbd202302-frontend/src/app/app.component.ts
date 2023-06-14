@@ -33,15 +33,7 @@ export class AppComponent {
 
     if (authenticationService.isUserLoggedIn()) {
       translate.use(this.localStorageService.get(environment.localeKey)!);
-      this.accountService.retrieveOwnAccount()
-        .subscribe(account => {
-          this.cartService.setLocalStorageKey(account.login + "-cart-products");
-          if (this.localStorageService.get(this.cartService.getLocalStorageKey()) !== null) {
-            this.cartService.setCart(JSON.parse(this.localStorageService.get(this.cartService.getLocalStorageKey())!));
-          }
-          this.cartService.isDoneObservable.next(true);
-          this.cartService.isDone = true;
-        });
+      this.cartService.getProductsFromLocalStorage();
     }
 
     this.matIconRegistry.addSvgIcon('google-logo',
@@ -63,8 +55,6 @@ export class AppComponent {
 
     if (this.authenticationService.isUserLoggedIn()) {
       this.authenticationService.showWarningIfSessionExpired();
-    } else {
-      this.localStorageService.set(environment.currentRoleKey, "guest")
     }
   }
 }

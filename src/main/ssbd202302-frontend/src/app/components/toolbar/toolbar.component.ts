@@ -175,6 +175,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authenticationService.logout();
+    this.cartService.clearProducts();
     this.translate.get('toolbar.logout.success.message')
       .pipe(first(), takeUntil(this.destroy))
       .subscribe(message => {

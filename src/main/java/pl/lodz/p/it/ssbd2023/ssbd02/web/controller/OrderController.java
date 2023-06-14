@@ -23,8 +23,10 @@ import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ChangeOrderStateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ObserveOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
@@ -79,8 +81,10 @@ public class OrderController {
 
   @GET
   @Path("/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
   public Response find(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.find(id)).build();
   }
 
   @GET
@@ -118,8 +122,19 @@ public class OrderController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response cancelOrder(@NotNull @Valid OrderDto orderDto) {
-    return Response.ok(orderEndpoint.cancelOrder(orderDto)).build();
+  public Response cancelOrder(@NotNull @Valid CancelOrderDto cancelOrderDto,
+                              @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    return Response.ok(orderEndpoint.cancelOrder(cancelOrderDto, login)).build();
+  }
+
+  @PUT
+  @Path("/employee/cancel")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response cancelOrderAsEmployee(@NotNull @Valid CancelOrderDto cancelOrderDto) {
+    return Response.ok(orderEndpoint.cancelOrderAsEmployee(cancelOrderDto.getId(), cancelOrderDto.getHash())).build();
   }
 
   @PUT
@@ -127,8 +142,10 @@ public class OrderController {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed(CLIENT)
-  public Response observeOrder(@NotNull @Valid OrderDto orderDto) {
-    return Response.ok(orderEndpoint.observeOrder(orderDto)).build();
+  public Response observeOrder(@NotNull @Valid ObserveOrderDto observeOrderDto,
+                               @Context SecurityContext securityContext) {
+    String login = securityContext.getUserPrincipal().getName();
+    return Response.ok(orderEndpoint.observeOrder(observeOrderDto.getId(), observeOrderDto.getHash(), login)).build();
   }
 
 

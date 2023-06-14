@@ -106,7 +106,9 @@ public class MessageUtil {
     public static final String EMAIL_ADMIN_LOGIN_SESSION_SUBJECT = "mok.email.admin.login.subject";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_MESSAGE = "mok.email.admin.login.message";
     public static final String EMAIL_ORDER_STATE_CHANGE_SUBJECT = "moz.email.order.state.change.subject";
-    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE = "moz.email.order.state.change.message";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE1 = "moz.email.order.state.change.message1";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE2 = "moz.email.order.state.change.message2";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE3 = "moz.email.order.state.change.message3";
     public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
     public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
@@ -138,5 +140,8 @@ public class MessageUtil {
     public static final String PRODUCT_CHANGE_STATE_DEARCHIVE = "exception.moz.product.change.state.dearchive";
     public static final String PRODUCT_CHANGE_STATE_ARCHIVE = "exception.moz.product.change.state.archive";
     public static final String INVALID_ORDER_STATE_TRANSITION = "exception.moz.invalid.order.state.transition";
+    public static final String INVALID_PRODUCT_AMOUNT = "exception.moz.invalid.product.amount";
+    public static final String PRODUCT_UPDATED_BY = "exception.moz.product.updated.by";
+    public static final String PRODUCT_CREATED_BY = "exception.moz.product.created.by";
   }
 }

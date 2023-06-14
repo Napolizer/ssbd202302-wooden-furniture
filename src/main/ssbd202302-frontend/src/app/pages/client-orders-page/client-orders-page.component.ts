@@ -1,15 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatTableDataSource} from "@angular/material/table";
-import {Subject, takeUntil, tap} from "rxjs";
+import {first, Subject, takeUntil, tap} from "rxjs";
 import {ClientOrder} from "../../interfaces/client.order";
-import {AccountService} from "../../services/account.service";
 import {NavigationService} from "../../services/navigation.service";
 import {BreadcrumbsService} from "../../services/breadcrumbs.service";
 import {TranslateService} from "@ngx-translate/core";
 import {NavigationEnd, Router} from "@angular/router";
-import {DialogService} from "../../services/dialog.service";
 import {ClientOrderService} from "../../services/client-order.service";
+import {OrderService} from "../../services/order.service";
+import {DialogService} from "../../services/dialog.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {AlertService} from "@full-fledged/alerts";
 
 @Component({
   selector: 'app-client-orders-page',
@@ -38,17 +40,19 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
   orders: ClientOrder[] = [];
   loading = true;
   listLoading = false;
-  displayedColumns = ['id', 'productsNumber', 'totalPrice', 'orderState', 'show', 'observe'];
+  displayedColumns = ['id', 'productsNumber', 'totalPrice', 'orderState', 'show', 'observe', 'cancel'];
   dataSource = new MatTableDataSource<ClientOrder>(this.orders);
   destroy = new Subject<boolean>();
 
   constructor(
-    private orderService: ClientOrderService,
+    private clientOrderService: ClientOrderService,
     private navigationService: NavigationService,
     private breadcrumbsService: BreadcrumbsService,
     private translate: TranslateService,
     private router: Router,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private orderService: OrderService,
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +63,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
           this.loading = true;
         }
       });
-    this.orderService.getAllClientOrders()
+    this.clientOrderService.getAllClientOrders()
       .pipe(tap(() => this.loading = true), takeUntil(this.destroy))
       .subscribe(orders => {
         console.log(orders)
@@ -84,7 +88,7 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   onResetClicked(): void {
     this.listLoading = true;
-    this.orderService.getAllClientOrders()
+    this.clientOrderService.getAllClientOrders()
       .subscribe(orders => {
         this.orders = orders;
         this.dataSource.data = this.orders;
@@ -104,12 +108,55 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   }
 
-  observeOrder(): void {
+  observeOrder(order: ClientOrder): void {
+    this.loading = true;
+    this.orderService.observeOrder(order)
+      .pipe(takeUntil(this.destroy))
+      .subscribe( {
+        next: () => {
+          this.loading = false
+          this.translate.get("order.observe.success")
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToClientOrdersPage();
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          const message = e.error.message as string;
+          this.translate
+            .get(message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.danger(msg);
+            })
+        }
+      })
+  }
 
+  onObserveClicked(order: ClientOrder) {
+    this.translate.get("order.observe.confirmation")
+      .pipe(takeUntil(this.destroy))
+      .subscribe(msg => {
+        const ref = this.dialogService.openConfirmationDialog(msg, "primary")
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.observeOrder(order);
+            }
+          });
+      })
   }
 
   canObserve(order: any): boolean {
     return (order.orderState == 'CREATED' || order.orderState == 'IN_DELIVERY') && !order.observed;
+  }
+
+  canCancel(order: ClientOrder): boolean {
+    return (order.orderState === 'CREATED' || order.orderState === 'COMPLETED');
   }
 
   calculateTotalQuantity(order: any): number {
@@ -122,5 +169,49 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   redirectToRatePage() {
     this.navigationService.redirectToRatePage();
+  }
+
+  onCancelClicked(order: ClientOrder) {
+        this.translate.get("order.cancel.confirmation")
+          .pipe(takeUntil(this.destroy))
+          .subscribe(msg => {
+            const ref = this.dialogService.openConfirmationDialog(msg, "primary")
+            ref
+              .afterClosed()
+              .pipe(first(), takeUntil(this.destroy))
+              .subscribe((result) => {
+                if (result == 'action') {
+                  this.cancelOrder(order);
+                }
+              });
+          })
+  }
+
+  cancelOrder(order: ClientOrder) {
+    console.log(order)
+    this.loading = true;
+    this.orderService.cancelOrder(order)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: () => {
+          this.loading = false
+          this.translate.get("order.cancel.success")
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToClientOrdersPage();
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          const message = e.error.message as string;
+          this.translate
+            .get(message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.danger(msg);
+            })
+        }
+      })
   }
 }

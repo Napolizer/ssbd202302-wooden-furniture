@@ -112,7 +112,7 @@
     <mat-icon>language</mat-icon>
   </button>
   <button
-    *ngIf="isUserLoggedIn()"
+    *ngIf="isUserLoggedIn() && isUserClient()"
     class="account"
     mat-icon-button
     matTooltip="View Cart"

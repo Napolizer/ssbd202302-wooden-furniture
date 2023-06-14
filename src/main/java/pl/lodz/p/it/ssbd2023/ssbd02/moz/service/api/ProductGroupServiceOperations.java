@@ -14,7 +14,7 @@ public interface ProductGroupServiceOperations {
 
   ProductGroup create(ProductGroup entity, CategoryName categoryName);
 
-  ProductGroup archive(Long id, String hash);
+  ProductGroup archive(Long id);
 
   ProductGroup editProductGroupName(Long id, String name, String hash);
 
@@ -29,4 +29,6 @@ public interface ProductGroupServiceOperations {
   Rate rateProductGroup(String login, Integer rateValue, Long productGroupId);
 
   Rate changeRateOnProductGroup(String login, Integer rateValue, Long productGroupId);
+
+  void removeRateFromProductGroup(String login, Long productGroupId);
 }

@@ -114,6 +114,14 @@
   "add.product.group.success": "Grupa produktów została pomyślnie dodana",
   "add.product.group.hint.max.50": "Maksymalnie 50 znaków",
 
+  "archive.product.group.name.label": "Nazwa grupy produktów",
+  "archive.product.group.hint.max.50": "Maksymalnie 50 znaków",
+  "archive.product.group.back": "Powrót",
+  "archive.product.group.confirm": "Zarchiwizuj",
+  "archive.product.group.validity.required": "Pole nie może być puste",
+  "archive.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "archive.product.group.success": "Pomyślnie zarchiwizowano grupę produktów",
+
   "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
   "add.product.category": "Kategoria",
   "add.product.wood.type": "Rodzaj drewna",
@@ -217,6 +225,7 @@
   "dialog.edit.account.message": "Czy na pewno chcesz zmienić dane swojego konta?",
   "dialog.admin.edit.account.message": "Czy na pewno chcesz zmienić dane tego konta?",
   "dialog.create.account.message": "Czy na pewno chcesz utworzyć konto?",
+  "dialog.create.order.message": "Czy na pewno chcesz złożyć zamówienie?",
   "dialog.edit.locale": "Czy na pewno chcesz zmienić język?",
   "dialog.google.register.message": "Czy na pewno chcesz powiązać swoje konto Google z kontem w naszym systemie?",
   "dialog.github.register.message": "Czy na pewno chcesz powiązać swoje konto Github z kontem w naszym systemie?",
@@ -230,7 +239,9 @@
   "dialog.add.product.group.message": "Czy na pewno chcesz dodać nową grupę produktów?",
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
+  "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
   "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
+  "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -280,6 +291,13 @@
   "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
   "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
   "exception.moz.invalid.order.state.transition": "Niepoprawna zmiana stanu zamówienia",
+  "exception.moz.order.not.found": "Nie znaleziono zamówienia",
+  "exception.moz.order.already.in.delivery": "Nie można zmienić stanu zamówienia, ponieważ jest już w dostawie",
+  "exception.moz.order.already.delivered": "Nie można zmienić stanu zamówienia, ponieważ jest już dostarczone",
+  "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
+  "exception.moz.rate.notfound": "Nie znaleziono oceny",
+  "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
+
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -343,6 +361,7 @@
 
   "employee.add.product.group": "Dodaj grupę produktów",
   "employee.add.product": "Dodaj produkt",
+  "employee.archive.product.group": "Zarchiwizuj grupę produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.ordersPerPage": "Liczba zamówień na stronę",
@@ -397,7 +416,9 @@
   "order.change.state.success": "Stan zamówienia został pomyślnie zmieniony",
   "order.change.state": "Zmień stan zamówienia",
   "select.order.state": "Wybierz stan zamówienia",
-  "order.show": "Wyświetl zamówienie",
+  "order.show": "Wyświetl",
+  "order.cancel": "Anuluj zamówienie",
+  "order.client.cancel.button": "Anuluj",
   "order.client.observe": "Obserwuj zamówienie",
   "order.client.observe.button": "Obserwuj",
   "order.state": "Stan zamówienia",
@@ -406,10 +427,15 @@
   "order.state.in.delivery": "W dostawie",
   "order.state.delivered": "Dostarczone",
   "order.state.cancelled": "Anulowane",
+  "order.observe.confirmation": "Czy na pewno chcesz obserwować to zamówienie?",
+  "order.observe.success": "Pomyślnie zaobserwowano zamówienie",
   "order.client.already.observed": "Już obserwowane",
+  "order.cancel.confirmation": "Czy na pewno chcesz anulować zamówienie?",
+  "order.cancel.success": "Zamówienie zostało anulowane",
+  "order.create.success": "Pomyślnie złożono zamówienie",
   "orders.client": "Twoje zamówienia",
+  "products.amount": "Zamówione produkty",
   "orders.done": "Zamówienia zrealizowane",
-  "products.amount": "Liczba produktów",
   "order.client.product.rate": "Oceń twój produkt",
   "products.size": "Liczba dostępnych produktów",
   "products.total.price": "Cena całkowita",
@@ -445,6 +471,8 @@
   "cart.max.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka niż dostępna liczba sztuk",
   "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
   "cart.add.product.success": "Produkt dodany do koszyka",
+  "cart.other.shipment.data.checkbox": "Czy chcesz podać inne dane do wysyłki?",
+  "cart.clear": "Wyczyść koszyk",
 
   "summary": "Podsumowanie",
   "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka",
@@ -454,5 +482,8 @@
   "total.price": "Cena całkowita",
   "recipient.first.name": "Imię odbiorcy",
   "recipient.last.name": "Nazwisko odbiorcy",
-  "recipient.full.name": "Imię i nazwisko odbiorcy"
+  "recipient.full.name": "Imię i nazwisko odbiorcy",
+  "rate.remove": "Usuń twoją ocenę",
+  "exception.moz.product.updated.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów był ostatnio edytowany przez tego użytkownika",
+  "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika"
 }
