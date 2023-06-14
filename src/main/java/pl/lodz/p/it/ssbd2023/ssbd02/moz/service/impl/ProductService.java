@@ -18,6 +18,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
@@ -191,6 +192,7 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   @RolesAllowed(CLIENT)
   public List<OrderedProduct> findAllProductsBelongingToAccount(String login) {
     return orderFacade.findByAccountLogin(login).stream()
+            .filter(o -> o.getOrderState().equals(OrderState.DELIVERED))
             .flatMap(o -> o.getOrderedProducts().stream())
             .toList();
   }
