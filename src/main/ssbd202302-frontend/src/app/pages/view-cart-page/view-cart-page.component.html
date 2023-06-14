@@ -4,6 +4,10 @@
   <div class="row">
     <div class="col-7">
       <h1 *ngIf="getTotalAmount() > 0" class="cart-header text-start mt-5">{{"cart" | translate}}</h1>
+      <button class="btn btn-outline-secondary" *ngIf="getTotalAmount() > 0" (click)="clearCart()">
+        <mat-icon>remove_shopping_cart</mat-icon>
+        {{"cart.clear" | translate}}
+      </button>
       <h1 *ngIf="getTotalAmount() <= 0" class="cart-header text-start mt-5">{{"cart.empty" | translate}}</h1>
       <mat-grid-list class="mat-list text-start" cols="1" rowHeight="350px">
         <mat-grid-tile class="mat-tile text-start" *ngFor="let orderedProduct of orderedProducts;">

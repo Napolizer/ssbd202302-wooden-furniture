@@ -240,6 +240,7 @@
   "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
   "dialog.change.order.state.message": "Are you sure you want to change order state?",
   "dialog.archive.product.group": "Are you sure you want to archive this product group?",
+  "dialog.cart.empty": "Are you sure you want to clear cart?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
@@ -469,6 +470,7 @@
   "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
   "cart.add.product.success": "Product added to cart",
   "cart.other.shipment.data.checkbox": "Do you want to provide other shipment data?",
+  "cart.clear": "Clear cart",
 
   "summary": "Summary",
   "cart.amount.error.message": "Impossible to add more products to cart than available amount",
