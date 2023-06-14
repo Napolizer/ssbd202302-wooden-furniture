@@ -176,48 +176,4 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
         }
       })
   }
-
-  // observeOrder(): void {
-  //   observeOrder(order: ClientOrder): void {
-  //     this.loading = true;
-  //     this.orderService.observeOrder(order)
-  //       .pipe(takeUntil(this.destroy))
-  //       .subscribe( {
-  //         next: () => {
-  //           this.loading = false
-  //           this.translate.get("order.observe.success")
-  //             .pipe(takeUntil(this.destroy))
-  //             .subscribe(msg => {
-  //               this.alertService.success(msg);
-  //               void this.navigationService.redirectToClientOrdersPage();
-  //             })
-  //         },
-  //         error: (e: HttpErrorResponse) => {
-  //           this.loading = false;
-  //           const message = e.error.message as string;
-  //           this.translate
-  //             .get(message || 'exception.unknown')
-  //             .pipe(takeUntil(this.destroy))
-  //             .subscribe(msg => {
-  //               this.alertService.danger(msg);
-  //             })
-  //         }
-  //       })
-  //   }
-  //
-  //   onObserveClicked(order: ClientOrder) {
-  //     this.translate.get("order.observe.confirmation")
-  //       .pipe(takeUntil(this.destroy))
-  //       .subscribe(msg => {
-  //         const ref = this.dialogService.openConfirmationDialog(msg, "primary")
-  //         ref
-  //           .afterClosed()
-  //           .pipe(first(), takeUntil(this.destroy))
-  //           .subscribe((result) => {
-  //             if (result == 'action') {
-  //               this.observeOrder(order);
-  //             }
-  //           });
-  //       })
-  //   }
 }
