@@ -14,11 +14,9 @@ import jakarta.interceptor.Interceptors;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
@@ -30,6 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
@@ -159,8 +158,16 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public void generateReport() {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public byte[] generateReport(String startDate, String endDate, String locale) {
+    if (locale == null || !(locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN))) {
+      throw ApplicationExceptionFactory.createInvalidLocaleException();
+    }
+    return repeatTransactionWithoutOptimistic(() -> orderService.generateReport(
+            OrderMapper.mapToLocalDateTime(startDate),
+            OrderMapper.mapToLocalDateTime(endDate),
+            locale
+    ));
   }
 
   @Override

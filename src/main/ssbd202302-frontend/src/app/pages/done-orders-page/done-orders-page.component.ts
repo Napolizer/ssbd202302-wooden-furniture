@@ -140,4 +140,8 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
     }
     return total;
   }
+
+  openGenerateReportDialog(): void {
+    this.dialogService.openGenerateReportDialog();
+  }
 }

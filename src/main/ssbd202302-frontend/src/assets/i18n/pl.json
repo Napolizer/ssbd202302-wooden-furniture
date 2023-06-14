@@ -297,7 +297,7 @@
   "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
   "exception.moz.rate.notfound": "Nie znaleziono oceny",
   "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
-
+  "exception.moz.invalid.date": "Niepoprawna data",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -485,5 +485,17 @@
   "recipient.full.name": "Imię i nazwisko odbiorcy",
   "rate.remove": "Usuń twoją ocenę",
   "exception.moz.product.updated.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów był ostatnio edytowany przez tego użytkownika",
-  "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika"
+  "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika",
+
+  "generate.report.title": "Wygeneruj raport sprzedażowy",
+  "generate.report.back": "Powrót",
+  "generate.report.confirm": "Generuj",
+  "generate.report.label": "Podaj okres sprzedaży",
+  "generate.report.start": "Data początkowa",
+  "generate.report.end": "Data końcowa",
+  "generate.report.required.date.start": "Data początkowa nie może być pusta",
+  "generate.report.required.date.end": "Data końcowa nie może być pusta",
+  "generate.report.invalid.date.start": "Niepoprawna data początkowa",
+  "generate.report.invalid.date.end": "Niepoprawna data końcowa",
+  "generate.report.success": "Raport sprzedażowy został pomyślnie wygenerowany"
 }

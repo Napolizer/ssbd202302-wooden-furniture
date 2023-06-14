@@ -39,7 +39,7 @@ public interface OrderEndpointOperations {
 
   OrderDto changeOrderState(Long id, OrderState state, String hash);
 
-  void generateReport();
+  byte[] generateReport(String startDate, String endDate, String locale);
 
   List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
 

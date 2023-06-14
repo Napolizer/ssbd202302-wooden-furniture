@@ -10,6 +10,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -56,7 +57,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { ThemeSwitcherComponentComponent } from './components/theme-switcher-component/theme-switcher-component.component';
 import {MatTableModule} from "@angular/material/table";
 import { AdminActionsMenuComponent } from './components/admin-actions-menu/admin-actions-menu.component';
-import {MatRippleModule} from "@angular/material/core";
+import {MatNativeDateModule, MatRippleModule} from "@angular/material/core";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import { AddRoleComponent } from './components/add-role/add-role.component';
@@ -80,6 +81,7 @@ import { ArchiveProductGroupComponent } from './components/archive-product-group
 import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
 import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
 import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
+import { GenerateReportComponent } from './components/generate-report/generate-report.component';
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
 import {MatChipsModule} from '@angular/material/chips';
 
@@ -132,6 +134,7 @@ import {MatChipsModule} from '@angular/material/chips';
     EmployeeActionsMenuComponent,
     ChangeOrderStateComponent,
     ClientRatesPageComponent,
+    GenerateReportComponent,
     ArchiveProductGroupComponent,
     DoneOrdersPageComponent,
   ],
@@ -149,6 +152,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatButtonModule,
     MatSelectModule,
     NgxDropzoneModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     FormsModule,
     AlertModule.forRoot({maxMessages: 8, timeout: 5000, positionX: 'right', positionY: 'top'}),
     ReactiveFormsModule,

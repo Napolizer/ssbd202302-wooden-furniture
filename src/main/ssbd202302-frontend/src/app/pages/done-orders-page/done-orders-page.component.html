@@ -114,6 +114,11 @@
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
           </mat-card-title>
         </mat-card>
+        <mat-card class="card">
+          <button button="submit" mat-stroked-button color="primary" (click)="openGenerateReportDialog()">
+            <mat-icon style="margin-bottom: 3px;">insert_chart</mat-icon> {{'generate.report.title' | translate}}
+          </button>
+        </mat-card>
       </div>
     </div>
   </div>
