@@ -30,6 +30,9 @@ import lombok.experimental.SuperBuilder;
 @NamedQueries({
     @NamedQuery(name = ProductGroup.FIND_BY_ID,
             query = "SELECT productGroup FROM product_group productGroup WHERE productGroup.id = :id"),
+    @NamedQuery(name = ProductGroup.GET_AVG_RATE,
+                query = "SELECT AVG(rate.value) FROM product_group productGroup JOIN productGroup.rates rate" +
+                        " WHERE productGroup.id = :productGroupId")
 })
 public class ProductGroup extends AbstractEntity {
 
@@ -47,7 +50,7 @@ public class ProductGroup extends AbstractEntity {
   @Builder.Default
   private List<Product> products = new ArrayList<>();
 
-  @OneToMany(cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "productGroup")
   @JoinColumn(name = "product_group_id", nullable = false)
   @Builder.Default
   private List<Rate> rates = new ArrayList<>();
@@ -56,10 +59,4 @@ public class ProductGroup extends AbstractEntity {
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
-  public void updateAverageRating() {
-    this.averageRating = rates.stream()
-            .mapToDouble(Rate::getValue)
-            .average()
-            .orElse(0.0);
-  }
 }

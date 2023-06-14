@@ -10,10 +10,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Data
@@ -44,4 +41,10 @@ public class Rate extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
+
+  @ManyToOne
+  @JoinColumn(name = "product_group_id", nullable = false)
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  private ProductGroup productGroup;
 }

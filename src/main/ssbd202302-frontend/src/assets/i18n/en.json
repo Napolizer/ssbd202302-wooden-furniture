@@ -285,6 +285,7 @@
   "exception.moz.order.already.in.delivery": "Order is already in delivery",
   "exception.moz.order.already.delivered": "Order is already delivered",
   "exception.moz.order.already.cancelled": "Order is already cancelled",
+  "exception.moz.rate.notfound": "Rate not found",
 
 
   "role.administrator": "Administrator",
@@ -461,5 +462,6 @@
   "total.price": "Total price",
   "recipient.first.name": "Recipient first name",
   "recipient.last.name": "Recipient last name",
-  "recipient.full.name": "Recipient name"
+  "recipient.full.name": "Recipient full name",
+  "rate.remove": "Remove your rate"
 }

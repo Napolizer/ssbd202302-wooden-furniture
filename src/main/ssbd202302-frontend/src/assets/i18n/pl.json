@@ -284,6 +284,7 @@
   "exception.moz.order.already.in.delivery": "Nie można zmienić stanu zamówienia, ponieważ jest już w dostawie",
   "exception.moz.order.already.delivered": "Nie można zmienić stanu zamówienia, ponieważ jest już dostarczone",
   "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
+  "exception.moz.rate.notfound": "Nie znaleziono oceny",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",
@@ -455,5 +456,6 @@
   "total.price": "Cena całkowita",
   "recipient.first.name": "Imię odbiorcy",
   "recipient.last.name": "Nazwisko odbiorcy",
-  "recipient.full.name": "Dane odbiorcy"
+  "recipient.full.name": "Imię i nazwisko odbiorcy",
+  "rate.remove": "Usuń twoją ocenę"
 }

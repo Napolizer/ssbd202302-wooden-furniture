@@ -8,4 +8,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.Facade;
 @Local
 public interface ProductGroupFacadeOperations extends Facade<ProductGroup> {
   Optional<ProductGroup> findById(Long productId);
+
+  Double getAverageRate(Long productGroupId);
 }
