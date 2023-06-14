@@ -10,7 +10,6 @@ import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
 import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
-import { ArchiveProductGroup } from '../interfaces/archive.product.group';
 
 @Injectable({
   providedIn: 'root',
@@ -138,10 +137,10 @@ export class ProductService {
     )
   }
 
-  public archiveProductGroup(productGroupId: string, productGroup: ArchiveProductGroup): Observable<ProductGroup> {
+  public archiveProductGroup(productGroupId: string): Observable<ProductGroup> {
     return this.httpClient.put<ProductGroup>(
       `${environment.apiBaseUrl}/product/group/archive/id/` + productGroupId,
-      productGroup,
+      null,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`

@@ -8,7 +8,6 @@ import {DialogService} from "../../services/dialog.service";
 import {NavigationService} from "../../services/navigation.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ProductGroup} from "../../interfaces/product.group";
-import { ArchiveProductGroup } from '../../interfaces/archive.product.group';
 import {AlertService} from "@full-fledged/alerts";
 import {HttpErrorResponse} from "@angular/common/http";
 
@@ -25,9 +24,6 @@ export class ArchiveProductGroupComponent implements OnInit {
   allOptions: any[];
   filteredOptions: Observable<any[]>;
   productGroupId: number;
-  productGroupToArchive: ArchiveProductGroup = {
-    hash: ''
-  };
 
   constructor(
     private productService: ProductService,
@@ -108,20 +104,12 @@ export class ArchiveProductGroupComponent implements OnInit {
             .pipe(first(), takeUntil(this.destroy))
             .subscribe((result) => {
               if (result === 'action') {
-                this.productService.retrieveProductGroup(this.productGroupId.toString())
+                this.productService.archiveProductGroup(this.productGroupId.toString())
                   .pipe(first(), takeUntil(this.destroy))
                   .subscribe({
-                    next: (productGroup) => {
-                      this.productGroupToArchive.hash = productGroup.hash;
-                      this.productService.archiveProductGroup(this.productGroupId.toString(), this.productGroupToArchive)
-                        .pipe(first(), takeUntil(this.destroy))
-                        .subscribe({
-                          next: (archivedProductGroup) => this.handleArchiveSuccess(archivedProductGroup),
-                          error: (e) => this.handleArchiveError(e)
-                        });
-                    },
-                    error: (e) => this.handleRetrieveDataError(e)
-                  })
+                    next: (archivedProductGroup) => this.handleArchiveSuccess(archivedProductGroup),
+                    error: (e) => this.handleArchiveError(e)
+                  });
               }
             });
         });
