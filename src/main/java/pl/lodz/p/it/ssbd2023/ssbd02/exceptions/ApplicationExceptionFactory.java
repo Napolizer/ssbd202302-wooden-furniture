@@ -29,6 +29,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.CategoryNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.IllegalProductArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.IllegalProductDeArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.InvalidOrderStateTransitionException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.InvalidProductAmountException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyCancelledException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
@@ -38,10 +39,12 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyRatedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductCreatedByException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductUpdatedByException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.RateNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.security.AccountBlockedException;
@@ -336,5 +339,17 @@ public final class ApplicationExceptionFactory {
 
   public static IllegalProductArchiveException createIllegalProductArchiveException() {
     return new IllegalProductArchiveException();
+  }
+
+  public static InvalidProductAmountException createInvalidProductAmountException() {
+    return new InvalidProductAmountException();
+  }
+
+  public static ProductUpdatedByException createProductUpdatedByException() {
+    return new ProductUpdatedByException();
+  }
+
+  public static ProductCreatedByException createProductCreatedByException() {
+    return new ProductCreatedByException();
   }
 }

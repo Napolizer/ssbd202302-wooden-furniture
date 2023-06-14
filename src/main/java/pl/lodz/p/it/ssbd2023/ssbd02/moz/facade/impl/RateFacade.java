@@ -38,6 +38,7 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
   @RolesAllowed(CLIENT)
   public void delete(Rate rate) {
     em.remove(em.merge(rate));
+    em.flush();
   }
 
   @Override

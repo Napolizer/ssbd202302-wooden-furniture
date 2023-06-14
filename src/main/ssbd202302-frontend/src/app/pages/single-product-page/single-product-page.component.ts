@@ -162,8 +162,8 @@ export class SingleProductPageComponent implements OnInit {
 
   isUserGuestOrClient(): boolean {
     return (
-      this.authenticationService.isUserInRole(Role.CLIENT) ||
-      this.authenticationService.isUserInRole(Role.GUEST)
+      this.authenticationService.isCurrentRole(Role.CLIENT) ||
+      this.authenticationService.isCurrentRole(Role.GUEST)
     );
   }
 

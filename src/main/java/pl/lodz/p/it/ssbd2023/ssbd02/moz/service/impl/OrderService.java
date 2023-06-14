@@ -26,6 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -50,6 +51,8 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   private AccountServiceOperations accountService;
   @Inject
   private ProductServiceOperations productService;
+  @Inject
+  private ProductFacadeOperations productFacade;
 
   @Override
   @RolesAllowed(CLIENT)
@@ -69,9 +72,16 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     Double totalPrice = 0.0;
     List<OrderedProduct> orderedProducts = new ArrayList<>();
 
+    Account account = accountService.getAccountByLogin(login)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
     for (Long productId : orderedProductsMap.keySet()) {
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+
+      if (orderedProductsMap.get(productId) > product.getAmount()) {
+        throw ApplicationExceptionFactory.createInvalidProductAmountException();
+      }
 
       OrderedProduct orderedProduct = OrderedProduct.builder()
           .amount(orderedProductsMap.get(productId))
@@ -82,12 +92,22 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       orderedProducts.add(orderedProduct);
       totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
 
-      //TODO edit products amount in database
-      //TODO make impossible to create order for employee that changed these products recently
-    }
+      if (product.getCreatedBy() != null) {
+        if (product.getCreatedBy().getLogin().equals(login) && product.getUpdatedBy() == null) {
+          throw ApplicationExceptionFactory.createProductCreatedByException();
+        }
+      }
 
-    Account account = accountService.getAccountByLogin(login)
-        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+      if (product.getUpdatedBy() != null) {
+        if (product.getUpdatedBy().getLogin().equals(login)) {
+          throw ApplicationExceptionFactory.createProductUpdatedByException();
+        }
+      }
+
+      product.setAmount(product.getAmount() - orderedProduct.getAmount());
+      product.setIsUpdatedBySystem(true);
+      productFacade.update(product);
+    }
 
     Address address = Address.builder()
             .country(account.getPerson().getAddress().getCountry())
@@ -117,6 +137,10 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
 
+      if (orderedProductsMap.get(productId) > product.getAmount()) {
+        throw ApplicationExceptionFactory.createInvalidProductAmountException();
+      }
+
       OrderedProduct orderedProduct = OrderedProduct.builder()
           .amount(orderedProductsMap.get(productId))
           .price(product.getPrice())
@@ -127,6 +151,8 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
 
       //TODO edit products amount in database
+      product.setAmount(product.getAmount() - orderedProduct.getAmount());
+      productFacade.update(product);
       //TODO make impossible to create order for employee that changed these products recently
     }
     Account account = accountService.getAccountByLogin(login)
@@ -218,19 +244,30 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order observeOrder(Long id, String hash) {
-    Order order = find(id).orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+  public Order observeOrder(Long id, String hash, String login) {
+    List<Order> orders = findByAccountLogin(login);
+    Order clientOrder = Order.builder().build();
+    for (Order order : orders) {
+      if (order.getAccount().getLogin().equals(login)) {
+        clientOrder = order;
+        break;
+      }
+    }
 
-    if (order.getObserved()) {
+    if (clientOrder == null) {
+      throw ApplicationExceptionFactory.createOrderNotFoundException();
+    }
+
+    if (clientOrder.getObserved()) {
       throw ApplicationExceptionFactory.createOrderAlreadyObservedException();
     }
 
-    if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
+    if (!CryptHashUtils.verifyVersion(clientOrder.getSumOfVersions(), hash)) {
       throw new OptimisticLockException();
     }
 
-    order.setObserved(true);
-    return orderFacade.update(order);
+    clientOrder.setObserved(true);
+    return orderFacade.update(clientOrder);
   }
 
   @Override
@@ -243,11 +280,18 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     if (!CryptHashUtils.verifyVersion(order.getSumOfVersions(), hash)) {
       throw new OptimisticLockException();
     }
+    String oldOrderState = order.getOrderState().name();
     order.setOrderState(state);
+    String newOrderState = order.getOrderState().name();
+    StringBuilder orderedProducts = new StringBuilder();
+    for (OrderedProduct orderedProduct : order.getOrderedProducts()) {
+      orderedProducts.append(orderedProduct.getProduct().getProductGroup().getName()).append("\n");
+    }
     order = orderFacade.update(order);
 
     if (order.getObserved()) {
-      mailService.sendEmailAboutChangingOrderState(order.getAccount().getEmail(), order.getAccount().getLocale());
+      mailService.sendEmailAboutOrderStateChange(order.getAccount().getEmail(), order.getAccount().getLocale(),
+          String.valueOf(orderedProducts), oldOrderState, newOrderState);
     }
     return order;
   }

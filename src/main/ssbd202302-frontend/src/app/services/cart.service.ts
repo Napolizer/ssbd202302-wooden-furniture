@@ -3,7 +3,8 @@ import {OrderedProduct} from "../interfaces/ordered.product";
 import {LocalStorageService} from "./local-storage.service";
 import {AlertService} from "@full-fledged/alerts";
 import {TranslateService} from "@ngx-translate/core";
-import {Observable, of, Subject} from "rxjs";
+import {ProductService} from "./product.service";
+import {AccountService} from "./account.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,15 @@ import {Observable, of, Subject} from "rxjs";
 export class CartService {
   private localStorageKey: string;
   private products: OrderedProduct[] = [];
-  public isDoneObservable: Subject<boolean>;
-  public isDone: boolean = false;
 
   constructor(
     private localStorageService: LocalStorageService,
     private translate: TranslateService,
     private alertService: AlertService,
+    private productService: ProductService,
+    private accountService: AccountService
 
   ) {
-    this.isDoneObservable = new Subject();
   }
 
   setLocalStorageKey(localStorageKey: string) {
@@ -39,15 +39,23 @@ export class CartService {
     if (this.isProductInCart(addedProduct)) {
       this.products.forEach(product => {
         if (product.product.id == addedProduct.product.id) {
-          if (product.amount < addedProduct.product.amount) {
-            product.amount += 1;
-            this.saveCart();
-          } else {
-            this.translate.get("cart.max.amount.error.message")
+          this.productService.retrieveProduct(product.product.id.toString())
+            .subscribe(chosenProduct => {
+              product.product = chosenProduct;
+              if (product.amount < chosenProduct.amount) {
+                product.amount += 1;
+                this.saveCart();
+                this.translate.get("cart.add.product.success")
+                  .subscribe(msg => {
+                    this.alertService.success(msg);
+                  })
+              } else {
+                this.translate.get("cart.max.amount.error.message")
                   .subscribe(msg => {
                     this.alertService.danger(msg);
-              })
-          }
+                  })
+              }
+            })
         }
       })
     } else {
@@ -70,8 +78,8 @@ export class CartService {
     this.products = [];
   }
 
-  getCart(): Observable<OrderedProduct[]> {
-    return of(this.products);
+  getCart(): OrderedProduct[] {
+    return this.products;
   }
 
   setCart(orderedProducts: OrderedProduct[]) {
@@ -91,5 +99,41 @@ export class CartService {
       amount += product.amount;
     })
     return amount;
+  }
+
+  getProductsFromLocalStorage() {
+    this.accountService.retrieveOwnAccount()
+      .subscribe(account => {
+        this.setLocalStorageKey(account.login + "-cart-products");
+        if (this.localStorageService.get(this.getLocalStorageKey()) !== null) {
+          let orderedProducts: OrderedProduct[] = JSON.parse(this.localStorageService.get(this.localStorageKey)!);
+          orderedProducts.forEach(orderedProduct => {
+            this.productService.retrieveProduct(orderedProduct.product.id.toString())
+              .subscribe(product => {
+                if (orderedProduct.product !== product) {
+                  orderedProduct.product = product
+                  if (orderedProduct.product.amount === 0) {
+                    this.removeProduct(orderedProduct);
+                  }
+                  if (orderedProduct.amount > product.amount) {
+                    orderedProduct.amount = product.amount;
+                  }
+                }
+              })
+          })
+          this.setCart(orderedProducts);
+        }
+      });
+  }
+
+  removeProduct(orderedProduct: OrderedProduct) {
+    if (this.isProductInCart(orderedProduct)) {
+      this.products.forEach((product, index) => {
+        if (orderedProduct.product.id === product.product.id) {
+          this.products.splice(index, 1);
+        }
+      })
+    }
+    this.saveCart();
   }
 }

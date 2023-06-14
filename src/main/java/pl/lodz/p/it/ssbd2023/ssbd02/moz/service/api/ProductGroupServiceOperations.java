@@ -29,4 +29,6 @@ public interface ProductGroupServiceOperations {
   Rate rateProductGroup(String login, Integer rateValue, Long productGroupId);
 
   Rate changeRateOnProductGroup(String login, Integer rateValue, Long productGroupId);
+
+  void removeRateFromProductGroup(String login, Long productGroupId);
 }

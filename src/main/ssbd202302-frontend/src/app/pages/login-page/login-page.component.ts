@@ -122,9 +122,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
               this.localStorageService.set(environment.localeKey, account.locale);
               this.cartService.clearProducts();
               this.cartService.setLocalStorageKey(account.login + "-cart-products");
-              if (this.localStorageService.get(this.cartService.getLocalStorageKey()) !== null) {
-                this.cartService.setCart(JSON.parse(this.localStorageService.get(this.cartService.getLocalStorageKey())!));
-              }
+              this.cartService.getProductsFromLocalStorage();
             });
         },
         error: e => {
@@ -147,6 +145,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: (url) => {
+          this.localStorageService.set(environment.currentRoleKey, 'client')
           window.location.href = url;
         },
         error: () => {
@@ -160,6 +159,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe({
         next: (url) => {
+          this.localStorageService.set(environment.currentRoleKey, 'client')
           window.location.href = url;
         },
         error: () => {

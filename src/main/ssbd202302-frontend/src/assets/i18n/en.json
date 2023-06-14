@@ -225,6 +225,7 @@
   "dialog.edit.account.message": "Are you sure you want to edit your account?",
   "dialog.admin.edit.account.message": "Are you sure you want to edit this account?",
   "dialog.create.account.message": "Are you sure you want to create an account?",
+  "dialog.create.order.message": "Are you sure you want to create order?",
   "dialog.edit.locale": "Are you sure you want to change language?",
   "dialog.google.register.message": "Are you sure you want to link your Google account with account in our system?",
   "dialog.github.register.message": "Are you sure you want to link your Github account with account in our system?",
@@ -294,6 +295,7 @@
   "exception.moz.order.already.in.delivery": "Order is already in delivery",
   "exception.moz.order.already.delivered": "Order is already delivered",
   "exception.moz.order.already.cancelled": "Order is already cancelled",
+  "exception.moz.rate.notfound": "Rate not found",
   "exception.moz.product.group.already.archived": "Product group is already archived",
 
 
@@ -433,9 +435,12 @@
   "order.state.in.delivery": "In delivery",
   "order.state.delivered": "Delivered",
   "order.state.cancelled": "Cancelled",
+  "order.observe.confirmation": "Are you sure you want to observe this order?",
+  "order.observe.success": "Successfully observed order",
   "order.client.already.observed": "Already observed",
   "order.cancel.confirmation": "Are you sure you want to cancel this order?",
   "order.cancel.success": "Order cancelled successfully",
+  "order.create.success": "Successfully created order",
   "orders.client": "Your orders",
   "products.amount": "Products amount",
   "order.client.product.rate": "Rate your product",
@@ -463,6 +468,7 @@
   "cart.max.amount.error.message": "Impossible to add more products to cart than available amount",
   "cart.min.amount.error.message": "Impossible to choose less than 1 piece of product",
   "cart.add.product.success": "Product added to cart",
+  "cart.other.shipment.data.checkbox": "Do you want to provide other shipment data?",
 
   "summary": "Summary",
   "cart.amount.error.message": "Impossible to add more products to cart than available amount",
@@ -472,5 +478,9 @@
   "total.price": "Total price",
   "recipient.first.name": "Recipient first name",
   "recipient.last.name": "Recipient last name",
-  "recipient.full.name": "Recipient name"
+  "recipient.full.name": "Recipient full name",
+  "rate.remove": "Remove your rate",
+
+  "exception.moz.product.updated.by": "Impossible to make order, because one of the product was edited by this user recently",
+  "exception.moz.product.created.by": "Impossible to make order, because one of the product was created by this user recently"
 }

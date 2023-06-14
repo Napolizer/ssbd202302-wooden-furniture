@@ -38,4 +38,15 @@ export class RateService {
       }
     )
   }
+
+  public removeRate(productGroupId: number): Observable<any> {
+    return this.httpClient.delete<Rate>(
+      `${environment.apiBaseUrl}/rate/id/${productGroupId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
+      }
+    )
+  }
 }
