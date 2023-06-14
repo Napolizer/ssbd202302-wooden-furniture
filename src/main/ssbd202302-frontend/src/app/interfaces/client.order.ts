@@ -1,6 +1,6 @@
 import {Product} from "./product";
 import {Address} from "./address";
-import {OrderedProduct} from "./orderedProduct";
+import {OrderedProduct} from "./ordered.product";
 
 export interface ClientOrder {
   id: number,
@@ -10,5 +10,6 @@ export interface ClientOrder {
   recipientLastName: string,
   recipientAddress: Address,
   hash: string,
-  observed: boolean
+  observed: boolean,
+  totalPrice: number
 }

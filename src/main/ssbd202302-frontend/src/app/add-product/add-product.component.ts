@@ -206,7 +206,7 @@ export class AddProductComponent implements OnInit {
       ) as number,
     };
 
-    if (this.image) {
+    if (this.image && this.imageUpload) {
       this.productService
         .createProductWithNewImage(this.image, productCreate)
         .pipe(takeUntil(this.destroy))
@@ -346,6 +346,7 @@ export class AddProductComponent implements OnInit {
   }
 
   onSelectChange(): void {
+    this.imageUpload = true;
     if (
       this.addProductForm.get('productGroupName')?.valid &&
       this.addProductForm.get('color')?.valid &&
@@ -364,12 +365,10 @@ export class AddProductComponent implements OnInit {
           this.imageProductId = this.displayedImage
             ? (products.at(0)?.id as number)
             : 0;
-          this.imageUpload = this.displayedImage ? false : true;
           this.allSelected = true;
         });
     } else {
       this.allSelected = false;
-      this.imageUpload = true;
       this.onFileRemove();
     }
   }

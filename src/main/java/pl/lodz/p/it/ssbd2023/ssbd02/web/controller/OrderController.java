@@ -22,6 +22,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ChangeOrderStateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
@@ -79,8 +80,10 @@ public class OrderController {
 
   @GET
   @Path("/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
   public Response find(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
+    return Response.ok(orderEndpoint.find(id)).build();
   }
 
   @GET
@@ -113,6 +116,15 @@ public class OrderController {
   @RolesAllowed(CLIENT)
   public Response cancelOrder(@NotNull @Valid OrderDto orderDto) {
     return Response.ok(orderEndpoint.cancelOrder(orderDto)).build();
+  }
+
+  @PUT
+  @Path("/employee/cancel")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response cancelOrderAsEmployee(@NotNull @Valid CancelOrderDto cancelOrderDto) {
+    return Response.ok(orderEndpoint.cancelOrderAsEmployee(cancelOrderDto.getId(), cancelOrderDto.getHash())).build();
   }
 
   @PUT

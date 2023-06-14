@@ -1,0 +1,15 @@
+<div class="action" [matMenuTriggerFor]="actionMenu">
+  {{'action' | translate}}
+  <mat-menu #actionMenu="matMenu">
+    <button mat-menu-item (click)="openChangeRoleDialog(order)">
+      <mat-icon>change_circle</mat-icon>
+      <span>{{'order.change.state' | translate}}</span>
+    </button>
+    <button *ngIf="canEmployeeCancelOrder(order)" mat-menu-item (click)="openCancelOrderDialog(order)">
+      <mat-icon>cancel</mat-icon>
+      <span>{{'order.cancel' | translate}}</span>
+    </button>
+  </mat-menu>
+</div>
+
+

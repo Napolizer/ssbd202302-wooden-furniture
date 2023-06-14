@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {TokenService} from "./token.service";
 import {Observable} from "rxjs";
 import {environment} from "../../environments/environment";
-import {ClientOrder} from "../interfaces/clientOrder";
+import {ClientOrder} from "../interfaces/client.order";
 
 @Injectable({
   providedIn: 'root'

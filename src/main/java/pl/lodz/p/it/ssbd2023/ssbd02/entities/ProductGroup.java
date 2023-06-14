@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -33,6 +34,7 @@ import lombok.experimental.SuperBuilder;
 public class ProductGroup extends AbstractEntity {
 
   public static final String FIND_BY_ID = "ProductGroup.findById";
+  public static final String GET_AVG_RATE = "ProductGroup.getAverageRate";
 
   @Column(nullable = false, unique = true)
   private String name;
@@ -45,7 +47,7 @@ public class ProductGroup extends AbstractEntity {
   @Builder.Default
   private List<Product> products = new ArrayList<>();
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.MERGE)
   @JoinColumn(name = "product_group_id", nullable = false)
   @Builder.Default
   private List<Rate> rates = new ArrayList<>();
@@ -53,4 +55,11 @@ public class ProductGroup extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
+
+  public void updateAverageRating() {
+    this.averageRating = rates.stream()
+            .mapToDouble(Rate::getValue)
+            .average()
+            .orElse(0.0);
+  }
 }

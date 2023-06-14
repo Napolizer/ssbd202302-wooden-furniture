@@ -1,9 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {Account} from "../../interfaces/account";
 import {MatTableDataSource} from "@angular/material/table";
 import {Subject, takeUntil, tap} from "rxjs";
-import {ClientOrder} from "../../interfaces/clientOrder";
+import {ClientOrder} from "../../interfaces/client.order";
 import {AccountService} from "../../services/account.service";
 import {NavigationService} from "../../services/navigation.service";
 import {BreadcrumbsService} from "../../services/breadcrumbs.service";
@@ -115,9 +114,13 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   calculateTotalQuantity(order: any): number {
     let total = 0;
-    for (const product of order.orderProductList) {
+    for (const product of order.orderedProducts) {
       total += product.amount;
     }
     return total;
+  }
+
+  redirectToRatePage() {
+    this.navigationService.redirectToRatePage();
   }
 }
