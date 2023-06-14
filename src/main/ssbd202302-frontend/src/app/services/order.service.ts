@@ -72,6 +72,21 @@ export class OrderService {
     );
   }
 
+  public observeOrder(order: ClientOrder): Observable<OrderDetailsDto> {
+    return this.httpClient.put<OrderDetailsDto>(
+      `${environment.apiBaseUrl}/order/observe`,
+      {
+        id: order.id,
+        hash: order.hash
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
   public cancelOrder(order: ClientOrder): Observable<OrderDetailsDto> {
     return this.httpClient.put<OrderDetailsDto>(
       `${environment.apiBaseUrl}/order/cancel`,

@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -31,7 +32,7 @@ import lombok.experimental.SuperBuilder;
             query = "SELECT productGroup FROM product_group productGroup WHERE productGroup.id = :id"),
     @NamedQuery(name = ProductGroup.GET_AVG_RATE,
                 query = "SELECT AVG(rate.value) FROM product_group productGroup JOIN productGroup.rates rate"
-                    + " WHERE productGroup.id = :productGroupId")
+                + " WHERE productGroup.id = :productGroupId")
 })
 public class ProductGroup extends AbstractEntity {
 

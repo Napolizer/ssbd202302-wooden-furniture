@@ -3,16 +3,15 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatTableDataSource} from "@angular/material/table";
 import {first, Subject, takeUntil, tap} from "rxjs";
 import {ClientOrder} from "../../interfaces/client.order";
-import {AccountService} from "../../services/account.service";
 import {NavigationService} from "../../services/navigation.service";
 import {BreadcrumbsService} from "../../services/breadcrumbs.service";
 import {TranslateService} from "@ngx-translate/core";
 import {NavigationEnd, Router} from "@angular/router";
-import {DialogService} from "../../services/dialog.service";
 import {ClientOrderService} from "../../services/client-order.service";
 import {OrderService} from "../../services/order.service";
-import {AlertService} from "@full-fledged/alerts";
+import {DialogService} from "../../services/dialog.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AlertService} from "@full-fledged/alerts";
 
 @Component({
   selector: 'app-client-orders-page',
@@ -109,8 +108,47 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
 
   }
 
-  observeOrder(): void {
+  observeOrder(order: ClientOrder): void {
+    this.loading = true;
+    this.orderService.observeOrder(order)
+      .pipe(takeUntil(this.destroy))
+      .subscribe( {
+        next: () => {
+          this.loading = false
+          this.translate.get("order.observe.success")
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.success(msg);
+              void this.navigationService.redirectToClientOrdersPage();
+            })
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          const message = e.error.message as string;
+          this.translate
+            .get(message || 'exception.unknown')
+            .pipe(takeUntil(this.destroy))
+            .subscribe(msg => {
+              this.alertService.danger(msg);
+            })
+        }
+      })
+  }
 
+  onObserveClicked(order: ClientOrder) {
+    this.translate.get("order.observe.confirmation")
+      .pipe(takeUntil(this.destroy))
+      .subscribe(msg => {
+        const ref = this.dialogService.openConfirmationDialog(msg, "primary")
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result == 'action') {
+              this.observeOrder(order);
+            }
+          });
+      })
   }
 
   canObserve(order: any): boolean {
