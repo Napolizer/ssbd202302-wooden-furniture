@@ -340,4 +340,23 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearCart(): void {
+    this.translate
+      .get("dialog.cart.empty")
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result === 'action') {
+              this.cartService.clearCart();
+              this.cartService.getProductsFromLocalStorage();
+              this.orderedProducts = this.cartService.getCart();
+            }
+          });
+      });
+  }
+
 }

@@ -232,6 +232,7 @@
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
   "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
+  "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
@@ -450,6 +451,7 @@
   "cart.min.amount.error.message": "Nie można wybrać mniej niż jednej sztuki produktu",
   "cart.add.product.success": "Produkt dodany do koszyka",
   "cart.other.shipment.data.checkbox": "Czy chcesz podać inne dane do wysyłki?",
+  "cart.clear": "Wyczyść koszyk",
 
   "summary": "Podsumowanie",
   "cart.amount.error.message": "Nie można dodać więcej sztuk produktu do koszyka",
