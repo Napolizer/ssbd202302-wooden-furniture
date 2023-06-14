@@ -101,4 +101,15 @@ export class OrderService {
       }
     );
   }
+
+  public getDoneOrders(): Observable<OrderDetailsDto[]> {
+    return this.httpClient.get<OrderDetailsDto[]>(
+      `${environment.apiBaseUrl}/order/done`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
 }

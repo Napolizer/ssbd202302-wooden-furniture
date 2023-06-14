@@ -80,6 +80,8 @@ import { ArchiveProductGroupComponent } from './components/archive-product-group
 import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.component';
 import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
 import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
+import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -131,6 +133,7 @@ import { ChangeOrderStateComponent } from './components/change-order-state/chang
     ChangeOrderStateComponent,
     ClientRatesPageComponent,
     ArchiveProductGroupComponent,
+    DoneOrdersPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -173,7 +176,8 @@ import { ChangeOrderStateComponent } from './components/change-order-state/chang
     MatSortModule,
     MatGridListModule,
     NgbModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatChipsModule
   ],
   providers: [
     DatePipe,

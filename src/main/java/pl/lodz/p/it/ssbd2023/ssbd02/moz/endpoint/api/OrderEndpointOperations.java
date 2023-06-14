@@ -42,4 +42,6 @@ public interface OrderEndpointOperations {
   void generateReport();
 
   List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+
+  List<OrderDetailsDto> findAllOrdersDone();
 }
