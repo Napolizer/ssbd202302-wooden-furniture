@@ -45,4 +45,5 @@ public interface OrderServiceOperations {
 
   boolean isLastTransactionRollback();
 
+  List<Order> findAllOrdersDone();
 }

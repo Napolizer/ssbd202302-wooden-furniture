@@ -42,4 +42,6 @@ public interface OrderEndpointOperations {
   byte[] generateReport(String startDate, String endDate, String locale);
 
   List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+
+  List<OrderDetailsDto> findAllOrdersDone();
 }

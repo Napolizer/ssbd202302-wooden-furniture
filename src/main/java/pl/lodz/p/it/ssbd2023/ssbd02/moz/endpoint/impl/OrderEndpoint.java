@@ -176,6 +176,15 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
+  @RolesAllowed(SALES_REP)
+  public List<OrderDetailsDto> findAllOrdersDone() {
+    return repeatTransactionWithOptimistic(() -> orderService.findAllOrdersDone())
+            .stream()
+            .map(orderMapper::mapToOrderDetailsDto)
+            .toList();
+  }
+
+  @Override
   protected boolean isLastTransactionRollback() {
     return orderService.isLastTransactionRollback();
   }

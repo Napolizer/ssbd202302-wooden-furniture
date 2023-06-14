@@ -82,6 +82,8 @@ import { ViewCartPageComponent } from './pages/view-cart-page/view-cart-page.com
 import { EmployeeActionsMenuComponent } from './components/employee-actions-menu/employee-actions-menu.component';
 import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
 import { GenerateReportComponent } from './components/generate-report/generate-report.component';
+import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -134,6 +136,7 @@ import { GenerateReportComponent } from './components/generate-report/generate-r
     ClientRatesPageComponent,
     GenerateReportComponent,
     ArchiveProductGroupComponent,
+    DoneOrdersPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -178,7 +181,8 @@ import { GenerateReportComponent } from './components/generate-report/generate-r
     MatSortModule,
     MatGridListModule,
     NgbModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatChipsModule
   ],
   providers: [
     DatePipe,

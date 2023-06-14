@@ -56,7 +56,7 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
-  @RolesAllowed(EMPLOYEE)
+  @RolesAllowed({EMPLOYEE, SALES_REP})
   public List<Order> findByState(OrderState orderState) {
     return getEntityManager().createNamedQuery(Order.FIND_BY_STATE, Order.class)
         .setParameter("orderState", orderState)
