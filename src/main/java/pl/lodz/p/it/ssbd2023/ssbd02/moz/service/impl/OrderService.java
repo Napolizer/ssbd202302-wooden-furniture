@@ -248,7 +248,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     List<Order> orders = findByAccountLogin(login);
     Order clientOrder = Order.builder().build();
     for (Order order : orders) {
-      if (order.getAccount().getLogin().equals(login)) {
+      if (order.getId().equals(id)) {
         clientOrder = order;
         break;
       }
