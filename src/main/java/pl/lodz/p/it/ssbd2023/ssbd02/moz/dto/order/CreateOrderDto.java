@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
 public class CreateOrderDto {
   @NotEmpty
   @Size(min = 1)
-  private List<@Valid OrderProductDto> products;
+  private List<@Valid OrderedProductDto> products;
 
   @Valid
   private ShippingDataDto shippingData;
