@@ -297,6 +297,16 @@ public final class ApplicationExceptionFactory {
             Response.Status.BAD_REQUEST);
   }
 
+  public static BaseWebApplicationException createInvalidDateException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_DATE,
+            Response.Status.BAD_REQUEST);
+  }
+
+  public static BaseWebApplicationException createInvalidLocaleException() {
+    return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_LOCALE,
+            Response.Status.BAD_REQUEST);
+  }
+
   public static BaseWebApplicationException createInvalidImageFileFormatException() {
     return new BaseWebApplicationException(MessageUtil.MessageKey.INVALID_IMAGE_FILE_FORMAT,
             Response.Status.BAD_REQUEST);

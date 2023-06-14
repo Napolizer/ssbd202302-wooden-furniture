@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.moz.service.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CANCELLED;
 
 import jakarta.annotation.security.DenyAll;
@@ -12,10 +13,26 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
@@ -31,6 +48,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 
@@ -279,8 +297,101 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
-  public void generateReport() {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public byte[] generateReport(LocalDateTime startDate, LocalDateTime endDate, String locale) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    List<Object[]> data = orderFacade.findOrderStatsForReport(startDate, endDate);
+    String[] headers = {MessageUtil.getMessage(locale, "moz.report.header1"),
+            MessageUtil.getMessage(locale, "moz.report.header2"),
+            MessageUtil.getMessage(locale, "moz.report.header3"),
+            MessageUtil.getMessage(locale, "moz.report.header4"),
+            MessageUtil.getMessage(locale, "moz.report.header5")};
+    try (Workbook workbook = new XSSFWorkbook()) {
+      Sheet sheet = workbook.createSheet("Sheet1");
+      Row titleRow = sheet.createRow(0);
+      Cell titleCell = titleRow.createCell(0);
+      titleCell.setCellValue(MessageUtil.getMessage(locale, "moz.report.title1")
+              + startDate.toLocalDate().format(formatter)
+              + MessageUtil.getMessage(locale, "moz.report.title2")
+              + endDate.toLocalDate().format(formatter));
+
+      CellRangeAddress titleRange = new CellRangeAddress(0, 2, 0, headers.length - 1);
+      sheet.addMergedRegion(titleRange);
+
+      CellStyle titleStyle = workbook.createCellStyle();
+      titleStyle.setAlignment(HorizontalAlignment.CENTER);
+      Font titleFont = workbook.createFont();
+      titleFont.setBold(true);
+      titleFont.setFontHeightInPoints((short) 18);
+      titleStyle.setFont(titleFont);
+      titleCell.setCellStyle(titleStyle);
+
+      Row headerRow = sheet.createRow(3);
+      CellStyle headerStyle = workbook.createCellStyle();
+      Font headerFont = workbook.createFont();
+      headerFont.setFontHeightInPoints((short) 13);
+      headerFont.setBold(true);
+      headerStyle.setFont(headerFont);
+      for (int i = 0; i < headers.length; i++) {
+        Cell cell = headerRow.createCell(i);
+        cell.setCellValue(headers[i]);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        cell.setCellStyle(headerStyle);
+      }
+
+      for (int i = 0; i < data.size(); i++) {
+        Row dataRow = sheet.createRow(i + 4);
+        for (int j = 0; j < data.get(i).length; j++) {
+          Cell cell = dataRow.createCell(j);
+          Object value = data.get(i)[j];
+          CellStyle cellStyle = workbook.createCellStyle();
+          cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+          cellStyle.setFillForegroundColor(IndexedColors.WHITE1.getIndex());
+
+          if (value instanceof Long convertedValue) {
+            cell.setCellValue(convertedValue);
+            if (j == 2) {
+              if (convertedValue == 0) {
+                cellStyle.setFillForegroundColor(IndexedColors.RED1.getIndex());
+              } else if (convertedValue <= 3) {
+                cellStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+              } else {
+                cellStyle.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+              }
+            }
+          } else if (value instanceof String convertedValue) {
+            cell.setCellValue(convertedValue);
+          } else if (value instanceof Double convertedValue) {
+            cell.setCellValue(convertedValue);
+            if (j == 4) {
+              cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#,##0.00 PLN"));
+            }
+          }
+
+          cellStyle.setBorderBottom(BorderStyle.THIN);
+          cellStyle.setBorderTop(BorderStyle.THIN);
+          cellStyle.setBorderLeft(BorderStyle.THIN);
+          cellStyle.setBorderRight(BorderStyle.THIN);
+          cell.setCellStyle(cellStyle);
+        }
+      }
+
+      for (int i = 0; i < headers.length; i++) {
+        sheet.autoSizeColumn(i);
+      }
+
+      try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        workbook.write(outputStream);
+        return outputStream.toByteArray();
+      } catch (IOException e) {
+        throw ApplicationExceptionFactory.createUnknownErrorException(e);
+      }
+    } catch (IOException e) {
+      throw ApplicationExceptionFactory.createUnknownErrorException(e);
+    }
   }
 
   @Override
