@@ -150,7 +150,7 @@ public class ProductController {
   }
 
   @GET
-  @Path("/group/id/{id}")
+  @Path("/group/products/id/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response findAllProductsByProductGroupId(@PathParam("id") Long id) {
     return Response.ok(productEndpoint.findAllByProductGroupId(id)).build();
@@ -203,9 +203,11 @@ public class ProductController {
   }
 
   @GET
-  @Path("/group/id")
-  public Response findGroup(Long id) {
-    throw new UnsupportedOperationException();
+  @Path("/group/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response findGroup(@PathParam("id") Long id) {
+    return Response.ok(productGroupEndpoint.find(id)).build();
   }
 
   @GET

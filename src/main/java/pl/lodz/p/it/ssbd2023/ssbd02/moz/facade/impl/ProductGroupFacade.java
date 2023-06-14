@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
-import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
@@ -16,7 +15,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
@@ -56,8 +54,7 @@ public class ProductGroupFacade extends AbstractFacade<ProductGroup>
   }
 
   @Override
-  @PermitAll
-  @TransactionAttribute(REQUIRES_NEW)
+  @RolesAllowed({CLIENT, EMPLOYEE})
   public Optional<ProductGroup> findById(Long productGroupId) {
     try {
       return Optional.of(em.createNamedQuery(ProductGroup.FIND_BY_ID, ProductGroup.class)

@@ -93,7 +93,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   }
 
   @Override
-  @PermitAll
+  @RolesAllowed(EMPLOYEE)
   public Optional<ProductGroup> find(Long id) {
     return productGroupFacade.find(id);
   }
