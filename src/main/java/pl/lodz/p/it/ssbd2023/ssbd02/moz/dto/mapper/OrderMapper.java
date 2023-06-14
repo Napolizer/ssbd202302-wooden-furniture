@@ -4,6 +4,7 @@ import jakarta.ejb.Stateful;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
@@ -96,7 +97,7 @@ public class OrderMapper {
 
   public static LocalDateTime mapToLocalDateTime(String date) {
     try {
-      return LocalDate.parse(date).atStartOfDay();
+      return LocalDate.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy")).atStartOfDay();
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidDateException();
     }

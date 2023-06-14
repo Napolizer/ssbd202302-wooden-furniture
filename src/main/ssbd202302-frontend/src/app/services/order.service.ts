@@ -70,4 +70,18 @@ export class OrderService {
       }
     );
   }
+
+  public generateSalesReport(startDate: string, endDate: string, locale: string): Observable<any> {
+    return this.httpClient.get<Blob>(
+      `${environment.apiBaseUrl}/order/report?startDate=${startDate}&endDate=${endDate}`,
+      {
+        responseType: 'blob' as 'json',
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+          'Accept-Language': locale
+        },
+        
+      }
+    );
+  }
 }

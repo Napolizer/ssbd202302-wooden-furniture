@@ -287,6 +287,7 @@
   "exception.moz.order.already.delivered": "Order is already delivered",
   "exception.moz.order.already.cancelled": "Order is already cancelled",
   "exception.moz.rate.notfound": "Rate not found",
+  "exception.moz.invalid.date": "Invalid date",
 
 
   "role.administrator": "Administrator",
@@ -469,5 +470,17 @@
   "rate.remove": "Remove your rate",
 
   "exception.moz.product.updated.by": "Impossible to make order, because one of the product was edited by this user recently",
-  "exception.moz.product.created.by": "Impossible to make order, because one of the product was created by this user recently"
+  "exception.moz.product.created.by": "Impossible to make order, because one of the product was created by this user recently",
+
+  "generate.report.title": "Generate sales report",
+  "generate.report.back": "Back",
+  "generate.report.confirm": "Generate",
+  "generate.report.label": "Enter sales period",
+  "generate.report.start": "Start date",
+  "generate.report.end": "End date",
+  "generate.report.required.date.start": "Start date cannot be empty",
+  "generate.report.required.date.end": "End date cannot be empty",
+  "generate.report.invalid.date.start": "Invalid start date",
+  "generate.report.invalid.date.end": "Invalid end date",
+  "generate.report.success": "Sales report has been successfully generated"
 }

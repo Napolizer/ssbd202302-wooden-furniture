@@ -301,18 +301,18 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   public byte[] generateReport(LocalDateTime startDate, LocalDateTime endDate, String locale) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     List<Object[]> data = orderFacade.findOrderStatsForReport(startDate, endDate);
-    String[] headers = {MessageUtil.getMessage(locale, "moz.report.header1"),
-            MessageUtil.getMessage(locale, "moz.report.header2"),
-            MessageUtil.getMessage(locale, "moz.report.header3"),
-            MessageUtil.getMessage(locale, "moz.report.header4"),
-            MessageUtil.getMessage(locale, "moz.report.header5")};
+    String[] headers = {MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_HEADER1),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_HEADER2),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_HEADER3),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_HEADER4),
+            MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_HEADER5)};
     try (Workbook workbook = new XSSFWorkbook()) {
       Sheet sheet = workbook.createSheet("Sheet1");
       Row titleRow = sheet.createRow(0);
       Cell titleCell = titleRow.createCell(0);
-      titleCell.setCellValue(MessageUtil.getMessage(locale, "moz.report.title1")
+      titleCell.setCellValue(MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_TITLE1)
               + startDate.toLocalDate().format(formatter)
-              + MessageUtil.getMessage(locale, "moz.report.title2")
+              + MessageUtil.getMessage(locale, MessageUtil.MessageKey.REPORT_TITLE2)
               + endDate.toLocalDate().format(formatter));
 
       CellRangeAddress titleRange = new CellRangeAddress(0, 2, 0, headers.length - 1);

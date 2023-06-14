@@ -143,5 +143,13 @@ public class MessageUtil {
     public static final String INVALID_PRODUCT_AMOUNT = "exception.moz.invalid.product.amount";
     public static final String PRODUCT_UPDATED_BY = "exception.moz.product.updated.by";
     public static final String PRODUCT_CREATED_BY = "exception.moz.product.created.by";
+
+    public static final String REPORT_TITLE1 = "moz.report.title1";
+    public static final String REPORT_TITLE2 = "moz.report.title2";
+    public static final String REPORT_HEADER1 = "moz.report.header1";
+    public static final String REPORT_HEADER2 = "moz.report.header2";
+    public static final String REPORT_HEADER3 = "moz.report.header3";
+    public static final String REPORT_HEADER4 = "moz.report.header4";
+    public static final String REPORT_HEADER5 = "moz.report.header5";
   }
 }
