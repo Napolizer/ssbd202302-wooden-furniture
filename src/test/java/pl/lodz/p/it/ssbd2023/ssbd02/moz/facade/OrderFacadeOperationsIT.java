@@ -329,15 +329,8 @@ public class OrderFacadeOperationsIT {
   }
 
   @Test
-  void failsToGetByStateOrdersFromAccountsWithoutEmployeeRole() {
+  void failsToGetByStateOrdersFromAccountsWithoutEmployeeOrSalesRepRole() {
     administrator.call(() -> {
-      assertThrows(EJBAccessException.class, () -> {
-        for (OrderState state : OrderState.values()) {
-          facade.findByState(state);
-        }
-      });
-    });
-    salesRep.call(() -> {
       assertThrows(EJBAccessException.class, () -> {
         for (OrderState state : OrderState.values()) {
           facade.findByState(state);
