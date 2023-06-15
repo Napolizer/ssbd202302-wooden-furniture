@@ -14,6 +14,8 @@ public interface ProductGroupEndpointOperations {
 
   ProductGroupInfoDto archive(Long id);
 
+  ProductGroupInfoDto activate(Long id);
+
   ProductGroupInfoDto editProductGroupName(Long id, EditProductGroupDto editProductGroupDto);
 
   ProductGroupInfoDto find(Long id);

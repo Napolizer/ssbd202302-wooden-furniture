@@ -57,6 +57,14 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
 
   @Override
   @RolesAllowed(EMPLOYEE)
+  public ProductGroupInfoDto activate(Long id) {
+    ProductGroup productGroup = repeatTransactionWithOptimistic(() ->
+        productGroupService.activate(id));
+    return ProductGroupMapper.mapToProductGroupInfoDto(productGroup);
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
   public ProductGroupInfoDto editProductGroupName(Long id, EditProductGroupDto editProductGroupDto) {
     ProductGroup productGroup = repeatTransactionWithoutOptimistic(() -> productGroupService.editProductGroupName(id,
         editProductGroupDto.getName(), editProductGroupDto.getHash()));

@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
@@ -15,24 +14,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.java.Log;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -70,7 +61,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
     @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_ID,
         query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId")
 })
-@Log
 public class Product extends AbstractEntity {
   public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
   public static final String FIND_ALL_BY_COLOR = "Product.findAllByColor";
