@@ -397,7 +397,7 @@ public class MOZ5IT {
 							.statusCode(200);
 
 			ProductCreateWithImageDto productCreateDto = InitData.getProductToCreate();
-			productCreateDto.setProductGroupId(50L);
+			productCreateDto.setProductGroupId(44L);
 			File file = new File(System.getProperty("user.dir") + "/src/test/resources/uploads/image.jpg");
 			given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
