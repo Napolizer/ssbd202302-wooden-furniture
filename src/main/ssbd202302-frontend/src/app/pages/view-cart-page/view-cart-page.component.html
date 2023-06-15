@@ -43,12 +43,25 @@
                 <mat-card-subtitle>
                   {{ "product.available.number.of.pieces" | translate }}: {{ orderedProduct.product.amount }}
                 </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="orderedProduct.product.archive">
+                  <span class="red-circle"></span>
+                  {{ "product.is.unavailable" | translate }}
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="!orderedProduct.product.archive && !orderedProduct.product.productGroup.archive">
+                  <span class="green-circle"></span>
+                  {{ "product.is.available" | translate }}
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="orderedProduct.product.productGroup.archive">
+                  <span class="red-circle"></span>
+                  {{ "product.withdrawn" | translate }}
+                </mat-card-subtitle>
                 <mat-card-subtitle>
                   {{ "product.chosen.number.of.pieces" | translate }}:
                 </mat-card-subtitle>
                 <div class="input-group w-75">
                   <div class="input-group-prepend">
-                    <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)">-</button>
+                    <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)"
+                            [disabled]="">-</button>
                   </div>
                   <input
                     name="amountInput"

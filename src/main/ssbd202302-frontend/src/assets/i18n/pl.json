@@ -479,6 +479,8 @@
   "product.chosen.number.of.pieces": "Wybrana liczba sztuk",
   "product.available.number.of.pieces": "Dostępna liczba sztuk",
   "product.id": "ID Produktu",
+  "product.is.available": "Produkt jest dostępny",
+  "product.is.unavailable": "Produkt jest niedostępny",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",
@@ -511,6 +513,8 @@
   "rate.remove": "Usuń twoją ocenę",
   "exception.moz.product.updated.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów był ostatnio edytowany przez tego użytkownika",
   "exception.moz.product.created.by": "Nie można złożyć zamówienia, ponieważ jeden z produktów został utworzony przez tego użytkownika",
+  "exception.moz.product.is.archive": "Jeden lub więcej produktów jest aktualnie niedostępny",
+  "exception.moz.product.group.is.archive": "Jedna lub więcej grup produktów jest niedostępna",
 
   "generate.report.title": "Wygeneruj raport sprzedażowy",
   "generate.report.back": "Powrót",
