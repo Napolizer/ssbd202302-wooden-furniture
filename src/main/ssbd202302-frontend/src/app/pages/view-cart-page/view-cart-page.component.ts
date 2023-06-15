@@ -391,4 +391,8 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           });
       });
   }
+
+  isAnyProductArchive(): boolean {
+    return this.cartService.isAnyProductArchive();
+  }
 }
