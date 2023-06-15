@@ -167,13 +167,7 @@ public class MOZ17IT {
           .body("recipientAddress.street", is(equalTo("Piotrkowska")))
           .body("recipientAddress.streetNumber", is(equalTo(1)))
           .body("recipientAddress.postalCode", is(equalTo("90-000")))
-          .body("account.firstName", is(equalTo("John")))
-          .body("account.lastName", is(equalTo("Doe")))
-          .body("account.address.country", is(equalTo("Poland")))
-          .body("account.address.city", is(equalTo("Lodz")))
-          .body("account.address.street", is(equalTo("Piotrkowska")))
-          .body("account.address.streetNumber", is(equalTo(1)))
-          .body("account.address.postalCode", is(equalTo("90-000")))
+          .body("accountLogin", is(equalTo("makesOrder")))
           .body("observed", is(equalTo(false)))
           .body("totalPrice", is(equalTo(900.0F)));
     }
@@ -235,13 +229,7 @@ public class MOZ17IT {
           .body("recipientAddress.street", is(equalTo("Street")))
           .body("recipientAddress.streetNumber", is(equalTo(2)))
           .body("recipientAddress.postalCode", is(equalTo("98-100")))
-          .body("account.firstName", is(equalTo("John")))
-          .body("account.lastName", is(equalTo("Doe")))
-          .body("account.address.country", is(equalTo("Poland")))
-          .body("account.address.city", is(equalTo("Lodz")))
-          .body("account.address.street", is(equalTo("Piotrkowska")))
-          .body("account.address.streetNumber", is(equalTo(1)))
-          .body("account.address.postalCode", is(equalTo("90-000")))
+          .body("accountLogin", is(equalTo("makesOrder")))
           .body("observed", is(equalTo(false)))
           .body("totalPrice", is(equalTo(900.0F)));
     }

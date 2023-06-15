@@ -21,11 +21,11 @@ public class OrderUtil {
           "shippingData": {
             "recipientFirstName": "Jan",
             "recipientLastName": "Kowalski",
-            "address": {
+            "recipientAddress": {
               "country": "Poland",
               "city": "Lodz",
               "street": "Piotrkowska",
-              "streetNumber": "1",
+              "streetNumber": 1,
               "postalCode": "90-000"
             }
           }

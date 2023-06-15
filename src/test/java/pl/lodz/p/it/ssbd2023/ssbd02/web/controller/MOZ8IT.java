@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CANCELLED;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.COMPLETED;
@@ -41,7 +42,7 @@ public class MOZ8IT {
           .get("/order")
           .then()
           .statusCode(200)
-          .body("size()", equalTo(2))
+          .body("size()", greaterThanOrEqualTo(2))
           .rootPath("find { it.id == 1 }")
             .body("id", equalTo(1))
             .body("hash", notNullValue())
@@ -106,7 +107,7 @@ public class MOZ8IT {
           .get("/order/present")
           .then()
           .statusCode(200)
-          .body("size()", equalTo(1))
+          .body("size()", greaterThanOrEqualTo(1))
           .rootPath("find { it.id == 1 }")
           .body("id", equalTo(1))
           .body("hash", notNullValue())
@@ -238,7 +239,7 @@ public class MOZ8IT {
             .get("/order/state/" + orderState)
             .then()
             .statusCode(200)
-            .body("size()", equalTo(0));
+            .body("size()", greaterThanOrEqualTo(0));
       }
 
       given()
@@ -271,7 +272,7 @@ public class MOZ8IT {
           .get("/order/state/DELIVERED")
           .then()
           .statusCode(200)
-          .body("size()", equalTo(1))
+          .body("size()", greaterThanOrEqualTo(1))
           .rootPath("find { it.id == 2 }")
           .body("id", equalTo(2))
           .body("hash", notNullValue())

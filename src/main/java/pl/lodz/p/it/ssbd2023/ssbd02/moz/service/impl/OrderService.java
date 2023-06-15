@@ -171,6 +171,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
       //TODO edit products amount in database
       product.setAmount(product.getAmount() - orderedProduct.getAmount());
+      product.setIsUpdatedBySystem(true);
       productFacade.update(product);
       //TODO make impossible to create order for employee that changed these products recently
     }
