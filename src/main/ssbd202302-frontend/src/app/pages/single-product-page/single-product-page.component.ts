@@ -258,46 +258,6 @@ export class SingleProductPageComponent implements OnInit {
         },
       });
   }
-
-  deArchiveProduct(): void {
-    this.productService
-      .deArchiveProduct(this.product.id.toString())
-      .pipe(first(), takeUntil(this.destroy))
-      .subscribe({
-        next: () => {
-          this.product.archive = true;
-          this.translate
-            .get('dearchive.success')
-            .pipe(takeUntil(this.destroy))
-            .subscribe((msg) => {
-              this.alertService.success(msg);
-              void this.navigationService.redirectToSingleProductPage(
-                this.product.id.toString()
-              );
-            });
-        },
-        error: (e) => {
-          combineLatest([
-            this.translate.get('exception.occurred'),
-            this.translate.get(e.error.message || 'exception.unknown'),
-          ])
-            .pipe(
-              first(),
-              takeUntil(this.destroy),
-              map((data) => ({
-                title: data[0],
-                message: data[1],
-              }))
-            )
-            .subscribe((data) => {
-              this.alertService.danger(`${data.title}: ${data.message}`);
-              void this.navigationService.redirectToSingleProductPage(
-                this.product.id.toString()
-              );
-            });
-        },
-      });
-  }
   setProductData(product: Product): void {
     this.productData = [
       product.productGroup.name,

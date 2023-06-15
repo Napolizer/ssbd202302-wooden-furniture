@@ -46,7 +46,5 @@ public interface ProductEndpointOperations {
 
   EditProductDto editProduct(Long id, EditProductDto editProductDto);
 
-  Product deArchive(Long productId);
-
   List<OrderProductWithRateDto> findAllProductsBelongingToAccount(String login);
 }
