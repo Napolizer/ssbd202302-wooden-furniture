@@ -115,6 +115,14 @@ public class ProductController {
   }
 
   @PUT
+  @Path("/group/activate/id/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response activateProductGroup(@PathParam("id") Long id) {
+    return Response.ok(productGroupEndpoint.activate(id)).build();
+  }
+
+  @PUT
   @Path("/group/id/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
