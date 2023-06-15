@@ -88,7 +88,7 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
               .setParameter("orderState", orderState)
               .setParameter("minPrice", minPrice)
               .setParameter("maxPrice", maxPrice)
-              .setParameter("amount", totalAmount)
+              .setParameter("totalAmount", totalAmount)
               .getResultList();
     }
     return getEntityManager()
@@ -96,7 +96,7 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
             .setParameter("orderState", orderState)
             .setParameter("minPrice", minPrice)
             .setParameter("maxPrice", maxPrice)
-            .setParameter("amount", totalAmount)
+            .setParameter("totalAmount", totalAmount)
             .getResultList();
   }
 

@@ -8,11 +8,12 @@ import {
 } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
-import { merge, Observable, of as observableOf, Subject } from 'rxjs';
+import { merge, Observable, of as observableOf, of, Subject } from 'rxjs';
 import {
   catchError,
   first,
   map,
+  max,
   startWith,
   switchMap,
   takeUntil,
@@ -80,6 +81,7 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
   maxSliderValue: number;
   minSliderValue: number = 0;
   amountSliderValue: number;
+  amounts: number[] = [];
 
   constructor(
     private orderService: OrderService,
@@ -105,8 +107,9 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
         console.log(orders);
         this.orders = orders;
         for(let i=0;i<this.orders.length;i++) {
-          this.calculateMaxAmount(this.orders[i]);
+          this.amounts[i] = this.calculateMaxAmount(this.orders[i]);
       }
+      this.maxAmount = Math.max(...this.amounts);
       this.amountSliderValue = this.maxAmount;
       this.maxSliderValue = this.maxTotalPrice = this.orders.reduce((max, element) => {
         return element.totalPrice > max ? element.totalPrice : max;
@@ -156,7 +159,7 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
         });
   }
 
-  onResetClicked(): void { 
+  onResetClicked(): void {
       this.listLoading = true;
       this.orderService
         .getDoneOrders()
@@ -187,14 +190,19 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
     return total;
   }
 
-  calculateMaxAmount(order: OrderDetailsDto): void {
-    this.maxAmount = 0;
+  openGenerateReportDialog(): void {
+    this.dialogService.openGenerateReportDialog();
+  }
+
+  calculateMaxAmount(order: OrderDetailsDto): number {
+    let maxAmount=0;
     let total = 0;
     for(let i=0;i<order.orderedProducts.length;i++) {
       total+=order.orderedProducts[i].amount;
     }
-    if(this.maxAmount<total) {
-      this.maxAmount=total;
+    if(maxAmount<total) {
+      maxAmount=total;
     }
+    return maxAmount
   }
 }

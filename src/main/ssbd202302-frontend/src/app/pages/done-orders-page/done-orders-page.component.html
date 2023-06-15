@@ -24,7 +24,7 @@
             [value]="1"
             [(ngModel)]="minSliderValue"
             (change)="handleApplyFiltersButton()"
-          ></mat-slider>
+          >{{minSliderValue}}</mat-slider>
           <label id="example-name-label" class="example-name-label"
             >{{ "orders.maxPrice" | translate }}</label
           >
