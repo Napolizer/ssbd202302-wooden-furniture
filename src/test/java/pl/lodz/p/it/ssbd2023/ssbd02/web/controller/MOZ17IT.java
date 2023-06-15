@@ -28,7 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
@@ -127,16 +127,16 @@ public class MOZ17IT {
     @DisplayName("Should properly create order without shipping data")
     @Test
     void shouldProperlyCreateOrderWithoutShippingData() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
-      orderedProducts.add(OrderProductDto.builder()
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId2)
           .amount(1)
           .build());
-      orderedProducts.add(OrderProductDto.builder()
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId3)
           .amount(1)
           .build());
@@ -167,13 +167,7 @@ public class MOZ17IT {
           .body("recipientAddress.street", is(equalTo("Piotrkowska")))
           .body("recipientAddress.streetNumber", is(equalTo(1)))
           .body("recipientAddress.postalCode", is(equalTo("90-000")))
-          .body("account.firstName", is(equalTo("John")))
-          .body("account.lastName", is(equalTo("Doe")))
-          .body("account.address.country", is(equalTo("Poland")))
-          .body("account.address.city", is(equalTo("Lodz")))
-          .body("account.address.street", is(equalTo("Piotrkowska")))
-          .body("account.address.streetNumber", is(equalTo(1)))
-          .body("account.address.postalCode", is(equalTo("90-000")))
+          .body("accountLogin", is(equalTo("makesOrder")))
           .body("observed", is(equalTo(false)))
           .body("totalPrice", is(equalTo(900.0F)));
     }
@@ -182,16 +176,16 @@ public class MOZ17IT {
     @DisplayName("Should properly create order with given shipping data")
     @Test
     void shouldProperlyCreateOrderWithGivenShippingData() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
-      orderedProducts.add(OrderProductDto.builder()
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId2)
           .amount(1)
           .build());
-      orderedProducts.add(OrderProductDto.builder()
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId3)
           .amount(1)
           .build());
@@ -199,7 +193,7 @@ public class MOZ17IT {
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
           .recipientFirstName("Romelo")
           .recipientLastName("Lukaku")
-          .address(AddressDto.builder()
+          .recipientAddress(AddressDto.builder()
               .country("Italy")
               .city("Mediolan")
               .street("Street")
@@ -235,13 +229,7 @@ public class MOZ17IT {
           .body("recipientAddress.street", is(equalTo("Street")))
           .body("recipientAddress.streetNumber", is(equalTo(2)))
           .body("recipientAddress.postalCode", is(equalTo("98-100")))
-          .body("account.firstName", is(equalTo("John")))
-          .body("account.lastName", is(equalTo("Doe")))
-          .body("account.address.country", is(equalTo("Poland")))
-          .body("account.address.city", is(equalTo("Lodz")))
-          .body("account.address.street", is(equalTo("Piotrkowska")))
-          .body("account.address.streetNumber", is(equalTo(1)))
-          .body("account.address.postalCode", is(equalTo("90-000")))
+          .body("accountLogin", is(equalTo("makesOrder")))
           .body("observed", is(equalTo(false)))
           .body("totalPrice", is(equalTo(900.0F)));
     }
@@ -256,8 +244,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order without token")
     @Test
     void shouldFailToCreateOrderWithoutToken() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -279,8 +267,8 @@ public class MOZ17IT {
     @DisplayName("Should fail with invalid access level")
     @Test
     void shouldFailWithInvalidAccessLevel() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -339,7 +327,7 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with empty products")
     @Test
     void shouldFailToCreateOrderWithEmptyProducts() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
           .products(orderedProducts)
@@ -361,8 +349,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid amount in ordered product")
     @Test
     void shouldFailToCreateOrderWithInvalidAmountInProduct() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(-1)
           .build());
@@ -387,8 +375,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid productId in ordered product")
     @Test
     void shouldFailToCreateOrderWithInvalidProductIdInOrderedProduct() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId(-1L)
           .amount(1)
           .build());
@@ -413,8 +401,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with non existing productId in ordered product")
     @Test
     void shouldFailToCreateOrderWithNonExistingProductIdInOrderedProduct() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId(Long.MAX_VALUE)
           .amount(1)
           .build());
@@ -439,8 +427,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid recipient first name")
     @Test
     void shouldFailToCreateOrderWithInvalidRecipientFirstName() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -448,7 +436,7 @@ public class MOZ17IT {
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
           .recipientFirstName("invalid")
           .recipientLastName("Lukaku")
-          .address(AddressDto.builder()
+          .recipientAddress(AddressDto.builder()
               .country("Italy")
               .city("Mediolan")
               .street("Street")
@@ -478,8 +466,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid recipient last name")
     @Test
     void shouldFailToCreateOrderWithInvalidRecipientLastName() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -487,7 +475,7 @@ public class MOZ17IT {
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
           .recipientFirstName("Romelo")
           .recipientLastName("invalid")
-          .address(AddressDto.builder()
+          .recipientAddress(AddressDto.builder()
               .country("Italy")
               .city("Mediolan")
               .street("Street")
@@ -517,8 +505,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid country in recipient address")
     @Test
     void shouldFailToCreateOrderWithInvalidCountryInRecipientAddress() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -526,7 +514,7 @@ public class MOZ17IT {
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
           .recipientFirstName("Romelo")
           .recipientLastName("Lukaku")
-          .address(AddressDto.builder()
+          .recipientAddress(AddressDto.builder()
               .country("invalid")
               .city("Mediolan")
               .street("Street")
@@ -556,8 +544,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid street number in recipient address")
     @Test
     void shouldFailToCreateOrderWithInvalidStreetNumberInRecipientAddress() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -565,7 +553,7 @@ public class MOZ17IT {
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
           .recipientFirstName("Romelo")
           .recipientLastName("Lukaku")
-          .address(AddressDto.builder()
+          .recipientAddress(AddressDto.builder()
               .country("Italy")
               .city("Mediolan")
               .street("Street")
@@ -595,8 +583,8 @@ public class MOZ17IT {
     @DisplayName("Should fail to create order with invalid postal code in recipient address")
     @Test
     void shouldFailToCreateOrderWithInvalidPostalCodeInRecipientAddress() {
-      List<OrderProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderProductDto.builder()
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
           .build());
@@ -604,7 +592,7 @@ public class MOZ17IT {
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
           .recipientFirstName("Romelo")
           .recipientLastName("Lukaku")
-          .address(AddressDto.builder()
+          .recipientAddress(AddressDto.builder()
               .country("Italy")
               .city("Mediolan")
               .street("Street")

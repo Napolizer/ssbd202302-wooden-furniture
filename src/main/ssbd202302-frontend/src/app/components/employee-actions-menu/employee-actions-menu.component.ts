@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {OrderDetailsDto} from "../../interfaces/order.details.dto";
-import {Subject} from "rxjs";
+import {Subject, takeUntil} from "rxjs";
 import { OrderService } from 'src/app/services/order.service';
 import {AlertService} from "@full-fledged/alerts";
 import {DialogService} from "../../services/dialog.service";
 import {TranslateService} from "@ngx-translate/core";
 import {NavigationService} from "../../services/navigation.service";
+import {OrderState} from "../../enums/order.state";
 
 @Component({
   selector: 'app-employee-actions-menu',
@@ -40,5 +41,29 @@ export class EmployeeActionsMenuComponent implements OnInit {
 
   openChangeRoleDialog(order: OrderDetailsDto): void {
     this.dialogService.openChangeOrderStateDialog(order);
+  }
+
+  openCancelOrderDialog(order: OrderDetailsDto): void {
+    this.dialogService.openConfirmationDialog(this.translate.instant('order.cancel.confirmation'), 'warn')
+      .afterClosed()
+      .pipe(takeUntil(this.destroy))
+      .subscribe(result => {
+        if (result === 'action') {
+          this.loadingChanged.emit(true);
+          this.orderService.cancelOrderAsEmployee(order)
+            .pipe(takeUntil(this.destroy))
+            .subscribe(updatedOrder => {
+              this.alertService.success(this.translate.instant('order.cancel.success'));
+              this.order.hash = updatedOrder.hash;
+              this.order.orderState = updatedOrder.orderState;
+          }, e => {
+              this.alertService.danger(this.translate.instant(e.error.message));
+          }).add(() => this.loadingChanged.emit(false));
+        }
+    });
+  }
+
+  canEmployeeCancelOrder(order: OrderDetailsDto): boolean {
+    return order.orderState === OrderState.CREATED || order.orderState === OrderState.COMPLETED;
   }
 }

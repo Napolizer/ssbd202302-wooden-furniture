@@ -1,4 +1,3 @@
-<app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
 <div>
   <br />
   <div class="page-container top-container">
@@ -109,17 +108,17 @@
                     "total.price" | translate
                   }}</mat-header-cell>
                   <mat-cell *matCellDef="let order">{{
-                    order.totalPrice
+                    round(order.totalPrice)
                   }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="show">
                   <mat-header-cell *matHeaderCellDef>{{
-                    "account.show" | translate
+                    "order.show" | translate
                   }}</mat-header-cell>
-                  <mat-cell *matCellDef="let account">
+                  <mat-cell *matCellDef="let order">
                     <mat-icon
                       class="show"
-                      (click)="redirectToAccountPage(account.id)"
+                      (click)="redirectToOrderPage(order)"
                       >remove_red_eye</mat-icon
                     >
                   </mat-cell>
@@ -157,6 +156,12 @@
           </button>
           <button button="submit" mat-stroked-button color="primary" (click)="openAddProductDialog()">
             <mat-icon style="margin-bottom: 3px;">add</mat-icon> {{'employee.add.product' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openArchiveProductGroupDialog()">
+            <mat-icon style="margin-bottom: 3px;">archive</mat-icon> {{'employee.archive.product.group' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openEditProductGroupNameDialog()">
+            <mat-icon style="margin-bottom: 3px;">edit</mat-icon> {{'employee.edit.product.group.name' | translate}}
           </button>
         </mat-card>
       </div>

@@ -14,6 +14,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
@@ -98,6 +99,16 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
             .setParameter("maxPrice", maxPrice)
             .setParameter("totalAmount", totalAmount)
             .getResultList();
+  }
+
+  @Override
+  @RolesAllowed(SALES_REP)
+  public List<Object[]> findOrderStatsForReport(LocalDateTime startDate, LocalDateTime endDate) {
+    return em.createNamedQuery(Order.FIND_ORDER_STATS_FOR_REPORT, Object[].class)
+            .setParameter("startDate", startDate)
+            .setParameter("endDate", endDate)
+            .setParameter("createdState", OrderState.CREATED).getResultList();
+
   }
 
   @Override

@@ -6,13 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.CapitalizedLong;
+import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.ProductGroupName;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class EditProductGroupDto {
-  @CapitalizedLong
+  @ProductGroupName
   @NotNull
   private String name;
 

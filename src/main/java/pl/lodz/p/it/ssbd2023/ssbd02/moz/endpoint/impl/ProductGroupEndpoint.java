@@ -11,16 +11,15 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import java.util.List;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.CategoryMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.ProductGroupMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductGroupDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupArchiveDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoWithoutHashDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductGroupEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
@@ -50,9 +49,9 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductGroupInfoDto archive(Long id, ProductGroupArchiveDto productGroupArchiveDto) {
+  public ProductGroupInfoDto archive(Long id) {
     ProductGroup productGroup = repeatTransactionWithOptimistic(() ->
-        productGroupService.archive(id, productGroupArchiveDto.getHash()));
+        productGroupService.archive(id));
     return ProductGroupMapper.mapToProductGroupInfoDto(productGroup);
   }
 
@@ -65,15 +64,18 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
   }
 
   @Override
-  public Optional<ProductGroupInfoDto> find(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public ProductGroupInfoDto find(Long id) {
+    return repeatTransactionWithoutOptimistic(() -> productGroupService.find(id))
+        .map(ProductGroupMapper::mapToProductGroupInfoDto)
+        .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
   }
 
   @Override
   @PermitAll
-  public List<ProductGroupInfoDto> findAll() {
+  public List<ProductGroupInfoWithoutHashDto> findAll() {
     return repeatTransactionWithoutOptimistic(() -> productGroupService.findAll()).stream()
-            .map(ProductGroupMapper::mapToProductGroupInfoDto).toList();
+            .map(ProductGroupMapper::mapToProductGroupInfoWithoutHashDto).toList();
   }
 
   @Override

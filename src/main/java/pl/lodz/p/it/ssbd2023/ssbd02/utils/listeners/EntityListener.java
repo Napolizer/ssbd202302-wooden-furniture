@@ -6,10 +6,13 @@ import jakarta.persistence.PreUpdate;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import lombok.extern.java.Log;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 
+@Log
 public class EntityListener {
   @PrePersist
   public void prePersist(AbstractEntity entity) {
@@ -32,6 +35,16 @@ public class EntityListener {
   @PreUpdate
   public void preUpdate(AbstractEntity entity) {
     entity.setUpdatedAt(LocalDateTime.now());
+
+    if (entity instanceof Product product) {
+      if (product.getIsUpdatedBySystem()) {
+        Account systemAccount = Account.builder()
+            .login("SYSTEM")
+            .build();
+        entity.setUpdatedBy(systemAccount);
+        return;
+      }
+    }
 
     String login = CDI.current().select(Principal.class).get().getName();
     AccountFacadeOperations accountFacade = CDI.current().select(AccountFacadeOperations.class).get();

@@ -106,7 +106,9 @@ public class MessageUtil {
     public static final String EMAIL_ADMIN_LOGIN_SESSION_SUBJECT = "mok.email.admin.login.subject";
     public static final String EMAIL_ADMIN_LOGIN_SESSION_MESSAGE = "mok.email.admin.login.message";
     public static final String EMAIL_ORDER_STATE_CHANGE_SUBJECT = "moz.email.order.state.change.subject";
-    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE = "moz.email.order.state.change.message";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE1 = "moz.email.order.state.change.message1";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE2 = "moz.email.order.state.change.message2";
+    public static final String EMAIL_ORDER_STATE_CHANGE_MESSAGE3 = "moz.email.order.state.change.message3";
     public static final String ERROR_EXPIRED_REFRESH_TOKEN = "exception.expired.refresh.token";
     public static final String ERROR_INVALID_REFRESH_TOKEN = "exception.invalid.refresh.token";
     public static final String ERROR_PASSWORD_ALREADY_USED = "exception.password.already.used";
@@ -126,6 +128,8 @@ public class MessageUtil {
     public static final String INVALID_IMAGE_FILE_FORMAT = "exception.invalid.image.file.format";
     public static final String INVALID_COLOR = "exception.moz.invalid.color";
     public static final String INVALID_WOOD_TYPE = "exception.moz.invalid.wood.type";
+    public static final String INVALID_DATE = "exception.moz.invalid.date";
+    public static final String INVALID_LOCALE = "exception.moz.invalid.locale";
     public static final String INCOMPATIBLE_PRODUCT_IMAGE = "exception.moz.incompatible.product.image";
     public static final String ORDER_ALREADY_IN_DELIVERY = "exception.moz.order.already.in.delivery";
     public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
@@ -138,5 +142,16 @@ public class MessageUtil {
     public static final String PRODUCT_CHANGE_STATE_DEARCHIVE = "exception.moz.product.change.state.dearchive";
     public static final String PRODUCT_CHANGE_STATE_ARCHIVE = "exception.moz.product.change.state.archive";
     public static final String INVALID_ORDER_STATE_TRANSITION = "exception.moz.invalid.order.state.transition";
+    public static final String INVALID_PRODUCT_AMOUNT = "exception.moz.invalid.product.amount";
+    public static final String PRODUCT_UPDATED_BY = "exception.moz.product.updated.by";
+    public static final String PRODUCT_CREATED_BY = "exception.moz.product.created.by";
+
+    public static final String REPORT_TITLE1 = "moz.report.title1";
+    public static final String REPORT_TITLE2 = "moz.report.title2";
+    public static final String REPORT_HEADER1 = "moz.report.header1";
+    public static final String REPORT_HEADER2 = "moz.report.header2";
+    public static final String REPORT_HEADER3 = "moz.report.header3";
+    public static final String REPORT_HEADER4 = "moz.report.header4";
+    public static final String REPORT_HEADER5 = "moz.report.header5";
   }
 }

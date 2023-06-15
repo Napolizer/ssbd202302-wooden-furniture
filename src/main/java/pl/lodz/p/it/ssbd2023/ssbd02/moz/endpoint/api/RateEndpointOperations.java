@@ -9,7 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateInputDto;
 @Local
 public interface RateEndpointOperations {
 
-  void delete(Long id, String login);
+  void delete(String login, Long productGroupId);
 
   RateDto create(String login, RateInputDto entity);
 

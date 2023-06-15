@@ -1,0 +1,71 @@
+<h1 mat-dialog-title>{{ "generate.report.title" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <form class="form-container" [formGroup]="generateReportForm">
+    <div class="form">
+      <app-spinner [loading]="loading"></app-spinner>
+      <div class="password-container">
+        <mat-form-field appearance="fill" class="input">
+          <mat-label>{{ "generate.report.label" | translate }}</mat-label>
+          <mat-date-range-input
+            [formGroup]="generateReportForm"
+            [rangePicker]="picker"
+          >
+            <input
+              matInput
+              required
+              matStartDate
+              formControlName="startDate"
+              placeholder="{{ 'generate.report.start' | translate }}"
+            />
+            <input
+              matInput
+              required
+              matEndDate
+              formControlName="endDate"
+              placeholder="{{ 'generate.report.end' | translate }}"
+            />
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+
+          <mat-error
+            *ngIf="
+              generateReportForm
+                .get('startDate')
+                ?.hasError('matStartDateInvalid')
+            "
+            >{{ "generate.report.invalid.date.start" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              generateReportForm.get('endDate')?.hasError('matEndDateInvalid')
+            "
+            >{{ "generate.report.invalid.date.end" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="generateReportForm.get('startDate')?.hasError('required')"
+            >{{ "generate.report.required.date.start" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="generateReportForm.get('endDate')?.hasError('required')"
+            >{{ "generate.report.required.date.end" | translate }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <div class="button-container">
+    <button mat-button type="button" mat-dialog-close>
+      {{ "generate.report.back" | translate }}
+    </button>
+    <button mat-button type="submit" (click)="onConfirm()">
+      {{ "generate.report.confirm" | translate }}
+    </button>
+  </div>
+</div>
