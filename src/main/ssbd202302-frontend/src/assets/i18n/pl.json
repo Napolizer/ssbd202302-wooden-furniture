@@ -137,7 +137,7 @@
   "edit.product.group.new.name.label": "Nowa nazwa grupy produktów",
   "edit.product.group.patternMismatch": "Pole musi zaczynać się od dużej litery i może zawierać tylko litery",
   "edit.product.group.back": "Powrót",
-  "edit.product.group.confirm": "Edytuj",
+  "edit.product.group.confirm": "Zapisz",
   "edit.product.group.success": "Pomyślnie edytowano grupę produktów",
 
   "add.product.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",

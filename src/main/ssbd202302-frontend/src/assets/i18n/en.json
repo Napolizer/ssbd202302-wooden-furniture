@@ -136,7 +136,7 @@
   "edit.product.group.new.name.label": "New product group name",
   "edit.product.group.patternMismatch": "Field must start with a capital letter and contain only letters",
   "edit.product.group.back": "Back",
-  "edit.product.group.confirm": "Edit",
+  "edit.product.group.confirm": "Save",
   "edit.product.group.success": "Product group edited successfully",
 
   "add.product.validity.notexisting": "The specified product group does not exist",
