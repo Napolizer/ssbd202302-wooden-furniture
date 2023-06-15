@@ -17,6 +17,7 @@
               <img
                 mat-card-xl-image
                 [src]="orderedProduct.product.imageUrl"
+                onerror="this.src='assets/images/not-found.png'"
                 alt="image"
                 (click)="redirectToSingleProductPage(orderedProduct.product.id.toString())">
               <div class="orderedProduct-info-div">
