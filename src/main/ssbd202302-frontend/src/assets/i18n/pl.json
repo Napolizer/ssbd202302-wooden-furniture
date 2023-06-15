@@ -522,5 +522,12 @@
   "display.stats.required.date.start": "Data początkowa nie może być pusta",
   "display.stats.required.date.end": "Data końcowa nie może być pusta",
   "display.stats.back": "Powrót",
-  "display.stats.confirm": "Wyświetl"
+  "display.stats.confirm": "Wyświetl",
+
+  "order.stats": "Statystyki zamówień",
+  "order.stats.product.group.name": "Grupa produktów",
+  "order.stats.product.average.rating": "Średnia ocen",
+  "order.stats.product.products.amount": "Obecny stan magazynowy",
+  "order.stats.product.products.sold.amount": "Sprzedanych",
+  "order.stats.product.products.total.income": "Całkowity zysk"
 }

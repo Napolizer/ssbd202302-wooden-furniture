@@ -11,7 +11,6 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

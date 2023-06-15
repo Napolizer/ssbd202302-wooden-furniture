@@ -7,6 +7,7 @@ import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {OrderDto} from "../interfaces/order.dto";
 import {CreateOrderDto} from "../interfaces/create.order.dto";
 import {ClientOrder} from "../interfaces/client.order";
+import {OrderStats} from "../interfaces/order.stats";
 
 @Injectable({
   providedIn: 'root'
@@ -112,6 +113,17 @@ export class OrderService {
           'Accept-Language': locale
         },
 
+      }
+    );
+  }
+
+  public getOrderStats(startDate: string, endDate: string): Observable<OrderStats[]> {
+    return this.httpClient.get<OrderStats[]>(
+      `${environment.apiBaseUrl}/order/statistics?startDate=${startDate}&endDate=${endDate}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        },
       }
     );
   }

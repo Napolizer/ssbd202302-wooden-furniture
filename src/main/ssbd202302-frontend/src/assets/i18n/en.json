@@ -528,5 +528,12 @@
   "display.stats.required.date.start": "Start date cannot be empty",
   "display.stats.required.date.end": "End date cannot be empty",
   "display.stats.back": "Back",
-  "display.stats.confirm": "Display"
+  "display.stats.confirm": "Display",
+
+  "order.stats": "Order stats",
+  "order.stats.product.group.name": "Product group",
+  "order.stats.product.average.rating": "Average rating",
+  "order.stats.product.products.amount": "Current stock level",
+  "order.stats.product.products.sold.amount": "Sold products",
+  "order.stats.product.products.total.income": "Total income"
 }

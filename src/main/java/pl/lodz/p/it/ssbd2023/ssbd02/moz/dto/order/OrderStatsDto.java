@@ -14,7 +14,7 @@ public class OrderStatsDto {
   @NotNull
   private String productGroupName;
   @NotNull
-  private Double avarageRating;
+  private Double averageRating;
   @NotNull
   private Integer amount;
   @NotNull

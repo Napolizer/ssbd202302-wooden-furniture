@@ -48,18 +48,19 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
     @NamedQuery(
         name = Order.FIND_ORDER_STATS_FOR_REPORT,
         query = "SELECT pg.name, pg.averageRating, "
-          + "COALESCE(SUM(p.amount), 0), "
-          + "COALESCE(SUM(CASE WHEN so.createdAt >= :startDate "
-             + "AND so.createdAt <= :endDate AND so.orderState != :createdState THEN sop.amount ELSE 0 END), 0), "
-          + "COALESCE(SUM(CASE WHEN so.createdAt >= :startDate "
-             + "AND so.createdAt <= :endDate AND so.orderState != :createdState "
-                + "THEN sop.price * sop.amount ELSE 0 END), 0) as total_price "
-                + "FROM product_group pg "
-                + "LEFT JOIN pg.products p "
-                + "LEFT JOIN OrderedProduct sop ON sop.product = p "
-                + "LEFT JOIN sop.order so "
-                + "GROUP BY pg.name, pg.averageRating "
-                + "ORDER BY total_price DESC"
+            + "COALESCE(SUM(p.amount), 0), "
+            + "COALESCE(SUM(CASE WHEN so.createdAt >= :startDate "
+            + "AND so.createdAt <= :endDate AND so.orderState != :createdState "
+            + "AND so.orderState != :cancelledState THEN sop.amount ELSE 0 END), 0), "
+            + "COALESCE(SUM(CASE WHEN so.createdAt >= :startDate "
+            + "AND so.createdAt <= :endDate AND so.orderState != :createdState "
+            + "AND so.orderState != :cancelledState THEN sop.price * sop.amount ELSE 0 END), 0) as total_price "
+            + "FROM product_group pg "
+            + "LEFT JOIN pg.products p "
+            + "LEFT JOIN OrderedProduct sop ON sop.product = p "
+            + "LEFT JOIN sop.order so "
+            + "GROUP BY pg.name, pg.averageRating "
+            + "ORDER BY total_price DESC"
     )
 })
 public class Order extends AbstractEntity {
