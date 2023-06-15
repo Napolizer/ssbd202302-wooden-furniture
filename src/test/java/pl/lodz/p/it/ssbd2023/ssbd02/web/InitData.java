@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
@@ -16,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 
@@ -190,6 +192,25 @@ public class InitData {
             .streetNumber(55)
             .postalCode("93-539")
             .hash(retrieveVersion(login))
+            .build();
+  }
+
+  public static String retrieveProductVersion(Integer productId) {
+    return given()
+            .when()
+            .get("/product/id/" + productId)
+            .then()
+            .contentType(MediaType.APPLICATION_JSON)
+            .statusCode(200)
+            .extract()
+            .path("hash");
+  }
+
+  public static EditProductDto getEditedProduct(Integer productId, Double price, Integer amount) {
+    return EditProductDto.builder()
+            .amount(amount)
+            .price(price)
+            .hash(retrieveProductVersion(productId))
             .build();
   }
 
