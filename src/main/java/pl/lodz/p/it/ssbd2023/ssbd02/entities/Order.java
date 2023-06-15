@@ -56,16 +56,39 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
                 + "THEN sop.price * sop.amount ELSE 0 END), 0) as total_price "
                 + "FROM product_group pg "
                 + "LEFT JOIN pg.products p "
-                + "LEFT JOIN OrderedProduct sop ON sop.product = p "
+                + "LEFT JOIN sales_order_product sop ON sop.product = p "
                 + "LEFT JOIN sop.order so "
                 + "GROUP BY pg.name, pg.averageRating "
                 + "ORDER BY total_price DESC"
-    )
+    ),
+    @NamedQuery(
+                name = Order.FIND_WITH_FILTERS,
+                query = "SELECT o FROM sales_order o "
+                        + "JOIN sales_order_product sop ON o.id = sop.order.id "
+                        + "WHERE o.orderState = :orderState "
+                        + "AND o.totalPrice BETWEEN :minPrice AND :maxPrice "
+                        + "AND o.id IN (SELECT sop.order.id FROM sales_order_product sop "
+                        + "GROUP BY sop.order.id HAVING SUM(sop.amount) = :amount)"
+        ),
+    @NamedQuery(
+                name = Order.FIND_WITH_FILTERS_WITH_COMPANY,
+                query = "SELECT o FROM sales_order o "
+                        + "JOIN sales_order_product sop ON o.id = sop.order.id "
+                        + "JOIN access_level al ON al.account.id = o.account.id "
+                        + "JOIN client c ON al.id = c.id "
+                        + "WHERE o.orderState = :orderState "
+                        + "AND o.totalPrice BETWEEN :minPrice AND :maxPrice "
+                        + "AND c.company IS NOT NULL "
+                        + "GROUP BY o "
+                        + "HAVING SUM(sop.amount) = :amount"
+        )
 })
 public class Order extends AbstractEntity {
   public static final String FIND_ACCOUNT_ORDERS = "Order.findAccountOrders";
   public static final String FIND_BY_STATE = "Order.findByState";
   public static final String FIND_ORDER_STATS_FOR_REPORT = "Order.findOrderStatsForReport";
+  public static final String FIND_WITH_FILTERS = "Order.findWithFilters";
+  public static final String FIND_WITH_FILTERS_WITH_COMPANY = "Order.findWithFiltersWithCompany";
 
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, name = "order_state")

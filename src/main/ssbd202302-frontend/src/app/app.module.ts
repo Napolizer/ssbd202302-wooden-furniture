@@ -86,6 +86,7 @@ import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-pa
 import {MatChipsModule} from '@angular/material/chips';
 import { EditProductGroupNameComponent } from './components/edit-product-group-name/edit-product-group-name.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -186,7 +187,8 @@ import { OrderPageComponent } from './pages/order-page/order-page.component';
     MatGridListModule,
     NgbModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSliderModule
   ],
   providers: [
     DatePipe,

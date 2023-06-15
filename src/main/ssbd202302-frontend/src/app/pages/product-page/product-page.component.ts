@@ -55,9 +55,8 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       .retrieveAllProducts()
       .pipe(tap(() => (this.loading = true)), takeUntil(this.destroy))
       .subscribe((products) => {
-        this.products = products;
+        this.products = products.sort((a, b) => a.productGroup.id - b.productGroup.id);
         this.loading = false;
-        console.log(this.products);
         this.updatePagedProducts();
       });
   }
