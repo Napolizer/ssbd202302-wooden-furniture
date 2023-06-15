@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -169,11 +170,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       orderedProducts.add(orderedProduct);
       totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
 
-      //TODO edit products amount in database
       product.setAmount(product.getAmount() - orderedProduct.getAmount());
       product.setIsUpdatedBySystem(true);
       productFacade.update(product);
-      //TODO make impossible to create order for employee that changed these products recently
     }
     Account account = accountService.getAccountByLogin(login)
         .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
@@ -235,27 +234,13 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @Override
   @RolesAllowed(CLIENT)
   public Order cancelOrder(Long id, String hash, String login) {
-    List<Order> clientOrders = findByAccountLogin(login);
-    Order order = Order.builder().build();
-    for (Order clientOrder : clientOrders) {
-      if (clientOrder.getId().equals(id)) {
-        order = clientOrder;
-      }
-    }
-
-    if (order == null) {
-      throw ApplicationExceptionFactory.createOrderNotFoundException();
-    }
+    Order order = findAsClient(login, id);
 
     if (order.getOrderState().equals(OrderState.IN_DELIVERY)) {
       throw ApplicationExceptionFactory.createOrderAlreadyInDeliveryException();
-    }
-
-    if (order.getOrderState().equals(OrderState.DELIVERED)) {
+    } else if (order.getOrderState().equals(OrderState.DELIVERED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyDeliveredException();
-    }
-
-    if (order.getOrderState().equals(CANCELLED)) {
+    } else if (order.getOrderState().equals(CANCELLED)) {
       throw ApplicationExceptionFactory.createOrderAlreadyCancelledException();
     }
 
@@ -295,7 +280,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     List<Order> orders = findByAccountLogin(login);
     Order clientOrder = Order.builder().build();
     for (Order order : orders) {
-      if (order.getId().equals(id)) {
+      if (Objects.equals(order.getId(), id)) {
         clientOrder = order;
         break;
       }
