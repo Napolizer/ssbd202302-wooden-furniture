@@ -136,4 +136,20 @@ export class CartService {
     }
     this.saveCart();
   }
+
+  isAnyProductArchive(): boolean {
+    let isAnyProductArchive: boolean = false;
+    this.products.forEach(orderedProduct => {
+      if (orderedProduct.product.productGroup.archive) {
+        isAnyProductArchive = true;
+        return;
+      } else {
+        if (orderedProduct.product.archive) {
+          isAnyProductArchive = true;
+          return;
+        }
+      }
+    })
+    return isAnyProductArchive;
+  }
 }
