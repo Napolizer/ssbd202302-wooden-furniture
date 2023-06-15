@@ -10,13 +10,14 @@ import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDetailedDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
@@ -25,9 +26,9 @@ public class OrderMapper {
   @Inject
   private AddressMapper addressMapper;
   @Inject
-  private AccountMapper accountMapper;
-  @Inject
   private OrderProductMapper orderProductMapper;
+  @Inject
+  private ProductMapper productMapper;
 
   public CreateOrderDto mapToCreateOrderDto(Order order) {
     List<OrderedProductDto> products = new ArrayList<>();
@@ -88,6 +89,24 @@ public class OrderMapper {
         .recipientFirstName(order.getRecipientFirstName())
         .recipientLastName(order.getRecipientLastName())
         .accountId(order.getAccount().getId())
+        .accountLogin(order.getAccount().getLogin())
+        .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
+        .observed(order.getObserved())
+        .totalPrice(order.getTotalPrice())
+        .hash(CryptHashUtils.hashVersion(order.getSumOfVersions()))
+        .build();
+  }
+
+  public OrderWithProductsDto mapToOrderWithProductsDto(Order order) {
+    List<OrderedProductDetailedDto> orderedProductDtoList = new ArrayList<>();
+    order.getOrderedProducts().forEach(
+        orderProduct -> orderedProductDtoList.add(orderProductMapper.mapToDetailedDto(orderProduct)));
+    return OrderWithProductsDto.builder()
+        .id(order.getId())
+        .orderedProducts(orderedProductDtoList)
+        .orderState(order.getOrderState().name())
+        .recipientFirstName(order.getRecipientFirstName())
+        .recipientLastName(order.getRecipientLastName())
         .accountLogin(order.getAccount().getLogin())
         .recipientAddress(addressMapper.mapToAddressDto(order.getDeliveryAddress()))
         .observed(order.getObserved())

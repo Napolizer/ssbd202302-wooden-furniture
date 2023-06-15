@@ -7,6 +7,7 @@ import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {OrderDto} from "../interfaces/order.dto";
 import {CreateOrderDto} from "../interfaces/create.order.dto";
 import {ClientOrder} from "../interfaces/client.order";
+import {OrderWithProductsDto} from "../interfaces/order.with.products.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -119,6 +120,17 @@ export class OrderService {
   public getDoneOrders(): Observable<OrderDetailsDto[]> {
     return this.httpClient.get<OrderDetailsDto[]>(
       `${environment.apiBaseUrl}/order/done`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public getOrderAsEmployee(orderId: number): Observable<OrderWithProductsDto> {
+    return this.httpClient.get<OrderWithProductsDto>(
+      `${environment.apiBaseUrl}/order/id/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${this.tokenService.getToken()}`,

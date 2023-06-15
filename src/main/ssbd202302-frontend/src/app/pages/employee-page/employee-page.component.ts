@@ -122,7 +122,7 @@ export class EmployeePageComponent implements OnInit {
   }
 
   redirectToOrderPage(order: OrderDetailsDto): void {
-
+    void this.navigationService.redirectToEmployeeOrdersPage(order.id);
   }
 
   onBackClicked(): void {
@@ -196,6 +196,18 @@ export class EmployeePageComponent implements OnInit {
         }
       })
   }
+
+  openEditProductGroupNameDialog(): void {
+    this.dialogService.openEditProductGroupNameDialog()
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+
+        }
+      })
+  }
+
   getRecipientName(order: OrderDetailsDto): string {
     return `${order.recipientFirstName} ${order.recipientLastName}`;
   }
@@ -211,5 +223,9 @@ export class EmployeePageComponent implements OnInit {
       sum += product.amount;
     }
     return sum;
+  }
+
+  round(num: number): string {
+    return String(+parseFloat(String(num)).toFixed(2));
   }
 }

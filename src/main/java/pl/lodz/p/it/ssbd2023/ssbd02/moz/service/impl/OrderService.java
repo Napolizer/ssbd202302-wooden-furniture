@@ -42,9 +42,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -171,6 +171,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
       //TODO edit products amount in database
       product.setAmount(product.getAmount() - orderedProduct.getAmount());
+      product.setIsUpdatedBySystem(true);
       productFacade.update(product);
       //TODO make impossible to create order for employee that changed these products recently
     }

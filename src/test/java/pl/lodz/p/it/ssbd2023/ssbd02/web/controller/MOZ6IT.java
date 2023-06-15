@@ -112,7 +112,7 @@ public class MOZ6IT {
               "name": "Zmieniona",
               "hash": "$hash"
             }
-          """.replace("$hash", "1"))
+          """.replace("$hash", CryptHashUtils.hashVersion(15L)))
           .when()
           .put("/product/group/id/50")
           .then()
@@ -140,7 +140,7 @@ public class MOZ6IT {
 
     @Test
     @DisplayName("Should fail because of missing body")
-    @Order(4)
+    @Order(5)
     void shouldFailBecauseOfMissingBody() {
       given()
           .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())

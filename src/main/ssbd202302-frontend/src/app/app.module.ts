@@ -84,6 +84,8 @@ import { ChangeOrderStateComponent } from './components/change-order-state/chang
 import { GenerateReportComponent } from './components/generate-report/generate-report.component';
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
 import {MatChipsModule} from '@angular/material/chips';
+import { EditProductGroupNameComponent } from './components/edit-product-group-name/edit-product-group-name.component';
+import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 @NgModule({
   declarations: [
@@ -137,6 +139,8 @@ import {MatChipsModule} from '@angular/material/chips';
     GenerateReportComponent,
     ArchiveProductGroupComponent,
     DoneOrdersPageComponent,
+    EditProductGroupNameComponent,
+    OrderPageComponent,
   ],
   imports: [
     BrowserModule,

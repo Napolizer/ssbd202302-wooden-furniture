@@ -108,7 +108,7 @@
                     "total.price" | translate
                   }}</mat-header-cell>
                   <mat-cell *matCellDef="let order">{{
-                    order.totalPrice
+                    round(order.totalPrice)
                   }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="show">
@@ -159,6 +159,9 @@
           </button>
           <button button="submit" mat-stroked-button color="primary" (click)="openArchiveProductGroupDialog()">
             <mat-icon style="margin-bottom: 3px;">archive</mat-icon> {{'employee.archive.product.group' | translate}}
+          </button>
+          <button button="submit" mat-stroked-button color="primary" (click)="openEditProductGroupNameDialog()">
+            <mat-icon style="margin-bottom: 3px;">edit</mat-icon> {{'employee.edit.product.group.name' | translate}}
           </button>
         </mat-card>
       </div>
