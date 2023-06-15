@@ -10,23 +10,24 @@ import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.OrderUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.DELIVERED;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOZ.22 - Cancel own order")
+@DisplayName("MOZ.21 - Observe order")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-public class MOZ22IT {
+public class MOZ21IT {
 
   @Nested
   @Order(1)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Positive {
     @Order(1)
-    @DisplayName("Should properly cancel created order")
+    @DisplayName("Should properly observe created order")
     @Test
-    void shouldProperlyCancelCreatedOrder() {
+    void shouldProperlyObserveCreatedOrder() {
       String token = AuthUtil.retrieveToken("client");
       OrderDto order = OrderUtil.createOrder();
       given()
@@ -39,16 +40,16 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(200)
-          .body("orderState", equalTo("CANCELLED"));
+          .body("observed", equalTo(true));
     }
 
     @Order(2)
-    @DisplayName("Should properly cancel completed order")
+    @DisplayName("Should properly observe completed order")
     @Test
-    void shouldProperlyCancelCompletedOrder() {
+    void shouldProperlyObserveCompletedOrder() {
       String token = AuthUtil.retrieveToken("client");
       OrderDto order = OrderUtil.createOrder(OrderState.COMPLETED);
       given()
@@ -61,10 +62,32 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(200)
-          .body("orderState", equalTo("CANCELLED"));
+          .body("observed", equalTo(true));
+    }
+
+    @Order(3)
+    @DisplayName("Should properly observe in delivery order")
+    @Test
+    void shouldProperlyObserveInDeliveryOrder() {
+      String token = AuthUtil.retrieveToken("client");
+      OrderDto order = OrderUtil.createOrder(OrderState.IN_DELIVERY);
+      given()
+          .header("Authorization", "Bearer " + token)
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "id": "%s",
+              "hash": "%s"
+            }
+            """.formatted(order.getId(), order.getHash()))
+          .when()
+          .put("/order/observe")
+          .then()
+          .statusCode(200)
+          .body("observed", equalTo(true));
     }
   }
 
@@ -72,11 +95,10 @@ public class MOZ22IT {
   @Order(2)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Negative {
-
     @Test
-    @DisplayName("should fail to cancel already delivered order")
+    @DisplayName("should fail to observe delivered order")
     @Order(1)
-    void shouldFailToCancelAlreadyDeliveredOrder() {
+    void shouldFailToObserveDeliveredOrder() {
       OrderDto order = OrderUtil.createOrder(DELIVERED);
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
@@ -88,16 +110,16 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(400)
-          .body("message", equalTo("exception.moz.order.already.delivered"));
+          .body("message", equalTo("exception.moz.order.delivered"));
     }
 
     @Test
-    @DisplayName("should fail to cancel already cancelled order")
+    @DisplayName("should fail to observe cancelled order")
     @Order(2)
-    void shouldFailToCancelAlreadyCancelledOrder() {
+    void shouldFailToObserveCancelledOrder() {
       String token = AuthUtil.retrieveToken("client");
       OrderDto order = OrderUtil.createOrder();
       given()
@@ -110,10 +132,11 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(200)
-          .body("orderState", equalTo("CANCELLED"));
+          .body("observed", equalTo(true));
+
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
           .header("Content-Type", "application/json")
@@ -124,16 +147,16 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(400)
-          .body("message", equalTo("exception.moz.order.already.cancelled"));
+          .body("message", equalTo("exception.moz.order.already.observed"));
     }
 
     @Test
-    @DisplayName("should fail to cancel order with invalid hash")
+    @DisplayName("should fail to observe order with invalid hash")
     @Order(3)
-    void shouldFailToCancelOrderWithInvalidHash() {
+    void shouldFailToObserveOrderWithInvalidHash() {
       OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
@@ -145,15 +168,15 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), "123"))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(400);
     }
 
     @Test
-    @DisplayName("should fail to cancel order without hash")
+    @DisplayName("should fail to observe order without hash")
     @Order(4)
-    void shouldFailToCancelOrderWithoutHash() {
+    void shouldFailToObserveOrderWithoutHash() {
       OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
@@ -164,15 +187,15 @@ public class MOZ22IT {
             }
             """.formatted(order.getId()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(not(equalTo(200)));
     }
 
     @Test
-    @DisplayName("should fail to cancel order with empty body")
+    @DisplayName("should fail to observe order with empty body")
     @Order(5)
-    void shouldFailToCancelOrderWithEmptyBody() {
+    void shouldFailToObserveOrderWithEmptyBody() {
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
           .header("Content-Type", "application/json")
@@ -181,28 +204,28 @@ public class MOZ22IT {
             }
             """)
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(400);
     }
 
     @Test
-    @DisplayName("should fail to cancel order with no body")
+    @DisplayName("should fail to observe order with no body")
     @Order(6)
-    void shouldFailToCancelOrderWithNoBody() {
+    void shouldFailToObserveOrderWithNoBody() {
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
           .header("Content-Type", "application/json")
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(400);
     }
 
     @Test
-    @DisplayName("should fail to cancel order without bearer")
+    @DisplayName("should fail to observe order without bearer")
     @Order(7)
-    void shouldFailToCancelOrderWithoutBearer() {
+    void shouldFailToObserveOrderWithoutBearer() {
       OrderDto order = OrderUtil.createOrder();
       given()
           .header("Content-Type", "application/json")
@@ -213,15 +236,15 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(401);
     }
 
     @Test
-    @DisplayName("should fail to cancel order without employee role")
+    @DisplayName("should fail to observe order without client role")
     @Order(8)
-    void shouldFailToCancelOrderWithoutClientRole() {
+    void shouldFailToObserveOrderWithoutClientRole() {
       OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator"))
@@ -233,9 +256,10 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(403);
+
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("sales_rep"))
           .header("Content-Type", "application/json")
@@ -246,9 +270,10 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(403);
+
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -259,30 +284,10 @@ public class MOZ22IT {
             }
             """.formatted(order.getId(), order.getHash()))
           .when()
-          .put("/order/cancel")
+          .put("/order/observe")
           .then()
           .statusCode(403);
-    }
 
-    @Test
-    @DisplayName("should fail to cancel order in delivery")
-    @Order(1)
-    void shouldFailToCancelOrderInDelivery() {
-      OrderDto order = OrderUtil.createOrder(IN_DELIVERY);
-      given()
-          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("client"))
-          .header("Content-Type", "application/json")
-          .body("""
-            {
-              "id": "%s",
-              "hash": "%s"
-            }
-            """.formatted(order.getId(), order.getHash()))
-          .when()
-          .put("/order/cancel")
-          .then()
-          .statusCode(400)
-          .body("message", equalTo("exception.moz.order.already.in.delivery"));
     }
   }
 }

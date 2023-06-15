@@ -285,21 +285,18 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @Override
   @RolesAllowed(CLIENT)
   public Order observeOrder(Long id, String hash, String login) {
-    List<Order> orders = findByAccountLogin(login);
-    Order clientOrder = Order.builder().build();
-    for (Order order : orders) {
-      if (Objects.equals(order.getId(), id)) {
-        clientOrder = order;
-        break;
-      }
-    }
-
-    if (clientOrder == null) {
-      throw ApplicationExceptionFactory.createOrderNotFoundException();
-    }
+    Order clientOrder = findAsClient(login, id);
 
     if (clientOrder.getObserved()) {
       throw ApplicationExceptionFactory.createOrderAlreadyObservedException();
+    }
+
+    if (clientOrder.getOrderState().equals(CANCELLED)) {
+      throw ApplicationExceptionFactory.createOrderCancelledException();
+    }
+
+    if (clientOrder.getOrderState().equals(DELIVERED)) {
+      throw ApplicationExceptionFactory.createOrderDeliveredException();
     }
 
     if (!CryptHashUtils.verifyVersion(clientOrder.getSumOfVersions(), hash)) {

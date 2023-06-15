@@ -35,6 +35,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyDeliveredExceptio
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyInDeliveryException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderAlreadyObservedException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderCancelledException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderDeliveredException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.OrderNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyExistsException;
@@ -376,5 +378,13 @@ public final class ApplicationExceptionFactory {
 
   public static ProductGroupIsArchiveException createProductGroupIsArchiveException() {
     return new ProductGroupIsArchiveException();
+  }
+
+  public static OrderCancelledException createOrderCancelledException() {
+    return new OrderCancelledException();
+  }
+
+  public static OrderDeliveredException createOrderDeliveredException() {
+    return new OrderDeliveredException();
   }
 }
