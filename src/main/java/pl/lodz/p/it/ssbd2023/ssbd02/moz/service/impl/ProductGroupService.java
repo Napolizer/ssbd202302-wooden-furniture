@@ -20,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.AccountMozFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
@@ -76,6 +75,20 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     }
 
     productGroup.setArchive(true);
+    return productGroupFacade.update(productGroup);
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public ProductGroup activate(Long id) {
+    ProductGroup productGroup = productGroupFacade.findById(id)
+        .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+    if (!productGroup.getArchive().equals(true)) {
+      throw ApplicationExceptionFactory.createProductGroupAlreadyArchivedException();
+    }
+
+    productGroup.setArchive(false);
     return productGroupFacade.update(productGroup);
   }
 
