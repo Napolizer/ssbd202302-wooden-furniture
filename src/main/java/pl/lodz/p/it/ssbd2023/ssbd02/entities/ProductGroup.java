@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;

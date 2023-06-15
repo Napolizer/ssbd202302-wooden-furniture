@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order;
 
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.ArrayList;
@@ -11,19 +12,19 @@ import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Capitalized;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Login;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDetailedDto;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderDto {
+public class OrderWithProductsDto {
   @NotNull
   private Long id;
 
   @NotNull
   @Builder.Default
-  private List<OrderedProductDto> orderedProducts = new ArrayList<>();
+  private List<OrderedProductDetailedDto> orderedProducts = new ArrayList<>();
 
   private String orderState;
 

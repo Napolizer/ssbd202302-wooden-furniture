@@ -85,6 +85,9 @@ import { GenerateReportComponent } from './components/generate-report/generate-r
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
 import {MatChipsModule} from '@angular/material/chips';
 import { EditProductGroupNameComponent } from './components/edit-product-group-name/edit-product-group-name.component';
+import { OrderPageComponent } from './pages/order-page/order-page.component';
+import {MatSliderModule} from '@angular/material/slider';
+import { ClientOrderPageComponent } from './pages/client-order-page/client-order-page.component';
 import { DisplayStatsComponent } from './components/display-stats/display-stats.component';
 import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-page.component';
 
@@ -141,6 +144,8 @@ import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-pa
     ArchiveProductGroupComponent,
     DoneOrdersPageComponent,
     EditProductGroupNameComponent,
+    OrderPageComponent,
+    ClientOrderPageComponent,
     DisplayStatsComponent,
     OrderStatsPageComponent,
   ],
@@ -188,7 +193,8 @@ import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-pa
     MatGridListModule,
     NgbModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSliderModule
   ],
   providers: [
     DatePipe,

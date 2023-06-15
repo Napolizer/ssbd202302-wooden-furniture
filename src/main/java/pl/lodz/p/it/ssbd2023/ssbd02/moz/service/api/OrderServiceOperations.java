@@ -43,9 +43,11 @@ public interface OrderServiceOperations {
 
   List<Object[]> findOrderStats(LocalDateTime startDate, LocalDateTime endDate);
 
-  List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+  List<Order> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount, boolean isCompany);
 
   boolean isLastTransactionRollback();
 
   List<Order> findAllOrdersDone();
+
+  Order findAsClient(String login, Long id);
 }

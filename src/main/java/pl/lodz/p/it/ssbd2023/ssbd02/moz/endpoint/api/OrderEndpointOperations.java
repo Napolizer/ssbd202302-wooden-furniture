@@ -8,6 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 
 
@@ -24,7 +25,7 @@ public interface OrderEndpointOperations {
 
   OrderDto update(Long id, UpdateOrderDto entity);
 
-  OrderDto find(Long id);
+  OrderWithProductsDto find(Long id);
 
   List<OrderDetailsDto> findAll();
 
@@ -44,7 +45,9 @@ public interface OrderEndpointOperations {
 
   List<OrderStatsDto> findOrderStats(String startDate, String endDate);
 
-  List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+  List<OrderDetailsDto> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount, boolean isCompany);
 
   List<OrderDetailsDto> findAllOrdersDone();
+
+  OrderWithProductsDto findAsClient(String name, Long id);
 }

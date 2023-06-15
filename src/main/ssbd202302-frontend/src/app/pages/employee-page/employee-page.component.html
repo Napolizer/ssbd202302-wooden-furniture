@@ -108,7 +108,7 @@
                     "total.price" | translate
                   }}</mat-header-cell>
                   <mat-cell *matCellDef="let order">{{
-                    order.totalPrice
+                    round(order.totalPrice)
                   }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="show">

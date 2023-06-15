@@ -7,6 +7,7 @@ import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {OrderDto} from "../interfaces/order.dto";
 import {CreateOrderDto} from "../interfaces/create.order.dto";
 import {ClientOrder} from "../interfaces/client.order";
+import {OrderWithProductsDto} from "../interfaces/order.with.products.dto";
 import {OrderStats} from "../interfaces/order.stats";
 
 @Injectable({
@@ -138,4 +139,39 @@ export class OrderService {
       }
     );
   }
+
+  public getOrderAsEmployee(orderId: number): Observable<OrderWithProductsDto> {
+    return this.httpClient.get<OrderWithProductsDto>(
+      `${environment.apiBaseUrl}/order/id/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public getOrderAsClient(orderId: number): Observable<OrderWithProductsDto> {
+    return this.httpClient.get<OrderWithProductsDto>(
+      `${environment.apiBaseUrl}/order/id/${orderId}/client`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+  public getDoneFilterOrders(minPrice: number, maxPrice: number, amount: number): Observable<OrderDetailsDto[]> {
+    return this.httpClient.get<OrderDetailsDto[]>(
+      `${environment.apiBaseUrl}/order/filters?minPrice=${minPrice}&maxPrice=${maxPrice}&amount=${amount}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
+
 }

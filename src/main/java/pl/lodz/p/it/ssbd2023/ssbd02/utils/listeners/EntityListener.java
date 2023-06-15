@@ -37,7 +37,7 @@ public class EntityListener {
     entity.setUpdatedAt(LocalDateTime.now());
 
     if (entity instanceof Product product) {
-      if (product.getIsUpdatedBySystem()) {
+      if (product.getIsUpdatedBySystem() != null && product.getIsUpdatedBySystem()) {
         Account systemAccount = Account.builder()
             .login("SYSTEM")
             .build();

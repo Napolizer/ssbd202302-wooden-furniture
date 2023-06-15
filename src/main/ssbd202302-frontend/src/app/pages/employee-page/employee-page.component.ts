@@ -122,7 +122,7 @@ export class EmployeePageComponent implements OnInit {
   }
 
   redirectToOrderPage(order: OrderDetailsDto): void {
-
+    void this.navigationService.redirectToEmployeeOrdersPage(order.id);
   }
 
   onBackClicked(): void {
@@ -223,5 +223,9 @@ export class EmployeePageComponent implements OnInit {
       sum += product.amount;
     }
     return sum;
+  }
+
+  round(num: number): string {
+    return String(+parseFloat(String(num)).toFixed(2));
   }
 }

@@ -42,9 +42,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.MailServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -171,6 +171,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
       //TODO edit products amount in database
       product.setAmount(product.getAmount() - orderedProduct.getAmount());
+      product.setIsUpdatedBySystem(true);
       productFacade.update(product);
       //TODO make impossible to create order for employee that changed these products recently
     }
@@ -198,6 +199,19 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   @RolesAllowed(EMPLOYEE)
   public Optional<Order> find(Long id) {
     return orderFacade.find(id);
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public Order findAsClient(String login, Long id) {
+    Order order = orderFacade.find(id)
+            .orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+
+    if (!order.getAccount().getLogin().equals(login)) {
+      throw ApplicationExceptionFactory.createOrderNotFoundException();
+    }
+    return order;
+
   }
 
   @Override
@@ -439,8 +453,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
-  public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public List<Order> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount, boolean isCompany) {
+    return orderFacade.findWithFilters(minPrice, maxPrice, totalAmount, DELIVERED, isCompany);
   }
 
   @Override
@@ -448,4 +463,5 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   public List<Order> findAllOrdersDone() {
     return orderFacade.findByState(DELIVERED);
   }
+
 }

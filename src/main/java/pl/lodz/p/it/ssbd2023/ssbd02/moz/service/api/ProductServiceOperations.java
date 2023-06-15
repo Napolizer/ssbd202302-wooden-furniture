@@ -45,7 +45,5 @@ public interface ProductServiceOperations {
 
   Product editProduct(Long id, Product productWithChanges, String hash);
 
-  Product deArchive(Long productId);
-
   List<OrderedProduct> findAllProductsBelongingToAccount(String login);
 }

@@ -36,7 +36,7 @@ public class ProductDto {
   @NotNull
   private WoodType woodType;
   @NotNull
-  private ProductGroupInfoDto productGroup;
+  private ProductGroupInfoWithoutHashDto productGroup;
   @NotNull
   private String hash;
 }

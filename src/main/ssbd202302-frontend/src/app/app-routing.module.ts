@@ -29,6 +29,8 @@ import {ClientOrdersPageComponent} from "./pages/client-orders-page/client-order
 import {ClientRatesPageComponent} from "./pages/client-rates-page/client-rates-page.component";
 import {ViewCartPageComponent} from "./pages/view-cart-page/view-cart-page.component";
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
+import {OrderPageComponent} from "./pages/order-page/order-page.component";
+import {ClientOrderPageComponent} from "./pages/client-order-page/client-order-page.component";
 import {OrderStatsPageComponent} from "./pages/order-stats-page/order-stats-page.component";
 
 const routes: Routes = [
@@ -238,6 +240,22 @@ const routes: Routes = [
     canActivate:[AuthGuard],
     data: {
       roles: [Role.SALES_REP]
+    }
+  },
+  {
+    path: 'employee/orders/:id',
+    component: OrderPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.EMPLOYEE]
+    }
+  },
+  {
+    path: 'client/orders/:id',
+    component: ClientOrderPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.CLIENT]
     }
   },
   // IMPORTANT: this route must be the last one

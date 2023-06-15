@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
@@ -94,10 +95,17 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public OrderDto find(Long id) {
+  public OrderWithProductsDto find(Long id) {
     return repeatTransactionWithOptimistic(() -> orderService.find(id))
-        .map(orderMapper::mapToOrderDto)
+        .map(orderMapper::mapToOrderWithProductsDto)
         .orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public OrderWithProductsDto findAsClient(String login, Long id) {
+    Order order = repeatTransactionWithOptimistic(() -> orderService.findAsClient(login, id));
+    return orderMapper.mapToOrderWithProductsDto(order);
   }
 
   @Override
@@ -183,8 +191,14 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public List<OrderDetailsDto> findWithFilters(Double minPrice, Double maxPrice,
+                                               Integer totalAmount, boolean isCompany) {
+    return repeatTransactionWithOptimistic(() -> orderService.findWithFilters(minPrice, maxPrice,
+            totalAmount, isCompany))
+            .stream()
+            .map(orderMapper::mapToOrderDetailsDto)
+            .toList();
   }
 
   @Override
@@ -195,6 +209,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
             .map(orderMapper::mapToOrderDetailsDto)
             .toList();
   }
+
 
   @Override
   protected boolean isLastTransactionRollback() {

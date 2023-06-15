@@ -161,16 +161,4 @@ export class ProductService {
       }
     )
   }
-
-  public deArchiveProduct(productId: string): Observable<Product> {
-    return this.httpClient.patch<Product>(
-      `${environment.apiBaseUrl}/product/dearchive/` + productId,
-      null,
-      {
-        headers: {
-          Authorization: `Bearer ${this.tokenService.getToken()}`
-        }
-      }
-    )
-  }
 }

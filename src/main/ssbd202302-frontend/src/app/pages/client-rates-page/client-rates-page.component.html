@@ -1,10 +1,19 @@
-<mat-grid-list class="mat-list" cols="4"gutterSize="15px" rowHeight="600px">
+<button
+  mat-button
+  color="primary"
+  class="resetButton moveRight"
+  (click)="onResetClicked()"
+>
+  {{"refresh" | translate}}
+  <mat-icon>refresh</mat-icon>
+</button>
+<mat-grid-list class="mat-list" cols="5" gutterSize="15px" rowHeight="700px">
   <mat-grid-tile *ngFor="let orderProduct of pagedProducts; let i = index;">
       <mat-card>
         <mat-card-header>
           <mat-card-title>
-            <img class="d-inline-block img-fluid mb-4"
-                 [src]="orderProduct.product.imageUrl"
+            <img class="d-inline-block img-fluid mb-4" [src]="orderProduct.product.imageUrl"
+                 width="230" height="200" onerror="this.src='assets/images/not-found.png'"
                  alt="zdjecie">
           </mat-card-title>
         </mat-card-header>
@@ -37,7 +46,7 @@
               (rateChange)="onRateChange(orderProduct)"
             ></ngb-rating>
           </div>
-          <div style="margin-top: 20px;display: flex;align-items: center;justify-content: center;">
+          <div style="margin-top: 20px;margin-bottom: 20px;display: flex;align-items: center;justify-content: center;">
             <button (click)="removeRating(orderProduct)">
               {{"rate.remove" | translate}}
             </button>

@@ -80,8 +80,25 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
-  public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public List<Order> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount,
+                                     OrderState orderState, boolean isCompany) {
+    if (isCompany) {
+      return getEntityManager()
+              .createNamedQuery(Order.FIND_WITH_FILTERS_WITH_COMPANY, Order.class)
+              .setParameter("orderState", orderState)
+              .setParameter("minPrice", minPrice)
+              .setParameter("maxPrice", maxPrice)
+              .setParameter("amount", totalAmount)
+              .getResultList();
+    }
+    return getEntityManager()
+            .createNamedQuery(Order.FIND_WITH_FILTERS, Order.class)
+            .setParameter("orderState", orderState)
+            .setParameter("minPrice", minPrice)
+            .setParameter("maxPrice", maxPrice)
+            .setParameter("amount", totalAmount)
+            .getResultList();
   }
 
   @Override
@@ -96,7 +113,7 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
-  @RolesAllowed(EMPLOYEE)
+  @RolesAllowed({EMPLOYEE, CLIENT})
   @Transactional(REQUIRES_NEW)
   public Optional<Order> find(Long id) {
     return Optional.ofNullable(getEntityManager().find(Order.class, id));
