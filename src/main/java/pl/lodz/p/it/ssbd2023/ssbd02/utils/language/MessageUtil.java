@@ -138,6 +138,8 @@ public class MessageUtil {
     public static final String ORDER_ALREADY_DELIVERED = "exception.moz.order.already.delivered";
     public static final String ORDER_ALREADY_CANCELLED = "exception.moz.order.already.cancelled";
     public static final String ORDER_ALREADY_OBSERVED = "exception.moz.order.already.observed";
+    public static final String ORDER_CANCELLED = "exception.moz.order.cancelled";
+    public static final String ORDER_DELIVERED = "exception.moz.order.delivered";
 
     public static final String ORDER_NOT_FOUND = "exception.moz.order.not.found";
     public static final String PRODUCT_ALREADY_RATED = "exception.moz.product.rate.exists";
