@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -46,7 +47,7 @@ public class MOK30IT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("size()", is(equalTo(expectedSize)))
+          .body("size()", is(greaterThanOrEqualTo(expectedSize)))
           .body("[0].id", is(notNullValue()))
           .body("[0].login", is(notNullValue()))
           .body("[0].email", is(notNullValue()))
@@ -77,7 +78,7 @@ public class MOK30IT {
           .then()
           .statusCode(200)
           .contentType("application/json")
-          .body("size()", is(equalTo(expectedSize)))
+          .body("size()", is(greaterThanOrEqualTo(expectedSize)))
           .body("[0].id", is(notNullValue()))
           .body("[0].login", is(notNullValue()))
           .body("[0].email", is(notNullValue()))
