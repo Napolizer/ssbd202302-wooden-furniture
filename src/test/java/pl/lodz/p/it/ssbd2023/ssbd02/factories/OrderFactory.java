@@ -49,7 +49,7 @@ public class OrderFactory {
   }
 
   public void clean() throws Exception {
-    em.createQuery("DELETE FROM OrderedProduct").executeUpdate();
+    em.createQuery("DELETE FROM sales_order_product").executeUpdate();
     em.createQuery("DELETE FROM sales_order").executeUpdate();
     productFactory.clean();
     accountFactory.clean();
