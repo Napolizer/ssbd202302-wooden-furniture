@@ -1,0 +1,163 @@
+package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
+
+import org.junit.jupiter.api.*;
+import org.microshed.testing.SharedContainerConfig;
+import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static org.hamcrest.Matchers.*;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
+@MicroShedTest
+@SharedContainerConfig(AppContainerConfig.class)
+@DisplayName("MOZ.4 - Archive Product")
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class MOZ4IT {
+    public int productId1;
+    public int productId2;
+
+    @Nested
+    @Order(1)
+    @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+    class Positive {
+
+        @Order(1)
+        @DisplayName("Should properly create products")
+        @Test
+        void shouldProperlyCreateProducts() {
+            ProductCreateWithImageDto productCreateWithImageDto1 = ProductCreateWithImageDto.builder()
+                    .price(200.0)
+                    .amount(2)
+                    .weight(55.5)
+                    .weightInPackage(60.5)
+                    .furnitureWidth(300)
+                    .furnitureHeight(70)
+                    .furnitureDepth(40)
+                    .packageWidth(310)
+                    .packageHeight(80)
+                    .packageDepth(40)
+                    .color(Color.BROWN.name())
+                    .woodType(WoodType.BIRCH.name())
+                    .productGroupId(1L)
+                    .imageProductId(1L)
+                    .build();
+
+            ProductCreateWithImageDto productCreateWithImageDto2 = ProductCreateWithImageDto.builder()
+                    .price(300.0)
+                    .amount(2)
+                    .weight(55.5)
+                    .weightInPackage(60.5)
+                    .furnitureWidth(300)
+                    .furnitureHeight(70)
+                    .furnitureDepth(40)
+                    .packageWidth(310)
+                    .packageHeight(80)
+                    .packageDepth(40)
+                    .color(Color.BLACK.name())
+                    .woodType(WoodType.BIRCH.name())
+                    .productGroupId(1L)
+                    .imageProductId(2L)
+                    .build();
+
+            productId1 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto1);
+            productId2 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto2);
+        }
+
+        @Order(2)
+        @DisplayName("Should properly archive product")
+        @Test
+        void shouldProperlyArchiveProduct() {
+            given()
+                    .when()
+                    .get("/product/id/" + productId1)
+                    .then()
+                    .statusCode(200)
+                    .body("archive", is(equalTo(false)));
+
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(EMPLOYEE))
+                    .when()
+                    .patch("/product/archive/" + productId1)
+                    .then()
+                    .statusCode(200)
+                    .body("message", is(equalTo("moz.product.archive.successful")));
+
+            given()
+                    .when()
+                    .get("/product/id/" + productId1)
+                    .then()
+                    .statusCode(200)
+                    .body("archive",is(equalTo(true)));
+        }
+    }
+    @Nested
+    @Order(2)
+    @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+    class Negative {
+        @Order(1)
+        @DisplayName("Should fail to archive product with invalid token")
+        @Test
+        void shouldFailToArchiveProductWithoutToken() {
+            given()
+                    .when()
+                    .patch("/product/archive/" + productId2)
+                    .then()
+                    .statusCode(401);
+        }
+
+        @Order(2)
+        @DisplayName("Should fail to archive already archived product")
+        @Test
+        void shouldFailToArchiveAlreadyArchivedProduct() {
+
+            given()
+                    .when()
+                    .get("/product/id/" + productId2)
+                    .then()
+                    .statusCode(200)
+                    .body("archive", is(equalTo(false)));
+
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(EMPLOYEE))
+                    .when()
+                    .patch("/product/archive/" + productId2)
+                    .then()
+                    .statusCode(200)
+                    .body("message", is(equalTo("moz.product.archive.successful")));
+
+            given()
+                    .when()
+                    .get("/product/id/" + productId2)
+                    .then()
+                    .statusCode(200)
+                    .body("archive",is(equalTo(true)));
+
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(EMPLOYEE))
+                    .when()
+                    .patch("/product/archive/" + productId2)
+                    .then()
+                    .statusCode(400);
+        }
+
+        @Order(3)
+        @DisplayName("Should fail to archive product with invalid id given")
+        @Test
+        void shouldFailToArchiveProductWithInvalidIdGiven() {
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(EMPLOYEE))
+                    .when()
+                    .patch("/product/archive/" + Long.MAX_VALUE)
+                    .then()
+                    .statusCode(404);
+        }
+    }
+}
