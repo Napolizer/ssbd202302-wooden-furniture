@@ -86,6 +86,7 @@ import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-pa
 import {MatChipsModule} from '@angular/material/chips';
 import { EditProductGroupNameComponent } from './components/edit-product-group-name/edit-product-group-name.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { ClientOrderPageComponent } from './pages/client-order-page/client-order-page.component';
 
 @NgModule({
   declarations: [
@@ -141,6 +142,7 @@ import { OrderPageComponent } from './pages/order-page/order-page.component';
     DoneOrdersPageComponent,
     EditProductGroupNameComponent,
     OrderPageComponent,
+    ClientOrderPageComponent,
   ],
   imports: [
     BrowserModule,
