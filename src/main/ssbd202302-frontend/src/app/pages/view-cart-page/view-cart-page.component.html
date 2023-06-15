@@ -43,12 +43,25 @@
                 <mat-card-subtitle>
                   {{ "product.available.number.of.pieces" | translate }}: {{ orderedProduct.product.amount }}
                 </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="orderedProduct.product.archive">
+                  <span class="red-circle"></span>
+                  {{ "product.is.unavailable" | translate }}
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="!orderedProduct.product.archive && !orderedProduct.product.productGroup.archive">
+                  <span class="green-circle"></span>
+                  {{ "product.is.available" | translate }}
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="orderedProduct.product.productGroup.archive">
+                  <span class="red-circle"></span>
+                  {{ "product.withdrawn" | translate }}
+                </mat-card-subtitle>
                 <mat-card-subtitle>
                   {{ "product.chosen.number.of.pieces" | translate }}:
                 </mat-card-subtitle>
                 <div class="input-group w-75">
                   <div class="input-group-prepend">
-                    <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)">-</button>
+                    <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)"
+                            [disabled]="orderedProduct.product.archive">-</button>
                   </div>
                   <input
                     name="amountInput"
@@ -58,9 +71,11 @@
                     [(ngModel)]="orderedProduct.amount"
                     min="1"
                     [max]="orderedProduct.product.amount"
-                    (change)="validateChangedAmount(orderedProduct); updateTotalPrice()"/>
+                    (change)="validateChangedAmount(orderedProduct); updateTotalPrice()"
+                    [disabled]="orderedProduct.product.archive"/>
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)">+</button>
+                    <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)"
+                            [disabled]="orderedProduct.product.archive">+</button>
                   </div>
                   <button mat-button color="primary" (click)="onRemoveFromCartClicked(orderedProduct)">
                     <mat-icon>delete</mat-icon>
@@ -298,7 +313,8 @@
                 *ngIf="!checked"
                 mat-raised-button
                 (click)="onConfirm()"
-                color="primary">
+                color="primary"
+                [disabled]="isAnyProductArchive()">
                 {{ "cart.make.order" | translate }}
                 <mat-icon>arrow_forward</mat-icon>
               </button>

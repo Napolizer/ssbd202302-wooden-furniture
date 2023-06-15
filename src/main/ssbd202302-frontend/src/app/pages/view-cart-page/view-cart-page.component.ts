@@ -74,7 +74,9 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
         .subscribe(product => {
           this.products.push(product);
           orderedProduct.product = product;
-          if (orderedProduct.amount > product.amount) {
+          if (orderedProduct.product.archive) {
+            orderedProduct.amount = 0;
+          } else if (orderedProduct.amount > product.amount) {
             orderedProduct.amount = product.amount;
           }
         })
@@ -134,7 +136,10 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(product => {
         orderedProduct.product = product;
-        if (orderedProduct.amount === 1 || orderedProduct.amount - 1 > product.amount) {
+        if (orderedProduct.product.archive) {
+          orderedProduct.amount = 0;
+          this.loading = false;
+        } else if (orderedProduct.amount === 1 || orderedProduct.amount - 1 > product.amount) {
           this.translate.get("cart.min.amount.error.message")
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
@@ -157,7 +162,10 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(product => {
         orderedProduct.product = product;
-        if (orderedProduct.amount + 1 > product.amount || orderedProduct.amount > product.amount) {
+        if (orderedProduct.product.archive) {
+          orderedProduct.amount = 0;
+          this.loading = false;
+        } else if (orderedProduct.amount + 1 > product.amount || orderedProduct.amount > product.amount) {
           this.translate.get("cart.max.amount.error.message")
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
@@ -179,23 +187,29 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
     this.productService.retrieveProduct(orderedProduct.product.id.toString())
       .pipe(takeUntil(this.destroy))
       .subscribe(product => {
-        if (orderedProduct.amount < 1) {
-          orderedProduct.amount = 1;
-          this.translate.get("cart.min.amount.error.message")
-            .pipe(takeUntil(this.destroy))
-            .subscribe(msg => {
-              this.alertService.danger(msg);
-              this.loading = false
-            })
-        }
-        if (orderedProduct.amount > product.amount) {
-          orderedProduct.amount = product.amount;
-          this.translate.get("cart.max.amount.error.message")
-            .pipe(takeUntil(this.destroy))
-            .subscribe(msg => {
-              this.alertService.danger(msg);
-              this.loading = false
-            })
+        orderedProduct.product = product;
+        if (orderedProduct.product.archive) {
+          orderedProduct.amount = 0;
+          this.loading = false;
+        } else {
+          if (orderedProduct.amount < 1) {
+            orderedProduct.amount = 1;
+            this.translate.get("cart.min.amount.error.message")
+              .pipe(takeUntil(this.destroy))
+              .subscribe(msg => {
+                this.alertService.danger(msg);
+                this.loading = false
+              })
+          }
+          if (orderedProduct.amount > product.amount) {
+            orderedProduct.amount = product.amount;
+            this.translate.get("cart.max.amount.error.message")
+              .pipe(takeUntil(this.destroy))
+              .subscribe(msg => {
+                this.alertService.danger(msg);
+                this.loading = false
+              })
+          }
         }
       })
   }
@@ -376,5 +390,9 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
             }
           });
       });
+  }
+
+  isAnyProductArchive(): boolean {
+    return this.cartService.isAnyProductArchive();
   }
 }
