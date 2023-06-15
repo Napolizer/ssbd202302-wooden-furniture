@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -28,8 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
@@ -45,6 +43,8 @@ public class MOZ17IT {
   public int productId1;
   public int productId2;
   public int productId3;
+  public int productId4;
+  public int productId5;
 
   @Nested
   @Order(1)
@@ -105,9 +105,45 @@ public class MOZ17IT {
           .imageProductId(4L)
           .build();
 
+      ProductCreateWithImageDto productCreateWithImageDto4 = ProductCreateWithImageDto.builder()
+          .price(400.0)
+          .amount(5)
+          .weight(55.5)
+          .weightInPackage(60.5)
+          .furnitureWidth(300)
+          .furnitureHeight(70)
+          .furnitureDepth(40)
+          .packageWidth(310)
+          .packageHeight(80)
+          .packageDepth(40)
+          .color(Color.GREEN.name())
+          .woodType(WoodType.JUNGLE.name())
+          .productGroupId(30L)
+          .imageProductId(48L)
+          .build();
+
+      ProductCreateWithImageDto productCreateWithImageDto5 = ProductCreateWithImageDto.builder()
+          .price(499.0)
+          .amount(5)
+          .weight(53.5)
+          .weightInPackage(62.5)
+          .furnitureWidth(301)
+          .furnitureHeight(80)
+          .furnitureDepth(41)
+          .packageWidth(312)
+          .packageHeight(85)
+          .packageDepth(43)
+          .color(Color.GREEN.name())
+          .woodType(WoodType.JUNGLE.name())
+          .productGroupId(30L)
+          .imageProductId(48L)
+          .build();
+
       productId1 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto1);
       productId2 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto2);
       productId3 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto3);
+      productId4 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto4);
+      productId5 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto5);
     }
 
     @Order(2)
@@ -604,6 +640,180 @@ public class MOZ17IT {
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
           .products(orderedProducts)
           .shippingData(shippingDataDto)
+          .build();
+
+      String token = AuthUtil.retrieveToken("makesOrder", "Student123!");
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(InitData.mapToJsonString(createOrderDto))
+          .when()
+          .post("/order/create")
+          .then()
+          .statusCode(400);
+    }
+
+    @Order(15)
+    @DisplayName("Should fail to create if user updated product recently")
+    @Test
+    void shouldFailToCreateOrderIfUserUpdatedProductRecently() {
+      String token = AuthUtil.retrieveToken("clientemployee", "Student123!");
+
+      ProductDto productDto = given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .when()
+          .get("/product/id/" + productId4)
+          .then()
+          .statusCode(200)
+          .extract()
+          .response()
+          .as(ProductDto.class);
+
+      EditProductDto editProductDto = EditProductDto.builder()
+              .price(999.0)
+              .amount(23)
+              .hash(productDto.getHash())
+              .build();
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(editProductDto)
+          .when()
+          .put("/product/editProduct/id/" + productId4)
+          .then()
+          .statusCode(200)
+          .body("price", equalTo(999.0F))
+          .body("amount", equalTo(23));
+
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId4)
+          .amount(1)
+          .build());
+
+      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+          .products(orderedProducts)
+          .build();
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(InitData.mapToJsonString(createOrderDto))
+          .when()
+          .post("/order/create")
+          .then()
+          .statusCode(409);
+    }
+
+    @Order(16)
+    @DisplayName("Should fail to create order if any product is archive")
+    @Test
+    void shouldFailToCreateOrderIfAnyProductIsArchive() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .when()
+          .patch("/product/archive/" + productId5)
+          .then()
+          .statusCode(200);
+
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId1)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId2)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId3)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId4)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId5)
+          .amount(1)
+          .build());
+
+      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+          .products(orderedProducts)
+          .build();
+
+      String token = AuthUtil.retrieveToken("makesOrder", "Student123!");
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(InitData.mapToJsonString(createOrderDto))
+          .when()
+          .post("/order/create")
+          .then()
+          .statusCode(400);
+    }
+
+    @Order(17)
+    @DisplayName("Should fail to create order if any product group is archive")
+    @Test
+    void shouldFailToCreateOrderIfAnyProductGroupIsArchive() {
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId1)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId2)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId3)
+          .amount(1)
+          .build());
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId4)
+          .amount(1)
+          .build());
+
+      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+          .products(orderedProducts)
+          .build();
+
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .when()
+          .put("/product/group/archive/id/48")
+          .then()
+          .statusCode(200)
+          .body("archive", equalTo(true));
+
+      String token = AuthUtil.retrieveToken("makesOrder", "Student123!");
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(InitData.mapToJsonString(createOrderDto))
+          .when()
+          .post("/order/create")
+          .then()
+          .statusCode(400);
+    }
+
+    @Order(18)
+    @DisplayName("Should fail to create order with higher amount of products than possible")
+    @Test
+    void shouldFailToCreateOrderWithHigherAmountOfProductsThanPossible() {
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId1)
+          .amount(999)
+          .build());
+
+      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+          .products(orderedProducts)
           .build();
 
       String token = AuthUtil.retrieveToken("makesOrder", "Student123!");
