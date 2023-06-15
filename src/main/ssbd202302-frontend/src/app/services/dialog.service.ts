@@ -19,6 +19,7 @@ import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {ChangeOrderStateComponent} from "../components/change-order-state/change-order-state.component";
 import { GenerateReportComponent } from '../components/generate-report/generate-report.component';
 import {EditProductGroupNameComponent} from "../components/edit-product-group-name/edit-product-group-name.component";
+import {DisplayStatsComponent} from "../components/display-stats/display-stats.component";
 
 @Injectable({
   providedIn: 'root'
@@ -136,6 +137,14 @@ export class DialogService {
 
   openGenerateReportDialog(): MatDialogRef<GenerateReportComponent> {
     return this.matDialog.open(GenerateReportComponent, {
+      disableClose: true,
+      width: '450px',
+      height: '350px',
+    });
+  }
+
+  openDisplayStatsDialog(): MatDialogRef<DisplayStatsComponent> {
+    return this.matDialog.open(DisplayStatsComponent, {
       disableClose: true,
       width: '450px',
       height: '350px',

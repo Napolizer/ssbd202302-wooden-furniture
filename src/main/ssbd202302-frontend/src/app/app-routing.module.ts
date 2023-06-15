@@ -31,6 +31,7 @@ import {ViewCartPageComponent} from "./pages/view-cart-page/view-cart-page.compo
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
 import {OrderPageComponent} from "./pages/order-page/order-page.component";
 import {ClientOrderPageComponent} from "./pages/client-order-page/client-order-page.component";
+import {OrderStatsPageComponent} from "./pages/order-stats-page/order-stats-page.component";
 
 const routes: Routes = [
   {
@@ -228,6 +229,14 @@ const routes: Routes = [
   {
     path:'orders/done',
     component:DoneOrdersPageComponent,
+    canActivate:[AuthGuard],
+    data: {
+      roles: [Role.SALES_REP]
+    }
+  },
+  {
+    path:'orders/stats/:from/:to',
+    component:OrderStatsPageComponent,
     canActivate:[AuthGuard],
     data: {
       roles: [Role.SALES_REP]

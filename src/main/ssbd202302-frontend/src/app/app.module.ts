@@ -88,6 +88,8 @@ import { EditProductGroupNameComponent } from './components/edit-product-group-n
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { ClientOrderPageComponent } from './pages/client-order-page/client-order-page.component';
+import { DisplayStatsComponent } from './components/display-stats/display-stats.component';
+import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-page.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +146,8 @@ import { ClientOrderPageComponent } from './pages/client-order-page/client-order
     EditProductGroupNameComponent,
     OrderPageComponent,
     ClientOrderPageComponent,
+    DisplayStatsComponent,
+    OrderStatsPageComponent,
   ],
   imports: [
     BrowserModule,

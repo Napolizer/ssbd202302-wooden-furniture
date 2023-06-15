@@ -1,26 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import {
   Component,
-  ViewChild,
-  AfterViewInit,
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
-import { merge, Observable, of as observableOf, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import {
-  catchError,
-  first,
-  map,
-  startWith,
-  switchMap,
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgIf, DatePipe } from '@angular/common';
+import { MatTableDataSource} from '@angular/material/table';
 import { OrderService } from 'src/app/services/order.service';
 import { OrderDetailsDto } from 'src/app/interfaces/order.details.dto';
 import {
@@ -30,10 +18,8 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { Product } from 'src/app/interfaces/product';
 import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ClientOrder } from 'src/app/interfaces/client.order';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -187,8 +173,8 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
     return total;
   }
 
-  openGenerateReportDialog(): void {
-    this.dialogService.openGenerateReportDialog();
+  openDisplayStatsDialog(): void {
+    this.dialogService.openDisplayStatsDialog();
   }
 
   calculateMaxAmount(order: OrderDetailsDto): void {

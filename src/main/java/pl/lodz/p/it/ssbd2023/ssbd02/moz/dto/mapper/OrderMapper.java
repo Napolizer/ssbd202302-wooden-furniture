@@ -126,10 +126,10 @@ public class OrderMapper {
   public static OrderStatsDto mapObjectToOrderStatsDto(Object[] objects) {
     return OrderStatsDto.builder()
         .productGroupName(objects[0].toString())
-        .avarageRating(Double.valueOf(objects[1].toString()))
+        .averageRating(Double.valueOf(objects[1].toString()))
         .amount(Integer.valueOf(objects[2].toString()))
         .soldAmount(Integer.valueOf(objects[3].toString()))
-        .avarageRating(Double.valueOf(objects[4].toString()))
+        .totalIncome(Double.valueOf(objects[4].toString()))
         .build();
   }
 }

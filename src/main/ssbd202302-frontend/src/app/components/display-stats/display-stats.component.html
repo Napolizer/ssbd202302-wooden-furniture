@@ -1,0 +1,71 @@
+<h1 mat-dialog-title>{{ "display.stats.title" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <form class="form-container" [formGroup]="displayStatsForm">
+    <div class="form">
+      <app-spinner [loading]="loading"></app-spinner>
+      <div class="password-container">
+        <mat-form-field appearance="fill" class="input">
+          <mat-label>{{ "display.stats.label" | translate }}</mat-label>
+          <mat-date-range-input
+            [formGroup]="displayStatsForm"
+            [rangePicker]="picker"
+          >
+            <input
+              matInput
+              required
+              matStartDate
+              formControlName="startDate"
+              placeholder="{{ 'display.stats.start' | translate }}"
+            />
+            <input
+              matInput
+              required
+              matEndDate
+              formControlName="endDate"
+              placeholder="{{ 'display.stats.end' | translate }}"
+            />
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+
+          <mat-error
+            *ngIf="
+              displayStatsForm
+                .get('startDate')
+                ?.hasError('matStartDateInvalid')
+            "
+          >{{ "display.stats.invalid.date.start" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="
+              displayStatsForm.get('endDate')?.hasError('matEndDateInvalid')
+            "
+          >{{ "display.stats.invalid.date.end" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="displayStatsForm.get('startDate')?.hasError('required')"
+          >{{ "display.stats.required.date.start" | translate }}</mat-error
+          >
+          <mat-error
+            *ngIf="displayStatsForm.get('endDate')?.hasError('required')"
+          >{{ "display.stats.required.date.end" | translate }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <div class="button-container">
+    <button mat-button type="button" mat-dialog-close>
+      {{ "display.stats.back" | translate }}
+    </button>
+    <button mat-button type="submit" (click)="onConfirm()">
+      {{ "display.stats.confirm" | translate }}
+    </button>
+  </div>
+</div>

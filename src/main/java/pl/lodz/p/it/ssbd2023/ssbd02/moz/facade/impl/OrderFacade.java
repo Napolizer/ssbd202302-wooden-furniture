@@ -105,10 +105,11 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   @RolesAllowed(SALES_REP)
   public List<Object[]> findOrderStatsForReport(LocalDateTime startDate, LocalDateTime endDate) {
     return em.createNamedQuery(Order.FIND_ORDER_STATS_FOR_REPORT, Object[].class)
-            .setParameter("startDate", startDate)
-            .setParameter("endDate", endDate)
-            .setParameter("createdState", OrderState.CREATED).getResultList();
-
+        .setParameter("startDate", startDate)
+        .setParameter("endDate", endDate)
+        .setParameter("createdState", OrderState.CREATED)
+        .setParameter("cancelledState", OrderState.CANCELLED)
+        .getResultList();
   }
 
   @Override
