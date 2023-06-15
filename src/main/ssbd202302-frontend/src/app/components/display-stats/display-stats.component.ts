@@ -45,11 +45,11 @@ export class DisplayStatsComponent implements OnInit {
         this.datePipe
           .transform(
             this.displayStatsForm.get('startDate')?.value,
-            'MM-dd-yyyy'
+            'YYYY-MM-dd'
           )?.toString() as string,
         this.datePipe
           .transform(this.displayStatsForm.get('endDate')?.value,
-            'MM-dd-yyyy'
+            'YYYY-MM-dd'
           )?.toString() as string
       );
       this.dialogRef.close('success');
