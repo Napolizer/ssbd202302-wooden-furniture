@@ -14,19 +14,23 @@ import jakarta.interceptor.Interceptors;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericEndpointExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 
 @Stateful
@@ -64,7 +68,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @RolesAllowed(CLIENT)
   public OrderDto create(CreateOrderDto createOrderDto, String login) {
     Map<Long, Integer> orderedProductsMap = new HashMap<>();
-    for (OrderProductDto orderedProduct : createOrderDto.getProducts()) {
+    for (OrderedProductDto orderedProduct : createOrderDto.getProducts()) {
       orderedProductsMap.put(orderedProduct.getProductId(), orderedProduct.getAmount());
     }
     Order created;
@@ -90,8 +94,11 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public Optional<OrderDto> find(Long id) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(EMPLOYEE)
+  public OrderWithProductsDto find(Long id) {
+    return repeatTransactionWithOptimistic(() -> orderService.find(id))
+        .map(orderMapper::mapToOrderWithProductsDto)
+        .orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
   }
 
   @Override
@@ -123,17 +130,25 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
 
   @Override
   @RolesAllowed(CLIENT)
-  public OrderDto cancelOrder(OrderDto orderDto) {
+  public OrderDto cancelOrder(CancelOrderDto cancelOrderDto, String login) {
     Order order = repeatTransactionWithOptimistic(
-        () -> orderService.cancelOrder(orderDto.getId(), orderDto.getHash()));
+        () -> orderService.cancelOrder(cancelOrderDto.getId(), cancelOrderDto.getHash(), login));
+    return orderMapper.mapToOrderDto(order);
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public OrderDto cancelOrderAsEmployee(Long id, String hash) {
+    Order order = repeatTransactionWithOptimistic(
+        () -> orderService.cancelOrderAsEmployee(id, hash));
     return orderMapper.mapToOrderDto(order);
   }
 
   @Override
   @RolesAllowed(CLIENT)
-  public OrderDto observeOrder(OrderDto orderDto) {
+  public OrderDto observeOrder(Long orderId, String hash, String login) {
     Order order = repeatTransactionWithOptimistic(
-        () -> orderService.observeOrder(orderDto.getId(), orderDto.getHash()));
+        () -> orderService.observeOrder(orderId, hash, login));
     return orderMapper.mapToOrderDto(order);
   }
 
@@ -145,8 +160,27 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public void generateReport() {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public byte[] generateReport(String startDate, String endDate, String locale) {
+    if (locale == null || !(locale.equals(MessageUtil.LOCALE_PL) || locale.equals(MessageUtil.LOCALE_EN))) {
+      throw ApplicationExceptionFactory.createInvalidLocaleException();
+    }
+    return repeatTransactionWithoutOptimistic(() -> orderService.generateReport(
+            OrderMapper.mapToLocalDateTime(startDate),
+            OrderMapper.mapToLocalDateTime(endDate),
+            locale
+    ));
+  }
+
+  @Override
+  @RolesAllowed(SALES_REP)
+  public List<OrderStatsDto> findOrderStats(String startDate, String endDate) {
+    return repeatTransactionWithOptimistic(() -> orderService.findOrderStats(
+        OrderMapper.mapToLocalDateTime(startDate),
+        OrderMapper.mapToLocalDateTime(endDate)))
+        .stream()
+        .map(OrderMapper::mapObjectToOrderStatsDto)
+        .toList();
   }
 
   @Override

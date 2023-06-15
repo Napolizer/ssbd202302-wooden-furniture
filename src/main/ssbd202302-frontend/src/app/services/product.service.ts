@@ -10,6 +10,7 @@ import { ProductCreate } from '../interfaces/product.create';
 import { ProductCreateWithImage } from '../interfaces/product.create with.image';
 import { EditProduct } from '../interfaces/edit.product';
 import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
+import {EditProductGroup} from "../interfaces/edit.product.group";
 
 @Injectable({
   providedIn: 'root',
@@ -92,13 +93,21 @@ export class ProductService {
     );
   }
 
+  retrieveProductGroup(id: string): Observable<ProductGroup> {
+    return this.httpClient.get<ProductGroup>(
+      `${environment.apiBaseUrl}/product/group/id/` + id,
+      {headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      });
+  }
 
   public retrieveProduct(id: string): Observable<Product> {
     return this.httpClient.get<Product>(`${environment.apiBaseUrl}/product/id/` + id);
   }
 
   public retrieveProductsByGivenProductGroup(productGroupId: string): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product/group/id/` + productGroupId);
+    return this.httpClient.get<Product[]>(`${environment.apiBaseUrl}/product/group/products/id/` + productGroupId);
   }
 
   public retrieveProductsByGivenCategory(productCategoryId: string): Observable<Product[]> {
@@ -117,9 +126,33 @@ export class ProductService {
     );
   }
 
+  public editProductGroup(productGroupId: string, editedProductGroup: EditProductGroup): Observable<ProductGroup> {
+    return this.httpClient.put<ProductGroup>(
+      `${environment.apiBaseUrl}/product/group/id/` + productGroupId,
+      editedProductGroup,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
+
   public archiveProduct(productId: string): Observable<Product> {
     return this.httpClient.patch<Product>(
       `${environment.apiBaseUrl}/product/archive/` + productId,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
+
+  public archiveProductGroup(productGroupId: string): Observable<ProductGroup> {
+    return this.httpClient.put<ProductGroup>(
+      `${environment.apiBaseUrl}/product/group/archive/id/` + productGroupId,
       null,
       {
         headers: {

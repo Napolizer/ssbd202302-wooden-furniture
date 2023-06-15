@@ -14,8 +14,11 @@ import { AddProductGroupComponent } from '../components/add-product-group/add-pr
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditProductComponent } from '../components/edit-product/edit-product.component';
 import { Product } from '../interfaces/product';
+import {ArchiveProductGroupComponent} from "../components/archive-product-group/archive-product-group.component";
 import {OrderDetailsDto} from "../interfaces/order.details.dto";
 import {ChangeOrderStateComponent} from "../components/change-order-state/change-order-state.component";
+import { GenerateReportComponent } from '../components/generate-report/generate-report.component';
+import {EditProductGroupNameComponent} from "../components/edit-product-group-name/edit-product-group-name.component";
 
 @Injectable({
   providedIn: 'root'
@@ -128,6 +131,31 @@ export class DialogService {
   openChangeOrderStateDialog(order: OrderDetailsDto): MatDialogRef<ChangeOrderStateComponent> {
     return this.matDialog.open(ChangeOrderStateComponent, {
       data: {order}
+    });
+  }
+
+  openGenerateReportDialog(): MatDialogRef<GenerateReportComponent> {
+    return this.matDialog.open(GenerateReportComponent, {
+      disableClose: true,
+      width: '450px',
+      height: '350px',
+    });
+  }
+
+
+  openArchiveProductGroupDialog(): MatDialogRef<ArchiveProductGroupComponent> {
+    return this.matDialog.open(ArchiveProductGroupComponent, {
+      disableClose: true,
+      width: '700px',
+      height: '300px',
+    });
+  }
+
+  openEditProductGroupNameDialog(): MatDialogRef<EditProductGroupNameComponent> {
+    return this.matDialog.open(EditProductGroupNameComponent, {
+      disableClose: true,
+      width: '700px',
+      height: '300px',
     });
   }
 }

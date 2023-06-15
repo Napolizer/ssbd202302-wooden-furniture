@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.RateFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
@@ -40,6 +41,9 @@ public class ProductGroupService extends AbstractService implements ProductGroup
 
   @Inject
   private ProductGroupFacadeOperations productGroupFacade;
+
+  @Inject
+  private RateFacadeOperations rateFacade;
 
   @Inject
   private AccountFacadeOperations accountFacade;
@@ -62,13 +66,9 @@ public class ProductGroupService extends AbstractService implements ProductGroup
 
   @Override
   @RolesAllowed(EMPLOYEE)
-  public ProductGroup archive(Long id, String hash) {
+  public ProductGroup archive(Long id) {
     ProductGroup productGroup = productGroupFacade.findById(id)
         .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
-
-    if (!CryptHashUtils.verifyVersion(productGroup.getVersion(), hash)) {
-      throw new OptimisticLockException();
-    }
 
     if (!productGroup.getArchive().equals(false)) {
       throw ApplicationExceptionFactory.createProductGroupAlreadyArchivedException();
@@ -93,7 +93,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   }
 
   @Override
-  @PermitAll
+  @RolesAllowed(EMPLOYEE)
   public Optional<ProductGroup> find(Long id) {
     return productGroupFacade.find(id);
   }
@@ -128,9 +128,11 @@ public class ProductGroupService extends AbstractService implements ProductGroup
             .anyMatch(rate -> rate.getAccount().equals(account));
 
     if (!doesProductHaveRateFromThisAccount) {
-      Rate rate = new Rate(rateValue, account);
+      Rate rate = new Rate(rateValue, account, productGroup);
       productGroup.getRates().add(rate);
-      productGroup.updateAverageRating();
+      rateFacade.create(rate);
+
+      productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
 
       productGroupFacade.update(productGroup);
       return rate;
@@ -155,10 +157,35 @@ public class ProductGroupService extends AbstractService implements ProductGroup
             .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
 
     clientRate.setValue(rateValue);
-    productGroup.updateAverageRating();
+    clientRate.setProductGroup(productGroup);
+    rateFacade.update(clientRate);
+
+    productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
 
     productGroupFacade.update(productGroup);
 
     return clientRate;
+  }
+
+  @Override
+  @RolesAllowed(CLIENT)
+  public void removeRateFromProductGroup(String login, Long productGroupId) {
+    Account account = accountFacade.findByLogin(login)
+            .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
+
+    ProductGroup productGroup = productGroupFacade.findById(productGroupId)
+            .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+
+
+    Rate clientRate = productGroup.getRates().stream()
+            .filter(rate -> rate.getAccount().equals(account))
+            .findFirst()
+            .orElseThrow(ApplicationExceptionFactory::createRateNotFoundException);
+
+    rateFacade.delete(clientRate);
+
+    productGroup.getRates().remove(clientRate);
+    productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
+    productGroupFacade.update(productGroup);
   }
 }

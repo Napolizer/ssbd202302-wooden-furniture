@@ -42,7 +42,7 @@ export class EmployeePageComponent implements OnInit {
   listLoading = false;
   searchPhrase: string = '';
   fullNames: string[] = [];
-  displayedColumns = ['id', 'orderState', 'recipient', 'address', 'productsAmount',  'accountLogin', 'totalPrice', 'action'];
+  displayedColumns = ['id', 'orderState', 'recipient', 'address', 'productsAmount',  'accountLogin', 'totalPrice', 'show', 'action'];
   dataSource = new MatTableDataSource<OrderDetailsDto>(this.orders);
   destroy = new Subject<boolean>();
 
@@ -121,8 +121,8 @@ export class EmployeePageComponent implements OnInit {
     return this.loading ? 'unloaded' : 'loaded';
   }
 
-  redirectToAccountPage(id: string): void {
-    void this.navigationService.redirectToAccountPage(id);
+  redirectToOrderPage(order: OrderDetailsDto): void {
+    void this.navigationService.redirectToEmployeeOrdersPage(order.id);
   }
 
   onBackClicked(): void {
@@ -186,6 +186,28 @@ export class EmployeePageComponent implements OnInit {
     });
   }
 
+  openArchiveProductGroupDialog() : void {
+    this.dialogService.openArchiveProductGroupDialog()
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+
+        }
+      })
+  }
+
+  openEditProductGroupNameDialog(): void {
+    this.dialogService.openEditProductGroupNameDialog()
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+
+        }
+      })
+  }
+
   getRecipientName(order: OrderDetailsDto): string {
     return `${order.recipientFirstName} ${order.recipientLastName}`;
   }
@@ -201,5 +223,9 @@ export class EmployeePageComponent implements OnInit {
       sum += product.amount;
     }
     return sum;
+  }
+
+  round(num: number): string {
+    return String(+parseFloat(String(num)).toFixed(2));
   }
 }

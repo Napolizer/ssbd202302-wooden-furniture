@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>{{ "employee.archive.product.group" | translate }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <app-spinner [loading]="loading"></app-spinner>
+
+  <div class="archive-panel">
+    <form class="form-container" [formGroup]="archiveProductGroupForm">
+      <div class="form">
+
+        <mat-form-field
+          class="product-group-input"
+          appearance="fill"
+          hintLabel="{{ 'archive.product.group.hint.max.50' | translate }}"
+        >
+          <mat-label>{{"archive.product.group.name.label" | translate }}</mat-label>
+          <input
+            type="text"
+            matInput
+            #productGroupName
+            formControlName="productGroupName"
+            [matAutocomplete]="auto"
+            required
+            (ngModelChange)="onSelectNameChange()"
+          />
+          <mat-error *ngIf="archiveProductGroupForm.get('productGroupName')?.hasError('required')">
+            {{ "archive.product.group.validity.required" | translate }}
+          </mat-error>
+          <mat-error *ngIf="archiveProductGroupForm.get('productGroupName')?.hasError('invalidProductGroup')">
+            {{ "archive.product.group.validity.notexisting" | translate }}
+          </mat-error>
+          <mat-hint align="end">
+            {{ productGroupName.value.length }}/50
+          </mat-hint>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let option of filteredOptions | async"
+              [value]="option.name"
+              style="font-size: 15px"
+            >
+              <div style="display: flex; justify-content: space-between">
+                <span>{{ option.name }}</span>
+                <small style="font-size: 10px">
+                  {{option.categoryName | translate}}
+                </small>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <div class="button-container">
+          <button mat-button type="button" mat-dialog-close>
+            {{ "archive.product.group.back" | translate }}
+          </button>
+          <button mat-button type="submit" (click)="onConfirm()">
+            {{ "archive.product.group.confirm" | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -8,6 +8,8 @@ import {OrderProductWithRate} from "../../interfaces/orderProductWithRate";
 import {RateService} from "../../services/rate.service";
 import {Rate} from "../../interfaces/rate";
 import {HttpErrorResponse} from "@angular/common/http";
+import {TranslateService} from "@ngx-translate/core";
+import {AlertService} from "@full-fledged/alerts";
 
 @Component({
   selector: 'app-client-rates-page',
@@ -39,7 +41,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<OrderProductWithRate>(this.orderProducts);
   sortedProducts: any[] = []; // Array to store the sorted products
   isAscending: boolean = true;
-  pageSize = 8; // Number of products per page
+  pageSize = 4; // Number of products per page
   pageSizeOptions: number[] = [4, 8, 12];
   starRating = 2;
   currentPage = 1; // Current page number
@@ -48,7 +50,9 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   constructor(
     private productService: ProductService,
     private rateService: RateService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit(): void {
@@ -161,7 +165,12 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
         error: (e: HttpErrorResponse) => {
           this.loading = false;
           orderProduct.rate = orderProduct.oldRate;
-          alert("Sth gone wrong")
+          this.translate
+            .get(e.error.message || 'exception.moz.rate.notfound')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
         },
       });
   }
@@ -183,9 +192,39 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
         error: (e: HttpErrorResponse) => {
           this.loading = false;
           orderProduct.rate = orderProduct.oldRate;
-          alert("Sth gone wrong")
+          this.translate
+            .get(e.error.message || 'exception.moz.rate.notfound')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
         },
       });
   }
 
+  removeRating(orderProduct: OrderProductWithRate): void {
+    orderProduct.rate = 0;
+    this.rateService.removeRate(orderProduct.product.productGroup.id)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (rate: Rate) => {
+          this.loading = false;
+          this.loadClientProducts();
+        },
+        error: (e: HttpErrorResponse) => {
+          this.loading = false;
+          orderProduct.rate = orderProduct.oldRate;
+          this.translate
+            .get(e.error.message || 'exception.moz.rate.notfound')
+            .pipe(takeUntil(this.destroy))
+            .subscribe((msg) => {
+              this.alertService.danger(msg);
+            });
+        },
+      });
+  }
+
+  onResetClicked() {
+    this.loadClientProducts();
+  }
 }

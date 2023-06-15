@@ -118,12 +118,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     return this.authenticationService.isCurrentRole(Role.EMPLOYEE);
   }
 
-  isUserClient(): boolean {
-    return this.authenticationService.isCurrentRole(Role.CLIENT);
-  }
-
   isUserSalesRep(): boolean {
     return this.authenticationService.isCurrentRole(Role.SALES_REP);
+  }
+
+  isUserClient(): boolean {
+    return this.authenticationService.isCurrentRole(Role.CLIENT);
   }
 
   isCurrentlyOnLoginPage(): boolean {
@@ -132,6 +132,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isUserNormalType(): boolean {
     return this.tokenService.getAccountType() === AccountType.NORMAL;
+  }
+  
+  openGenerateReportDialog(): void {
+    this.dialogService.openGenerateReportDialog();
   }
 
   switchRole(role: string): void {
@@ -175,6 +179,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authenticationService.logout();
+    this.cartService.clearProducts();
     this.translate.get('toolbar.logout.success.message')
       .pipe(first(), takeUntil(this.destroy))
       .subscribe(message => {

@@ -156,7 +156,7 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
         });
   }
 
-  onResetClicked(): void { 
+  onResetClicked(): void {
       this.listLoading = true;
       this.orderService
         .getDoneOrders()
@@ -185,6 +185,10 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
       total += product.amount;
     }
     return total;
+  }
+
+  openGenerateReportDialog(): void {
+    this.dialogService.openGenerateReportDialog();
   }
 
   calculateMaxAmount(order: OrderDetailsDto): void {
