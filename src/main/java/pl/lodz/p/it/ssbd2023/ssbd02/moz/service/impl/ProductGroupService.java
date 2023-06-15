@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.AccountMozFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
@@ -137,6 +138,9 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     ProductGroup productGroup = productGroupFacade.findById(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
 
+    if (!checkIfProductGroupIsBoughtByClient(account, productGroup)) {
+      throw ApplicationExceptionFactory.createProductGroupNotFoundException();
+    }
 
     boolean doesProductHaveRateFromThisAccount = productGroup.getRates().stream()
             .anyMatch(rate -> rate.getAccount().equals(account));
@@ -153,6 +157,13 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     } else {
       throw ApplicationExceptionFactory.createProductAlreadyRatedException();
     }
+  }
+
+  private boolean checkIfProductGroupIsBoughtByClient(Account account, ProductGroup productGroup) {
+    return account.getOrders().stream()
+            .filter(o -> o.getOrderState().equals(OrderState.DELIVERED))
+            .flatMap(o -> o.getOrderedProducts().stream())
+            .anyMatch(op -> op.getProduct().getProductGroup().equals(productGroup));
   }
 
   @Override
@@ -202,4 +213,5 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
     productGroupFacade.update(productGroup);
   }
+
 }

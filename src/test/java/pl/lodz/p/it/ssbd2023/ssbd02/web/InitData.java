@@ -16,8 +16,11 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
+
+import java.util.List;
 
 public class InitData {
 
@@ -62,6 +65,18 @@ public class InitData {
             .path("id");
   }
 
+  public static List<OrderProductWithRateDto> getAllClientProducts() {
+    return given()
+            .header("Authorization", "Bearer " + InitData.retrieveClientToken())
+            .get("/product/client")
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .jsonPath()
+            .getList(".", OrderProductWithRateDto.class);
+  }
+
   public static String mapToJsonString(Object object) {
     try {
       return objectMapper.writeValueAsString(object);
@@ -84,6 +99,10 @@ public class InitData {
 
   public static String retrieveClientToken() {
     return retrieveToken(InitData.getUserCredentials("client", "Student123!"));
+  }
+
+  public static String retrieveClient2Token() {
+    return retrieveToken(InitData.getUserCredentials("client2", "Student123!"));
   }
 
   public static String generateChangeEmailToken(String login, String newEmail) {
