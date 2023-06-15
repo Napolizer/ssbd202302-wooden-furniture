@@ -105,4 +105,8 @@ export class NavigationService {
   public redirectToEmployeeOrdersPage(orderId: number): Promise<boolean> {
     return this.router.navigate(['/employee/orders/' + orderId]);
   }
+
+  public redirectToClientOrderPage(orderId: number): Promise<boolean> {
+    return this.router.navigate(['/client/orders/' + orderId]);
+  }
 }

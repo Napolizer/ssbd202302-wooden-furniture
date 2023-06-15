@@ -112,7 +112,7 @@ public class OrderFacade extends AbstractFacade<Order> implements OrderFacadeOpe
   }
 
   @Override
-  @RolesAllowed(EMPLOYEE)
+  @RolesAllowed({EMPLOYEE, CLIENT})
   @Transactional(REQUIRES_NEW)
   public Optional<Order> find(Long id) {
     return Optional.ofNullable(getEntityManager().find(Order.class, id));

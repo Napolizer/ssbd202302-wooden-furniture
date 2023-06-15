@@ -41,12 +41,74 @@ export class ClientOrderPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
+    this.route.paramMap.subscribe(params => {
+      this.orderId = Number(params.get('id'));
+      this.getOrder()
+        .subscribe(order => {
+          this.order = order;
+          this.loading = false;
+        });
+    })
   }
 
   ngOnDestroy(): void {
     this.destroy.next(true);
     this.destroy.unsubscribe();
+  }
+
+  getOrder(): Observable<OrderWithProductsDto> {
+    return this.orderService.getOrderAsClient(this.orderId);
+  }
+
+  getProducts(): OrderedProduct[] {
+    return this.order?.orderedProducts ?? [];
+  }
+
+  getRecipientFullName(): string {
+    return this.order?.recipientFirstName + ' ' + this.order?.recipientLastName;
+  }
+
+  getListAnimationState(): string {
+    return this.loading ? 'unloaded' : 'loaded';
+  }
+
+  getProgress(): number {
+    if (this.order.orderState === undefined) return 0;
+    switch (this.order.orderState) {
+      case OrderState.CREATED:
+        return 5;
+      case OrderState.COMPLETED:
+        return 35;
+      case OrderState.IN_DELIVERY:
+        return 75;
+      default:
+        return 100;
+    }
+  }
+
+  getProgressStyle(): any {
+    return {
+      'width': this.getProgress() + '%',
+      ...(this.order?.orderState === OrderState.CANCELLED && {'background-color': 'red !important'}),
+      ...(this.order?.orderState === OrderState.DELIVERED && {'background-color': 'green !important'})
+    }
+  }
+
+  round(num: number): string {
+    return String(+parseFloat(String(num)).toFixed(2));
+  }
+
+  onResetClicked(): void {
+    this.loading = true;
+    combineLatest([
+      this.getOrder(),
+      timer(1000)
+    ])
+      .pipe(takeUntil(this.destroy), map(obj => obj[0]))
+      .subscribe(order => {
+        this.order = order;
+        this.loading = false;
+      });
   }
 
 }
