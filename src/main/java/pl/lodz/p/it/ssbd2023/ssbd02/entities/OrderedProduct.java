@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@Entity
+@Entity(name = "sales_order_product")
 @Table(name = "sales_order_product", indexes = {
     @Index(name = "sales_order_product_product_id", columnList = "product_id"),
     @Index(name = "sales_order_product_order_id", columnList = "order_id"),

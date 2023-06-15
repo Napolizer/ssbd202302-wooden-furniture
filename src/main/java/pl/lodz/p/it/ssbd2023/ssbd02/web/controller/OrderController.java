@@ -29,6 +29,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ChangeOrderStateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ObserveOrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
@@ -171,10 +172,13 @@ public class OrderController {
 
   @GET
   @Path("/filters")
-  public Response findWithFilters(@QueryParam("price") Double orderPrice,
-                                        @QueryParam("orderSize") Integer orderSize,
-                                        @QueryParam("isCompany") boolean isCompany) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public Response findWithFilters(@QueryParam("minPrice") Double minPrice,
+                                        @QueryParam("maxPrice") Double maxPrice,
+                                  @QueryParam("amount") Integer totalAmount,
+                                  @QueryParam("company") boolean isCompany) {
+    List<OrderDetailsDto> orderList = orderEndpoint.findWithFilters(minPrice, maxPrice, totalAmount, isCompany);
+    return Response.ok(orderList).build();
   }
 
   @GET

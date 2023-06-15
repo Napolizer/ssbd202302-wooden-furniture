@@ -26,7 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOZ.10 - Cancel order as employee")
+@DisplayName("MOZ.11 - Cancel order as employee")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class MOZ11IT {
   @Nested
