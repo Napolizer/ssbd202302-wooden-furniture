@@ -85,7 +85,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
         .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
 
     if (!productGroup.getArchive().equals(true)) {
-      throw ApplicationExceptionFactory.createProductGroupAlreadyArchivedException();
+      throw ApplicationExceptionFactory.createProductGroupAlreadyActivatedException();
     }
 
     productGroup.setArchive(false);

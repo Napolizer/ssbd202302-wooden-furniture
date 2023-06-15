@@ -90,6 +90,7 @@ import {MatSliderModule} from '@angular/material/slider';
 import { ClientOrderPageComponent } from './pages/client-order-page/client-order-page.component';
 import { DisplayStatsComponent } from './components/display-stats/display-stats.component';
 import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-page.component';
+import { ActivateProductGroupComponent } from './components/activate-product-group/activate-product-group.component';
 
 @NgModule({
   declarations: [
@@ -148,6 +149,7 @@ import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-pa
     ClientOrderPageComponent,
     DisplayStatsComponent,
     OrderStatsPageComponent,
+    ActivateProductGroupComponent,
   ],
   imports: [
     BrowserModule,

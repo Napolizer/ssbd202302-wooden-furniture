@@ -122,6 +122,14 @@
   "archive.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
   "archive.product.group.success": "Pomyślnie zarchiwizowano grupę produktów",
 
+  "activate.product.group.name.label": "Nazwa grupy produktów",
+  "activate.product.group.hint.max.50": "Maksymalnie 50 znaków",
+  "activate.product.group.back": "Powrót",
+  "activate.product.group.confirm": "Aktywuj",
+  "activate.product.group.validity.required": "Pole nie może być puste",
+  "activate.product.group.validity.notexisting": "Grupa produktów o podanej nazwie nie istnieje",
+  "activate.product.group.success": "Pomyślnie aktywowano grupę produktów",
+
   "edit.product.group.name.label": "Nazwa grupy produktów",
   "edit.product.group.name.hint.max.50": "Maksymalnie 50 znaków",
   "edit.product.group.validity.required": "Pole nie może być puste",
@@ -250,6 +258,7 @@
   "dialog.add.product.message": "Czy na pewno chcesz dodać nowy produkt?",
   "dialog.employee.edit.product.message": "Czy na pewno chcesz edytować ten produkt?",
   "dialog.archive.product.group": "Czy na pewno chcesz zarchiwizować tę grupę produktów?",
+  "dialog.activate.product.group": "Czy na pewno chcesz aktywować tę grupę produktów?",
   "dialog.change.order.state.message": "Czy na pewno chcesz zmienić stan zamówienia?",
   "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
   "dialog.cart.remove": "Czy na pewno chcesz usunąć produkt z koszyka?",
@@ -309,6 +318,7 @@
   "exception.moz.order.already.cancelled": "Nie można zmienić stanu zamówienia, ponieważ jest już anulowane",
   "exception.moz.rate.notfound": "Nie znaleziono oceny",
   "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
+  "exception.moz.product.group.already.activated": "Grupa produktów jest już aktywna",
   "exception.moz.invalid.date": "Niepoprawna data",
 
   "role.administrator": "Administrator",
@@ -376,6 +386,7 @@
   "employee.add.product": "Dodaj produkt",
   "employee.archive.product.group": "Zarchiwizuj grupę produktów",
   "employee.edit.product.group.name": "Edytuj nazwę grupy produktów",
+  "employee.activate.product.group": "Aktywuj grupę produktów",
 
   "paginator.itemsPerPage": "Liczba użytkowników na stronie",
   "paginator.ordersPerPage": "Liczba zamówień na stronę",

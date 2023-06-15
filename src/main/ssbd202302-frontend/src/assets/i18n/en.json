@@ -121,6 +121,14 @@
   "archive.product.group.validity.notexisting": "The specified product group does not exist",
   "archive.product.group.success": "Product group archived successfully",
 
+  "activate.product.group.name.label": "Product group name",
+  "activate.product.group.hint.max.50": "Max 50 characters",
+  "activate.product.group.back": "Back",
+  "activate.product.group.confirm": "Activate",
+  "activate.product.group.validity.required": "The field cannot be empty",
+  "activate.product.group.validity.notexisting": "The specified product group does not exist",
+  "activate.product.group.success": "Product group activated successfully",
+
   "edit.product.group.name.label": "Product group name",
   "edit.product.group.name.hint.max.50": "Max 50 characters",
   "edit.product.group.validity.required": "The field cannot be empty",
@@ -250,6 +258,7 @@
   "dialog.employee.edit.product.message": "Are you sure you want to edit this product?",
   "dialog.change.order.state.message": "Are you sure you want to change order state?",
   "dialog.archive.product.group": "Are you sure you want to archive this product group?",
+  "dialog.activate.product.group": "Are you sure you want to activate this product group?",
   "dialog.cart.empty": "Are you sure you want to clear cart?",
   "dialog.cart.remove": "Are you sure you want to remove item from cart?",
   "dialog.edit.product.group": "Are you sure you want to edit product group name?",
@@ -310,6 +319,7 @@
   "exception.moz.rate.notfound": "Rate not found",
   "exception.moz.invalid.date": "Invalid date",
   "exception.moz.product.group.already.archived": "Product group is already archived",
+  "exception.moz.product.group.already.activated": "Product group is already activated",
 
 
   "role.administrator": "Administrator",
@@ -378,6 +388,7 @@
   "employee.add.product": "Add product",
   "employee.archive.product.group": "Archive product group",
   "employee.edit.product.group.name": "Edit product group name",
+  "employee.activate.product.group": "Activate product group",
 
   "paginator.itemsPerPage": "Items per page",
   "paginator.ordersPerPage": "Orders per page",

@@ -161,4 +161,16 @@ export class ProductService {
       }
     )
   }
+
+  public activateProductGroup(productGroupId: string): Observable<ProductGroup> {
+    return this.httpClient.put<ProductGroup>(
+      `${environment.apiBaseUrl}/product/group/activate/id/` + productGroupId,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    )
+  }
 }
