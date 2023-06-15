@@ -48,10 +48,10 @@ public class MOZ2IT {
                     .packageWidth(310)
                     .packageHeight(80)
                     .packageDepth(40)
-                    .color(Color.BROWN.name())
+                    .color(Color.RED.name())
                     .woodType(WoodType.BIRCH.name())
                     .productGroupId(1L)
-                    .imageProductId(1L)
+                    .imageProductId(3L)
                     .build();
 
             ProductCreateWithImageDto productCreateWithImageDto2 = ProductCreateWithImageDto.builder()
@@ -65,10 +65,10 @@ public class MOZ2IT {
                     .packageWidth(310)
                     .packageHeight(80)
                     .packageDepth(40)
-                    .color(Color.BLACK.name())
-                    .woodType(WoodType.BIRCH.name())
-                    .productGroupId(1L)
-                    .imageProductId(2L)
+                    .color(Color.WHITE.name())
+                    .woodType(WoodType.OAK.name())
+                    .productGroupId(2L)
+                    .imageProductId(5L)
                     .build();
 
             ProductCreateWithImageDto productCreateWithImageDto3 = ProductCreateWithImageDto.builder()
@@ -82,10 +82,10 @@ public class MOZ2IT {
                     .packageWidth(310)
                     .packageHeight(80)
                     .packageDepth(40)
-                    .color(Color.BROWN.name())
-                    .woodType(WoodType.OAK.name())
-                    .productGroupId(2L)
-                    .imageProductId(4L)
+                    .color(Color.RED.name())
+                    .woodType(WoodType.SPRUCE.name())
+                    .productGroupId(3L)
+                    .imageProductId(6L)
                     .build();
 
             productId1 = ProductUtil.createProductWithExistingImage(productCreateWithImageDto1);
@@ -106,7 +106,7 @@ public class MOZ2IT {
                     .body("price",equalTo(200.0F))
                     .body("amount", equalTo(2))
                     .body("archive", equalTo(false))
-                    .body("color", equalTo("BROWN"))
+                    .body("color", equalTo("RED"))
                     .body("weight", equalTo(55.5F))
                     .body("weightInPackage", equalTo(60.5F))
                     .body("woodType", equalTo("BIRCH"));
@@ -121,10 +121,10 @@ public class MOZ2IT {
                     .body("price",equalTo(300.0F))
                     .body("amount", equalTo(2))
                     .body("archive", equalTo(false))
-                    .body("color", equalTo("BLACK"))
+                    .body("color", equalTo("WHITE"))
                     .body("weight", equalTo(55.5F))
                     .body("weightInPackage", equalTo(60.5F))
-                    .body("woodType", equalTo("BIRCH"));
+                    .body("woodType", equalTo("OAK"));
 
             given()
                     .when()
@@ -136,10 +136,10 @@ public class MOZ2IT {
                     .body("price",equalTo(400.0F))
                     .body("amount", equalTo(2))
                     .body("archive", equalTo(false))
-                    .body("color", equalTo("BROWN"))
+                    .body("color", equalTo("RED"))
                     .body("weight", equalTo(55.5F))
                     .body("weightInPackage", equalTo(60.5F))
-                    .body("woodType", equalTo("OAK"));
+                    .body("woodType", equalTo("SPRUCE"));
         }
     }
 
