@@ -44,4 +44,19 @@ public class ProductUtil {
         .extract()
         .path("id");
   }
+
+  public static int createProductWithExistingImageByClientEmployee(ProductCreateWithImageDto productCreateWithImageDto) {
+    String productCreateWithImageString = InitData.mapToJsonString(productCreateWithImageDto);
+    String token = AuthUtil.retrieveToken("clientemployee", "Student123!");
+    return given()
+        .header(AUTHORIZATION, "Bearer " + token)
+        .header(CONTENT_TYPE, "application/json")
+        .body(productCreateWithImageString)
+        .when()
+        .post("/product/existing-image")
+        .then()
+        .statusCode(201)
+        .extract()
+        .path("id");
+  }
 }

@@ -27,8 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
@@ -655,7 +654,60 @@ public class MOZ17IT {
           .statusCode(400);
     }
 
-    @Order(14)
+    @Order(15)
+    @DisplayName("Should fail to create if user updated product recently")
+    @Test
+    void shouldFailToCreateOrderIfUserUpdatedProductRecently() {
+      String token = AuthUtil.retrieveToken("clientemployee", "Student123!");
+
+      ProductDto productDto = given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .when()
+          .get("/product/id/" + productId4)
+          .then()
+          .statusCode(200)
+          .extract()
+          .response()
+          .as(ProductDto.class);
+
+      EditProductDto editProductDto = EditProductDto.builder()
+              .price(999.0)
+              .amount(23)
+              .hash(productDto.getHash())
+              .build();
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(editProductDto)
+          .when()
+          .put("/product/editProduct/id/" + productId4)
+          .then()
+          .statusCode(200)
+          .body("price", equalTo(999.0F))
+          .body("amount", equalTo(23));
+
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId4)
+          .amount(1)
+          .build());
+
+      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+          .products(orderedProducts)
+          .build();
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(InitData.mapToJsonString(createOrderDto))
+          .when()
+          .post("/order/create")
+          .then()
+          .statusCode(409);
+    }
+
+    @Order(16)
     @DisplayName("Should fail to create order if any product is archive")
     @Test
     void shouldFailToCreateOrderIfAnyProductIsArchive() {
@@ -704,7 +756,7 @@ public class MOZ17IT {
           .statusCode(400);
     }
 
-    @Order(15)
+    @Order(17)
     @DisplayName("Should fail to create order if any product group is archive")
     @Test
     void shouldFailToCreateOrderIfAnyProductGroupIsArchive() {
@@ -750,7 +802,7 @@ public class MOZ17IT {
           .statusCode(400);
     }
 
-    @Order(16)
+    @Order(18)
     @DisplayName("Should fail to create order with higher amount of products than possible")
     @Test
     void shouldFailToCreateOrderWithHigherAmountOfProductsThanPossible() {
