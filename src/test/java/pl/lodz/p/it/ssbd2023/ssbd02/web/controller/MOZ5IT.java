@@ -392,7 +392,7 @@ public class MOZ5IT {
 			given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.contentType("application/json")
-							.put("/product/group/archive/id/50")
+							.put("/product/group/archive/id/44")
 							.then()
 							.statusCode(200);
 
@@ -432,7 +432,7 @@ public class MOZ5IT {
 			given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.contentType("application/json")
-							.put("/product/group/activate/id/50")
+							.put("/product/group/activate/id/44")
 							.then()
 							.statusCode(200);
 		}

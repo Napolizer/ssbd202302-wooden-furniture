@@ -87,7 +87,7 @@ public class MOZ18IT {
             }
             """.formatted(products.get(products.size() - 1).getProduct().getProductGroup().getId()))
             .when()
-            .post("/rate")
+            .put("/rate")
             .then()
             .statusCode(200);
   }

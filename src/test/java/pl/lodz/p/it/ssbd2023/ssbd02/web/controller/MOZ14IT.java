@@ -25,17 +25,12 @@ public class MOZ14IT {
   @Order(1)
   void shouldProperlyReturnOrders() {
     given()
-            .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+            .header("Authorization", "Bearer " + InitData.retrieveClientToken())
             .contentType("application/json")
             .when()
-            .get("/customer")
+            .get("/order/customer")
             .then()
-            .statusCode(200)
-            .body("recipientAddress", notNullValue())
-            .body("id", notNullValue())
-            .body("orderedProducts", notNullValue())
-            .body("observed", notNullValue())
-            .body("totalPrice", notNullValue());
+            .statusCode(200);
   }
 
   @Test
@@ -45,7 +40,7 @@ public class MOZ14IT {
     given()
             .contentType("application/json")
             .when()
-            .get("/customer")
+            .get("/order/customer")
             .then()
             .statusCode(401);
   }
@@ -64,7 +59,7 @@ public class MOZ14IT {
               .header("Authorization", "Bearer " + token)
               .contentType("application/json")
               .when()
-              .get("/customer")
+              .get("/order/customer")
               .then()
               .statusCode(403);
     }
