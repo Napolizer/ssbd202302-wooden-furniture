@@ -123,6 +123,14 @@ public class OrderService extends AbstractService implements OrderServiceOperati
         }
       }
 
+      if (product.getProductGroup().getArchive()) {
+        throw ApplicationExceptionFactory.createProductGroupIsArchiveException();
+      }
+
+      if (product.getArchive()) {
+        throw ApplicationExceptionFactory.createProductIsArchiveException();
+      }
+
       product.setAmount(product.getAmount() - orderedProduct.getAmount());
       product.setIsUpdatedBySystem(true);
       productFacade.update(product);
