@@ -1,5 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -10,24 +12,20 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.AccountMozFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.AccountFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericFacadeExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.facade.AbstractFacade;
 
-import java.util.Optional;
-
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
-
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({
-        GenericFacadeExceptionsInterceptor.class,
-        AccountFacadeExceptionsInterceptor.class,
-        LoggerInterceptor.class
+    GenericFacadeExceptionsInterceptor.class,
+    AccountFacadeExceptionsInterceptor.class,
+    LoggerInterceptor.class
 })
 @DenyAll
 public class AccountMozFacade extends AbstractFacade<Account> implements AccountMozFacadeOperations {
