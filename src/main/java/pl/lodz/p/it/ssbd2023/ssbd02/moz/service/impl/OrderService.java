@@ -238,8 +238,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
-  public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public List<Order> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount, boolean isCompany) {
+    return orderFacade.findWithFilters(minPrice, maxPrice, totalAmount, DELIVERED, isCompany);
   }
 
   @Override

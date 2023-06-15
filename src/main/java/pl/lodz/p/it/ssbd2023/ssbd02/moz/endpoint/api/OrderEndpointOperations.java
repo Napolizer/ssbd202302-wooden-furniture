@@ -39,7 +39,7 @@ public interface OrderEndpointOperations {
 
   void generateReport();
 
-  List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+  List<OrderDetailsDto> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount, boolean isCompany);
 
   List<OrderDetailsDto> findAllOrdersDone();
 }

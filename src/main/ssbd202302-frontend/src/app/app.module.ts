@@ -81,6 +81,7 @@ import { EmployeeActionsMenuComponent } from './components/employee-actions-menu
 import { ChangeOrderStateComponent } from './components/change-order-state/change-order-state.component';
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -175,7 +176,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatGridListModule,
     NgbModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSliderModule
   ],
   providers: [
     DatePipe,

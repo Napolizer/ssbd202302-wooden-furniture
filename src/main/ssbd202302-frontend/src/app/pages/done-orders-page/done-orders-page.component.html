@@ -11,7 +11,49 @@
         [@loadedUnloadedList]="{ value: getListAnimationState() }"
       >
         <mat-card class="card">
-            <mat-card-title>{{'orders.done' | translate}}</mat-card-title>
+          <label id="example-name-label" class="example-name-label"
+            >{{ "orders.minPrice" | translate }}</label
+          >
+          <mat-slider
+            thumbLabel
+            tickInterval="1000"
+            step="1"
+            min="0"
+            [max]="maxTotalPrice"
+            aria-label="units"
+            [value]="1"
+            [(ngModel)]="minSliderValue"
+            (change)="handleApplyFiltersButton()"
+          ></mat-slider>
+          <label id="example-name-label" class="example-name-label"
+            >{{ "orders.maxPrice" | translate }}</label
+          >
+          <mat-slider
+            thumbLabel
+            tickInterval="1000"
+            step="1"
+            min="1"
+            [max]="maxTotalPrice"
+            aria-label="units"
+            [value]="maxTotalPrice"
+            [(ngModel)]="maxSliderValue"
+            (change)="handleApplyFiltersButton()"
+          ></mat-slider>
+          <label id="example-name-label" class="example-name-label"
+            >{{ "orders.productsAmount" | translate }}</label
+          >
+          <mat-slider
+            thumbLabel
+            tickInterval="1000"
+            step="1"
+            min="1"
+            [max]="maxAmount"
+            aria-label="units"
+            [value]="maxAmount"
+            [(ngModel)]="amountSliderValue"
+            (change)="handleApplyFiltersButton()"
+          ></mat-slider>
+          <mat-card-title>{{ "orders.done" | translate }}</mat-card-title>
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
             <button
               mat-button
@@ -104,11 +146,11 @@
                 ></mat-row>
               </mat-table>
               <mat-paginator
-    [pageSizeOptions]="[10, 20, 30]"
-    showFirstLastButtons
-    aria-label="Select page of periodic elements"
-  >
-  </mat-paginator>
+                [pageSizeOptions]="[10, 20, 30]"
+                showFirstLastButtons
+                aria-label="Select page of periodic elements"
+              >
+              </mat-paginator>
             </div>
           </mat-card-content>
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">

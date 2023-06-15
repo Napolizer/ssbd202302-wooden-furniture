@@ -51,4 +51,15 @@ export class OrderService {
       }
     );
   }
+
+  public getDoneFilterOrders(minPrice: number, maxPrice: number, amount: number): Observable<OrderDetailsDto[]> {
+    return this.httpClient.get<OrderDetailsDto[]>(
+      `${environment.apiBaseUrl}/order/filters?minPrice=${minPrice}&maxPrice=${maxPrice}&amount=${amount}`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
 }

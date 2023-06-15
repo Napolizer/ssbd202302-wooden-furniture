@@ -150,8 +150,14 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
-  public List<OrderDto> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
-    throw new UnsupportedOperationException();
+  @RolesAllowed(SALES_REP)
+  public List<OrderDetailsDto> findWithFilters(Double minPrice, Double maxPrice,
+                                               Integer totalAmount, boolean isCompany) {
+    return repeatTransactionWithOptimistic(() -> orderService.findWithFilters(minPrice, maxPrice,
+            totalAmount, isCompany))
+            .stream()
+            .map(orderMapper::mapToOrderDetailsDto)
+            .toList();
   }
 
   @Override

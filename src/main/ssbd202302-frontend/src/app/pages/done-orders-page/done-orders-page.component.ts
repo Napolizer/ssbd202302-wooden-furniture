@@ -36,6 +36,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ClientOrder } from 'src/app/interfaces/client.order';
 import { DialogService } from 'src/app/services/dialog.service';
 import { NavigationService } from 'src/app/services/navigation.service';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-done-orders-page',
@@ -70,6 +71,15 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
   displayedColumns = ['id', 'accountId', 'productsNumber', 'totalPrice'];
   dataSource = new MatTableDataSource<OrderDetailsDto>(this.orders);
   destroy = new Subject<boolean>();
+  minPrice: number;
+  maxPrice: number;
+  amount: number;
+  maxAmount: number;
+  maxTotalPrice: number;
+  formGroup: FormGroup;
+  maxSliderValue: number;
+  minSliderValue: number = 0;
+  amountSliderValue: number;
 
   constructor(
     private orderService: OrderService,
@@ -94,6 +104,14 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
       .subscribe((orders) => {
         console.log(orders);
         this.orders = orders;
+        for(let i=0;i<this.orders.length;i++) {
+          this.calculateMaxAmount(this.orders[i]);
+      }
+      this.amountSliderValue = this.maxAmount;
+      this.maxSliderValue = this.maxTotalPrice = this.orders.reduce((max, element) => {
+        return element.totalPrice > max ? element.totalPrice : max;
+      }, Number.MIN_VALUE);
+
         this.loading = false;
         this.dataSource = new MatTableDataSource<OrderDetailsDto>(this.orders);
       });
@@ -104,6 +122,19 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
     this.destroy.unsubscribe();
   }
 
+  validateNumber(event: KeyboardEvent): void {
+    const input = event.key;
+    const regex = /[0-9]|\./; // Regular expression to match numbers
+
+    if (!regex.test(input) && event.key !== 'Backspace') {
+      event.preventDefault();
+    }
+  }
+
+  isNumberValid(): boolean {
+    return !isNaN(this.minPrice);
+  }
+
   getListAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
   }
@@ -112,13 +143,28 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
     void this.navigationService.redirectToMainPage();
   }
 
-  onResetClicked(): void {
+  handleApplyFiltersButton(): void {
+    this.loading=true;
     this.listLoading = true;
-    this.orderService.getDoneOrders().subscribe((orders) => {
-      this.orders = orders;
-      this.dataSource.data = this.orders;
-      this.listLoading = false;
-    });
+      this.orderService
+        .getDoneFilterOrders(this.minSliderValue, this.maxSliderValue, this.amountSliderValue)
+        .subscribe((orders) => {
+          this.orders = orders;
+          this.dataSource.data = this.orders;
+          this.listLoading = false;
+          this.loading=false;
+        });
+  }
+
+  onResetClicked(): void { 
+      this.listLoading = true;
+      this.orderService
+        .getDoneOrders()
+        .subscribe((orders) => {
+          this.orders = orders;
+          this.dataSource.data = this.orders;
+          this.listLoading = false;
+        });
   }
 
   shouldDisplayTable(): boolean {
@@ -139,5 +185,16 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
       total += product.amount;
     }
     return total;
+  }
+
+  calculateMaxAmount(order: OrderDetailsDto): void {
+    this.maxAmount = 0;
+    let total = 0;
+    for(let i=0;i<order.orderedProducts.length;i++) {
+      total+=order.orderedProducts[i].amount;
+    }
+    if(this.maxAmount<total) {
+      this.maxAmount=total;
+    }
   }
 }

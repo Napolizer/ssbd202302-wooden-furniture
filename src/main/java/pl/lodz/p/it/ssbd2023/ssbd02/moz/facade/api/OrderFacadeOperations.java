@@ -13,5 +13,6 @@ public interface OrderFacadeOperations extends Facade<Order> {
 
   List<Order> findByState(OrderState orderState);
 
-  List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany);
+  List<Order> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount,
+                              OrderState orderState, boolean isCompany);
 }

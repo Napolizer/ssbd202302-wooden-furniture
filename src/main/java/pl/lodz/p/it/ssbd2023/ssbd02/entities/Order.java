@@ -44,12 +44,34 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
         name = Order.FIND_BY_STATE,
         query = "SELECT o FROM sales_order o "
         + "WHERE o.orderState = :orderState"
-    )
+    ),
+    @NamedQuery(
+                name = Order.FIND_WITH_FILTERS,
+                query = "SELECT o FROM sales_order o "
+                        + "JOIN sales_order_product sop ON o.id = sop.order.id "
+                        + "WHERE o.orderState = :orderState "
+                        + "AND o.totalPrice BETWEEN :minPrice AND :maxPrice "
+                        + "AND o.id IN (SELECT sop.order.id FROM sales_order_product sop "
+                        + "GROUP BY sop.order.id HAVING SUM(sop.amount) = :amount)"
+        ),
+    @NamedQuery(
+                name = Order.FIND_WITH_FILTERS_WITH_COMPANY,
+                query = "SELECT o FROM sales_order o "
+                        + "JOIN sales_order_product sop ON o.id = sop.order.id "
+                        + "JOIN access_level al ON al.account.id = o.account.id "
+                        + "JOIN client c ON al.id = c.id "
+                        + "WHERE o.orderState = :orderState "
+                        + "AND o.totalPrice BETWEEN :minPrice AND :maxPrice "
+                        + "AND c.company IS NOT NULL "
+                        + "GROUP BY o "
+                        + "HAVING SUM(sop.amount) = :amount"
+        )
 })
 public class Order extends AbstractEntity {
   public static final String FIND_ACCOUNT_ORDERS = "Order.findAccountOrders";
   public static final String FIND_BY_STATE = "Order.findByState";
-
+  public static final String FIND_WITH_FILTERS = "Order.findWithFilters";
+  public static final String FIND_WITH_FILTERS_WITH_COMPANY = "Order.findWithFiltersWithCompany";
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false, name = "order_state")
   private OrderState orderState;
