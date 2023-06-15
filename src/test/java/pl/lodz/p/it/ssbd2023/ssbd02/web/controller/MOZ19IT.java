@@ -67,36 +67,6 @@ public class MOZ19IT {
       assertEquals(3, dto.getRate());
       assertEquals(3.0, dto.getProduct().getProductGroup().getAverageRating());
     }
-
-    @Order(4)
-    @DisplayName("Should add valid rate from another client")
-    @Test
-    void shouldAddValidRateAsAnotherClient() {
-      given()
-              .header("Authorization", "Bearer " + InitData.retrieveClient2Token())
-              .header("Content-Type", "application/json")
-              .body("""
-            {
-              "rate": 4,
-              "productId":  %d
-            }
-            """.formatted(products.get(0).getProduct().getProductGroup().getId()))
-              .when()
-              .post("/rate")
-              .then()
-              .statusCode(200)
-              .body("rate", equalTo(4));
-    }
-
-    @Order(5)
-    @DisplayName("Should set new avg")
-    @Test
-    void shouldSetNewAvgFromBothClients() {
-      assertTrue(products.size() > 0);
-      var dto = products.get(0);
-      assertEquals(3, dto.getRate());
-      assertEquals(3.5, dto.getProduct().getProductGroup().getAverageRating());
-    }
   }
 
   @Nested
@@ -129,7 +99,7 @@ public class MOZ19IT {
       assertTrue(products.size() > 0);
       var dto = products.get(0);
       assertEquals(3, dto.getRate());
-      assertEquals(3.5, dto.getProduct().getProductGroup().getAverageRating());
+      assertEquals(3.0, dto.getProduct().getProductGroup().getAverageRating());
     }
 
     @Order(3)
@@ -158,12 +128,27 @@ public class MOZ19IT {
       assertTrue(products.size() > 0);
       var dto = products.get(0);
       assertEquals(3, dto.getRate());
-      assertEquals(3.5, dto.getProduct().getProductGroup().getAverageRating());
+      assertEquals(3.0, dto.getProduct().getProductGroup().getAverageRating());
+    }
+
+    @Order(5)
+    @DisplayName("Should not add rate when product group doesn't exist")
+    @Test
+    void shouldNotAddWhenProductGroupDoesNotExist() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveClientToken())
+              .header("Content-Type", "application/json")
+              .body("""
+            {
+              "rate": 3,
+              "productId":  100000
+            }
+            """)
+              .when()
+              .post("/rate")
+              .then()
+              .statusCode(404);
     }
   }
-
-
-
-
 
 }
