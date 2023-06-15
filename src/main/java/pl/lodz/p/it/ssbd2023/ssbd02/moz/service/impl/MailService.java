@@ -42,7 +42,8 @@ public class MailService extends AbstractService implements MailServiceOperation
               + "\n" + orderedProducts
               + "\n" + MessageUtil.getMessage(locale, MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE2)
               + " " + MessageUtil.getMessage(locale, orderOldState) + " " + MessageUtil.getMessage(locale,
-              MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE3) + " " + MessageUtil.getMessage(locale, orderNewState) + "."
+              MessageUtil.MessageKey.EMAIL_ORDER_STATE_CHANGE_MESSAGE3) + " "
+                  + MessageUtil.getMessage(locale, orderNewState) + "."
       );
     } catch (MessagingException e) {
       throw ApplicationExceptionFactory.createMailServiceException(e);

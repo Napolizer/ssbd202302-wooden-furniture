@@ -7,5 +7,6 @@ import jakarta.mail.MessagingException;
 public interface MailServiceOperations {
   void sendEmailAboutOrderStateChange(String to, String locale, String orderProducts, String orderOldState,
                                       String orderNewState);
+
   void sendEmail(String to, String subject, String message) throws MessagingException;
 }

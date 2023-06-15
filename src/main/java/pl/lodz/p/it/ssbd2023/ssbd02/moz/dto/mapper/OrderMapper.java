@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.AddressMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDetailedDto;
@@ -120,5 +121,15 @@ public class OrderMapper {
     } catch (Exception e) {
       throw ApplicationExceptionFactory.createInvalidDateException();
     }
+  }
+
+  public static OrderStatsDto mapObjectToOrderStatsDto(Object[] objects) {
+    return OrderStatsDto.builder()
+        .productGroupName(objects[0].toString())
+        .avarageRating(Double.valueOf(objects[1].toString()))
+        .amount(Integer.valueOf(objects[2].toString()))
+        .soldAmount(Integer.valueOf(objects[3].toString()))
+        .avarageRating(Double.valueOf(objects[4].toString()))
+        .build();
   }
 }

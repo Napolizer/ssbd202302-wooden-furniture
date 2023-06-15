@@ -431,6 +431,15 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
+  @RolesAllowed(SALES_REP)
+  public List<Object[]> findOrderStats(LocalDateTime startDate, LocalDateTime endDate) {
+    if (startDate.isAfter(endDate)) {
+      throw ApplicationExceptionFactory.createInvalidDateException();
+    }
+    return orderFacade.findOrderStatsForReport(startDate, endDate);
+  }
+
+  @Override
   public List<Order> findWithFilters(Double orderPrice, Integer orderSize, boolean isCompany) {
     throw new UnsupportedOperationException();
   }

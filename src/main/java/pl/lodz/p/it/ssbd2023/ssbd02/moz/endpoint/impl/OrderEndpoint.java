@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CancelOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
@@ -169,6 +170,17 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
             OrderMapper.mapToLocalDateTime(endDate),
             locale
     ));
+  }
+
+  @Override
+  @RolesAllowed(SALES_REP)
+  public List<OrderStatsDto> findOrderStats(String startDate, String endDate) {
+    return repeatTransactionWithOptimistic(() -> orderService.findOrderStats(
+        OrderMapper.mapToLocalDateTime(startDate),
+        OrderMapper.mapToLocalDateTime(endDate)))
+        .stream()
+        .map(OrderMapper::mapObjectToOrderStatsDto)
+        .toList();
   }
 
   @Override
