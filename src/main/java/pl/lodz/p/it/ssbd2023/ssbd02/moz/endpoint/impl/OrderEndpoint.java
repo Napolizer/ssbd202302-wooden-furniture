@@ -102,6 +102,13 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   }
 
   @Override
+  @RolesAllowed(CLIENT)
+  public OrderWithProductsDto findAsClient(String login, Long id) {
+    Order order = repeatTransactionWithOptimistic(() -> orderService.findAsClient(login, id));
+    return orderMapper.mapToOrderWithProductsDto(order);
+  }
+
+  @Override
   @RolesAllowed(EMPLOYEE)
   public List<OrderDetailsDto> findAll() {
     return repeatTransactionWithOptimistic(() -> orderService.findAll())
@@ -202,6 +209,7 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
             .map(orderMapper::mapToOrderDetailsDto)
             .toList();
   }
+
 
   @Override
   protected boolean isLastTransactionRollback() {

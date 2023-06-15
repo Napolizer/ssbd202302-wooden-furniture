@@ -202,6 +202,19 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   }
 
   @Override
+  @RolesAllowed(CLIENT)
+  public Order findAsClient(String login, Long id) {
+    Order order = orderFacade.find(id)
+            .orElseThrow(ApplicationExceptionFactory::createOrderNotFoundException);
+
+    if (!order.getAccount().getLogin().equals(login)) {
+      throw ApplicationExceptionFactory.createOrderNotFoundException();
+    }
+    return order;
+
+  }
+
+  @Override
   @RolesAllowed(EMPLOYEE)
   public List<Order> findAll() {
     return orderFacade.findAll();
@@ -450,4 +463,5 @@ public class OrderService extends AbstractService implements OrderServiceOperati
   public List<Order> findAllOrdersDone() {
     return orderFacade.findByState(DELIVERED);
   }
+
 }

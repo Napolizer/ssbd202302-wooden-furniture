@@ -30,6 +30,7 @@ import {ClientRatesPageComponent} from "./pages/client-rates-page/client-rates-p
 import {ViewCartPageComponent} from "./pages/view-cart-page/view-cart-page.component";
 import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-page.component';
 import {OrderPageComponent} from "./pages/order-page/order-page.component";
+import {ClientOrderPageComponent} from "./pages/client-order-page/client-order-page.component";
 
 const routes: Routes = [
   {
@@ -238,6 +239,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.EMPLOYEE]
+    }
+  },
+  {
+    path: 'client/orders/:id',
+    component: ClientOrderPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.CLIENT]
     }
   },
   // IMPORTANT: this route must be the last one

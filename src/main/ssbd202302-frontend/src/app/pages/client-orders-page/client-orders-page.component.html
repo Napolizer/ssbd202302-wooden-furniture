@@ -40,7 +40,7 @@
                 <ng-container matColumnDef="show">
                   <mat-header-cell class="justify-content-center" *matHeaderCellDef>{{'order.show' | translate}}</mat-header-cell>
                   <mat-cell class="justify-content-center" *matCellDef="let order">
-                    <mat-icon class="show" (click)="showOrder()">remove_red_eye</mat-icon>
+                    <mat-icon class="show" (click)="showOrder(order.id)">remove_red_eye</mat-icon>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="observe">

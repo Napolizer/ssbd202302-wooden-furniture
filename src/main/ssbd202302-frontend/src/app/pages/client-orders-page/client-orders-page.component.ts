@@ -104,8 +104,8 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
     return this.loading || this.listLoading;
   }
 
-  showOrder(): void {
-
+  showOrder(orderId: number): void {
+    this.navigationService.redirectToClientOrderPage(orderId);
   }
 
   observeOrder(order: ClientOrder): void {
@@ -152,7 +152,8 @@ export class ClientOrdersPageComponent implements OnInit, OnDestroy {
   }
 
   canObserve(order: any): boolean {
-    return (order.orderState == 'CREATED' || order.orderState == 'IN_DELIVERY') && !order.observed;
+    return (order.orderState == 'CREATED' || order.orderState == 'COMPLETED' || order.orderState == 'IN_DELIVERY')
+      && !order.observed;
   }
 
   canCancel(order: ClientOrder): boolean {

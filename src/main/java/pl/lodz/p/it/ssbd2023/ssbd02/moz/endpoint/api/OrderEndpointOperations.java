@@ -48,4 +48,6 @@ public interface OrderEndpointOperations {
   List<OrderDetailsDto> findWithFilters(Double minPrice, Double maxPrice, Integer totalAmount, boolean isCompany);
 
   List<OrderDetailsDto> findAllOrdersDone();
+
+  OrderWithProductsDto findAsClient(String name, Long id);
 }

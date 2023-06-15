@@ -91,6 +91,14 @@ public class OrderController {
   }
 
   @GET
+  @Path("/id/{id}/client")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(CLIENT)
+  public Response findAsClient(@PathParam("id") Long id) {
+    return Response.ok(orderEndpoint.findAsClient(principal.getName(), id)).build();
+  }
+
+  @GET
   @RolesAllowed(EMPLOYEE)
   public Response findAll() {
     return Response.ok(orderEndpoint.findAll()).build();

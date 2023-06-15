@@ -87,6 +87,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import { EditProductGroupNameComponent } from './components/edit-product-group-name/edit-product-group-name.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import {MatSliderModule} from '@angular/material/slider';
+import { ClientOrderPageComponent } from './pages/client-order-page/client-order-page.component';
 
 @NgModule({
   declarations: [
@@ -142,6 +143,7 @@ import {MatSliderModule} from '@angular/material/slider';
     DoneOrdersPageComponent,
     EditProductGroupNameComponent,
     OrderPageComponent,
+    ClientOrderPageComponent,
   ],
   imports: [
     BrowserModule,

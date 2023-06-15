@@ -139,6 +139,17 @@ export class OrderService {
     );
   }
 
+  public getOrderAsClient(orderId: number): Observable<OrderWithProductsDto> {
+    return this.httpClient.get<OrderWithProductsDto>(
+      `${environment.apiBaseUrl}/order/id/${orderId}/client`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`,
+        }
+      }
+    );
+  }
+
   public getDoneFilterOrders(minPrice: number, maxPrice: number, amount: number): Observable<OrderDetailsDto[]> {
     return this.httpClient.get<OrderDetailsDto[]>(
       `${environment.apiBaseUrl}/order/filters?minPrice=${minPrice}&maxPrice=${maxPrice}&amount=${amount}`,
@@ -149,4 +160,6 @@ export class OrderService {
       }
     );
   }
+
+
 }
