@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {combineLatest, first, map, Subject, takeUntil, tap, timer,} from "rxjs";
+import {Subject, takeUntil, tap} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {OrderStats} from "../../interfaces/order.stats";
 import {OrderService} from "../../services/order.service";
@@ -9,6 +9,8 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {TranslateService} from "@ngx-translate/core";
 import {DatePipe} from "@angular/common";
+import {HttpErrorResponse} from "@angular/common/http";
+import {AlertService} from "@full-fledged/alerts";
 
 @Component({
   selector: 'app-order-stats-page',
@@ -50,6 +52,7 @@ export class OrderStatsPageComponent implements OnInit {
     private orderService: OrderService,
     private translate: TranslateService,
     private datePipe: DatePipe,
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
@@ -129,5 +132,56 @@ export class OrderStatsPageComponent implements OnInit {
 
   compare(a: string | number | boolean, b: string | number | boolean, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  openGenerateReportDialog(): void {
+    this.orderService.generateSalesReport(this.datePipe
+        .transform(
+          new Date(this.route.snapshot.paramMap.get('from')!),
+          'MM/dd/yyyy'
+        )?.toString() as string,
+      this.datePipe
+        .transform(
+          new Date(this.route.snapshot.paramMap.get('to')!),
+          'MM/dd/yyyy'
+        )?.toString() as string,
+        this.translate.currentLang)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (response: Blob) => this.handleGenerateReportSuccess(response),
+        error: (e: HttpErrorResponse) => this.handleGenerateReportError(e),
+      });
+  }
+
+  handleGenerateReportSuccess(response: Blob): void {
+    const startDate = this.datePipe
+      .transform(new Date(this.route.snapshot.paramMap.get('from')!), 'MM_dd_yyyy')
+      ?.toString();
+    const endDate = this.datePipe
+      .transform(new Date(this.route.snapshot.paramMap.get('to')!), 'MM_dd_yyyy')
+      ?.toString();
+    const url = window.URL.createObjectURL(response);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'sales_report_' + startDate + '_to_' + endDate + '.xlsx';
+    link.click();
+    this.translate
+      .get('generate.report.success' || 'exception.unknown')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        this.alertService.success(msg);
+        this.loading = false;
+      });
+  }
+
+  handleGenerateReportError(e: HttpErrorResponse): void {
+    const message = e.error.message as string;
+    this.translate
+      .get(message || 'exception.unknown')
+      .pipe(takeUntil(this.destroy))
+      .subscribe((msg) => {
+        this.alertService.danger(msg);
+        this.loading = false;
+      });
   }
 }

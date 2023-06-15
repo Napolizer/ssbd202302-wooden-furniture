@@ -80,6 +80,11 @@
               >
               </mat-paginator>
             </div>
+            <mat-card class="card">
+              <button button="submit" mat-stroked-button color="primary" (click)="openGenerateReportDialog()">
+                <mat-icon style="margin-bottom: 3px;">insert_chart</mat-icon> {{'generate.report.title' | translate}}
+              </button>
+            </mat-card>
           </mat-card-content>
         </mat-card>
       </div>

@@ -127,10 +127,6 @@ export class DoneOrdersPageComponent implements OnInit, OnDestroy {
     return total;
   }
 
-  openGenerateReportDialog(): void {
-    this.dialogService.openGenerateReportDialog();
-  }
-
   openDisplayStatsDialog(): void {
     this.dialogService.openDisplayStatsDialog();
   }
