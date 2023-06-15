@@ -29,7 +29,7 @@ public class ProductMapper {
               .packageDimensions(product.getPackageDimensions())
               .color(product.getColor())
               .woodType(product.getWoodType())
-              .productGroup(ProductGroupMapper.mapToProductGroupInfoDto(product.getProductGroup()))
+              .productGroup(ProductGroupMapper.mapToProductGroupInfoWithoutHashDto(product.getProductGroup()))
               .build();
   }
 
@@ -47,7 +47,7 @@ public class ProductMapper {
             .color(product.getColor())
             .woodType(product.getWoodType())
             .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
-            .productGroup(ProductGroupMapper.mapToProductGroupInfoDto(product.getProductGroup()))
+            .productGroup(ProductGroupMapper.mapToProductGroupInfoWithoutHashDto(product.getProductGroup()))
             .build();
   }
 
