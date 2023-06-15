@@ -22,7 +22,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.web.InitData.getAllClientProducts;
 public class MOZ19IT {
 
   private final List<OrderProductWithRateDto> products = getAllClientProducts();
-  private static int counter = 0;
 
   @Nested
   @Order(1)
