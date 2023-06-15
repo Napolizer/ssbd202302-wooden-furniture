@@ -57,6 +57,9 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   public Product createProductWithNewImage(Product product, byte[] image, Long productGroupId, String fileName) {
     ProductGroup productGroup = productGroupFacade.findById(productGroupId)
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
+    if (productGroup.getArchive()) {
+      throw ApplicationExceptionFactory.createProductGroupIsArchiveException();
+    }
     product.setProductGroup(productGroup);
     Product entity = productFacade.create(product);
     entity.getImage().setUrl(googleService.saveImageInStorage(image, fileName));
@@ -70,6 +73,9 @@ public class ProductService extends AbstractService implements ProductServiceOpe
             .orElseThrow(ApplicationExceptionFactory::createProductGroupNotFoundException);
     Product productWithImage = productFacade.findById(imageProductId)
             .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
+    if (productGroup.getArchive()) {
+      throw ApplicationExceptionFactory.createProductGroupIsArchiveException();
+    }
 
     if (!(productGroup.getId().equals(productWithImage.getProductGroup().getId())
             && product.getColor().equals(productWithImage.getColor())

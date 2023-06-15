@@ -384,5 +384,57 @@ public class MOZ5IT {
 							.statusCode(404)
 							.body("message", equalTo(MessageUtil.MessageKey.PRODUCT_NOT_FOUND));
 		}
+
+		@Test
+		@Order(13)
+		@DisplayName("Should fail to add product with archived product group")
+		void shouldFailToAddProductWithArchivedProductGroup() {
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.put("/product/group/archive/id/50")
+							.then()
+							.statusCode(200);
+
+			ProductCreateWithImageDto productCreateDto = InitData.getProductToCreate();
+			productCreateDto.setProductGroupId(50L);
+			File file = new File(System.getProperty("user.dir") + "/src/test/resources/uploads/image.jpg");
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.multiPart("image", file)
+							.multiPart("product", InitData.mapToJsonString(productCreateDto))
+							.when()
+							.post("/product/new-image")
+							.then()
+							.statusCode(400)
+							.body("message", equalTo(MessageUtil.MessageKey.PRODUCT_GROUP_IS_ARCHIVE));
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(productCreateDto))
+							.when()
+							.post("/product/existing-image")
+							.then()
+							.statusCode(400)
+							.body("message", equalTo(MessageUtil.MessageKey.PRODUCT_GROUP_IS_ARCHIVE));
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(productCreateDto))
+							.when()
+							.post("/product/existing-image")
+							.then()
+							.statusCode(400)
+							.body("message", equalTo(MessageUtil.MessageKey.PRODUCT_GROUP_IS_ARCHIVE));
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.put("/product/group/activate/id/50")
+							.then()
+							.statusCode(200);
+		}
 	}
 }
