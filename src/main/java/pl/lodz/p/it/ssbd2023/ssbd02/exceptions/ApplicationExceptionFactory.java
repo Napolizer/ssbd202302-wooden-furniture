@@ -43,7 +43,9 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductCreatedByException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyActivatedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupIsArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupNotFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductIsArchiveException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductNotFoundException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductUpdatedByException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.RateNotFoundException;
@@ -366,5 +368,13 @@ public final class ApplicationExceptionFactory {
 
   public static ProductCreatedByException createProductCreatedByException() {
     return new ProductCreatedByException();
+  }
+
+  public static ProductIsArchiveException createProductIsArchiveException() {
+    return new ProductIsArchiveException();
+  }
+
+  public static ProductGroupIsArchiveException createProductGroupIsArchiveException() {
+    return new ProductGroupIsArchiveException();
   }
 }

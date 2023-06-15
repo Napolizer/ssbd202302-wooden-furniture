@@ -123,6 +123,8 @@ public class MessageUtil {
     public static final String PRODUCT_GROUP_ALREADY_ACTIVATED = "exception.moz.product.group.already.activated";
     public static final String PRODUCT_ALREADY_EXITS = "exception.moz.product.dimensions.already.exists";
     public static final String PRODUCT_NOT_FOUND = "exception.moz.product.not.found";
+    public static final String PRODUCT_IS_ARCHIVE = "exception.moz.product.is.archive";
+    public static final String PRODUCT_GROUP_IS_ARCHIVE = "exception.moz.product.group.is.archive";
     public static final String PRODUCT_GROUP_NOT_FOUND = "exception.moz.product.group.not.found";
     public static final String ORDER_ALREADY_EXITS = "exception.moz.order.already.exists";
     public static final String PRODUCT_CREATE_DTO_VALIDATION = "exception.moz.product.create.dto.validation";

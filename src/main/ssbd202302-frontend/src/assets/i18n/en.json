@@ -311,6 +311,7 @@
   "exception.moz.product.not.found": "Product not found",
   "exception.moz.product.change.state.archive": "Product is already archived",
   "exception.moz.product.change.state.dearchive": "Product is already dearchived",
+  "exception.moz.product.is.archive": "One or more products are unavailable",
   "exception.moz.invalid.order.state.transition": "Invalid order state transition",
   "exception.moz.order.not.found": "Order not found",
   "exception.moz.order.already.in.delivery": "Order is already in delivery",
@@ -319,6 +320,7 @@
   "exception.moz.rate.notfound": "Rate not found",
   "exception.moz.invalid.date": "Invalid date",
   "exception.moz.product.group.already.archived": "Product group is already archived",
+  "exception.moz.product.group.is.archive": "One or more product groups are unavailable",
   "exception.moz.product.group.already.activated": "Product group is already activated",
 
 
@@ -434,6 +436,8 @@
   "product.withdrawn": "The product has been withdrawn from sale",
   "product.name": "Model",
   "product.id": "Product ID",
+  "product.is.available": "Product is available",
+  "product.is.unavailable": "Product is unavailable",
 
   "product.wood.type.birch": "Birch",
   "product.wood.type.oak": "Oak",
