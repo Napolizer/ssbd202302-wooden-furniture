@@ -186,7 +186,7 @@ export class EmployeePageComponent implements OnInit {
     });
   }
 
-  openArchiveProductGroupDialog() : void {
+  openArchiveProductGroupDialog(): void {
     this.dialogService.openArchiveProductGroupDialog()
       .afterClosed()
       .pipe(first(), takeUntil(this.destroy))
@@ -195,6 +195,17 @@ export class EmployeePageComponent implements OnInit {
 
         }
       })
+  }
+
+  openActivateProductGroupDialog(): void {
+    this.dialogService.openActivateProductGroupDialog()
+      .afterClosed()
+      .pipe(first(), takeUntil(this.destroy))
+      .subscribe((result) => {
+        if (result === 'success') {
+
+        }
+      });
   }
 
   openEditProductGroupNameDialog(): void {

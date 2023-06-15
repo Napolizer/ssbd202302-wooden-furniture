@@ -40,6 +40,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ParentCategoryNotAllowedExcep
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductAlreadyRatedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductCreatedByException;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyActivatedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyArchivedException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupAlreadyExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.moz.ProductGroupIsArchiveException;
@@ -329,6 +330,10 @@ public final class ApplicationExceptionFactory {
 
   public static ProductGroupAlreadyArchivedException createProductGroupAlreadyArchivedException() {
     return new ProductGroupAlreadyArchivedException();
+  }
+
+  public static ProductGroupAlreadyActivatedException createProductGroupAlreadyActivatedException() {
+    return new ProductGroupAlreadyActivatedException();
   }
 
   public static ProductAlreadyRatedException createProductAlreadyRatedException() {

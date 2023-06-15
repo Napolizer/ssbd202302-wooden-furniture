@@ -20,6 +20,7 @@ import {ChangeOrderStateComponent} from "../components/change-order-state/change
 import { GenerateReportComponent } from '../components/generate-report/generate-report.component';
 import {EditProductGroupNameComponent} from "../components/edit-product-group-name/edit-product-group-name.component";
 import {DisplayStatsComponent} from "../components/display-stats/display-stats.component";
+import {ActivateProductGroupComponent} from "../components/activate-product-group/activate-product-group.component";
 
 @Injectable({
   providedIn: 'root'
@@ -154,6 +155,14 @@ export class DialogService {
 
   openArchiveProductGroupDialog(): MatDialogRef<ArchiveProductGroupComponent> {
     return this.matDialog.open(ArchiveProductGroupComponent, {
+      disableClose: true,
+      width: '700px',
+      height: '300px',
+    });
+  }
+
+  openActivateProductGroupDialog(): MatDialogRef<ActivateProductGroupComponent> {
+    return this.matDialog.open(ActivateProductGroupComponent, {
       disableClose: true,
       width: '700px',
       height: '300px',
