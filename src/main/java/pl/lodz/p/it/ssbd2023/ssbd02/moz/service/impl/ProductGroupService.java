@@ -21,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Rate;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.CategoryName;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.facade.api.AccountFacadeOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.AccountMozFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.RateFacadeOperations;
@@ -46,7 +47,7 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   private RateFacadeOperations rateFacade;
 
   @Inject
-  private AccountFacadeOperations accountFacade;
+  private AccountMozFacadeOperations accountFacade;
 
   @Inject
   private CategoryFacadeOperations categoryFacade;
