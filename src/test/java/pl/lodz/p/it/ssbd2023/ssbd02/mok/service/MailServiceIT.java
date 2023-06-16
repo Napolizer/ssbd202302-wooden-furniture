@@ -37,6 +37,7 @@ public class MailServiceIT {
         .addPackages(true, "org.apache")
         .addPackages(true, "com.google.cloud")
         .addPackages(true, "com.google.auth")
+        .addPackages(true, "jakarta.mail")
         .addAsResource(new File("src/test/resources/"), "");
   }
 

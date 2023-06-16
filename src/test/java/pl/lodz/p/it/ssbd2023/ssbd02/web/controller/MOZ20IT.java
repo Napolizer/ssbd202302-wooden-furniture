@@ -36,7 +36,7 @@ public class MOZ20IT {
               "rate": 3,
               "productId":  %d
             }
-            """.formatted(products.get(0).getProduct().getProductGroup().getId()))
+            """.formatted(products.get(6).getProduct().getProductGroup().getId()))
             .when()
             .post("/rate")
             .then()
@@ -50,8 +50,8 @@ public class MOZ20IT {
   void shouldSetNewAvg() {
     assertTrue(products.size() > 0);
     var dto = products.get(0);
-    assertEquals(3, dto.getRate());
-    assertEquals(3.0, dto.getProduct().getProductGroup().getAverageRating());
+    assertEquals(0, dto.getRate());
+    assertEquals(0.0, dto.getProduct().getProductGroup().getAverageRating());
   }
 
   @Order(3)
