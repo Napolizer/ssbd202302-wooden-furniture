@@ -19,7 +19,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.web.InitData.getAllClientProducts;
 @SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOZ.20 - Remove rate")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MOZ20IT {
+class MOZ20IT {
 
   private final List<OrderProductWithRateDto> products = getAllClientProducts();
 
@@ -29,6 +29,11 @@ public class MOZ20IT {
   @Test
   void shouldAddValidRate() {
     given()
+        .header("Authorization", "Bearer " + InitData.retrieveClientToken())
+        .when()
+        .delete("/rate/id/" + products.get(1).getProduct().getProductGroup().getId());
+
+    given()
             .header("Authorization", "Bearer " + InitData.retrieveClientToken())
             .header("Content-Type", "application/json")
             .body("""
@@ -36,7 +41,7 @@ public class MOZ20IT {
               "rate": 3,
               "productId":  %d
             }
-            """.formatted(products.get(6).getProduct().getProductGroup().getId()))
+            """.formatted(products.get(1).getProduct().getProductGroup().getId()))
             .when()
             .post("/rate")
             .then()
@@ -49,9 +54,9 @@ public class MOZ20IT {
   @Test
   void shouldSetNewAvg() {
     assertTrue(products.size() > 0);
-    var dto = products.get(0);
-    assertEquals(0, dto.getRate());
-    assertEquals(0.0, dto.getProduct().getProductGroup().getAverageRating());
+    var dto = products.get(1);
+    assertEquals(3, dto.getRate());
+    assertEquals(3.5, dto.getProduct().getProductGroup().getAverageRating());
   }
 
   @Order(3)
