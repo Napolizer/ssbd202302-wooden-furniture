@@ -14,7 +14,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {AlertModule} from '@full-fledged/alerts';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import {MatListModule} from "@angular/material/list";
@@ -91,6 +91,9 @@ import { ClientOrderPageComponent } from './pages/client-order-page/client-order
 import { DisplayStatsComponent } from './components/display-stats/display-stats.component';
 import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-page.component';
 import { ActivateProductGroupComponent } from './components/activate-product-group/activate-product-group.component';
+import {RedirectInterceptorService} from "./services/redirect-interceptor.service";
+import { ServerErrorPageComponent } from './pages/server-error-page/server-error-page.component';
+import { UnauthorizedPageComponent } from './pages/unauthorized-page/unauthorized-page.component';
 
 @NgModule({
   declarations: [
@@ -150,6 +153,8 @@ import { ActivateProductGroupComponent } from './components/activate-product-gro
     DisplayStatsComponent,
     OrderStatsPageComponent,
     ActivateProductGroupComponent,
+    ServerErrorPageComponent,
+    UnauthorizedPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -200,7 +205,12 @@ import { ActivateProductGroupComponent } from './components/activate-product-gro
   ],
   providers: [
     DatePipe,
-    ThemeSwitcherComponentComponent
+    ThemeSwitcherComponentComponent,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RedirectInterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

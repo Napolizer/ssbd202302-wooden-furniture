@@ -347,6 +347,10 @@
   "notfound.description": "Strona którą próbujesz odwiedzić nie istnieje...",
   "notfound.button": "Wróć",
   "notfound.oops": "Ups!",
+  "gone.wrong.title": "Coś poszło źle",
+  "gone.wrong.description": "Serwer padł. Przepraszamy za niedogodności, zapraszamy później",
+  "unauthorized.title": "Nie jesteś uwierzytelniony",
+  "unauthorized.description": "Proszę zaloguj się",
 
   "false": "nie",
   "true": "tak",
