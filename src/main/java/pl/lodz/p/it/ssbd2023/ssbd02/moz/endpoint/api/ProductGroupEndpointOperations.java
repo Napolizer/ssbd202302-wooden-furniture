@@ -21,8 +21,4 @@ public interface ProductGroupEndpointOperations {
   ProductGroupInfoDto find(Long id);
 
   List<ProductGroupInfoWithoutHashDto> findAll();
-
-  List<ProductGroupInfoDto> findAllPresent();
-
-  List<ProductGroupInfoDto> findAllArchived();
 }

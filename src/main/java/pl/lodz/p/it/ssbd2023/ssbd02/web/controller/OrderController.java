@@ -31,8 +31,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ObserveOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.TimePeriodDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 
 @Path("/order")
@@ -43,12 +41,6 @@ public class OrderController {
 
   @Inject
   private Principal principal;
-
-  @GET
-  @Path("/account/login/{login}")
-  public Response findByAccountLogin(@PathParam("login") String login) {
-    throw new UnsupportedOperationException();
-  }
 
   @GET
   @Path("/state/{state}")
@@ -68,19 +60,6 @@ public class OrderController {
     return Response.status(Response.Status.CREATED)
         .entity(orderEndpoint.create(createOrderDto, login)).build();
   }
-
-  @PUT
-  @Path("/archive/{id}")
-  public Response archive(@PathParam("id") Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @PUT
-  @Path("/id/{id}")
-  public Response update(@PathParam("id") Long id, UpdateOrderDto entity) {
-    throw new UnsupportedOperationException();
-  }
-
 
   @GET
   @Path("/id/{id}")

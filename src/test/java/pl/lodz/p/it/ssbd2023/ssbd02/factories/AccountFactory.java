@@ -7,10 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Administrator;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Client;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Employee;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.SalesRep;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
@@ -21,18 +18,6 @@ public class AccountFactory {
   private EntityManager em;
   @Inject
   private PersonFactory personFactory;
-
-  public Account createAdmin(String login) throws Exception {
-    return create(login, List.of(new Administrator()));
-  }
-
-  public Account createEmployee(String login) throws Exception {
-    return create(login, List.of(new Employee()));
-  }
-
-  public Account createSalesRep(String login) throws Exception {
-    return create(login, List.of(new SalesRep()));
-  }
 
   public Account createClient(String login) throws Exception {
     return create(login, List.of(new Client()));

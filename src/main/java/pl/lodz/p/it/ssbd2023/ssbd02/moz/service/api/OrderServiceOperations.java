@@ -19,10 +19,6 @@ public interface OrderServiceOperations {
 
   Order createWithGivenShippingData(Order entity, String login, Map<Long, Integer> orderedProductsMap);
 
-  Order archive(Long id);
-
-  Order update(Long id, Order entity);
-
   Optional<Order> find(Long id);
 
   List<Order> findAll();

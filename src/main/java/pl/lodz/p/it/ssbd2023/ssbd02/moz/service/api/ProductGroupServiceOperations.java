@@ -24,10 +24,6 @@ public interface ProductGroupServiceOperations {
 
   List<ProductGroup> findAll();
 
-  List<ProductGroup> findAllPresent();
-
-  List<ProductGroup> findAllArchived();
-
   Rate rateProductGroup(String login, Integer rateValue, Long productGroupId);
 
   Rate changeRateOnProductGroup(String login, Integer rateValue, Long productGroupId);

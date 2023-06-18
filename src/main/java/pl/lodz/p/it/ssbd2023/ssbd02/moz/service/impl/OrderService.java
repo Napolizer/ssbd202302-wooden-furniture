@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -190,16 +189,6 @@ public class OrderService extends AbstractService implements OrderServiceOperati
     order.setOrderedProducts(orderedProducts);
     order.setOrderState(OrderState.CREATED);
     return orderFacade.create(order);
-  }
-
-  @Override
-  public Order archive(Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Order update(Long id, Order entity) {
-    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -40,18 +40,4 @@ public class RateFacade extends AbstractFacade<Rate> implements RateFacadeOperat
     em.remove(em.merge(rate));
     em.flush();
   }
-
-  @Override
-  public List<Rate> findAllByValue(Integer value) {
-    return em.createNamedQuery(Rate.FIND_ALL_BY_VALUE, Rate.class)
-        .setParameter("value", value)
-        .getResultList();
-  }
-
-  @Override
-  public List<Rate> findAllByPersonId(Long personId) {
-    return em.createNamedQuery(Rate.FIND_ALL_BY_PERSON_ID, Rate.class)
-        .setParameter("personId", personId)
-        .getResultList();
-  }
 }

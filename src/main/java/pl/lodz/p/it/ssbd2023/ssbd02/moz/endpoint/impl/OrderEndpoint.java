@@ -24,7 +24,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.OrderEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.OrderServiceOperations;
@@ -81,16 +80,6 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
           () -> orderService.createWithGivenShippingData(order, login, orderedProductsMap));
     }
     return orderMapper.mapToOrderDto(created);
-  }
-
-  @Override
-  public OrderDto archive(Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public OrderDto update(Long id, UpdateOrderDto entity) {
-    throw new UnsupportedOperationException();
   }
 
   @Override

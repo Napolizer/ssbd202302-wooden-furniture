@@ -10,6 +10,4 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class RateService extends AbstractService implements RateServiceOperations {
 
-
-
 }
