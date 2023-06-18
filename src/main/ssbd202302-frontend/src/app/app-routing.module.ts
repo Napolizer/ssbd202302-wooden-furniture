@@ -32,6 +32,8 @@ import { DoneOrdersPageComponent } from './pages/done-orders-page/done-orders-pa
 import {OrderPageComponent} from "./pages/order-page/order-page.component";
 import {ClientOrderPageComponent} from "./pages/client-order-page/client-order-page.component";
 import {OrderStatsPageComponent} from "./pages/order-stats-page/order-stats-page.component";
+import {ServerErrorPageComponent} from "./pages/server-error-page/server-error-page.component";
+import {UnauthorizedPageComponent} from "./pages/unauthorized-page/unauthorized-page.component";
 
 const routes: Routes = [
   {
@@ -185,6 +187,14 @@ const routes: Routes = [
   {
     path: 'not-found',
     component: NotFoundPageComponent
+  },
+  {
+    path: 'server-error',
+    component: ServerErrorPageComponent
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedPageComponent
   },
   {
     path:'account-role-add/:id',

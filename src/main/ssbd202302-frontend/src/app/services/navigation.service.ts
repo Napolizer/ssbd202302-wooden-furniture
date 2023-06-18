@@ -58,6 +58,14 @@ export class NavigationService {
     return this.router.navigate(['/not-found']);
   }
 
+  public redirectToServerErrorPage(): Promise<boolean> {
+    return this.router.navigate(['/server-error']);
+  }
+
+  public redirectToUnauthorizedPage(): Promise<boolean> {
+    return this.router.navigate(['/unauthorized']);
+  }
+
   public redirectToForbiddenPage(): Promise<boolean> {
     return this.router.navigate(['/forbidden']);
   }

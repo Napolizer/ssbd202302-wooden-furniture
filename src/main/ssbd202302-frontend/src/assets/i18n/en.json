@@ -350,6 +350,10 @@
   "notfound.description": "Page you are trying to access does not exist...",
   "notfound.button": "Home",
   "notfound.oops": "Oops!",
+  "gone.wrong.title": "Something gone wrong",
+  "gone.wrong.description": "Server is down. We are sorry for the inconvenience, come back later",
+  "unauthorized.title": "You are unauthorized",
+  "unauthorized.description": "Please authenticate first",
 
   "false": "no",
   "true": "yes",
