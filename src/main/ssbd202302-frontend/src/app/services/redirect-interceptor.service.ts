@@ -26,7 +26,7 @@ export class RedirectInterceptorService {
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
+        if (error.status === 401 && !request.url.includes('/login')) {
           // Redirect to your custom page
           this.router.redirectToUnauthorizedPage();
         } else if (error.status === 500) {
