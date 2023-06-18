@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "setup": "bash ./setup.sh",
+    "teardown": "bash ./teardown.sh"
   },
   "private": true,
   "dependencies": {
