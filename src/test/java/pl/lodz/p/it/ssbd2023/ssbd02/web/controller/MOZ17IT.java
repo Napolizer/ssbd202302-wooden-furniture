@@ -8,8 +8,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
 
+import io.restassured.RestAssured;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -19,27 +21,31 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AddressDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.CreateOrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.ShippingDataDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOZ.17 - Make order")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MOZ17IT {
+  @BeforeAll
+  public static void setup() {
+    RestAssured.baseURI = "http://localhost:8080/api/v1";
+  }
   public int productId1;
   public int productId2;
   public int productId3;

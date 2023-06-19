@@ -1,30 +1,33 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import jakarta.ws.rs.core.MediaType;
-import org.junit.jupiter.api.*;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 import static io.restassured.RestAssured.given;
-import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.equalTo;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+import io.restassured.RestAssured;
+import jakarta.ws.rs.core.MediaType;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestInstance;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
+
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOZ.2 - Get product")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MOZ2IT {
+    @BeforeAll
+    public static void setup() {
+        RestAssured.baseURI = "http://localhost:8080/api/v1";
+    }
     public int productId1;
     public int productId2;
     public int productId3;

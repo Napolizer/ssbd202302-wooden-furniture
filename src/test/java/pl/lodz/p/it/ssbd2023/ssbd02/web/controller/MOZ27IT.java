@@ -1,22 +1,32 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
+
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOZ.27 - Generate sales report")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class MOZ27IT {
+	@BeforeAll
+	public static void setup() {
+		RestAssured.baseURI = "http://localhost:8080/api/v1";
+	}
 
 	@Nested
 	@Order(1)

@@ -1,21 +1,32 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+
+import io.restassured.RestAssured;
 import jakarta.ws.rs.core.MediaType;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.equalTo;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOZ.1 - Get product list")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class MOZ1IT {
+    @BeforeAll
+    public static void setup() {
+        RestAssured.baseURI = "http://localhost:8080/api/v1";
+    }
     @Nested
     @Order(1)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

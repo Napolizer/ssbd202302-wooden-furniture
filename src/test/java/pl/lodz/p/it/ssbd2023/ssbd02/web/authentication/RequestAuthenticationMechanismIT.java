@@ -5,16 +5,20 @@ import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
+import io.restassured.RestAssured;
 import jakarta.ws.rs.core.HttpHeaders;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 public class RequestAuthenticationMechanismIT {
+  @BeforeAll
+  public static void setup() {
+    RestAssured.baseURI = "http://localhost:8080/api/v1";
+  }
+  @Test
   private String retrieveAdminToken() {
     return given()
         .contentType("application/json")

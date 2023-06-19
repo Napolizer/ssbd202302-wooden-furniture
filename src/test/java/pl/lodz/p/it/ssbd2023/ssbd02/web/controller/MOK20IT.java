@@ -6,8 +6,12 @@ import static jakarta.ws.rs.core.HttpHeaders.IF_MATCH;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.ADMINISTRATOR;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,19 +20,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("MOK.20 - Change email")
 class MOK20IT {
+  @BeforeAll
+  public static void setup() {
+    RestAssured.baseURI = "http://localhost:8080/api/v1";
+  }
 
   @Nested
   @Order(1)

@@ -8,25 +8,28 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CANCELLED;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.COMPLETED;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.IN_DELIVERY;
 
+import io.restassured.RestAssured;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
+//@MicroShedTest
+//@SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOZ.8 - Display orders")
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class MOZ8IT {
+  @BeforeAll
+  public static void setup() {
+    RestAssured.baseURI = "http://localhost:8080/api/v1";
+  }
   @Nested
   @Order(1)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
