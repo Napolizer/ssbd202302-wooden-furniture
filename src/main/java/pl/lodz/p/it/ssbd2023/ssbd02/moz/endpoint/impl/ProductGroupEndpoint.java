@@ -87,16 +87,6 @@ public class ProductGroupEndpoint extends AbstractEndpoint implements ProductGro
   }
 
   @Override
-  public List<ProductGroupInfoDto> findAllPresent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<ProductGroupInfoDto> findAllArchived() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   protected boolean isLastTransactionRollback() {
     return productGroupService.isLastTransactionRollback();
   }

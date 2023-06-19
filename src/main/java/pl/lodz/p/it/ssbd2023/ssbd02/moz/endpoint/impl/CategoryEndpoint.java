@@ -8,8 +8,6 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import java.util.List;
-import java.util.Optional;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.category.CategoryDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.CategoryMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.CategoryEndpointOperations;
@@ -35,26 +33,6 @@ public class CategoryEndpoint extends AbstractEndpoint implements CategoryEndpoi
   public List<CategoryDto> findAllParentCategories() {
     return repeatTransactionWithoutOptimistic(() -> categoryService.findAllParentCategories())
             .stream().map(CategoryMapper::mapToCategoryDto).toList();
-  }
-
-  @Override
-  public Optional<Category> find(Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Category> findAll() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Category> findAllPresent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Category> findAllArchived() {
-    throw new UnsupportedOperationException();
   }
 
   @Override

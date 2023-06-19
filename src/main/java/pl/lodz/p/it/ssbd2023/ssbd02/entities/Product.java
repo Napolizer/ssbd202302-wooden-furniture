@@ -42,14 +42,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
                               "furniture_height",
                               "furniture_depth" }) })
 @NamedQueries({
-    @NamedQuery(name = Product.FIND_ALL_BY_WOOD_TYPE,
-        query = "SELECT product FROM Product product WHERE product.woodType = :woodType"),
-    @NamedQuery(name = Product.FIND_ALL_BY_COLOR,
-        query = "SELECT product FROM Product product WHERE product.color = :color"),
-    @NamedQuery(name = Product.FIND_ALL_AVAILABLE,
-        query = "SELECT product FROM Product product WHERE product.archive = false"),
-    @NamedQuery(name = Product.FIND_ALL_BY_PRICE,
-        query = "SELECT product FROM Product product WHERE product.price BETWEEN :minPrice AND :maxPrice"),
     @NamedQuery(name = Product.FIND_BY_PRODUCT_ID,
         query = "SELECT product FROM Product product WHERE product.id = :id"),
     @NamedQuery(name = Product.FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE,
@@ -62,10 +54,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
         query = "SELECT product FROM Product product WHERE product.productGroup.id = :productGroupId")
 })
 public class Product extends AbstractEntity {
-  public static final String FIND_ALL_BY_WOOD_TYPE = "Product.findAllByWoodType";
-  public static final String FIND_ALL_BY_COLOR = "Product.findAllByColor";
-  public static final String FIND_ALL_AVAILABLE = "Product.findAllAvailable";
-  public static final String FIND_ALL_BY_PRICE = "Product.findAllByPrice";
   public static final String FIND_BY_PRODUCT_ID = "Product.findByProductId";
   public static final String
           FIND_ALL_BY_PRODUCT_GROUP_COLOR_AND_WOOD_TYPE = "Product.findAllByProductGroupColorAndWoodType";

@@ -63,7 +63,7 @@
                     {{"order.stats.product.products.total.income" | translate}}
                   </mat-header-cell>
                   <mat-cell *matCellDef="let orderStats">
-                    {{orderStats.totalIncome}}
+                    {{orderStats.totalIncome | number:'1.2-2'}}
                   </mat-cell>
                 </ng-container>
                 <mat-header-row

@@ -120,16 +120,6 @@ public class ProductGroupService extends AbstractService implements ProductGroup
   }
 
   @Override
-  public List<ProductGroup> findAllPresent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<ProductGroup> findAllArchived() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   @RolesAllowed(CLIENT)
   public Rate rateProductGroup(String login, Integer rateValue, Long productGroupId) {
     Account account = accountFacade.findByLogin(login)
@@ -213,5 +203,4 @@ public class ProductGroupService extends AbstractService implements ProductGroup
     productGroup.setAverageRating(productGroupFacade.getAverageRate(productGroupId));
     productGroupFacade.update(productGroup);
   }
-
 }

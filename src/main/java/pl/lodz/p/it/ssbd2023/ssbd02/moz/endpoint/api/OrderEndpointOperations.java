@@ -9,7 +9,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDetailsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderStatsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderWithProductsDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.UpdateOrderDto;
 
 
 @Local
@@ -20,10 +19,6 @@ public interface OrderEndpointOperations {
   List<OrderDetailsDto> findByState(OrderState orderState);
 
   OrderDto create(CreateOrderDto entity, String login);
-
-  OrderDto archive(Long id);
-
-  OrderDto update(Long id, UpdateOrderDto entity);
 
   OrderWithProductsDto find(Long id);
 

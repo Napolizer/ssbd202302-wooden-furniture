@@ -17,23 +17,9 @@ public interface ProductServiceOperations {
 
   Product archive(Long id);
 
-  Product update(Long id, Product entity);
-
   Optional<Product> find(Long id);
 
   List<Product> findAll();
-
-  List<Product> findAllPresent();
-
-  List<Product> findAllArchived();
-
-  List<Product> findAllByWoodType(WoodType woodType);
-
-  List<Product> findAllByColor(Color color);
-
-  List<Product> findAllAvailable();
-
-  List<Product> findAllByPrice(Double minPrice, Double maxPrice);
 
   List<Product> findAllByProductGroupColorAndWoodType(Long productGroupId, Color color, WoodType woodType);
 

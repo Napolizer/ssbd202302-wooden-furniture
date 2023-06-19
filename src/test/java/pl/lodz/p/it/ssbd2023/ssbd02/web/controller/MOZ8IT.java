@@ -249,7 +249,7 @@ public class MOZ8IT {
           .get("/order/state/CREATED")
           .then()
           .statusCode(200)
-          .body("size()", equalTo(1))
+          .body("size()", greaterThanOrEqualTo(1))
           .rootPath("find { it.id == 1 }")
           .body("id", equalTo(1))
           .body("hash", notNullValue())

@@ -25,7 +25,7 @@ public abstract class AbstractService implements SessionSynchronization {
   }
 
   @Override
-  public void afterBegin() throws EJBException, RemoteException {
+  public void afterBegin() throws EJBException {
     transactionId = Long.toString(System.currentTimeMillis())
             + ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
 
@@ -38,7 +38,7 @@ public abstract class AbstractService implements SessionSynchronization {
   }
 
   @Override
-  public void beforeCompletion() throws EJBException, RemoteException {
+  public void beforeCompletion() throws EJBException {
     LOGGER.log(Level.INFO, "Transaction TXid={0} before commit in {1}, identity: {2}",
             new Object[] {
               transactionId, this.getClass().getName(),
@@ -48,7 +48,7 @@ public abstract class AbstractService implements SessionSynchronization {
   }
 
   @Override
-  public void afterCompletion(boolean committed) throws EJBException, RemoteException {
+  public void afterCompletion(boolean committed) throws EJBException {
     lastTransactionRollback = !committed;
     LOGGER.log(Level.INFO, "Transaction TXid={0} ends in {1}" + " with {3}, identity {2}",
             new Object[] {

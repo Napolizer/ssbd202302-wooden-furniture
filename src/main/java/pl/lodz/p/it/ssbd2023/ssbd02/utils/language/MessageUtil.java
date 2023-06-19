@@ -46,8 +46,6 @@ public class MessageUtil {
     public static final String EMAIL_ACCOUNT_CONFIRMATION_TOPIC3 = "mok.email.account.confirmation.topic3";
     public static final String EMAIL_ACCOUNT_REMOVED_SUBJECT = "mok.email.account.removed.subject";
     public static final String EMAIL_ACCOUNT_REMOVED_MESSAGE = "mok.email.account.removed.message";
-    public static final String EMAIL_ACCOUNT_REMOVED_REMINDER_SUBJECT = "mok.email.account.removed.reminder.subject";
-    public static final String EMAIL_ACCOUNT_REMOVED_REMINDER_MESSAGE = "mok.email.account.removed.reminder.message";
     public static final String EMAIL_ACCOUNT_ACTIVATED_SUBJECT = "mok.email.account.activated.subject";
     public static final String EMAIL_ACCOUNT_ACTIVATED_MESSAGE = "mok.email.account.activated.message";
     public static final String EMAIL_ACCOUNT_VERIFIED_SUBJECT = "mok.email.account.verified.subject";
@@ -63,8 +61,6 @@ public class MessageUtil {
     public static final String ACCOUNT_CLIENT_AND_SALES_REP_ACCESS_LEVEL_CONFLICT =
             "exception.mok.account.client.and.sales.rep.access.levels.conflict";
     public static final String ACCOUNT_REMOVE_ACCESS_LEVEL = "exception.mok.account.remove.access.level";
-    public static final String ADDRESS_ALREADY_ASSIGNED =
-            "exception.mok.account.address.already.assigned";
     public static final String ACCOUNT_NOT_FOUND = "exception.mok.account.not.found";
     public static final String ACCOUNT_NOT_ACTIVE = "exception.mok.account.not.active";
     public static final String ACCOUNT_NOT_VERIFIED = "exception.mok.account.not.verified";

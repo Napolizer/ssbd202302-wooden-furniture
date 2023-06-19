@@ -103,11 +103,6 @@ public class ProductService extends AbstractService implements ProductServiceOpe
     return productAfterUpdate;
   }
 
-  @Override
-  public Product update(Long id, Product entity) {
-    throw new UnsupportedOperationException();
-  }
-
   @PermitAll
   public Optional<Product> find(Long id) {
     return productFacade.findById(id);
@@ -116,36 +111,6 @@ public class ProductService extends AbstractService implements ProductServiceOpe
   @PermitAll
   public List<Product> findAll() {
     return productFacade.findAll();
-  }
-
-  @Override
-  public List<Product> findAllPresent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Product> findAllArchived() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Product> findAllByWoodType(WoodType woodType) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Product> findAllByColor(Color color) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Product> findAllAvailable() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Product> findAllByPrice(Double minPrice, Double maxPrice) {
-    throw new UnsupportedOperationException();
   }
 
   @Override

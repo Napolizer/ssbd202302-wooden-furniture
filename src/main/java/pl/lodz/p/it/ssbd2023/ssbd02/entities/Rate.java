@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,15 +25,7 @@ import lombok.experimental.SuperBuilder;
     @Index(name = "rate_person_id", columnList = "person_id", unique = true),
     @Index(name = "rate_product_group_id", columnList = "product_group_id", unique = true)
 })
-@NamedQueries({@NamedQuery(name = Rate.FIND_ALL_BY_VALUE,
-    query = "SELECT rate from Rate rate WHERE rate.value = :value"),
-    @NamedQuery(name = Rate.FIND_ALL_BY_PERSON_ID,
-        query = "SELECT rate from Rate rate WHERE rate.account.id = :personId")}
-)
 public class Rate extends AbstractEntity {
-
-  public static final String FIND_ALL_BY_VALUE = "Rate.findAllByValue";
-  public static final String FIND_ALL_BY_PERSON_ID = "Rate.findAllByPerson_Id";
 
   @Column(nullable = false)
   @Min(1)

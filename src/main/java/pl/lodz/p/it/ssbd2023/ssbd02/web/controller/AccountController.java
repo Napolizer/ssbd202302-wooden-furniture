@@ -39,7 +39,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccessLevelDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountRegisterDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountSearchSettingsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.AccountWithoutSensitiveDataDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeLocaleDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.ChangeModeDto;
@@ -52,7 +51,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.mapper.DtoToEntityMapper;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.endpoint.api.AccountEndpointOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GithubServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 
 @Path("/account")
@@ -64,8 +62,6 @@ public class AccountController {
   private Principal principal;
   @Inject
   private HttpServletRequest servletRequest;
-  @Inject
-  private GithubServiceOperations githubService;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -260,10 +256,7 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(ADMINISTRATOR)
   public Response editAccountAsAdmin(@PathParam("login") String login,
-                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto,
-                                     @Context SecurityContext securityContext) {
-
-
+                                     @NotNull @Valid EditPersonInfoDto editPersonInfoDto) {
     return Response.ok(accountEndpoint.editAccountInfoAsAdmin(login, editPersonInfoDto)).build();
   }
 

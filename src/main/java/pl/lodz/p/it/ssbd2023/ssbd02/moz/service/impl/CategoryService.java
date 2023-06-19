@@ -8,7 +8,6 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import java.util.List;
-import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Category;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.CategoryFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.CategoryServiceOperations;
@@ -33,25 +32,5 @@ public class CategoryService extends AbstractService implements CategoryServiceO
   @PermitAll
   public List<Category> findAllParentCategories() {
     return categoryFacade.findAllParentCategories();
-  }
-
-  @Override
-  public Optional<Category> find(Long id) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Category> findAll() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Category> findAllPresent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public List<Category> findAllArchived() {
-    throw new UnsupportedOperationException();
   }
 }
