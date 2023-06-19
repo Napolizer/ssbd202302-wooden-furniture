@@ -8,19 +8,24 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
@@ -108,6 +113,13 @@ public class Product extends AbstractEntity {
 
   @Builder.Default
   private Boolean isUpdatedBySystem = false;
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @Builder.Default
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  @JoinColumn(name = "product_id")
+  private List<ProductHistory> productHistory = new ArrayList<>();
 
   public Long getSumOfVersions() {
     return this.getVersion();

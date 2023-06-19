@@ -24,6 +24,7 @@ GRANT SELECT,INSERT,UPDATE ON TABLE product_group TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE rate TO ssbd02moz;
 GRANT SELECT,INSERT,UPDATE ON TABLE sales_order TO ssbd02moz;
 GRANT SELECT,INSERT ON TABLE sales_order_product TO ssbd02moz;
+GRANT SELECT,INSERT,UPDATE ON TABLE product_history TO ssbd02moz;
 
 GRANT SELECT ON account TO ssbd02auth;
 GRANT SELECT ON access_level TO ssbd02auth;
