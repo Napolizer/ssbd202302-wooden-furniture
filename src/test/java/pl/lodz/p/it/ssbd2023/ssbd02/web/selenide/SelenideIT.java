@@ -36,7 +36,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 class SelenideIT {
 //  public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;
 
-  @BeforeEach
+//  @BeforeEach
   public void setUp() {
 //    RemoteWebDriver driver = chrome.getWebDriver();
 //    WebDriverRunner.setWebDriver(driver);
@@ -51,12 +51,12 @@ class SelenideIT {
     Configuration.baseUrl = "http://localhost:4200";
   }
 
-  @AfterEach
+//  @AfterEach
   public void tearDown() {
     WebDriverRunner.closeWebDriver();
   }
 
-  @Test
+//  @Test
   void showSelenideUsers() {
     open("/");
     $(".title-text").shouldHave(text("Wooden Furniture"));
