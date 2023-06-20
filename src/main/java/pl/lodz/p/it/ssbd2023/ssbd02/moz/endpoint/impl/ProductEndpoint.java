@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductHistoryDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.ProductEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
@@ -129,6 +130,15 @@ public class ProductEndpoint extends AbstractEndpoint implements ProductEndpoint
     return repeatTransactionWithoutOptimistic(() ->
             productService.findAllProductsBelongingToAccount(login)).stream()
             .map(orderProductMapper::mapToOrderProductWithRateDto)
+            .toList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<ProductHistoryDto> findProductHistory(Long productId) {
+    return repeatTransactionWithoutOptimistic(() ->
+            productService.findProductHistory(productId)).stream()
+            .map(ProductMapper::mapToProductHistoryDto)
             .toList();
   }
 

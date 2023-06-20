@@ -4,12 +4,14 @@ import jakarta.ejb.Stateful;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Dimensions;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Image;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductHistoryDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 
 @Stateful
@@ -121,6 +123,17 @@ public class ProductMapper {
             .price(product.getPrice())
             .amount(product.getAmount())
             .hash(CryptHashUtils.hashVersion(product.getSumOfVersions()))
+            .build();
+  }
+
+  public static ProductHistoryDto mapToProductHistoryDto(ProductHistory productHistory) {
+    return ProductHistoryDto.builder()
+            .editDate(productHistory.getCreatedAt())
+            .editedBy(productHistory.getCreatedBy().getPerson().getFirstName()
+                    + " " + productHistory.getCreatedBy().getPerson().getLastName())
+            .newValue(productHistory.getNewValue())
+            .oldValue(productHistory.getOldValue())
+            .fieldName(productHistory.getFieldName())
             .build();
   }
 }

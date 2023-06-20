@@ -8,6 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductHistoryDto;
 
 @Local
 public interface ProductEndpointOperations {
@@ -30,4 +31,6 @@ public interface ProductEndpointOperations {
   EditProductDto editProduct(Long id, EditProductDto editProductDto);
 
   List<OrderProductWithRateDto> findAllProductsBelongingToAccount(String login);
+
+  List<ProductHistoryDto> findProductHistory(Long productId);
 }

@@ -13,12 +13,15 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductGroup;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductField;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
@@ -97,6 +100,8 @@ public class ProductService extends AbstractService implements ProductServiceOpe
       throw ApplicationExceptionFactory.createIllegalProductArchiveException();
     }
 
+    product.getProductHistory().add(
+            ProductHistory.builder().fieldName(ProductField.ARCHIVE).oldValue(0.0).newValue(1.0).build());
     product.setArchive(true);
     Product productAfterUpdate = productFacade.update(product);
 
@@ -140,6 +145,26 @@ public class ProductService extends AbstractService implements ProductServiceOpe
       throw new OptimisticLockException();
     }
 
+    if (product.getArchive()) {
+      throw ApplicationExceptionFactory.createIllegalProductArchiveException();
+    }
+
+    if (!Objects.equals(productWithChanges.getPrice(), product.getPrice())) {
+      product.getProductHistory().add(ProductHistory.builder()
+                      .fieldName(ProductField.PRICE)
+                      .oldValue(product.getPrice())
+                      .newValue(productWithChanges.getPrice())
+                      .build());
+    }
+
+    if (!Objects.equals(productWithChanges.getAmount(), product.getAmount())) {
+      product.getProductHistory().add(ProductHistory.builder()
+                      .fieldName(ProductField.AMOUNT)
+                      .oldValue(product.getAmount().doubleValue())
+                      .newValue(productWithChanges.getAmount().doubleValue())
+                      .build());
+    }
+
     product.update(productWithChanges);
     return productFacade.update(product);
   }
@@ -151,5 +176,12 @@ public class ProductService extends AbstractService implements ProductServiceOpe
             .filter(o -> o.getOrderState().equals(OrderState.DELIVERED))
             .flatMap(o -> o.getOrderedProducts().stream())
             .toList();
+  }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<ProductHistory> findProductHistory(Long productId) {
+    return productFacade.findById(productId).orElseThrow(ApplicationExceptionFactory::createProductNotFoundException)
+            .getProductHistory();
   }
 }

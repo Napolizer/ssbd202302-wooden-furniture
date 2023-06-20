@@ -157,6 +157,14 @@ public class ProductController {
   }
 
   @GET
+  @Path("/id/{id}/history")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed(EMPLOYEE)
+  public Response findProductHistory(@PathParam("id") Long id) {
+    return Response.ok(productEndpoint.findProductHistory(id)).build();
+  }
+
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response findAll() {
     List<ProductDto> productDtoList = productEndpoint.findAll();
