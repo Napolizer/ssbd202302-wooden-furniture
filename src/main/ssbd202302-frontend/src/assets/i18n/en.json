@@ -322,6 +322,8 @@
   "exception.moz.product.group.already.archived": "Product group is already archived",
   "exception.moz.product.group.is.archive": "One or more product groups are unavailable",
   "exception.moz.product.group.already.activated": "Product group is already activated",
+  "exception.moz.product.price.changed": "Price has changed",
+  "exception.moz.invalid.product.amount": "Invalid product amount",
 
 
   "role.administrator": "Administrator",
