@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.ProductHistory;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 
@@ -32,4 +33,6 @@ public interface ProductServiceOperations {
   Product editProduct(Long id, Product productWithChanges, String hash);
 
   List<OrderedProduct> findAllProductsBelongingToAccount(String login);
+
+  List<ProductHistory> findProductHistory(Long productId);
 }

@@ -177,4 +177,11 @@ public class ProductService extends AbstractService implements ProductServiceOpe
             .flatMap(o -> o.getOrderedProducts().stream())
             .toList();
   }
+
+  @Override
+  @RolesAllowed(EMPLOYEE)
+  public List<ProductHistory> findProductHistory(Long productId) {
+    return productFacade.findById(productId).orElseThrow(ApplicationExceptionFactory::createProductNotFoundException)
+            .getProductHistory();
+  }
 }
