@@ -561,5 +561,16 @@
   "order.stats.product.products.sold.amount": "Sprzedanych",
   "order.stats.product.products.total.income": "Całkowity zysk",
 
-  "show.edition.history": "Wyświetl historię edycji"
+  "show.edition.history": "Wyświetl historię edycji",
+  "edition.history": "Historia edycji",
+  "field.name": "Nazwa pola",
+  "old.value": "Stara wartość",
+  "new.value": "Nowa wartość",
+  "edit.date": "Data edycji",
+  "edited.by": "Edytowane przez",
+  "paginator.elementsPerPage": "Elementów na stronie",
+  "price": "Cena",
+  "archive": "Archiwalny",
+  "history.false": "fałsz",
+  "history.true": "prawda"
 }

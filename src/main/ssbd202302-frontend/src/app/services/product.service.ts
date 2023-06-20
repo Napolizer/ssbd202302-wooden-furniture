@@ -175,8 +175,8 @@ export class ProductService {
     )
   }
 
-  public findProductHistory(productId: number): Observable<ProductHistoryDto> {
-    return this.httpClient.get<ProductHistoryDto>(
+  public findProductHistory(productId: number): Observable<ProductHistoryDto[]> {
+    return this.httpClient.get<ProductHistoryDto[]>(
       `${environment.apiBaseUrl}/product/id/${productId}/history`,
       {
         headers: {

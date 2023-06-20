@@ -1,3 +1,5 @@
 export enum ProductField {
-  PRICE, AMOUNT, ARCHIVE
+  PRICE = 'PRICE',
+  AMOUNT = 'AMOUNT',
+  ARCHIVE = 'ARCHIVE'
 }
