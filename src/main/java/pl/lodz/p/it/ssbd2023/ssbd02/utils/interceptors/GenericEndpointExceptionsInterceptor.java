@@ -18,6 +18,9 @@ public class GenericEndpointExceptionsInterceptor {
     } catch (EJBAccessException | AccessLocalException ae) {
       throw ApplicationExceptionFactory.createAccessDeniedException(ae);
     } catch (Exception e) {
+      if (e.getCause().getCause() instanceof BaseWebApplicationException bae) {
+        throw bae;
+      }
       throw ApplicationExceptionFactory.createUnknownErrorException(e);
     }
   }

@@ -4,8 +4,10 @@ package pl.lodz.p.it.ssbd2023.ssbd02.entities;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ExcludeSuperclassListeners;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -14,6 +16,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
@@ -22,13 +25,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
-
+import pl.lodz.p.it.ssbd2023.ssbd02.utils.listeners.OrderListener;
 
 @Data
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity(name = "sales_order")
+@ExcludeSuperclassListeners
+@EntityListeners(OrderListener.class)
 @Table(name = "sales_order", indexes = {
     @Index(name = "sales_order_account_id", columnList = "account_id"),
     @Index(name = "sales_order_delivery_person_id", columnList = "recipient_id", unique = true),
@@ -119,6 +124,9 @@ public class Order extends AbstractEntity {
   @Column(name = "observed", columnDefinition = "boolean default false not null")
   @Builder.Default
   private Boolean observed = false;
+
+  @Column(name = "modification_block_time", nullable = false)
+  private LocalDateTime modificationBlockTime;
 
   public Long getSumOfVersions() {
     Long sumOfProductsVersions = 0L;
