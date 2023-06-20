@@ -109,6 +109,7 @@
                   mat-raised-button
                   color="primary"
                   (click)="handleAddToCartButton(product)"
+                  [disabled]="product.archive || product.productGroup.archive"
                 >
                   <mat-icon>add_shopping_cart</mat-icon>
                   {{ "product.add.to.cart" | translate }}
