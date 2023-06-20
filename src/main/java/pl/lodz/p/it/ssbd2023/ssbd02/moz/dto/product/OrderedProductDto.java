@@ -17,5 +17,8 @@ public class OrderedProductDto {
   private Integer amount;
   @NotNull
   @Positive
+  private Double price;
+  @NotNull
+  @Positive
   private Long productId;
 }

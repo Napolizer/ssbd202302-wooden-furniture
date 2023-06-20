@@ -74,6 +74,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
         .subscribe(product => {
           this.products.push(product);
           orderedProduct.product = product;
+          orderedProduct.price = product.price;
           if (orderedProduct.product.archive) {
             orderedProduct.amount = 0;
           } else if (orderedProduct.amount > product.amount) {
@@ -136,8 +137,10 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(product => {
         orderedProduct.product = product;
+        orderedProduct.price = product.price;
         if (orderedProduct.product.archive) {
           orderedProduct.amount = 0;
+          this.updateTotalPrice();
           this.loading = false;
         } else if (orderedProduct.amount === 1 || orderedProduct.amount - 1 > product.amount) {
           this.translate.get("cart.min.amount.error.message")
@@ -145,6 +148,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
             .subscribe(msg => {
               this.alertService.danger(msg);
               orderedProduct.amount = 1;
+              this.updateTotalPrice();
               this.loading = false;
             })
         } else {
@@ -162,8 +166,10 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(product => {
         orderedProduct.product = product;
+        orderedProduct.price = product.price;
         if (orderedProduct.product.archive) {
           orderedProduct.amount = 0;
+          this.updateTotalPrice();
           this.loading = false;
         } else if (orderedProduct.amount + 1 > product.amount || orderedProduct.amount > product.amount) {
           this.translate.get("cart.max.amount.error.message")
@@ -171,6 +177,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
             .subscribe(msg => {
               this.alertService.danger(msg);
               orderedProduct.amount = product.amount;
+              this.updateTotalPrice();
               this.loading = false;
             })
         } else {
@@ -188,12 +195,15 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(product => {
         orderedProduct.product = product;
+        orderedProduct.price = product.price;
         if (orderedProduct.product.archive) {
           orderedProduct.amount = 0;
+          this.updateTotalPrice();
           this.loading = false;
         } else {
           if (orderedProduct.amount < 1) {
             orderedProduct.amount = 1;
+            this.updateTotalPrice();
             this.translate.get("cart.min.amount.error.message")
               .pipe(takeUntil(this.destroy))
               .subscribe(msg => {
@@ -203,6 +213,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           }
           if (orderedProduct.amount > product.amount) {
             orderedProduct.amount = product.amount;
+            this.updateTotalPrice();
             this.translate.get("cart.max.amount.error.message")
               .pipe(takeUntil(this.destroy))
               .subscribe(msg => {
@@ -298,6 +309,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
     this.orderedProducts.forEach(orderedProduct => {
       let orderedProductDto: OrderProductDto = {
         amount: orderedProduct.amount,
+        price: orderedProduct.price,
         productId: orderedProduct.product.id
       }
       this.orderedProductsDto.push(orderedProductDto);
@@ -320,6 +332,15 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           void this.navigationService.redirectToClientPage();
         },
         error: (e: HttpErrorResponse) => {
+          this.orderedProducts.forEach(orderedProduct => {
+            this.productService.retrieveProduct(orderedProduct.product.id.toString())
+              .pipe(takeUntil(this.destroy))
+              .subscribe(product => {
+                orderedProduct.product = product;
+                orderedProduct.price = product.price;
+              })
+          })
+          this.updateTotalPrice();
           this.loading = false;
           const message = e.error.message as string;
           this.translate
@@ -327,7 +348,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
               this.alertService.danger(msg);
-              this.orderedProductsDto = []
+              this.orderedProductsDto = [];
             })
         }
       })

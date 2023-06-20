@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -42,6 +43,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.Product;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.AccountServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.MailServiceOperations;
@@ -87,7 +89,7 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order create(Order order, String login, Map<Long, Integer> orderedProductsMap) {
+  public Order create(Order order, String login, Map<Long, OrderedProductDto> orderedProductsMap) {
     Double totalPrice = 0.0;
     List<OrderedProduct> orderedProducts = new ArrayList<>();
 
@@ -98,29 +100,32 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
 
-      if (orderedProductsMap.get(productId) > product.getAmount()) {
+      if (orderedProductsMap.get(productId).getAmount() > product.getAmount()) {
         throw ApplicationExceptionFactory.createInvalidProductAmountException();
       }
 
+      if (!Objects.equals(orderedProductsMap.get(productId).getPrice(), product.getPrice())) {
+        throw ApplicationExceptionFactory.createProductPriceChangedException();
+      }
+
       OrderedProduct orderedProduct = OrderedProduct.builder()
-          .amount(orderedProductsMap.get(productId))
+          .amount(orderedProductsMap.get(productId).getAmount())
           .price(product.getPrice())
           .product(product)
           .order(order)
           .build();
       orderedProducts.add(orderedProduct);
-      totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
+      totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId).getAmount();
 
       if (product.getCreatedBy() != null) {
-        if (product.getCreatedBy().getLogin().equals(login) && product.getUpdatedBy() == null) {
+        if (product.getCreatedBy().getLogin().equals(login)
+            && productFacade.findAllDiscountsByEmployeeOfProductInCurrentMonth(productId, account.getId()).isEmpty()) {
           throw ApplicationExceptionFactory.createProductCreatedByException();
         }
       }
 
-      if (product.getUpdatedBy() != null) {
-        if (product.getUpdatedBy().getLogin().equals(login)) {
-          throw ApplicationExceptionFactory.createProductUpdatedByException();
-        }
+      if (!productFacade.findAllDiscountsByEmployeeOfProductInCurrentMonth(productId, account.getId()).isEmpty()) {
+        throw ApplicationExceptionFactory.createProductUpdatedByException();
       }
 
       if (product.getProductGroup().getArchive()) {
@@ -156,33 +161,57 @@ public class OrderService extends AbstractService implements OrderServiceOperati
 
   @Override
   @RolesAllowed(CLIENT)
-  public Order createWithGivenShippingData(Order order, String login, Map<Long, Integer> orderedProductsMap) {
+  public Order createWithGivenShippingData(Order order, String login, Map<Long, OrderedProductDto> orderedProductsMap) {
     Double totalPrice = 0.0;
     List<OrderedProduct> orderedProducts = new ArrayList<>();
+
+    Account account = accountService.getAccountByLogin(login)
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     for (Long productId : orderedProductsMap.keySet()) {
       Product product = productService.find(productId)
           .orElseThrow(ApplicationExceptionFactory::createProductNotFoundException);
 
-      if (orderedProductsMap.get(productId) > product.getAmount()) {
+      if (orderedProductsMap.get(productId).getAmount() > product.getAmount()) {
         throw ApplicationExceptionFactory.createInvalidProductAmountException();
       }
 
+      if (!Objects.equals(orderedProductsMap.get(productId).getPrice(), product.getPrice())) {
+        throw ApplicationExceptionFactory.createProductPriceChangedException();
+      }
+
       OrderedProduct orderedProduct = OrderedProduct.builder()
-          .amount(orderedProductsMap.get(productId))
+          .amount(orderedProductsMap.get(productId).getAmount())
           .price(product.getPrice())
           .product(product)
           .order(order)
           .build();
       orderedProducts.add(orderedProduct);
-      totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId);
+      totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId).getAmount();
+
+      if (product.getCreatedBy() != null) {
+        if (product.getCreatedBy().getLogin().equals(login)
+            && productFacade.findAllDiscountsByEmployeeOfProductInCurrentMonth(productId, account.getId()).isEmpty()) {
+          throw ApplicationExceptionFactory.createProductCreatedByException();
+        }
+      }
+
+      if (!productFacade.findAllDiscountsByEmployeeOfProductInCurrentMonth(productId, account.getId()).isEmpty()) {
+        throw ApplicationExceptionFactory.createProductUpdatedByException();
+      }
+
+      if (product.getProductGroup().getArchive()) {
+        throw ApplicationExceptionFactory.createProductGroupIsArchiveException();
+      }
+
+      if (product.getArchive()) {
+        throw ApplicationExceptionFactory.createProductIsArchiveException();
+      }
 
       product.setAmount(product.getAmount() - orderedProduct.getAmount());
       product.setIsUpdatedBySystem(true);
       productFacade.update(product);
     }
-    Account account = accountService.getAccountByLogin(login)
-        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException);
 
     order.setTotalPrice(totalPrice);
     order.setAccount(account);

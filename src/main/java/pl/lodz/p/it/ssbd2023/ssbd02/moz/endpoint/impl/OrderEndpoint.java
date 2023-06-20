@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.OrderedProduct;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.mapper.OrderMapper;
@@ -66,9 +67,9 @@ public class OrderEndpoint extends AbstractEndpoint implements OrderEndpointOper
   @Override
   @RolesAllowed(CLIENT)
   public OrderDto create(CreateOrderDto createOrderDto, String login) {
-    Map<Long, Integer> orderedProductsMap = new HashMap<>();
+    Map<Long, OrderedProductDto> orderedProductsMap = new HashMap<>();
     for (OrderedProductDto orderedProduct : createOrderDto.getProducts()) {
-      orderedProductsMap.put(orderedProduct.getProductId(), orderedProduct.getAmount());
+      orderedProductsMap.put(orderedProduct.getProductId(), orderedProduct);
     }
     Order created;
     if (createOrderDto.getShippingData() == null) {

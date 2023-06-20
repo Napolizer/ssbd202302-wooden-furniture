@@ -320,6 +320,8 @@
   "exception.moz.product.group.already.archived": "Grupa produktów jest już zarchiwizowana",
   "exception.moz.product.group.already.activated": "Grupa produktów jest już aktywna",
   "exception.moz.invalid.date": "Niepoprawna data",
+  "exception.moz.product.price.changed": "Cena jednego z produktów zmieniła się",
+  "exception.moz.invalid.product.amount": "Nieprawidłowa liczba sztuk jednego z produktów",
 
   "role.administrator": "Administrator",
   "role.employee": "Pracownik",

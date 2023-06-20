@@ -25,11 +25,10 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductField;
 @Table(name = "product_history")
 @NamedQueries({
     @NamedQuery(name = ProductHistory.FIND_ALL_DISCOUNTS_BY_EMPLOYEE_OF_PRODUCT_IN_CURRENT_MONTH,
-            query = "SELECT ph FROM ProductHistory ph "
-                    + "JOIN Product p "
-                    + "WHERE ph.id = :productId AND ph.createdBy.id = :accountId AND ph.newValue < ph.oldValue "
-                    + "AND ph.fieldName = :price AND p.price = ph.newValue "
-                    + "AND extract(MONTH from :now) - extract(MONTH from ph.createdAt) = 0"),
+        query = "SELECT ph FROM ProductHistory ph "
+            + "JOIN Product p "
+            + "WHERE p.id = :productId AND ph.createdBy.id = :accountId AND ph.newValue < ph.oldValue "
+            + "AND ph.fieldName = :price AND p.price = ph.newValue "),
 })
 public class ProductHistory extends AbstractEntity {
 

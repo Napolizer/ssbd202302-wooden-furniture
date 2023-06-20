@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Order;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderedProductDto;
 
 @Local
 public interface OrderServiceOperations {
@@ -15,9 +16,9 @@ public interface OrderServiceOperations {
 
   List<Order> findByState(OrderState orderState);
 
-  Order create(Order entity, String login, Map<Long, Integer> orderedProductsMap);
+  Order create(Order entity, String login, Map<Long, OrderedProductDto> orderedProductsMap);
 
-  Order createWithGivenShippingData(Order entity, String login, Map<Long, Integer> orderedProductsMap);
+  Order createWithGivenShippingData(Order entity, String login, Map<Long, OrderedProductDto> orderedProductsMap);
 
   Optional<Order> find(Long id);
 

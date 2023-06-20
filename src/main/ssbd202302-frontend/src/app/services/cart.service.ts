@@ -111,7 +111,8 @@ export class CartService {
             this.productService.retrieveProduct(orderedProduct.product.id.toString())
               .subscribe(product => {
                 if (orderedProduct.product !== product) {
-                  orderedProduct.product = product
+                  orderedProduct.product = product;
+                  orderedProduct.price = product.price;
                   if (orderedProduct.product.amount === 0) {
                     this.removeProduct(orderedProduct);
                   }

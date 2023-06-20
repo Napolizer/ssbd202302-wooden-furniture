@@ -144,6 +144,7 @@ public class MessageUtil {
     public static final String PRODUCT_CHANGE_STATE_ARCHIVE = "exception.moz.product.change.state.archive";
     public static final String INVALID_ORDER_STATE_TRANSITION = "exception.moz.invalid.order.state.transition";
     public static final String INVALID_PRODUCT_AMOUNT = "exception.moz.invalid.product.amount";
+    public static final String PRODUCT_PRICE_CHANGED = "exception.moz.product.price.changed";
     public static final String PRODUCT_UPDATED_BY = "exception.moz.product.updated.by";
     public static final String PRODUCT_CREATED_BY = "exception.moz.product.created.by";
 

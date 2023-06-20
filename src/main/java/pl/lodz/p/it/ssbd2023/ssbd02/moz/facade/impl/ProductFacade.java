@@ -90,15 +90,14 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
   }
 
   @Override
-  @RolesAllowed(EMPLOYEE)
+  @RolesAllowed(CLIENT)
   public List<ProductHistory> findAllDiscountsByEmployeeOfProductInCurrentMonth(Long productId, Long accountId) {
     return em.createNamedQuery(
             ProductHistory.FIND_ALL_DISCOUNTS_BY_EMPLOYEE_OF_PRODUCT_IN_CURRENT_MONTH, ProductHistory.class)
-            .setParameter("productId", productId)
-            .setParameter("accountId", accountId)
-            .setParameter("price", ProductField.PRICE)
-            .setParameter("now", LocalDateTime.now())
-            .getResultList();
+        .setParameter("productId", productId)
+        .setParameter("accountId", accountId)
+        .setParameter("price", ProductField.PRICE)
+        .getResultList();
   }
 
   @Override
