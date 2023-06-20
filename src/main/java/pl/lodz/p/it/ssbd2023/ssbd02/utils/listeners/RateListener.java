@@ -16,8 +16,8 @@ public class RateListener {
   public void prePersist(Rate rate) {
     rate.setCreatedAt(LocalDateTime.now());
     rate.setModificationBlockTime(rate.getCreatedAt().plusMinutes(
-        System.getenv("RATE_MODIFICATION_BLOCK_TIME") == null ?
-            44640 : Long.parseLong(System.getenv("RATE_MODIFICATION_BLOCK_TIME"))
+        System.getenv("RATE_MODIFICATION_BLOCK_TIME") == null
+            ? 44640 : Long.parseLong(System.getenv("RATE_MODIFICATION_BLOCK_TIME"))
     ));
 
     String login = CDI.current().select(Principal.class).get().getName();
