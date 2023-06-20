@@ -34,6 +34,9 @@ import {ClientOrderPageComponent} from "./pages/client-order-page/client-order-p
 import {OrderStatsPageComponent} from "./pages/order-stats-page/order-stats-page.component";
 import {ServerErrorPageComponent} from "./pages/server-error-page/server-error-page.component";
 import {UnauthorizedPageComponent} from "./pages/unauthorized-page/unauthorized-page.component";
+import {
+  ProductEditionHistoryPageComponent
+} from "./pages/product-edition-history-page/product-edition-history-page.component";
 
 const routes: Routes = [
   {
@@ -266,6 +269,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       roles: [Role.CLIENT]
+    }
+  },
+  {
+    path: 'product/:id/history',
+    component: ProductEditionHistoryPageComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: [Role.EMPLOYEE]
     }
   },
   // IMPORTANT: this route must be the last one

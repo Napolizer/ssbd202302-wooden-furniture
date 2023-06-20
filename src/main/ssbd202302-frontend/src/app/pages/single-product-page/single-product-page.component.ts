@@ -274,4 +274,8 @@ export class SingleProductPageComponent implements OnInit {
       product.productGroup.averageRating.toString(),
     ];
   }
+
+  redirectToProductEditionHistoryPage(): void {
+    void this.navigationService.redirectToProductEditionHistoryPage(this.product.id);
+  }
 }

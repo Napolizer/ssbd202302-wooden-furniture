@@ -559,5 +559,7 @@
   "order.stats.product.average.rating": "Średnia ocen",
   "order.stats.product.products.amount": "Obecny stan magazynowy",
   "order.stats.product.products.sold.amount": "Sprzedanych",
-  "order.stats.product.products.total.income": "Całkowity zysk"
+  "order.stats.product.products.total.income": "Całkowity zysk",
+
+  "show.edition.history": "Wyświetl historię edycji"
 }

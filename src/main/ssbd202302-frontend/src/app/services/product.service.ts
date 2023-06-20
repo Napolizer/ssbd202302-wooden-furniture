@@ -11,6 +11,7 @@ import { ProductCreateWithImage } from '../interfaces/product.create with.image'
 import { EditProduct } from '../interfaces/edit.product';
 import {OrderProductWithRate} from "../interfaces/orderProductWithRate";
 import {EditProductGroup} from "../interfaces/edit.product.group";
+import {ProductHistoryDto} from "../interfaces/product.history.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -172,5 +173,16 @@ export class ProductService {
         }
       }
     )
+  }
+
+  public findProductHistory(productId: number): Observable<ProductHistoryDto> {
+    return this.httpClient.get<ProductHistoryDto>(
+      `${environment.apiBaseUrl}/product/id/${productId}/history`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.tokenService.getToken()}`
+        }
+      }
+    );
   }
 }

@@ -565,5 +565,7 @@
   "order.stats.product.average.rating": "Average rating",
   "order.stats.product.products.amount": "Current stock level",
   "order.stats.product.products.sold.amount": "Sold products",
-  "order.stats.product.products.total.income": "Total income"
+  "order.stats.product.products.total.income": "Total income",
+
+  "show.edition.history": "Show edition history"
 }
