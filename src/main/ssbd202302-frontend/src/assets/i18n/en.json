@@ -324,6 +324,7 @@
   "exception.moz.product.group.already.activated": "Product group is already activated",
   "exception.moz.product.price.changed": "Price has changed",
   "exception.moz.invalid.product.amount": "Invalid product amount",
+  "exception.moz.modification.time.expired": "Modification time of this resource has expired",
 
 
   "role.administrator": "Administrator",
