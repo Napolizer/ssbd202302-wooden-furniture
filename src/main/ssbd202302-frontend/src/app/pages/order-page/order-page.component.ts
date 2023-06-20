@@ -43,7 +43,10 @@ export class OrderPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
        this.orderId = Number(params.get('id'));
-       this.getOrder()
+       combineLatest([
+         this.getOrder(),
+         timer(500)
+         ]).pipe(takeUntil(this.destroy), map(obj => obj[0]))
          .subscribe(order => {
            this.order = order;
            this.loading = false;
@@ -109,11 +112,5 @@ export class OrderPageComponent implements OnInit, OnDestroy {
         this.order = order;
         this.loading = false;
       });
-  }
-
-  getCardStyling(): any {
-    return {
-      'background-color': document.body.classList.contains('dark-mode') ? '#424242' : '#fafafa'
-    };
   }
 }

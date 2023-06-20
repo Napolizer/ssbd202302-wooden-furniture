@@ -565,5 +565,18 @@
   "order.stats.product.average.rating": "Average rating",
   "order.stats.product.products.amount": "Current stock level",
   "order.stats.product.products.sold.amount": "Sold products",
-  "order.stats.product.products.total.income": "Total income"
+  "order.stats.product.products.total.income": "Total income",
+
+  "show.edition.history": "Show edition history",
+  "edition.history": "Edition history",
+  "field.name": "Field name",
+  "old.value": "Old value",
+  "new.value": "New value",
+  "edit.date": "Edit date",
+  "edited.by": "Edited by",
+  "paginator.elementsPerPage": "Elements per page",
+  "price": "Price",
+  "archive": "Archive",
+  "history.false": "false",
+  "history.true": "true"
 }

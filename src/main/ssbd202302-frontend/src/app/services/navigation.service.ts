@@ -121,4 +121,8 @@ export class NavigationService {
   public redirectToStatsPage(from: string, to: string): Promise<boolean> {
     return this.router.navigate(['orders/stats/' + from + '/' + to])
   }
+
+  public redirectToProductEditionHistoryPage(productId: number): Promise<boolean> {
+    return this.router.navigate([`/product/${productId}/history`])
+  }
 }

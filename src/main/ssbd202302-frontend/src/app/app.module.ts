@@ -94,6 +94,7 @@ import { ActivateProductGroupComponent } from './components/activate-product-gro
 import {RedirectInterceptorService} from "./services/redirect-interceptor.service";
 import { ServerErrorPageComponent } from './pages/server-error-page/server-error-page.component';
 import { UnauthorizedPageComponent } from './pages/unauthorized-page/unauthorized-page.component';
+import { ProductEditionHistoryPageComponent } from './pages/product-edition-history-page/product-edition-history-page.component';
 
 @NgModule({
   declarations: [
@@ -155,6 +156,7 @@ import { UnauthorizedPageComponent } from './pages/unauthorized-page/unauthorize
     ActivateProductGroupComponent,
     ServerErrorPageComponent,
     UnauthorizedPageComponent,
+    ProductEditionHistoryPageComponent,
   ],
   imports: [
     BrowserModule,
