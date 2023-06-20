@@ -155,5 +155,6 @@ public class MessageUtil {
     public static final String REPORT_HEADER3 = "moz.report.header3";
     public static final String REPORT_HEADER4 = "moz.report.header4";
     public static final String REPORT_HEADER5 = "moz.report.header5";
+    public static final String MODIFICATION_TIME_EXPIRED = "moz.modification.time.expired";
   }
 }

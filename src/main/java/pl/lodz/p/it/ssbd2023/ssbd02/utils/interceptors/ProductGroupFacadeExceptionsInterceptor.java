@@ -5,6 +5,7 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceException;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
+import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.BaseWebApplicationException;
 
 public class ProductGroupFacadeExceptionsInterceptor {
   @AroundInvoke
@@ -16,7 +17,10 @@ public class ProductGroupFacadeExceptionsInterceptor {
     } catch (PersistenceException pe) {
       if (pe.getMessage().contains("product_group_name_key")) {
         throw ApplicationExceptionFactory.createProductGroupAlreadyExistsException();
-      }  else {
+      } else {
+        if (pe.getCause() instanceof BaseWebApplicationException exception) {
+          throw exception;
+        }
         throw pe;
       }
     }
