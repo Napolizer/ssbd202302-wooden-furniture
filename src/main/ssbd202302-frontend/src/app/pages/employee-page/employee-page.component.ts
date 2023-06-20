@@ -5,7 +5,6 @@ import { DialogService } from 'src/app/services/dialog.service';
 import {OrderDetailsDto} from "../../interfaces/order.details.dto";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort, Sort} from "@angular/material/sort";
 import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {MatRipple} from "@angular/material/core";
 import {OrderService} from "../../services/order.service";
@@ -37,6 +36,7 @@ import {NavigationEnd, Router} from "@angular/router";
   ]
 })
 export class EmployeePageComponent implements OnInit {
+  loadedOrders: OrderDetailsDto[] = [];
   orders: OrderDetailsDto[] = [];
   loading = true;
   listLoading = false;
@@ -48,9 +48,6 @@ export class EmployeePageComponent implements OnInit {
 
   @ViewChild(MatPaginator, {static: true})
   paginator: MatPaginator;
-
-  @ViewChild(MatSort)
-  sort: MatSort;
 
   @ViewChild(ElementRef)
   searchInput: ElementRef;
@@ -82,10 +79,10 @@ export class EmployeePageComponent implements OnInit {
       .pipe(tap(() => this.loading = true), takeUntil(this.destroy))
       .subscribe(orders => {
         this.orders = orders;
+        this.loadedOrders = orders;
         this.loading = false;
         this.dataSource = new MatTableDataSource<OrderDetailsDto>(this.orders);
         this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
       });
     this.initPaginator();
   }
@@ -105,18 +102,6 @@ export class EmployeePageComponent implements OnInit {
     this.paginator._intl.previousPageLabel = this.translate.instant('paginator.previousPageLabel');
   }
 
-  compare(a: string | number | boolean, b: string | number | boolean, isAsc: boolean) {
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }
-
-  onSortClicked(event: Sort) {
-    this.dataSource.data = this.dataSource.data.sort((a: OrderDetailsDto, b: OrderDetailsDto) => {
-      const isAsc = event.direction === 'asc';
-      const field = event.active;
-      return this.compare(a[field], b[field], isAsc);
-    });
-  }
-
   getListAnimationState(): string {
     return this.loading ? 'unloaded' : 'loaded';
   }
@@ -130,10 +115,11 @@ export class EmployeePageComponent implements OnInit {
   }
 
   onSearchClicked(): void {
-    this.orders = this.orders.filter(order =>
-      order.recipientFirstName.toLowerCase().includes(this.searchPhrase.toLowerCase()) ||
-      order.recipientLastName.toLowerCase().includes(this.searchPhrase.toLowerCase())
+    this.orders = this.loadedOrders.filter(order =>
+      order.recipientFirstName.toLowerCase().includes(this.searchPhrase.toLowerCase())
+      || order.recipientLastName.toLowerCase().includes(this.searchPhrase.toLowerCase())
     );
+    this.dataSource.data = this.orders;
   }
 
   onResetClicked(): void {
@@ -146,6 +132,7 @@ export class EmployeePageComponent implements OnInit {
       .pipe(takeUntil(this.destroy), map(obj => obj[0]))
       .subscribe(orders => {
         this.orders = orders;
+        this.loadedOrders = orders;
         this.dataSource.data = this.orders;
         this.listLoading = false;
       });
