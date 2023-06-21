@@ -68,12 +68,67 @@ public class MOZ18IT {
             }
             """.formatted(products.get(products.size() - 1).getProduct().getProductGroup().getId()))
             .when()
-            .post("/rate")
+            .put("/rate")
             .then()
             .statusCode(400);
   }
 
   @Order(4)
+  @DisplayName("Should not change existing not valid rate without id")
+  @Test
+  void shouldNotChangeRateWithRateWithoutProductGroup() {
+    given()
+            .header("Authorization", "Bearer " + InitData.retrieveClientToken())
+            .header("Content-Type", "application/json")
+            .body("""
+            {
+              "rate": 0
+            }
+            """.formatted(products.get(products.size() - 1)))
+            .when()
+            .put("/rate")
+            .then()
+            .statusCode(400);
+  }
+
+  @Order(5)
+  @DisplayName("Should not change existing valid rate without token")
+  @Test
+  void shouldNotChangeExistingValidRateWithoutToken() {
+    given()
+            .header("Content-Type", "application/json")
+            .body("""
+            {
+              "rate": 1,
+              "productId":  %d
+            }
+            """.formatted(products.get(products.size() - 1).getProduct().getProductGroup().getId()))
+            .when()
+            .put("/rate")
+            .then()
+            .statusCode(401);
+  }
+
+  @Order(6)
+  @DisplayName("Should not change existing valid rate with token with different role")
+  @Test
+  void shouldNotChangeExistingValidRateWithTokenWithDifferentRole() {
+    given()
+            .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+            .header("Content-Type", "application/json")
+            .body("""
+            {
+              "rate": 1,
+              "productId":  %d
+            }
+            """.formatted(products.get(products.size() - 1).getProduct().getProductGroup().getId()))
+            .when()
+            .put("/rate")
+            .then()
+            .statusCode(403);
+  }
+
+  @Order(7)
   @DisplayName("Should change existing rate")
   @Test
   void shouldChangeExistingRate() {
@@ -92,7 +147,7 @@ public class MOZ18IT {
             .statusCode(200);
   }
 
-  @Order(5)
+  @Order(8)
   @DisplayName("Should set new avg after change")
   @Test
   void shouldSetNewAvgAfterChange() {
