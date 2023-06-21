@@ -130,7 +130,7 @@ export class RemoveAccountRolePageComponent implements OnInit {
             .pipe(takeUntil(this.destroy))
             .subscribe(msg => {
               this.alertService.success(msg);
-              this.navigationService.redirectToAccountPage(this.id);
+              void this.navigationService.redirectToAccountPage(this.id);
             });
         },
         error: e => {
