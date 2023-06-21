@@ -23,15 +23,29 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   private displayAuthenticationWarning(): void {
-    this.alertService.warning(this.translate.instant('auth.not.authenticated'));
+    this.translate
+      .get('auth.not.authenticated')
+      .subscribe((result: string) => {
+        this.alertService.warning(result);
+      });
+    // this.translate.instant('auth.not.authenticated')
   }
 
   private displayTokenExpiredWarning(): void {
-    this.alertService.warning(this.translate.instant('auth.token.expired'));
+    this.translate
+      .get('auth.token.expired')
+      .subscribe((result) => {
+        this.alertService.warning(result);
+      });
+    //this.alertService.warning(this.translate.instant('auth.token.expired'));
   }
 
   private handleForcePasswordChange(): void {
-    this.alertService.danger(this.translate.instant('change.password.force.message'))
+    this.translate
+      .get('change.password.force.message')
+      .subscribe((result) => {
+        this.alertService.danger(this.translate.instant(result))
+      });
     this.dialogService.openChangePasswordDialog()
     .afterClosed()
     .subscribe((result) => {
