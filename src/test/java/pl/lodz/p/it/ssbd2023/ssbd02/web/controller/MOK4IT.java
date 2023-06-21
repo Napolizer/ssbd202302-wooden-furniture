@@ -6,12 +6,15 @@ import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountState;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.language.MessageUtil;
@@ -25,7 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 public class MOK4IT {
   @Nested
   @Order(1)
-  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Init {
     @DisplayName("Should properly create account for first positive test")
     @Test
@@ -79,19 +82,37 @@ public class MOK4IT {
 
   @Nested
   @Order(2)
-  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Positive {
     @DisplayName("Should properly activate blocked account")
     @Test
     @Order(1)
     void shouldProperlyActivateBlockedAccount() {
       given()
-          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator", "Student123!"))
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+          .when()
+          .get("/account/id/" + AccountUtil.getAccountId("blockedThomas"))
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("accountState", is(equalTo("BLOCKED")));
+
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
           .patch("/account/activate/" + AccountUtil.getAccountId("blockedThomas"))
           .then()
           .statusCode(200)
           .contentType("application/json")
           .body("message", is(equalTo("mok.account.activate.successful")));
+
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+          .when()
+          .get("/account/id/" + AccountUtil.getAccountId("blockedThomas"))
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("accountState", is(equalTo("ACTIVE")));
     }
 
     @DisplayName("Should properly activate not verified account")
@@ -99,18 +120,36 @@ public class MOK4IT {
     @Order(2)
     void shouldProperlyActivateNotVerifiedAccount() {
       given()
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+          .when()
+          .get("/account/id/" + AccountUtil.getAccountId("notVerifiedThomas"))
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("accountState", is(equalTo("NOT_VERIFIED")));
+
+      given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("administrator", "Student123!"))
           .patch("/account/activate/" + AccountUtil.getAccountId("notVerifiedThomas"))
           .then()
           .statusCode(200)
           .contentType("application/json")
           .body("message", is(equalTo("mok.account.activate.successful")));
+
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+          .when()
+          .get("/account/id/" + AccountUtil.getAccountId("notVerifiedThomas"))
+          .then()
+          .statusCode(200)
+          .contentType("application/json")
+          .body("accountState", is(equalTo("ACTIVE")));
     }
   }
 
   @Nested
   @Order(3)
-  @TestClassOrder(ClassOrderer.OrderAnnotation.class)
+  @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
   class Negative {
     @DisplayName("Should fail to activate already active account")
     @Test
@@ -134,6 +173,27 @@ public class MOK4IT {
           .then()
           .statusCode(404)
           .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_NOT_FOUND));
+    }
+
+    @DisplayName("Should fail because of missing authorization header")
+    @Test
+    @Order(3)
+    void shouldFailToActivateAccountWithoutAuthorizationHeader() {
+      given()
+          .patch("/account/activate/" + AccountUtil.getAccountId("blockedThomas"))
+          .then()
+          .statusCode(401);
+    }
+
+    @DisplayName("Should fail because of wrong authorization header")
+    @Test
+    @Order(4)
+    void shouldFailToActivateAccountWithWrongAuthorizationHeader() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveSalesRepToken())
+          .patch("/account/activate/" + AccountUtil.getAccountId("blockedThomas"))
+          .then()
+          .statusCode(403);
     }
   }
 }

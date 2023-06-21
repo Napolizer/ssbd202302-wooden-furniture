@@ -75,5 +75,17 @@ public class MOZ9IT {
           .then()
           .statusCode(400);
     }
+
+    @Test
+    @DisplayName("Should fail because of wrong authorization header given")
+    @Order(4)
+    void shouldFailBecauseOfWrongHeader() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+          .when()
+          .put("/product/group/archive/id/47")
+          .then()
+          .statusCode(403);
+    }
   }
 }
