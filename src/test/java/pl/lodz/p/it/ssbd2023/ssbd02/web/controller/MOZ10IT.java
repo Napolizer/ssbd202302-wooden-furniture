@@ -283,5 +283,85 @@ public class MOZ10IT {
           .statusCode(400)
           .body("message", equalTo("exception.moz.invalid.order.state.transition"));
     }
+
+    @Test
+    @DisplayName("should fail if hash is null")
+    @Order(10)
+    void shouldFailIfHashIsNull() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "state": "%s",
+              "hash": "%s"
+            }
+            """.formatted(IN_DELIVERY, null))
+          .when()
+          .put("/order/state/%s".formatted(order.getId()))
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("should fail if hash is in invalid format")
+    @Order(11)
+    void shouldFailIfHashIsInInvalidFormat() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "state": "%s",
+              "hash": "%s"
+            }
+            """.formatted(IN_DELIVERY, "invalid-format"))
+          .when()
+          .put("/order/state/%s".formatted(order.getId()))
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("should fail if state is null")
+    @Order(12)
+    void shouldFailIfStateIsNull() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "state": "%s",
+              "hash": "%s"
+            }
+            """.formatted(null, order.getHash()))
+          .when()
+          .put("/order/state/%s".formatted(order.getId()))
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("should fail if state is in invalid format")
+    @Order(13)
+    void shouldFailIfStateIsInInvalidFormat() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "state": "%s",
+              "hash": "%s"
+            }
+            """.formatted("invalid-format", order.getHash()))
+          .when()
+          .put("/order/state/%s".formatted(order.getId()))
+          .then()
+          .statusCode(400);
+    }
   }
 }
