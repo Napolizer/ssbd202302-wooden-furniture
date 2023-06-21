@@ -189,9 +189,9 @@ public class OrderService extends AbstractService implements OrderServiceOperati
       orderedProducts.add(orderedProduct);
       totalPrice += orderedProduct.getPrice() * orderedProductsMap.get(productId).getAmount();
 
-      if (product.getCreatedBy() != null) {
-        if (product.getCreatedBy().getLogin().equals(login)
-            && productFacade.findAllDiscountsByEmployeeOfProductInCurrentMonth(productId, account.getId()).isEmpty()) {
+      if (product.getCreatedBy() != null
+          && productFacade.findAllDiscountsByEmployeeOfProductInCurrentMonth(productId, account.getId()).isEmpty()) {
+        if (product.getCreatedBy().getLogin().equals(login)) {
           throw ApplicationExceptionFactory.createProductCreatedByException();
         }
       }

@@ -16,6 +16,7 @@ public class OrderUtil {
         {
           "products": [{
             "amount": 1,
+            "price": 3699.99,
             "productId": 104
           }],
           "shippingData": {
