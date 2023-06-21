@@ -265,5 +265,19 @@ public class MOK2IT {
 							.then()
 							.statusCode(403);
 		}
+
+		@Test
+		@Order(6)
+		@DisplayName("Should fail to create new account without authorization header")
+		void shouldFailToCreateAccountWithoutAuthorizationHeader() {
+			AccountCreateDto account = InitData.getAccountToCreate();
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(account))
+							.when()
+							.post("/account/create")
+							.then()
+							.statusCode(401);
+		}
 	}
 }

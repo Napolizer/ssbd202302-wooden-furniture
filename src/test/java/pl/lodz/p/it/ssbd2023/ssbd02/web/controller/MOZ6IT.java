@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -42,6 +43,16 @@ public class MOZ6IT {
           .then()
           .statusCode(200)
           .body("name", equalTo("Zmieniona"));
+
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .when()
+          .get("/product/group/id/50")
+          .then()
+          .contentType(MediaType.APPLICATION_JSON)
+          .statusCode(200)
+          .body("name", equalTo("Zmieniona"));
+
       given()
           .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
           .contentType("application/json")
@@ -54,6 +65,15 @@ public class MOZ6IT {
           .when()
           .put("/product/group/id/50")
           .then()
+          .statusCode(200)
+          .body("name", equalTo("HarmonyHaven Double Bed"));
+
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .when()
+          .get("/product/group/id/50")
+          .then()
+          .contentType(MediaType.APPLICATION_JSON)
           .statusCode(200)
           .body("name", equalTo("HarmonyHaven Double Bed"));
     }
@@ -147,6 +167,61 @@ public class MOZ6IT {
           .contentType("application/json")
           .when()
           .put("/product/group/id/" + Long.MAX_VALUE)
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should fail because of wrong authorization header given")
+    @Order(6)
+    void shouldFailBecauseOfWrongHeader() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+          .contentType("application/json")
+          .body("""
+            {
+              "name": "HarmonyHaven Double Bed",
+              "hash": "$hash"
+            }
+          """.replace("$hash", CryptHashUtils.hashVersion(2L)))
+          .when()
+          .put("/product/group/id/50")
+          .then()
+          .statusCode(403);
+    }
+
+    @Test
+    @DisplayName("Should fail because of missing name")
+    @Order(7)
+    void shouldFailBecauseOfMissingName() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .contentType("application/json")
+          .body("""
+            {
+              "hash": "$hash"
+            }
+          """.replace("$hash", CryptHashUtils.hashVersion(2L)))
+          .when()
+          .put("/product/group/id/50")
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should fail because of missing hash")
+    @Order(8)
+    void shouldFailBecauseOfMissingHash() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .contentType("application/json")
+          .body("""
+            {
+              "name": "HarmonyHaven Double Bed"
+            }
+          """)
+          .when()
+          .put("/product/group/id/50")
           .then()
           .statusCode(400);
     }

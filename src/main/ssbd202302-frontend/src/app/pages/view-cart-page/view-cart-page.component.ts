@@ -408,6 +408,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
               this.cartService.removeProduct(productToRemove)
               this.cartService.getProductsFromLocalStorage();
               this.orderedProducts = this.cartService.getCart();
+              this.updateTotalPrice();
             }
           });
       });

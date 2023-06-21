@@ -15,7 +15,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.rate.RateInputDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.endpoint.api.RateEndpointOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.ProductGroupServiceOperations;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.service.api.RateServiceOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.GenericServiceExceptionsInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.LoggerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
@@ -30,15 +29,14 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.endpoint.AbstractEndpoint;
 public class RateEndpoint extends AbstractEndpoint implements RateEndpointOperations {
 
   @Inject
-  private RateServiceOperations rateService;
-
-  @Inject
   private ProductGroupServiceOperations productGroupService;
 
   @Override
   @RolesAllowed(CLIENT)
   public void delete(String login, Long productGroupId) {
-    productGroupService.removeRateFromProductGroup(login, productGroupId);
+    repeatTransactionWithOptimistic(() -> productGroupService
+            .removeRateFromProductGroup(login, productGroupId));
+
   }
 
   @Override
@@ -61,6 +59,6 @@ public class RateEndpoint extends AbstractEndpoint implements RateEndpointOperat
 
   @Override
   protected boolean isLastTransactionRollback() {
-    return rateService.isLastTransactionRollback();
+    return productGroupService.isLastTransactionRollback();
   }
 }

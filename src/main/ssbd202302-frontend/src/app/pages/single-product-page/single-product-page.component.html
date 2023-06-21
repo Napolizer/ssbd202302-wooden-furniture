@@ -244,11 +244,11 @@
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="openEditProductDialog()">
     <mat-icon>edit</mat-icon>
-    <span>Edytuj produkt</span>
+    <span>{{'product.edit' | translate}}</span>
   </button>
   <button mat-menu-item [disabled]="product.archive" (click)="archiveProduct()">
     <mat-icon>query_builder</mat-icon>
-    <span>Zarchiwizuj produkt</span>
+    <span>{{'product.archive' | translate}}</span>
   </button>
   <button mat-menu-item (click)="redirectToProductEditionHistoryPage()">
     <mat-icon>edit_calendar</mat-icon>

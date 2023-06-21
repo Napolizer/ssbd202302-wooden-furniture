@@ -53,16 +53,28 @@ import { Subject } from "rxjs/internal/Subject";
           else if(this.currentUrl.includes("/login")) {
             this.breadcrumbs=['toolbar.home']
           }
+          else if(this.currentUrl.includes("/client/orders/rates")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.clientPanel', 'toolbar.rates' ]
+          }
+          else if(this.currentUrl.includes("/client/orders")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.clientPanel']
+          }
+          else if(this.currentUrl.includes("/products")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.products']
+          }
           return this.breadcrumbs;
     }
 
     navigate(breadcrumb: string): void {
         switch(breadcrumb) {
-            case 'toolbar.home': 
+            case 'toolbar.home':
                 void this.navigationService.redirectToMainPage();
                 break;
             case 'toolbar.adminPanel':
                 void this.navigationService.redirectToAdminPage();
+                break;
+            case 'toolbar.clientPanel':
+                void this.navigationService.redirectToClientPage();
                 break;
         }
     }
@@ -76,5 +88,6 @@ import { Subject } from "rxjs/internal/Subject";
   getRefreshObservable() {
     return this.refreshSubject.asObservable();
   }
-  
+
   }
+

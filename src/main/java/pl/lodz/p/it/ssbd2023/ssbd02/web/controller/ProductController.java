@@ -4,6 +4,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.json.Json;
@@ -41,6 +42,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.mappers.FormDataMapper;
 
 @Path("/product")
 @Interceptors({SimpleLoggerInterceptor.class})
+@RequestScoped
 public class ProductController {
 
   @Inject
