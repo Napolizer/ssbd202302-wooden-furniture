@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.ws.rs.GET;
@@ -12,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 
 @Path("/category")
 @Interceptors({SimpleLoggerInterceptor.class})
+@RequestScoped
 public class CategoryController {
 
   @Inject

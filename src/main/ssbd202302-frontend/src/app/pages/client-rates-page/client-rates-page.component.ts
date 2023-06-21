@@ -10,6 +10,7 @@ import {Rate} from "../../interfaces/rate";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TranslateService} from "@ngx-translate/core";
 import {AlertService} from "@full-fledged/alerts";
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-client-rates-page',
@@ -46,22 +47,25 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   starRating = 2;
   currentPage = 1; // Current page number
   pagedProducts: OrderProductWithRate[] = []; // Paged products to display
+// Declare an event emitter
+  refreshToolbar: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private productService: ProductService,
     private rateService: RateService,
     private router: Router,
     private translate: TranslateService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
     this.router.events.pipe(takeUntil(this.destroy)).subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.loading = true;
+
+        this.refreshToolbar.emit();
       }
     });
-
     this.loadClientProducts();
   }
 

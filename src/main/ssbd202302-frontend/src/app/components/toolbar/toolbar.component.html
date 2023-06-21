@@ -1,4 +1,4 @@
-<mat-toolbar [ngStyle]="getToolbarColor()">
+<mat-toolbar [ngStyle]="getToolbarColor()" >
   <button
     *ngIf="isUserLoggedIn()"
     mat-icon-button
@@ -17,7 +17,9 @@
       </a>
     </ng-container>
     <ng-container *ngIf="last">
-      <strong>{{ breadcrumb | translate }}</strong>
+       <a (click)="navigateBreadcrumb(breadcrumb)" style="all: unset">
+         <strong>{{ breadcrumb | translate }} </strong>
+      </a>
     </ng-container>
   </span>
   <mat-menu #mainMenu [overlapTrigger]="false" yPosition="below">

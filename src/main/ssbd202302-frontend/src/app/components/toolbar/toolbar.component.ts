@@ -75,7 +75,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   redirectToClientPage(): void {
     this.breadcrumbs=['toolbar.home','toolbar.clientPanel']
-    this.navigationService.redirectToClientPage();
+    this.navigationService.redirectToClientOrdersPage();
   }
 
   redirectToAccountPage(): void {
@@ -133,7 +133,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   isUserNormalType(): boolean {
     return this.tokenService.getAccountType() === AccountType.NORMAL;
   }
-  
+
   openGenerateReportDialog(): void {
     this.dialogService.openGenerateReportDialog();
   }
@@ -340,7 +340,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.redirectToLoginPage();
         break;
       }
+      case 'toolbar.clientPanel': {
+        this.breadcrumbs=['toolbar.home']
+        this.redirectToClientPage();
+        break;
+      }
       default:
+        console.log("No breadcrumbs for this page")
         break;
     }
   }
@@ -357,4 +363,5 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   countProductsInCart(): number {
     return this.cartService.getTotalAmountOfProducts();
   }
+
 }

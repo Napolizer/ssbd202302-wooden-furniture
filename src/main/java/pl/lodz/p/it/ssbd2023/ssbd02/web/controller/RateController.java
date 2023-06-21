@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.validation.Valid;
@@ -24,6 +25,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.interceptors.SimpleLoggerInterceptor;
 
 @Path("/rate")
 @Interceptors({SimpleLoggerInterceptor.class})
+@RequestScoped
 public class RateController {
 
   @Inject
