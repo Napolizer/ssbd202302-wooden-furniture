@@ -307,7 +307,7 @@ class MOK20IT {
           .when()
           .put("/account/change-email/" + id)
           .then()
-          .statusCode(400);
+          .statusCode(401);
     }
   }
 }

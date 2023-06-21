@@ -9,8 +9,8 @@ import static com.codeborne.selenide.Selenide.open;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import java.time.Duration;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
@@ -20,6 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
+@DisplayName("MOK.1 - Register")
 class SelenideMOK1 {
   public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;
 
@@ -32,12 +33,8 @@ class SelenideMOK1 {
     Configuration.baseUrl = "http://frontend";
   }
 
-  @AfterAll
-  public static void tearDown() {
-    WebDriverRunner.closeWebDriver();
-  }
-
   @Test
+  @DisplayName("Should properly register account")
   void shouldProperlyRegisterUser() {
     open("/");
     $(".title-text").shouldHave(text("Wooden Furniture"));
@@ -63,6 +60,7 @@ class SelenideMOK1 {
   }
 
   @Test
+  @DisplayName("Should properly register account with company details")
   void shouldProperlyRegisterUserWithCompany() {
     open("/");
     $(".title-text").shouldHave(text("Wooden Furniture"));

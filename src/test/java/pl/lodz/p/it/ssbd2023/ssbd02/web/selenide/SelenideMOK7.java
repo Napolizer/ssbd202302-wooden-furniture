@@ -3,17 +3,17 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.selenide;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+
+import java.time.Duration;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-
-import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.text;
@@ -24,7 +24,6 @@ import static com.codeborne.selenide.WebDriverConditions.urlContaining;
 @SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOK.7 - Change own password")
 class SelenideMOK7 {
-
   public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;
 
   @BeforeAll
@@ -36,28 +35,10 @@ class SelenideMOK7 {
     Configuration.baseUrl = "http://frontend";
   }
 
-  @AfterAll
-  public static void tearDown() {
-    WebDriverRunner.closeWebDriver();
+  @AfterEach
+  public void cleanUp() {
+    localStorage().clear();
   }
-
-//  @BeforeEach
-//  public void setUp() {
-//    ChromeOptions options = new ChromeOptions();
-//    options.addArguments("start-maximized");
-//    options.addArguments("--no-sandbox");
-//    options.addArguments("--ignore-certificate-errors");
-//    options.addArguments("--lang=en");
-//    options.setExperimentalOption("prefs", Map.of("intl.accept_languages", "en"));
-//    WebDriverRunner.setWebDriver(new ChromeDriver(options));
-//    Configuration.baseUrl = "http://localhost:4200";
-//    Configuration.timeout = Duration.ofSeconds(6).toMillis();
-//  }
-//
-//  @AfterEach
-//  public void tearDown() {
-//    WebDriverRunner.closeWebDriver();
-//  }
 
   @Test
   @DisplayName("Should properly log in, change password and then log in again with new password")
