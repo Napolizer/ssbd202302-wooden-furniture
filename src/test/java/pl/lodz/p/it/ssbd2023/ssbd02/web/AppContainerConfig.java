@@ -55,7 +55,7 @@ public class AppContainerConfig implements SharedContainerConfiguration {
       .withReadinessPath("/api/v1/health")
       .dependsOn(postgres)
       .dependsOn(chrome)
-      .withStartupTimeout(Duration.ofMinutes(2));
+      .withStartupTimeout(Duration.ofMinutes(5));
 
   public static DockerImageName firefoxImage() {
     return DockerImageName.parse("selenium/standalone-chrome");

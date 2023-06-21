@@ -174,7 +174,8 @@
                       <mat-icon>add</mat-icon>
                       {{'account.addrole' | translate}}
                     </button>
-                    <button *ngIf="canRemoveRole()" mat-button color="primary" (click)="redirectToRemoveAccountRolesPage()">
+                    <button *ngIf="canRemoveRole()" mat-button color="primary" (click)="redirectToRemoveAccountRolesPage()"
+                    class="remove-role-button">
                       <mat-icon>remove</mat-icon>
                       {{'account.removerole' | translate}}
                     </button>

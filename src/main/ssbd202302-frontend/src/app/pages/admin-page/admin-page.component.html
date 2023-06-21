@@ -66,12 +66,15 @@
                 matSort
                 *ngIf="shouldDisplayTable()"
                 (matSortChange)="onSortClicked($event)"
+                class="mat-table-accounts"
               >
-                <ng-container matColumnDef="login">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+                <ng-container matColumnDef="login"
+                class="ng-container-login">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                  class="mat-cell-column-login">{{
                     "login" | translate
                   }}</mat-header-cell>
-                  <mat-cell *matCellDef="let account">
+                  <mat-cell *matCellDef="let account" class="mat-cell-login">
                     {{ account.login }}</mat-cell
                   >
                 </ng-container>
@@ -127,7 +130,8 @@
                     >
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="action">
+                <ng-container matColumnDef="action"
+                class="ng-container-action-menu-account">
                   <mat-header-cell *matHeaderCellDef>{{
                     "perform.action" | translate
                   }}</mat-header-cell>
@@ -135,6 +139,7 @@
                     <app-admin-actions-menu
                       [account]="account"
                       (loadingChanged)="listLoading = $event.valueOf()"
+                      class="action-menu-account"
                     ></app-admin-actions-menu>
                   </mat-cell>
                 </ng-container>
