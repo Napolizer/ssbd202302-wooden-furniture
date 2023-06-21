@@ -149,5 +149,17 @@ public class MOK5IT {
               .statusCode(400)
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_CLIENT_AND_SALES_REP_ACCESS_LEVEL_CONFLICT));
     }
+
+    @Test
+    @DisplayName("Should fail with invalid access level token")
+    @Order(7)
+    void shouldFailWithInvalidAccessLevelToken() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveSalesRepToken())
+          .when()
+          .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Sales_rep")
+          .then()
+          .statusCode(403);
+    }
   }
 }
