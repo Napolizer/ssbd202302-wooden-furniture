@@ -51,11 +51,6 @@ class SelenideIT {
     Configuration.baseUrl = "http://localhost:4200";
   }
 
-//  @AfterEach
-  public void tearDown() {
-    WebDriverRunner.closeWebDriver();
-  }
-
 //  @Test
   void showSelenideUsers() {
     open("/");
