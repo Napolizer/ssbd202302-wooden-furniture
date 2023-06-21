@@ -56,10 +56,12 @@ import { Subject } from "rxjs/internal/Subject";
           else if(this.currentUrl.includes("/client/orders/rates")) {
             this.breadcrumbs=['toolbar.home', 'toolbar.clientPanel', 'toolbar.rates' ]
           }
-        else if(this.currentUrl.includes("/client/orders")) {
-          this.breadcrumbs=['toolbar.home', 'toolbar.clientPanel']
-        }
-
+          else if(this.currentUrl.includes("/client/orders")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.clientPanel']
+          }
+          else if(this.currentUrl.includes("/products")) {
+            this.breadcrumbs=['toolbar.home', 'toolbar.products']
+          }
           return this.breadcrumbs;
     }
 
@@ -88,3 +90,4 @@ import { Subject } from "rxjs/internal/Subject";
   }
 
   }
+

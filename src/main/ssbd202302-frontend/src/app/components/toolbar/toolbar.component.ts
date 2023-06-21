@@ -94,6 +94,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   redirectToProductsPage(): void {
+    this.breadcrumbs=['toolbar.home', 'toolbar.products']
     void this.navigationService.redirectToProductsPage();
   }
 

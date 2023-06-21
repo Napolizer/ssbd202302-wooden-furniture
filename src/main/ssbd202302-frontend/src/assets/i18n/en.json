@@ -345,6 +345,7 @@
   "toolbar.createAccount": "Create Account",
   "toolbar.account": "Account",
   "toolbar.doneOrders": "Done orders",
+  "toolbar.products": "Products",
   "toolbar.rates": "Rates",
 
   "auth.token.expired": "Your token has expired",
@@ -503,6 +504,7 @@
   "product.amount": "Amount",
   "product.image": "Image",
   "product.edit": "Edit product",
+  "product.archive": "Archive product",
   "product.dimensions": "Dimensions",
   "product.package.dimensions": "Package dimensions",
   "product.chosen.number.of.pieces": "Chosen number of pieces",
