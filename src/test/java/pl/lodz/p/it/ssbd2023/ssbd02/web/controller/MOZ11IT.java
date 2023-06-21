@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CANCELLED;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.COMPLETED;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.DELIVERED;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.IN_DELIVERY;
@@ -278,7 +277,6 @@ public class MOZ11IT {
     @DisplayName("should fail if id is null")
     @Order(10)
     void shouldFailIfIdIsNull() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -287,7 +285,7 @@ public class MOZ11IT {
               "id": "%s",
               "hash": "%s"
             }
-            """.formatted(null, order.getHash()))
+            """.formatted(null, "$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe"))
           .when()
           .put("/order/employee/cancel")
           .then()
@@ -298,7 +296,6 @@ public class MOZ11IT {
     @DisplayName("should fail if id is in invalid format")
     @Order(11)
     void shouldFailIfIdIsInInvalidFormat() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -307,7 +304,7 @@ public class MOZ11IT {
               "id": "%s",
               "hash": "%s"
             }
-            """.formatted("invalid-format", order.getHash()))
+            """.formatted("invalid-format", "$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe"))
           .when()
           .put("/order/employee/cancel")
           .then()
@@ -318,7 +315,6 @@ public class MOZ11IT {
     @DisplayName("should fail if hash is null")
     @Order(12)
     void shouldFailIfHashIsNull() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -327,7 +323,7 @@ public class MOZ11IT {
               "id": "%s",
               "hash": "%s"
             }
-            """.formatted(order.getId(), null))
+            """.formatted(5L, null))
           .when()
           .put("/order/employee/cancel")
           .then()
@@ -338,7 +334,6 @@ public class MOZ11IT {
     @DisplayName("should fail if hash is in invalid format")
     @Order(13)
     void shouldFailIfHashIsInInvalidFormat() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -347,7 +342,7 @@ public class MOZ11IT {
               "id": "%s",
               "hash": "%s"
             }
-            """.formatted(order.getId(), "invalid-hash"))
+            """.formatted(5L, "invalid-hash"))
           .when()
           .put("/order/employee/cancel")
           .then()

@@ -288,7 +288,6 @@ public class MOZ10IT {
     @DisplayName("should fail if hash is null")
     @Order(10)
     void shouldFailIfHashIsNull() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -299,7 +298,7 @@ public class MOZ10IT {
             }
             """.formatted(IN_DELIVERY, null))
           .when()
-          .put("/order/state/%s".formatted(order.getId()))
+          .put("/order/state/%s".formatted(5L))
           .then()
           .statusCode(400);
     }
@@ -308,7 +307,6 @@ public class MOZ10IT {
     @DisplayName("should fail if hash is in invalid format")
     @Order(11)
     void shouldFailIfHashIsInInvalidFormat() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -319,7 +317,7 @@ public class MOZ10IT {
             }
             """.formatted(IN_DELIVERY, "invalid-format"))
           .when()
-          .put("/order/state/%s".formatted(order.getId()))
+          .put("/order/state/%s".formatted(5L))
           .then()
           .statusCode(400);
     }
@@ -328,7 +326,6 @@ public class MOZ10IT {
     @DisplayName("should fail if state is null")
     @Order(12)
     void shouldFailIfStateIsNull() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -337,9 +334,9 @@ public class MOZ10IT {
               "state": "%s",
               "hash": "%s"
             }
-            """.formatted(null, order.getHash()))
+            """.formatted(null, "$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe"))
           .when()
-          .put("/order/state/%s".formatted(order.getId()))
+          .put("/order/state/%s".formatted(5L))
           .then()
           .statusCode(400);
     }
@@ -348,7 +345,6 @@ public class MOZ10IT {
     @DisplayName("should fail if state is in invalid format")
     @Order(13)
     void shouldFailIfStateIsInInvalidFormat() {
-      OrderDto order = OrderUtil.createOrder();
       given()
           .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
           .header("Content-Type", "application/json")
@@ -357,9 +353,9 @@ public class MOZ10IT {
               "state": "%s",
               "hash": "%s"
             }
-            """.formatted("invalid-format", order.getHash()))
+            """.formatted("invalid-format", "$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe"))
           .when()
-          .put("/order/state/%s".formatted(order.getId()))
+          .put("/order/state/%s".formatted(5L))
           .then()
           .statusCode(400);
     }
