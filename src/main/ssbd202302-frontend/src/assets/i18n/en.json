@@ -190,7 +190,7 @@
   "account.edit": "Edit",
   "account.state.active": "Active",
   "account.state.blocked": "Blocked",
-  "account.state.notVerified": "Not Verified",
+  "account.state.not_verified": "Not Verified",
   "account.state.inactive": "Inactive",
   "account.addrole": "Add role",
   "account.removerole": "Remove role",

@@ -191,7 +191,7 @@
   "account.edit": "Edytuj",
   "account.state.active": "Aktywne",
   "account.state.blocked": "Zablokowane",
-  "account.state.notVerified": "Nie zweryfikowane",
+  "account.state.not_verified": "Nie zweryfikowane",
   "account.state.inactive": "Nieaktywne",
   "account.addrole": "Dodaj rolę",
   "account.removerole": "Usuń rolę",
