@@ -139,5 +139,76 @@ public class MOK27IT {
 							.statusCode(410)
 							.body("message", equalTo(MessageUtil.MessageKey.ERROR_EXPIRED_CHANGE_EMAIL_LINK));
 		}
+
+		@Test
+		@DisplayName("Should fail to change email with invalid version")
+		@Order(3)
+		void shouldFailToChangeEmailWithInvalidVersion() {
+			String login = "clientemployee";
+			String newEmail = "anotheremail123@example.com";
+			SetEmailToSendPasswordDto emailDto = InitData.getEmailToChange(newEmail);
+			String version = "$2a$12$B9ebs7UPupDVjQbQXHmxIOQqQE0SnlUSFd7rz1LnHxmO0FQ3/f5US";
+
+			given()
+							.contentType("application/json")
+							.header(HttpHeaders.AUTHORIZATION, "Bearer " + InitData.retrieveAdminToken())
+							.header(HttpHeaders.IF_MATCH, version)
+							.body(InitData.mapToJsonString(emailDto))
+							.when()
+							.put("/account/change-email/" + InitData.retrieveAccountId(login))
+							.then()
+							.statusCode(409);
+		}
+
+		@Test
+		@DisplayName("Should fail to change email without authorization header")
+		@Order(4)
+		void shouldFailToChangeEmailWithoutAuthorizationHeader() {
+			String login = "clientemployee";
+			String newEmail = "anotheremail123@example.com";
+			SetEmailToSendPasswordDto emailDto = InitData.getEmailToChange(newEmail);
+			String version = "$2a$12$B9ebs7UPupDVjQbQXHmxIOQqQE0SnlUSFd7rz1LnHxmO0FQ3/f5US";
+
+			given()
+							.contentType("application/json")
+							.header(HttpHeaders.IF_MATCH, version)
+							.body(InitData.mapToJsonString(emailDto))
+							.when()
+							.put("/account/change-email/" + InitData.retrieveAccountId(login))
+							.then()
+							.statusCode(401);
+		}
+
+		@Test
+		@DisplayName("Should fail to submit new email without authorization header")
+		@Order(5)
+		void shouldFailToSubmitNewEmailWithoutAuthorizationHeader() {
+			String login = "clientemployee";
+			String newEmail = "anotheremail123@example.com";
+			SetEmailToSendPasswordDto emailDto = InitData.getEmailToChange(newEmail);
+			String version = InitData.retrieveVersion(login);
+
+			given()
+							.contentType("application/json")
+							.header(HttpHeaders.AUTHORIZATION, "Bearer " + InitData.retrieveAdminToken())
+							.header(HttpHeaders.IF_MATCH, version)
+							.body(InitData.mapToJsonString(emailDto))
+							.when()
+							.put("/account/change-email/" + InitData.retrieveAccountId(login))
+							.then()
+							.statusCode(200);
+
+			String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLdWJhMTIzIiwiaWF0IjoxN" +
+							"jg0NjY3NTU2LCJleHAiOjE2ODQ3NTM5NTYsInR5cGUiOiJBQ0NPVU5UX0NPTkZJUk" +
+							"1BVElPTiJ9.YGfR9iIC54jknWOyZCZ5ryg9WVY4B-qyuz6TW-7ujWzsu00a-YzMHcGu2udx-6kOKXttSDXk6QHaDEST1yaZpw";
+
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(emailDto))
+							.when()
+							.patch( "/account/change-email?token=" + token)
+							.then()
+							.statusCode(401);
+		}
 	}
 }
