@@ -773,7 +773,7 @@ public class MOZ17IT {
           .when()
           .post("/order/create")
           .then()
-          .statusCode(409);
+          .statusCode(400);
     }
 
     @Order(17)
@@ -784,6 +784,34 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(999)
+          .price(200.0)
+          .build());
+
+      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+          .products(orderedProducts)
+          .build();
+
+      String token = AuthUtil.retrieveToken("makesOrder", "Student123!");
+
+      given()
+          .header(AUTHORIZATION, "Bearer " + token)
+          .header(CONTENT_TYPE, "application/json")
+          .body(InitData.mapToJsonString(createOrderDto))
+          .when()
+          .post("/order/create")
+          .then()
+          .statusCode(400);
+    }
+
+    @Order(18)
+    @DisplayName("Should fail to create order with invalid amount")
+    @Test
+    void shouldFailToCreateOrderAmountAmountOfProductsThanPossible() {
+      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+      orderedProducts.add(OrderedProductDto.builder()
+          .productId((long) productId1)
+          .amount(-1)
+          .price(200.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()

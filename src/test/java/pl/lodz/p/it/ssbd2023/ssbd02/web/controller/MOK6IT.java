@@ -146,5 +146,17 @@ public class MOK6IT {
               .statusCode(400)
               .body("message", equalTo(MessageUtil.MessageKey.ACCOUNT_REMOVE_ACCESS_LEVEL));
     }
+
+    @Test
+    @DisplayName("Should fail to remove access level with invalid access level token")
+    @Order(6)
+    void shouldFailWithInvalidAccessLevelToken() {
+      given()
+          .header("Authorization", "Bearer " + InitData.retrieveSalesRepToken())
+          .when()
+          .delete("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/Sales_rep")
+          .then()
+          .statusCode(403);
+    }
   }
 }
