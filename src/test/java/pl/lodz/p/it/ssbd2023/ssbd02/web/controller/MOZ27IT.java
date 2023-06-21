@@ -103,5 +103,32 @@ public class MOZ27IT {
 							.statusCode(400)
 							.body("message", equalTo(MessageUtil.MessageKey.INVALID_LOCALE));
 		}
+
+		@Test
+		@Order(4)
+		@DisplayName("Should fail to generate report without authorization header")
+		void shouldFailToGenerateReportWithoutAuthorizationHeader() {
+			given()
+							.header("Accept-Language", MessageUtil.LOCALE_PL)
+							.queryParam("startDate", "01/01/2023")
+							.queryParam("endDate", "12/01/2023")
+							.get("/order/report")
+							.then()
+							.statusCode(401);
+		}
+
+		@Test
+		@Order(5)
+		@DisplayName("Should fail to generate report as employee")
+		void shouldFailToGenerateReportAsEmployee() {
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.header("Accept-Language", MessageUtil.LOCALE_PL)
+							.queryParam("startDate", "01/01/2023")
+							.queryParam("endDate", "12/01/2023")
+							.get("/order/report")
+							.then()
+							.statusCode(403);
+		}
 	}
 }
