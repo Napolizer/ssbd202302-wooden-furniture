@@ -487,7 +487,7 @@
             </div>
             <div class="form-person">
               <div class="button-container">
-                <button mat-button (click)="onConfirm()">
+                <button mat-button (click)="onConfirm()" class="register-button">
                   {{ "register.button.sign" | translate }}
                 </button>
               </div>
@@ -506,7 +506,7 @@
         </p>
         <p>
           {{ "register.confirm.third" | translate
-          }}<a routerLink="/login">{{
+          }}<a routerLink="/login" class="register-success-login-redirect">{{
             "register.confirm.fourth" | translate
           }}</a>
         </p>
