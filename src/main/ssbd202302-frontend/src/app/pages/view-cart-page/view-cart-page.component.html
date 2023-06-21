@@ -61,7 +61,7 @@
                 <div class="input-group w-75">
                   <div class="input-group-prepend">
                     <button class="btn btn-outline-secondary" (click)="decreaseAmount(orderedProduct)"
-                            [disabled]="orderedProduct.product.archive">-</button>
+                            [disabled]="orderedProduct.product.archive || orderedProduct.product.productGroup.archive">-</button>
                   </div>
                   <input
                     name="amountInput"
@@ -72,10 +72,10 @@
                     min="1"
                     [max]="orderedProduct.product.amount"
                     (change)="validateChangedAmount(orderedProduct); updateTotalPrice()"
-                    [disabled]="orderedProduct.product.archive"/>
+                    [disabled]="orderedProduct.product.archive || orderedProduct.product.productGroup.archive"/>
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary" (click)="increaseAmount(orderedProduct)"
-                            [disabled]="orderedProduct.product.archive">+</button>
+                            [disabled]="orderedProduct.product.archive || orderedProduct.product.productGroup.archive">+</button>
                   </div>
                   <button mat-button color="primary" (click)="onRemoveFromCartClicked(orderedProduct)">
                     <mat-icon>delete</mat-icon>

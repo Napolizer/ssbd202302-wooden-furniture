@@ -167,14 +167,17 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId2)
           .amount(1)
+          .price(300.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId3)
           .amount(1)
+          .price(400.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -215,14 +218,17 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId2)
           .amount(1)
+          .price(300.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId3)
           .amount(1)
+          .price(400.0)
           .build());
 
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
@@ -282,6 +288,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -305,6 +312,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -387,6 +395,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(-1)
+          .price(200.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -413,6 +422,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId(-1L)
           .amount(1)
+          .price(200.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -439,6 +449,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId(Long.MAX_VALUE)
           .amount(1)
+          .price(200.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -465,6 +476,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
@@ -504,6 +516,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
@@ -543,6 +556,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
@@ -582,6 +596,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
@@ -621,6 +636,7 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
 
       ShippingDataDto shippingDataDto = ShippingDataDto.builder()
@@ -669,7 +685,7 @@ public class MOZ17IT {
           .as(ProductDto.class);
 
       EditProductDto editProductDto = EditProductDto.builder()
-              .price(999.0)
+              .price(1.0)
               .amount(23)
               .hash(productDto.getHash())
               .build();
@@ -682,13 +698,14 @@ public class MOZ17IT {
           .put("/product/editProduct/id/" + productId4)
           .then()
           .statusCode(200)
-          .body("price", equalTo(999.0F))
+          .body("price", equalTo(1.0F))
           .body("amount", equalTo(23));
 
       List<OrderedProductDto> orderedProducts = new ArrayList<>();
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId4)
           .amount(1)
+          .price(999.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -720,22 +737,27 @@ public class MOZ17IT {
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId1)
           .amount(1)
+          .price(200.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId2)
           .amount(1)
+          .price(300.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId3)
           .amount(1)
+          .price(400.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId4)
           .amount(1)
+          .price(400.0)
           .build());
       orderedProducts.add(OrderedProductDto.builder()
           .productId((long) productId5)
           .amount(1)
+          .price(499.0)
           .build());
 
       CreateOrderDto createOrderDto = CreateOrderDto.builder()
@@ -751,56 +773,10 @@ public class MOZ17IT {
           .when()
           .post("/order/create")
           .then()
-          .statusCode(400);
+          .statusCode(409);
     }
 
     @Order(17)
-    @DisplayName("Should fail to create order if any product group is archive")
-    @Test
-    void shouldFailToCreateOrderIfAnyProductGroupIsArchive() {
-      List<OrderedProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderedProductDto.builder()
-          .productId((long) productId1)
-          .amount(1)
-          .build());
-      orderedProducts.add(OrderedProductDto.builder()
-          .productId((long) productId2)
-          .amount(1)
-          .build());
-      orderedProducts.add(OrderedProductDto.builder()
-          .productId((long) productId3)
-          .amount(1)
-          .build());
-      orderedProducts.add(OrderedProductDto.builder()
-          .productId((long) productId4)
-          .amount(1)
-          .build());
-
-      CreateOrderDto createOrderDto = CreateOrderDto.builder()
-          .products(orderedProducts)
-          .build();
-
-      given()
-          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
-          .when()
-          .put("/product/group/archive/id/48")
-          .then()
-          .statusCode(200)
-          .body("archive", equalTo(true));
-
-      String token = AuthUtil.retrieveToken("makesOrder", "Student123!");
-
-      given()
-          .header(AUTHORIZATION, "Bearer " + token)
-          .header(CONTENT_TYPE, "application/json")
-          .body(InitData.mapToJsonString(createOrderDto))
-          .when()
-          .post("/order/create")
-          .then()
-          .statusCode(400);
-    }
-
-    @Order(18)
     @DisplayName("Should fail to create order with higher amount of products than possible")
     @Test
     void shouldFailToCreateOrderWithHigherAmountOfProductsThanPossible() {

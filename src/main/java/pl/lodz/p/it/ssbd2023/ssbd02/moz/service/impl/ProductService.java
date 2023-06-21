@@ -12,6 +12,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.OptimisticLockException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.ProductField;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 import pl.lodz.p.it.ssbd2023.ssbd02.exceptions.ApplicationExceptionFactory;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.GoogleServiceOperations;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.AccountMozFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.OrderFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductFacadeOperations;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.api.ProductGroupFacadeOperations;
@@ -54,6 +56,12 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
   @Inject
   private GoogleServiceOperations googleService;
+
+  @Inject
+  private Principal principal;
+
+  @Inject
+  private AccountMozFacadeOperations accountFacade;
 
   @Override
   @RolesAllowed(EMPLOYEE)
@@ -88,6 +96,8 @@ public class ProductService extends AbstractService implements ProductServiceOpe
 
     product.setProductGroup(productGroup);
     product.setImage(productWithImage.getImage());
+    product.setCreatedBy(accountFacade.findByLogin(principal.getName())
+        .orElseThrow(ApplicationExceptionFactory::createAccountNotFoundException));
     return productFacade.update(product);
   }
 

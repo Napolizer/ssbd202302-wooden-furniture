@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.moz.facade.impl;
 
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
@@ -38,7 +39,7 @@ public class AccountMozFacade extends AbstractFacade<Account> implements Account
   }
 
   @Override
-  @RolesAllowed(CLIENT)
+  @RolesAllowed({CLIENT, EMPLOYEE})
   public Optional<Account> findByLogin(String login) {
     try {
       return Optional.of(em.createNamedQuery(Account.FIND_BY_LOGIN, Account.class)

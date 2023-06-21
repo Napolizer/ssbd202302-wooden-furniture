@@ -48,7 +48,7 @@ public class MOZ9IT {
     void shouldFailBecauseOfMissingHeader() {
       given()
           .when()
-          .put("/product/group/archive/id/48")
+          .put("/product/group/archive/id/47")
           .then()
           .statusCode(401);
     }
