@@ -255,7 +255,7 @@ public class MOZ11IT {
 
     @Test
     @DisplayName("should fail to cancel order in delivery")
-    @Order(1)
+    @Order(9)
     void shouldFailToCancelOrderInDelivery() {
       OrderDto order = OrderUtil.createOrder(IN_DELIVERY);
       given()
@@ -272,6 +272,86 @@ public class MOZ11IT {
           .then()
           .statusCode(400)
           .body("message", equalTo("exception.moz.order.already.in.delivery"));
+    }
+
+    @Test
+    @DisplayName("should fail if id is null")
+    @Order(10)
+    void shouldFailIfIdIsNull() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "id": "%s",
+              "hash": "%s"
+            }
+            """.formatted(null, order.getHash()))
+          .when()
+          .put("/order/employee/cancel")
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("should fail if id is in invalid format")
+    @Order(11)
+    void shouldFailIfIdIsInInvalidFormat() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "id": "%s",
+              "hash": "%s"
+            }
+            """.formatted("invalid-format", order.getHash()))
+          .when()
+          .put("/order/employee/cancel")
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("should fail if hash is null")
+    @Order(12)
+    void shouldFailIfHashIsNull() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "id": "%s",
+              "hash": "%s"
+            }
+            """.formatted(order.getId(), null))
+          .when()
+          .put("/order/employee/cancel")
+          .then()
+          .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("should fail if hash is in invalid format")
+    @Order(13)
+    void shouldFailIfHashIsInInvalidFormat() {
+      OrderDto order = OrderUtil.createOrder();
+      given()
+          .header("Authorization", "Bearer " + AuthUtil.retrieveToken("employee"))
+          .header("Content-Type", "application/json")
+          .body("""
+            {
+              "id": "%s",
+              "hash": "%s"
+            }
+            """.formatted(order.getId(), "invalid-hash"))
+          .when()
+          .put("/order/employee/cancel")
+          .then()
+          .statusCode(400);
     }
   }
 }

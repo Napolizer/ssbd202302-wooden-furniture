@@ -169,6 +169,28 @@ public class MOK21IT {
                 .then()
                 .statusCode(200);
       }
+
+      @DisplayName("Should fail if account is blocked")
+      @Test
+      @Order(5)
+      void shouldFailIfAccountIsBlocked() {
+        AccountUtil.registerUser("blockedaccount123");
+
+        given()
+            .contentType("application/json")
+            .body("""
+                         {
+                             "email": "blockedaccount123@ssbd.com"
+                         }
+                  """)
+            .when()
+            .post("/account/forgot-password")
+            .then()
+            .statusCode(400)
+            .contentType("application/json")
+            .body("message", notNullValue())
+            .body("message", is(equalTo("exception.mok.account.not.active")));
+      }
     }
 
     @Nested

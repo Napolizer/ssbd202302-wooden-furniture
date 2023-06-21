@@ -292,5 +292,22 @@ class MOK20IT {
           .body("message", is(equalTo("exception.optimistic.lock")));
     }
 
+    @DisplayName("Should fail to change email if token is missing")
+    @Test
+    @Order(7)
+    void shouldFailToChangeEmailIfHashIsMissing() {
+      int id = AccountUtil.getAccountId("bednaro");
+      given()
+          .contentType("application/json")
+          .body("""
+                     {
+                         "email": "user@gmail.com"
+                     }
+              """)
+          .when()
+          .put("/account/change-email/" + id)
+          .then()
+          .statusCode(400);
+    }
   }
 }
