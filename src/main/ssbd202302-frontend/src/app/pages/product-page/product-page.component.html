@@ -1,4 +1,11 @@
 <app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
+<button
+              mat-button
+              color="primary"
+              (click)="onResetClicked()"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
 <mat-grid-list class="mat-list" cols="5" gutterSize="15px" rowHeight="600px">
   <mat-grid-tile *ngFor="let product of pagedProducts; let i = index">
     <a

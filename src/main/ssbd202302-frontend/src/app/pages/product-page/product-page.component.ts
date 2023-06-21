@@ -82,6 +82,15 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     return this.loading;
   }
 
+  onResetClicked(): void {
+    this.loading=true;
+    this.productService.retrieveAllProducts().subscribe(products => {
+      this.products = products.sort((a, b) => a.productGroup.id - b.productGroup.id);
+      this.loading = false;
+      this.updatePagedProducts();
+    })
+  }
+
   getStarArray(averageRating: number): string[] {
     const starArray = [];
     const fullStars = Math.floor(averageRating);
