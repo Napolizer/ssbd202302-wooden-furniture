@@ -148,6 +148,63 @@ public class MOZ19IT {
               .then()
               .statusCode(404);
     }
+
+    @Order(6)
+    @DisplayName("Should not add rate without token")
+    @Test
+    void shouldNotAddRateWithoutToken() {
+      given()
+              .header("Content-Type", "application/json")
+              .body("""
+            {
+              "rate": 1,
+              "productId":  %d
+            }
+            """.formatted(products.get(products.size() - 1).getProduct().getProductGroup().getId()))
+              .when()
+              .post("/rate")
+              .then()
+              .statusCode(401);
+    }
+
+    @Order(7)
+    @DisplayName("Should not add rate with token with different role")
+    @Test
+    void shouldNotAddRateWithTokenWithDifferentRole() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .header("Content-Type", "application/json")
+              .body("""
+            {
+              "rate": 1,
+              "productId":  %d
+            }
+            """.formatted(products.get(products.size() - 1).getProduct().getProductGroup().getId()))
+              .when()
+              .post("/rate")
+              .then()
+              .statusCode(403);
+    }
+
+    @Order(8)
+    @DisplayName("Should not add rate without product group id")
+    @Test
+    void shouldNotAddRateWithoutProductGroupId() {
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+              .header("Content-Type", "application/json")
+              .body("""
+            {
+              "rate": 1,
+            }
+            """)
+              .when()
+              .post("/rate")
+              .then()
+              .statusCode(403);
+    }
   }
+
+
 
 }

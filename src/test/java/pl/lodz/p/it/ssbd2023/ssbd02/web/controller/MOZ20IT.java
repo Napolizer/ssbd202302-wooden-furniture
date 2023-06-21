@@ -94,4 +94,30 @@ class MOZ20IT {
             .then()
             .statusCode(404);
   }
+
+  @Order(6)
+  @DisplayName("Should not remove rate without token")
+  @Test
+  void shouldNotRemoveRateWithoutToken() {
+    given()
+            .header("Content-Type", "application/json")
+            .when()
+            .delete("/rate/id/" + products.get(1).getProduct().getProductGroup().getId())
+            .then()
+            .statusCode(401);
+  }
+
+  @Order(7)
+  @DisplayName("Should not add rate with token with different role")
+  @Test
+  void shouldNotRemoveRateWithTokenWithDifferentRole() {
+    given()
+            .header("Authorization", "Bearer " + InitData.retrieveAdminToken())
+            .header("Content-Type", "application/json")
+            .when()
+            .delete("/rate/id/" + products.get(1).getProduct().getProductGroup().getId())
+            .then()
+            .statusCode(403);
+  }
+
 }

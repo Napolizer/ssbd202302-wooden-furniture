@@ -166,5 +166,34 @@ public class MOK26IT {
               .then()
               .statusCode(400);
     }
+
+    @Test
+    @DisplayName("Should fail to change access level when there is no token")
+    @Order(6)
+    void failsToChangeAccessLevelWhenThereIsNoToken() {
+      AccessLevelDto accessLevel = new AccessLevelDto("administrator");
+      given()
+              .contentType(ContentType.JSON)
+              .body(InitData.mapToJsonString(accessLevel))
+              .when()
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/change")
+              .then()
+              .statusCode(401);
+    }
+
+    @Test
+    @DisplayName("Should fail to change access level when there is token with different role")
+    @Order(7)
+    void failsToChangeAccessLevelWhenThereIsTokenWithDifferentRole() {
+      AccessLevelDto accessLevel = new AccessLevelDto("administrator");
+      given()
+              .header("Authorization", "Bearer " + InitData.retrieveClientToken())
+              .contentType(ContentType.JSON)
+              .body(InitData.mapToJsonString(accessLevel))
+              .when()
+              .put("/account/id/" + InitData.retrieveAccountId(login) + "/accessLevel/change")
+              .then()
+              .statusCode(403);
+    }
   }
 }
