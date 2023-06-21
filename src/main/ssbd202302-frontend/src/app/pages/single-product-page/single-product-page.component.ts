@@ -278,4 +278,14 @@ export class SingleProductPageComponent implements OnInit {
   redirectToProductEditionHistoryPage(): void {
     void this.navigationService.redirectToProductEditionHistoryPage(this.product.id);
   }
+
+  onResetClicked(): void {
+    this.loading=true;
+    this.id = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    this.productService
+      .retrieveProduct(this.id).subscribe(product => {
+        this.product = product;
+        this.loading = false;
+      })
+  }
 }

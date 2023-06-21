@@ -1,3 +1,11 @@
+<button
+              mat-button
+              color="primary"
+              class="resetButton"
+              (click)="onResetClicked()"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
 <app-spinner [loading]="shouldDisplaySpinner()"></app-spinner>
 <mat-card>
   <div class="container mt-4">
