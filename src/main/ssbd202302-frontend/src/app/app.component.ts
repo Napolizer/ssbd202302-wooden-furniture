@@ -34,6 +34,8 @@ export class AppComponent {
     if (authenticationService.isUserLoggedIn()) {
       translate.use(this.localStorageService.get(environment.localeKey)!);
       this.cartService.getProductsFromLocalStorage();
+    } else {
+      translate.use(this.translate.getBrowserLang() as string);
     }
 
     this.matIconRegistry.addSvgIcon('google-logo',

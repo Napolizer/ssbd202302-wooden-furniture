@@ -48,14 +48,35 @@ public class MOZ5IT {
 			ProductCreateDto productCreateDto = InitData.getProductToCreate();
 			productCreateDto.setFurnitureWidth(width);
 			File file = new File(System.getProperty("user.dir") + "/src/test/resources/uploads/" + fileName);
-			given()
+			int id = given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.multiPart("image", file)
 							.multiPart("product", InitData.mapToJsonString(productCreateDto))
 							.when()
 							.post("/product/new-image")
 							.then()
-							.statusCode(201);
+							.statusCode(201)
+							.extract()
+							.path("id");
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.get("/product/id/" + id)
+							.then()
+							.statusCode(200)
+							.body("amount", equalTo(productCreateDto.getAmount()))
+							.body("archive", equalTo(false))
+							.body("furnitureDimensions.depth", equalTo(productCreateDto.getFurnitureDepth()))
+							.body("furnitureDimensions.height", equalTo(productCreateDto.getFurnitureHeight()))
+							.body("furnitureDimensions.width", equalTo(productCreateDto.getFurnitureWidth()))
+							.body("packageDimensions.depth", equalTo(productCreateDto.getPackageDepth()))
+							.body("packageDimensions.height", equalTo(productCreateDto.getPackageHeight()))
+							.body("packageDimensions.width", equalTo(productCreateDto.getPackageWidth()))
+							.body("imageUrl", is(notNullValue()))
+							.body("productGroup.id", equalTo(productCreateDto.getProductGroupId().intValue()))
+							.body("color", equalTo(productCreateDto.getColor()))
+							.body("woodType", equalTo(productCreateDto.getWoodType()));
 		}
 
 		@Test
@@ -64,7 +85,7 @@ public class MOZ5IT {
 		void shouldProperlyCreateWithExistingImage() {
 			ProductCreateWithImageDto productCreateDto = InitData.getProductToCreate();
 			productCreateDto.setFurnitureWidth(444);
-			given()
+			int id = given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.contentType("application/json")
 							.body(InitData.mapToJsonString(productCreateDto))
@@ -72,8 +93,17 @@ public class MOZ5IT {
 							.log().all()
 							.post("/product/existing-image")
 							.then()
-							.log().all()
 							.statusCode(201)
+							.extract()
+							.path("id");
+
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.get("/product/id/" + id)
+							.then()
+							.statusCode(200)
 							.body("amount", equalTo(productCreateDto.getAmount()))
 							.body("archive", equalTo(false))
 							.body("furnitureDimensions.depth", equalTo(productCreateDto.getFurnitureDepth()))
@@ -105,14 +135,35 @@ public class MOZ5IT {
 			productCreateDto.setFurnitureWidth(width);
 			productCreateDto.setColor(color);
 			File file = new File(System.getProperty("user.dir") + "/src/test/resources/uploads/image.jpg");
-			given()
+			int id = given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.multiPart("image", file)
 							.multiPart("product", InitData.mapToJsonString(productCreateDto))
 							.when()
 							.post("/product/new-image")
 							.then()
-							.statusCode(201);
+							.statusCode(201)
+							.extract()
+							.path("id");
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.get("/product/id/" + id)
+							.then()
+							.statusCode(200)
+							.body("amount", equalTo(productCreateDto.getAmount()))
+							.body("archive", equalTo(false))
+							.body("furnitureDimensions.depth", equalTo(productCreateDto.getFurnitureDepth()))
+							.body("furnitureDimensions.height", equalTo(productCreateDto.getFurnitureHeight()))
+							.body("furnitureDimensions.width", equalTo(productCreateDto.getFurnitureWidth()))
+							.body("packageDimensions.depth", equalTo(productCreateDto.getPackageDepth()))
+							.body("packageDimensions.height", equalTo(productCreateDto.getPackageHeight()))
+							.body("packageDimensions.width", equalTo(productCreateDto.getPackageWidth()))
+							.body("imageUrl", is(notNullValue()))
+							.body("productGroup.id", equalTo(productCreateDto.getProductGroupId().intValue()))
+							.body("color", equalTo(productCreateDto.getColor()))
+							.body("woodType", equalTo(productCreateDto.getWoodType()));
 
 		}
 
@@ -132,14 +183,35 @@ public class MOZ5IT {
 			productCreateDto.setFurnitureWidth(width);
 			productCreateDto.setWoodType(woodType);
 			File file = new File(System.getProperty("user.dir") + "/src/test/resources/uploads/image.jpg");
-			given()
+			int id = given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.multiPart("image", file)
 							.multiPart("product", InitData.mapToJsonString(productCreateDto))
 							.when()
 							.post("/product/new-image")
 							.then()
-							.statusCode(201);
+							.statusCode(201)
+							.extract()
+							.path("id");
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.get("/product/id/" + id)
+							.then()
+							.statusCode(200)
+							.body("amount", equalTo(productCreateDto.getAmount()))
+							.body("archive", equalTo(false))
+							.body("furnitureDimensions.depth", equalTo(productCreateDto.getFurnitureDepth()))
+							.body("furnitureDimensions.height", equalTo(productCreateDto.getFurnitureHeight()))
+							.body("furnitureDimensions.width", equalTo(productCreateDto.getFurnitureWidth()))
+							.body("packageDimensions.depth", equalTo(productCreateDto.getPackageDepth()))
+							.body("packageDimensions.height", equalTo(productCreateDto.getPackageHeight()))
+							.body("packageDimensions.width", equalTo(productCreateDto.getPackageWidth()))
+							.body("imageUrl", is(notNullValue()))
+							.body("productGroup.id", equalTo(productCreateDto.getProductGroupId().intValue()))
+							.body("color", equalTo(productCreateDto.getColor()))
+							.body("woodType", equalTo(productCreateDto.getWoodType()));
 		}
 	}
 
@@ -435,6 +507,35 @@ public class MOZ5IT {
 							.put("/product/group/activate/id/44")
 							.then()
 							.statusCode(200);
+		}
+
+		@Test
+		@Order(14)
+		@DisplayName("Should fail to add product without authorization header")
+		void shouldFailToAddProductWithoutAuthorizationHeader() {
+			ProductCreateWithImageDto productCreateDto = InitData.getProductToCreate();
+			given()
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(productCreateDto))
+							.when()
+							.post("/product/existing-image")
+							.then()
+							.statusCode(401);
+		}
+
+		@Test
+		@Order(15)
+		@DisplayName("Should fail to add product as sales representative")
+		void shouldFailToAddProductAsSalesRep() {
+			ProductCreateWithImageDto productCreateDto = InitData.getProductToCreate();
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveSalesRepToken())
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(productCreateDto))
+							.when()
+							.post("/product/existing-image")
+							.then()
+							.statusCode(403);
 		}
 	}
 }

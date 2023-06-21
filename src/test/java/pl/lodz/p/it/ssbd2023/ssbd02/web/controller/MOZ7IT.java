@@ -52,7 +52,7 @@ public class MOZ7IT {
 			ProductGroupCreateDto productGroupCreateDto = InitData.getProductGroupToCreate();
 			productGroupCreateDto.setName("Product Group " + categoryName.split("_")[0]);
 			productGroupCreateDto.setCategoryName(categoryName);
-			given()
+			int id = given()
 							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
 							.contentType("application/json")
 							.body(InitData.mapToJsonString(productGroupCreateDto))
@@ -60,6 +60,15 @@ public class MOZ7IT {
 							.post("/product/group")
 							.then()
 							.statusCode(201)
+							.extract()
+							.path("id");
+
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+							.contentType("application/json")
+							.get("/product/group/id/" + id)
+							.then()
+							.statusCode(200)
 							.body("name", equalTo(productGroupCreateDto.getName()))
 							.body("category.name", equalTo(productGroupCreateDto.getCategoryName()))
 							.body("averageRating", equalTo(0.0F))
@@ -117,7 +126,7 @@ public class MOZ7IT {
 
 		@Test
 		@Order(3)
-		@DisplayName("Should fail to add product with empty data")
+		@DisplayName("Should fail to add product group with empty data")
 		void shouldFailToAddProductGroupWithEmptyData() {
 			ProductGroupCreateDto productGroupCreateDto = new ProductGroupCreateDto();
 			given()
@@ -133,7 +142,7 @@ public class MOZ7IT {
 
 		@Test
 		@Order(4)
-		@DisplayName("Should fail to add product with blank product name")
+		@DisplayName("Should fail to add product group with blank product name")
 		void shouldFailToAddProductGroupWithBlankProductName() {
 			ProductGroupCreateDto productGroupCreateDto = InitData.getProductGroupToCreate();
 			productGroupCreateDto.setName("");
@@ -152,7 +161,7 @@ public class MOZ7IT {
 
 		@Test
 		@Order(5)
-		@DisplayName("Should fail to add product with too long product name")
+		@DisplayName("Should fail to add product group with too long product name")
 		void shouldFailToAddProductGroupWithTooLongProductName() {
 			ProductGroupCreateDto productGroupCreateDto = InitData.getProductGroupToCreate();
 			productGroupCreateDto.setName("TooLongProductGroupNameTooLongProductGroupNameTooLongProductGroupName");
@@ -172,7 +181,7 @@ public class MOZ7IT {
 
 		@ParameterizedTest(name = "name: {0}")
 		@Order(6)
-		@DisplayName("Should fail to add product with invalid pattern product name")
+		@DisplayName("Should fail to add product group with invalid pattern product name")
 		@CsvSource({
 						"123Product Group",
 						"product Group",
@@ -196,8 +205,8 @@ public class MOZ7IT {
 		}
 
 		@ParameterizedTest(name = "categoryName: {0}")
-		@Order(5)
-		@DisplayName("Should fail to add product with non existing category name")
+		@Order(7)
+		@DisplayName("Should fail to add product group with non existing category name")
 		@CsvSource({
 						"FOTEL",
 						"SOFA",
@@ -217,6 +226,37 @@ public class MOZ7IT {
 							.then()
 							.statusCode(404)
 							.body("message", equalTo(MessageUtil.MessageKey.CATEGORY_NOT_FOUND));
+		}
+
+		@Test
+		@Order(8)
+		@DisplayName("Should fail to add product group without authorization header")
+		void shouldFailToAddProductGroupWithoutAuthorizationHeader() {
+			ProductGroupCreateDto productGroupCreateDto = InitData.getProductGroupToCreate();
+			given()
+							.header("Accept-Language", MessageUtil.LOCALE_PL)
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(productGroupCreateDto))
+							.when()
+							.post("/product/group")
+							.then()
+							.statusCode(401);
+		}
+
+		@Test
+		@Order(9)
+		@DisplayName("Should fail to add product group as sales representative")
+		void shouldFailToAddProductGroupAsEmployee() {
+			ProductGroupCreateDto productGroupCreateDto = InitData.getProductGroupToCreate();
+			given()
+							.header("Authorization", "Bearer " + InitData.retrieveSalesRepToken())
+							.header("Accept-Language", MessageUtil.LOCALE_PL)
+							.contentType("application/json")
+							.body(InitData.mapToJsonString(productGroupCreateDto))
+							.when()
+							.post("/product/group")
+							.then()
+							.statusCode(403);
 		}
 
 	}
