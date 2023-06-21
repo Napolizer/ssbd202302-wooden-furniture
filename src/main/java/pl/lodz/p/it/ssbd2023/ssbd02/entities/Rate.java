@@ -34,8 +34,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.listeners.RateListener;
 public class Rate extends AbstractEntity {
 
   @Column(nullable = false)
-  @Min(1)
-  @Max(5)
   private Integer value;
 
   @ManyToOne

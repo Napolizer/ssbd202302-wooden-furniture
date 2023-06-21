@@ -345,6 +345,7 @@
   "toolbar.createAccount": "Create Account",
   "toolbar.account": "Account",
   "toolbar.doneOrders": "Done orders",
+  "toolbar.rates": "Rates",
 
   "auth.token.expired": "Your token has expired",
   "auth.not.authenticated": "You are not authenticated",

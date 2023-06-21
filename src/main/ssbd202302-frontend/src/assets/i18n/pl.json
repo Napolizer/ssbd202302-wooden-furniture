@@ -342,6 +342,7 @@
   "toolbar.createAccount": "Utwórz Konto",
   "toolbar.account": "Konto Użytkownika",
   "toolbar.doneOrders": "Zamówienia zrealizowane",
+  "toolbar.rates": "Oceny",
 
   "auth.token.expired": "Twój token wygasł",
   "auth.not.authenticated": "Nie jesteś zalogowany",
