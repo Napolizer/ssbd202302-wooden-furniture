@@ -15,9 +15,9 @@ import java.lang.annotation.Target;
 @NotNull(message = "Field cannot be empty")
 @Pattern(regexp = "^[0-9]*\\.[0-9]{2}$", message = "Price must end with .xx")
 public @interface Price {
-    String message() default "Price must end with .xx";
+  String message() default "Price must end with .xx";
 
-    Class<?>[] groups() default {};
+  Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+  Class<? extends Payload>[] payload() default {};
 }

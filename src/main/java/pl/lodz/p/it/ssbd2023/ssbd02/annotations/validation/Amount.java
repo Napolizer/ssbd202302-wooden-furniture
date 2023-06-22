@@ -8,15 +8,16 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 @Constraint(validatedBy = {})
 @NotNull(message = "Field cannot be empty")
 @Pattern(regexp = "^[0-9]\\d*$", message = "Amount must be positive number")
 public @interface Amount {
-    String message() default "Amount must be positive number";
+  String message() default "Amount must be positive number";
 
-    Class<?>[] groups() default {};
+  Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+  Class<? extends Payload>[] payload() default {};
 }
