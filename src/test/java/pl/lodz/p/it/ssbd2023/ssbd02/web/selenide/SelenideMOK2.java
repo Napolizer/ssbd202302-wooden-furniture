@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.selenide;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,9 +37,9 @@ public class SelenideMOK2 {
     Configuration.baseUrl = "http://frontend";
   }
 
-  @AfterAll
-  public static void tearDown() {
-    WebDriverRunner.closeWebDriver();
+  @AfterEach
+  public void cleanUp() {
+    localStorage().clear();
   }
 
   @Test

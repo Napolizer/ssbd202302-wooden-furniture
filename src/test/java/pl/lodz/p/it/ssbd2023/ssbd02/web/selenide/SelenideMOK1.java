@@ -4,11 +4,13 @@ import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.localStorage;
 import static com.codeborne.selenide.Selenide.open;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import java.time.Duration;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,11 @@ class SelenideMOK1 {
 
     Configuration.timeout = Duration.ofSeconds(20).toMillis();
     Configuration.baseUrl = "http://frontend";
+  }
+
+  @AfterEach
+  public void cleanUp() {
+    localStorage().clear();
   }
 
   @Test

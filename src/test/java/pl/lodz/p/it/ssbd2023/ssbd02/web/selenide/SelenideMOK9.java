@@ -55,6 +55,7 @@ class SelenideMOK9 {
     $$("input").findBy(attribute("data-placeholder", "login")).setValue("client2");
     $$("input").findBy(attribute("data-placeholder", "password")).setValue("Student123!");
     $(".mat-focus-indicator .login-button").click();
+    webdriver().shouldHave(urlContaining("/home"));
     $$(".mat-icon").filterBy(Condition.text("account_circle")).first().click();
     $$(".mat-menu-item").filterBy(Condition.text("My Account")).first().click();
     webdriver().shouldHave(urlContaining("/self"));

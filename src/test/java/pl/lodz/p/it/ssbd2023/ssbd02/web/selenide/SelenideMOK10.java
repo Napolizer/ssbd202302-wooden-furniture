@@ -9,7 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import org.microshed.testing.SharedContainerConfig;
+import org.microshed.testing.jupiter.MicroShedTest;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
@@ -19,8 +20,8 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.urlContaining;
 
-//@MicroShedTest
-//@SharedContainerConfig(AppContainerConfig.class)
+@MicroShedTest
+@SharedContainerConfig(AppContainerConfig.class)
 @DisplayName("MOK.10 - Edit account as admin")
 class SelenideMOK10 {
   public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;

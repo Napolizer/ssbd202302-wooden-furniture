@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.web.selenide;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,9 +34,9 @@ public class SelenideMOK8 {
     Configuration.baseUrl = "http://frontend";
   }
 
-  @AfterAll
-  public static void tearDown() {
-    WebDriverRunner.closeWebDriver();
+  @AfterEach
+  public void cleanUp() {
+    localStorage().clear();
   }
 
   @Test
@@ -69,7 +69,6 @@ public class SelenideMOK8 {
     $$(".mat-option-text").findBy(text("Client")).click();
     $$(".mat-button").findBy(text("Create")).click();
     $$(".mat-raised-button").filterBy(Condition.text("Confirm")).first().click();
-    $$(".mat-icon").filterBy(Condition.text("account_circle")).first().click();
     $$(".mat-icon").filterBy(Condition.text("account_circle")).first().click();
     $$(".mat-menu-item").filterBy(Condition.text("Logout")).first().click();
     webdriver().shouldHave(urlContaining("/home"));

@@ -30,13 +30,12 @@ public class SelenideMOK5 {
     Configuration.baseUrl = "http://frontend";
   }
 
-  @AfterAll
-  public static void tearDown() {
-    WebDriverRunner.closeWebDriver();
+  @AfterEach
+  public void cleanUp() {
+    localStorage().clear();
   }
 
   @Test
-  @DisplayName("Should properly add employee access level to account")
   void shouldProperlyAddEmployeeAccessLevelToAccount() {
     open("/");
     $(".title-text").shouldHave(text("Wooden Furniture"));
@@ -44,7 +43,7 @@ public class SelenideMOK5 {
     $$("input").findBy(attribute("data-placeholder", "login")).setValue("administrator");
     $$("input").findBy(attribute("data-placeholder", "password")).setValue("Student123!");
     $(".mat-focus-indicator .login-button").click();
-    sleep(7000);
+    webdriver().shouldHave(urlContaining("/home"));
     $$(".mat-icon").filterBy(Condition.text("menu")).first().click();
     $$(".mat-menu-item").filterBy(Condition.text("admin_panel_settings")).first().click();
     sleep(4000);

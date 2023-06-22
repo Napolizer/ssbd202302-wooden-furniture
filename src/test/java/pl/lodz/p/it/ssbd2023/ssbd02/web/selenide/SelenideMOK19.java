@@ -25,8 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
-public class SelenideMOK19 {
-
+class SelenideMOK19 {
   public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;
 
   @BeforeAll

@@ -5,13 +5,10 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import java.time.Duration;
-import java.util.Map;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
@@ -34,9 +31,9 @@ public class SelenideMOK6 {
         Configuration.baseUrl = "http://frontend";
     }
 
-    @AfterAll
-    public static void tearDown() {
-        WebDriverRunner.closeWebDriver();
+    @AfterEach
+    public void cleanUp() {
+        localStorage().clear();
     }
 
     @Test
@@ -48,6 +45,7 @@ public class SelenideMOK6 {
         $$("input").findBy(attribute("data-placeholder", "login")).setValue("administrator");
         $$("input").findBy(attribute("data-placeholder", "password")).setValue("Student123!");
         $(".mat-focus-indicator .login-button").click();
+        webdriver().shouldHave(urlContaining("/home"));
         sleep(7000);
         $$(".mat-icon").filterBy(Condition.text("menu")).first().click();
         $$(".mat-menu-item").filterBy(Condition.text("admin_panel_settings")).first().click();

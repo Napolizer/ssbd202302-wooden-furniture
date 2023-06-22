@@ -6,6 +6,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.localStorage;
 import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.sleep;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.urlContaining;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,7 +55,7 @@ class SelenideMOK11 {
     assertThat(localStorage().containsItem("refreshToken"), equalTo(false));
     $(".title-text").shouldHave(text("Wooden Furniture"));
     $$("span").findBy(text("Login")).click();
-    $$("input").findBy(attribute("data-placeholder", "login")).setValue("client");
+    $$("input").findBy(attribute("data-placeholder", "login")).setValue("administrator");
     $$("input").findBy(attribute("data-placeholder", "password")).setValue("Student123!");
     $(".mat-focus-indicator .login-button").click();
     webdriver().shouldHave(urlContaining("/home"));
