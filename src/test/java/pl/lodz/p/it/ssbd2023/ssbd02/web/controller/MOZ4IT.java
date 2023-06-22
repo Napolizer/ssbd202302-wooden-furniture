@@ -182,7 +182,7 @@ public class MOZ4IT {
                     .when()
                     .patch("/product/archive/" + productId2)
                     .then()
-                    .statusCode(401);
+                    .statusCode(403);
         }
     }
 }
