@@ -47,8 +47,7 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   starRating = 2;
   currentPage = 1; // Current page number
   pagedProducts: OrderProductWithRate[] = []; // Paged products to display
-// Declare an event emitter
-  refreshToolbar: EventEmitter<void> = new EventEmitter<void>();
+
 
   constructor(
     private productService: ProductService,
@@ -62,8 +61,6 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
     this.router.events.pipe(takeUntil(this.destroy)).subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.loading = true;
-
-        this.refreshToolbar.emit();
       }
     });
     this.loadClientProducts();
@@ -180,8 +177,6 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   }
 
   updateRate(orderProduct: OrderProductWithRate): void {
-    orderProduct.oldRate = orderProduct.rate;
-
     const rate: Rate = {
       rate: orderProduct.rate,
       productId: orderProduct.product.productGroup.id
