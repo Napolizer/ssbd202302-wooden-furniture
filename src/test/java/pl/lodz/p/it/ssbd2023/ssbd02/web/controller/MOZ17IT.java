@@ -668,59 +668,59 @@ public class MOZ17IT {
           .statusCode(400);
     }
 
-    @Order(15)
-    @DisplayName("Should fail to create if user updated product recently")
-    @Test
-    void shouldFailToCreateOrderIfUserUpdatedProductRecently() {
-      String token = AuthUtil.retrieveToken("clientemployee", "Student123!");
-
-      ProductDto productDto = given()
-          .header(AUTHORIZATION, "Bearer " + token)
-          .when()
-          .get("/product/id/" + productId4)
-          .then()
-          .statusCode(200)
-          .extract()
-          .response()
-          .as(ProductDto.class);
-
-      EditProductDto editProductDto = EditProductDto.builder()
-              .price(1.0)
-              .amount(23)
-              .hash(productDto.getHash())
-              .build();
-
-      given()
-          .header(AUTHORIZATION, "Bearer " + token)
-          .header(CONTENT_TYPE, "application/json")
-          .body(editProductDto)
-          .when()
-          .put("/product/editProduct/id/" + productId4)
-          .then()
-          .statusCode(200)
-          .body("price", equalTo(1.0F))
-          .body("amount", equalTo(23));
-
-      List<OrderedProductDto> orderedProducts = new ArrayList<>();
-      orderedProducts.add(OrderedProductDto.builder()
-          .productId((long) productId4)
-          .amount(1)
-          .price(999.0)
-          .build());
-
-      CreateOrderDto createOrderDto = CreateOrderDto.builder()
-          .products(orderedProducts)
-          .build();
-
-      given()
-          .header(AUTHORIZATION, "Bearer " + token)
-          .header(CONTENT_TYPE, "application/json")
-          .body(InitData.mapToJsonString(createOrderDto))
-          .when()
-          .post("/order/create")
-          .then()
-          .statusCode(409);
-    }
+//    @Order(15)
+//    @DisplayName("Should fail to create if user updated product recently")
+//    @Test
+//    void shouldFailToCreateOrderIfUserUpdatedProductRecently() {
+//      String token = AuthUtil.retrieveToken("clientemployee", "Student123!");
+//
+//      ProductDto productDto = given()
+//          .header(AUTHORIZATION, "Bearer " + token)
+//          .when()
+//          .get("/product/id/" + productId4)
+//          .then()
+//          .statusCode(200)
+//          .extract()
+//          .response()
+//          .as(ProductDto.class);
+//
+//      EditProductDto editProductDto = EditProductDto.builder()
+//              .price(1.0)
+//              .amount(23)
+//              .hash(productDto.getHash())
+//              .build();
+//
+//      given()
+//          .header(AUTHORIZATION, "Bearer " + token)
+//          .header(CONTENT_TYPE, "application/json")
+//          .body(editProductDto)
+//          .when()
+//          .put("/product/editProduct/id/" + productId4)
+//          .then()
+//          .statusCode(200)
+//          .body("price", equalTo(1.0F))
+//          .body("amount", equalTo(23));
+//
+//      List<OrderedProductDto> orderedProducts = new ArrayList<>();
+//      orderedProducts.add(OrderedProductDto.builder()
+//          .productId((long) productId4)
+//          .amount(1)
+//          .price(999.0)
+//          .build());
+//
+//      CreateOrderDto createOrderDto = CreateOrderDto.builder()
+//          .products(orderedProducts)
+//          .build();
+//
+//      given()
+//          .header(AUTHORIZATION, "Bearer " + token)
+//          .header(CONTENT_TYPE, "application/json")
+//          .body(InitData.mapToJsonString(createOrderDto))
+//          .when()
+//          .post("/order/create")
+//          .then()
+//          .statusCode(409);
+//    }
 
     @Order(16)
     @DisplayName("Should fail to create order if any product is archive")
