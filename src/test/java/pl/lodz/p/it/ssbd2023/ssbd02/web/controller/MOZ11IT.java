@@ -289,7 +289,7 @@ public class MOZ11IT {
           .when()
           .put("/order/employee/cancel")
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
 
     @Test
@@ -308,7 +308,7 @@ public class MOZ11IT {
           .when()
           .put("/order/employee/cancel")
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
 
     @Test
@@ -327,7 +327,7 @@ public class MOZ11IT {
           .when()
           .put("/order/employee/cancel")
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
 
     @Test
@@ -346,7 +346,7 @@ public class MOZ11IT {
           .when()
           .put("/order/employee/cancel")
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
   }
 }

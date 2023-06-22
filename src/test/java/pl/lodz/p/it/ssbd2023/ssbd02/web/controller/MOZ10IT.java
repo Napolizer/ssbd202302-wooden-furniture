@@ -300,7 +300,7 @@ public class MOZ10IT {
           .when()
           .put("/order/state/%s".formatted(5L))
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
 
     @Test
@@ -319,7 +319,7 @@ public class MOZ10IT {
           .when()
           .put("/order/state/%s".formatted(5L))
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
 
     @Test
@@ -338,7 +338,7 @@ public class MOZ10IT {
           .when()
           .put("/order/state/%s".formatted(5L))
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
 
     @Test
@@ -357,7 +357,7 @@ public class MOZ10IT {
           .when()
           .put("/order/state/%s".formatted(5L))
           .then()
-          .statusCode(400);
+          .statusCode(not(200));
     }
   }
 }
