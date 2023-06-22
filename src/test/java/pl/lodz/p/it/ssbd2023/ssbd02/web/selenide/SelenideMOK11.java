@@ -14,35 +14,30 @@ import static org.hamcrest.Matchers.equalTo;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import java.time.Duration;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testcontainers.containers.BrowserWebDriverContainer;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
-@MicroShedTest
-@SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOK.11 - Logout")
 class SelenideMOK11 {
-  public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;
-
   @BeforeAll
   public static void setUp() {
-    RemoteWebDriver driver = chrome.getWebDriver();
-    WebDriverRunner.setWebDriver(driver);
-
-    Configuration.timeout = Duration.ofSeconds(20).toMillis();
-    Configuration.baseUrl = "http://frontend";
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("start-maximized");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--ignore-certificate-errors");
+    options.addArguments("--lang=en");
+    options.setExperimentalOption("prefs", Map.of("intl.accept_languages", "en"));
+    WebDriverRunner.setWebDriver(new ChromeDriver(options));
+    Configuration.baseUrl = "http://localhost:4200";
   }
 
   @AfterEach
-  public void cleanUp() {
-    localStorage().clear();
+  public void tearDown() {
+    WebDriverRunner.closeWebDriver();
   }
 
   @Test
@@ -54,7 +49,7 @@ class SelenideMOK11 {
     assertThat(localStorage().containsItem("refreshToken"), equalTo(false));
     $(".title-text").shouldHave(text("Wooden Furniture"));
     $$("span").findBy(text("Login")).click();
-    $$("input").findBy(attribute("data-placeholder", "login")).setValue("client");
+    $$("input").findBy(attribute("data-placeholder", "login")).setValue("administrator");
     $$("input").findBy(attribute("data-placeholder", "password")).setValue("Student123!");
     $(".mat-focus-indicator .login-button").click();
     webdriver().shouldHave(urlContaining("/home"));

@@ -1,42 +1,41 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.selenide;
 
+import static com.codeborne.selenide.Condition.attribute;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.Selenide.webdriver;
+import static com.codeborne.selenide.WebDriverConditions.urlContaining;
+
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import java.time.Duration;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.util.Map;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testcontainers.containers.BrowserWebDriverContainer;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-
-import static com.codeborne.selenide.Condition.attribute;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverConditions.urlContaining;
-
-//@MicroShedTest
-//@SharedContainerConfig(AppContainerConfig.class)
-@DisplayName("MOK.10 - Edit account as admin")
 class SelenideMOK10 {
-  public static BrowserWebDriverContainer<?> chrome = AppContainerConfig.chrome;
-
   @BeforeAll
   public static void setUp() {
-    RemoteWebDriver driver = chrome.getWebDriver();
-    WebDriverRunner.setWebDriver(driver);
-
-    Configuration.timeout = Duration.ofSeconds(20).toMillis();
-    Configuration.baseUrl = "http://frontend";
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("start-maximized");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--ignore-certificate-errors");
+    options.addArguments("--lang=en");
+    options.setExperimentalOption("prefs", Map.of("intl.accept_languages", "en"));
+    WebDriverRunner.setWebDriver(new ChromeDriver(options));
+    Configuration.baseUrl = "http://localhost:4200";
   }
 
   @AfterEach
-  public void cleanUp() {
-    localStorage().clear();
+  public void tearDown() {
+    WebDriverRunner.closeWebDriver();
   }
 
   @Test

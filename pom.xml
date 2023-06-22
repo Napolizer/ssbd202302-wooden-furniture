@@ -358,6 +358,9 @@
                         <include>**/*IT.java</include>
                         <include>**/*IntegrationTest.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/Selenide*.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
