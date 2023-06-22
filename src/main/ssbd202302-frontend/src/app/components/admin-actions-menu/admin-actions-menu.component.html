@@ -58,7 +58,8 @@
         matTooltipShowDelay="500">
         <button mat-menu-item
                 (click)="openChangeRoleDialog(account)"
-                [disabled]="!canChangeRole(account)">
+                [disabled]="!canChangeRole(account)"
+                class="change-role-button">
           <mat-icon>person_search</mat-icon>
           <span>{{'account.changerole' | translate}}</span>
         </button>

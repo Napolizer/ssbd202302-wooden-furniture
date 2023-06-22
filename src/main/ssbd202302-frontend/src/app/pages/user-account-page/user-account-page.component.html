@@ -179,7 +179,8 @@
                       <mat-icon>remove</mat-icon>
                       {{'account.removerole' | translate}}
                     </button>
-                    <button *ngIf="canChangeRole()" mat-button color="primary" (click)="redirectToChangeAccountRolesPage()">
+                    <button *ngIf="canChangeRole()" mat-button color="primary" (click)="redirectToChangeAccountRolesPage()"
+                    class="change-role-button">
                       <mat-icon>compare_arrows</mat-icon>
                       {{'account.changerole' | translate}}
                     </button>
