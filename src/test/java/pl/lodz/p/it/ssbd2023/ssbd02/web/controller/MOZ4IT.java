@@ -1,19 +1,21 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.*;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.hamcrest.Matchers.*;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.*;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
@@ -158,6 +160,29 @@ public class MOZ4IT {
                     .patch("/product/archive/" + Long.MAX_VALUE)
                     .then()
                     .statusCode(404);
+        }
+
+        @Order(4)
+        @DisplayName("Should fail to archive product with empty id value")
+        @Test
+        void shouldFailToArchiveProductWithEmptyId() {
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(EMPLOYEE))
+                    .when()
+                    .patch("/product/archive/")
+                    .then()
+                    .statusCode(404);
+        }
+        @Order(5)
+        @DisplayName("Should fail to archive product without enough permissions")
+        @Test
+        void shouldFailToEditProductWithoutEnoughPermissions() {
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(CLIENT))
+                    .when()
+                    .patch("/product/archive/" + productId2)
+                    .then()
+                    .statusCode(401);
         }
     }
 }

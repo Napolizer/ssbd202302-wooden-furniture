@@ -18,6 +18,7 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.HttpHeaders.IF_MATCH;
 import static org.hamcrest.Matchers.equalTo;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
 import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 @MicroShedTest
@@ -156,6 +157,22 @@ public class MOZ3IT {
                     .put("/product/editProduct/id/" + productId1)
                     .then()
                     .statusCode(409);
+        }
+
+        @Order(4)
+        @DisplayName("Should fail to edit product without enough permissions")
+        @Test
+        void shouldFailToEditProductWithoutEnoughPermissions() {
+            EditProductDto editProductDto = InitData.getEditedProduct(productId1, 100.0, 100);
+
+            given()
+                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(CLIENT))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(InitData.mapToJsonString(editProductDto))
+                    .when()
+                    .put("/product/editProduct/id/" + productId1)
+                    .then()
+                    .statusCode(401);
         }
     }
 }
