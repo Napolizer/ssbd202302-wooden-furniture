@@ -8,7 +8,7 @@
   <h4 *ngIf="getAccount().roles.length > 1">{{'current.roles' | translate}}: {{getAccountRoles()}}</h4>
   <mat-form-field>
     <mat-label>{{'select.role' | translate}}</mat-label>
-    <mat-select [(ngModel)]="chosenRole">
+    <mat-select [(ngModel)]="chosenRole" class="mat-select-change-role">
       <mat-option *ngFor="let role of getPossibleChangeRoles()" [value]="role">{{'role.' + role | translate}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -17,7 +17,8 @@
   <button mat-raised-button (click)="onCancelClick()">
     {{ "dialog.confirmation.close" | translate }}
   </button>
-  <button mat-raised-button (click)="confirmChange(chosenRole)" color="primary">
+  <button mat-raised-button (click)="confirmChange(chosenRole)" color="primary"
+  class="confirm-change-role-button">
     {{ "dialog.confirmation.action" | translate }}
   </button>
 </div>

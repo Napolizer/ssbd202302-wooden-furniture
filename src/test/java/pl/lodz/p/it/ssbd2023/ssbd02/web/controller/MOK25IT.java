@@ -22,6 +22,7 @@ public class MOK25IT {
     @DisplayName("Should properly delete inactive accounts")
     @Test
     void shouldProperlyDeleteInactiveAccounts() throws InterruptedException {
+      TimeUnit.SECONDS.sleep(15);
       AccountUtil.registerUser("inactiveuser");
       AccountUtil.registerUser("anotherinactiveuser");
       int allAccounts = AccountUtil.countAccounts();

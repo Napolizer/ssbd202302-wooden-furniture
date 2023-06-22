@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {Subject, takeUntil, tap} from "rxjs";
+import {first, Subject, takeUntil, tap} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {ProductService} from "../../services/product.service";
 import {NavigationEnd, Router} from "@angular/router";
@@ -11,6 +11,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {TranslateService} from "@ngx-translate/core";
 import {AlertService} from "@full-fledged/alerts";
 import { EventEmitter } from '@angular/core';
+import {DialogService} from "../../services/dialog.service";
 
 @Component({
   selector: 'app-client-rates-page',
@@ -47,23 +48,21 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   starRating = 2;
   currentPage = 1; // Current page number
   pagedProducts: OrderProductWithRate[] = []; // Paged products to display
-// Declare an event emitter
-  refreshToolbar: EventEmitter<void> = new EventEmitter<void>();
+
 
   constructor(
     private productService: ProductService,
     private rateService: RateService,
     private router: Router,
     private translate: TranslateService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
     this.router.events.pipe(takeUntil(this.destroy)).subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.loading = true;
-
-        this.refreshToolbar.emit();
       }
     });
     this.loadClientProducts();
@@ -180,8 +179,6 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   }
 
   updateRate(orderProduct: OrderProductWithRate): void {
-    orderProduct.oldRate = orderProduct.rate;
-
     const rate: Rate = {
       rate: orderProduct.rate,
       productId: orderProduct.product.productGroup.id
@@ -207,24 +204,37 @@ export class ClientRatesPageComponent implements OnInit, OnDestroy {
   }
 
   removeRating(orderProduct: OrderProductWithRate): void {
-    orderProduct.rate = 0;
-    this.rateService.removeRate(orderProduct.product.productGroup.id)
+    this.translate
+      .get('dialog.remove.rate')
       .pipe(takeUntil(this.destroy))
-      .subscribe({
-        next: (rate: Rate) => {
-          this.loading = false;
-          this.loadClientProducts();
-        },
-        error: (e: HttpErrorResponse) => {
-          this.loading = false;
-          orderProduct.rate = orderProduct.oldRate;
-          this.translate
-            .get(e.error.message || 'exception.moz.rate.notfound')
-            .pipe(takeUntil(this.destroy))
-            .subscribe((msg) => {
-              this.alertService.danger(msg);
-            });
-        },
+      .subscribe((msg) => {
+        const ref = this.dialogService.openConfirmationDialog(msg, 'primary');
+        ref
+          .afterClosed()
+          .pipe(first(), takeUntil(this.destroy))
+          .subscribe((result) => {
+            if (result === 'action') {
+              orderProduct.rate = 0;
+              this.rateService.removeRate(orderProduct.product.productGroup.id)
+                .pipe(takeUntil(this.destroy))
+                .subscribe({
+                  next: (rate: Rate) => {
+                    this.loading = false;
+                    this.loadClientProducts();
+                  },
+                  error: (e: HttpErrorResponse) => {
+                    this.loading = false;
+                    orderProduct.rate = orderProduct.oldRate;
+                    this.translate
+                      .get(e.error.message || 'exception.moz.rate.notfound')
+                      .pipe(takeUntil(this.destroy))
+                      .subscribe((msg) => {
+                        this.alertService.danger(msg);
+                      });
+                  },
+                });
+            }
+          });
       });
   }
 

@@ -263,6 +263,7 @@
   "dialog.cart.empty": "Czy na pewno chcesz wyczyścić koszyk?",
   "dialog.cart.remove": "Czy na pewno chcesz usunąć produkt z koszyka?",
   "dialog.edit.product.group": "Czy na pewno chcesz zmienić nazwę grupy produktów?",
+  "dialog.remove.rate": "Czy na pewno chcesz usunąć ocenę?",
 
   "exception.occurred": "Wystąpił błąd",
   "exception.unknown": "Nieznany błąd",
