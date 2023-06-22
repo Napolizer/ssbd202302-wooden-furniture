@@ -91,7 +91,6 @@ import { ClientOrderPageComponent } from './pages/client-order-page/client-order
 import { DisplayStatsComponent } from './components/display-stats/display-stats.component';
 import { OrderStatsPageComponent } from './pages/order-stats-page/order-stats-page.component';
 import { ActivateProductGroupComponent } from './components/activate-product-group/activate-product-group.component';
-import {RedirectInterceptorService} from "./services/redirect-interceptor.service";
 import { ServerErrorPageComponent } from './pages/server-error-page/server-error-page.component';
 import { UnauthorizedPageComponent } from './pages/unauthorized-page/unauthorized-page.component';
 import { ProductEditionHistoryPageComponent } from './pages/product-edition-history-page/product-edition-history-page.component';
@@ -207,12 +206,7 @@ import { ProductEditionHistoryPageComponent } from './pages/product-edition-hist
   ],
   providers: [
     DatePipe,
-    ThemeSwitcherComponentComponent,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: RedirectInterceptorService,
-      multi: true
-    }
+    ThemeSwitcherComponentComponent
   ],
   bootstrap: [AppComponent]
 })
