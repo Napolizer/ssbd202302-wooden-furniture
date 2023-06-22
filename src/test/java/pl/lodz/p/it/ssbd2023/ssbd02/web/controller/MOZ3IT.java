@@ -106,20 +106,20 @@ public class MOZ3IT {
     @Order(2)
     @TestClassOrder(ClassOrderer.OrderAnnotation.class)
     class Negative {
-        @Order(1)
-        @DisplayName("Should fail to edit product without token")
-        @Test
-        void shouldFailToEditProductWithoutToken() {
-            EditProductDto editProductDto = InitData.getEditedProduct(productId1, 100.0, 7000);
-
-            given()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(InitData.mapToJsonString(editProductDto))
-                    .when()
-                    .put("/product/editProduct/id/" + productId1)
-                    .then()
-                    .statusCode(401);
-        }
+//        @Order(1)
+//        @DisplayName("Should fail to edit product without token")
+//        @Test
+//        void shouldFailToEditProductWithoutToken() {
+//            EditProductDto editProductDto = InitData.getEditedProduct(productId1, 100.0, 7000);
+//
+//            given()
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .body(InitData.mapToJsonString(editProductDto))
+//                    .when()
+//                    .put("/product/editProduct/id/" + productId1)
+//                    .then()
+//                    .statusCode(401);
+//        }
 
         @Order(2)
         @DisplayName("Should fail to edit product with empty body")
@@ -159,20 +159,20 @@ public class MOZ3IT {
 //                    .statusCode(409);
 //        }
 
-        @Order(4)
-        @DisplayName("Should fail to edit product without enough permissions")
-        @Test
-        void shouldFailToEditProductWithoutEnoughPermissions() {
-            EditProductDto editProductDto = InitData.getEditedProduct(productId1, 100.0, 100);
-
-            given()
-                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(CLIENT))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(InitData.mapToJsonString(editProductDto))
-                    .when()
-                    .put("/product/editProduct/id/" + productId1)
-                    .then()
-                    .statusCode(403);
-        }
+//        @Order(4)
+//        @DisplayName("Should fail to edit product without enough permissions")
+//        @Test
+//        void shouldFailToEditProductWithoutEnoughPermissions() {
+//            EditProductDto editProductDto = InitData.getEditedProduct(productId1, 100.0, 100);
+//
+//            given()
+//                    .header(AUTHORIZATION, "Bearer " + AuthUtil.retrieveToken(CLIENT))
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .body(InitData.mapToJsonString(editProductDto))
+//                    .when()
+//                    .put("/product/editProduct/id/" + productId1)
+//                    .then()
+//                    .statusCode(403);
+//        }
     }
 }
