@@ -47,7 +47,10 @@
             ></ngb-rating>
           </div>
           <div style="margin-top: 20px;margin-bottom: 20px;display: flex;align-items: center;justify-content: center;">
-            <button (click)="removeRating(orderProduct)">
+            <button *ngIf="orderProduct.rate != 0" (click)="removeRating(orderProduct)">
+              {{"rate.remove" | translate}}
+            </button>
+            <button *ngIf="orderProduct.rate == 0" [disabled]="true" >
               {{"rate.remove" | translate}}
             </button>
           </div>

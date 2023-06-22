@@ -262,6 +262,7 @@
   "dialog.cart.empty": "Are you sure you want to clear cart?",
   "dialog.cart.remove": "Are you sure you want to remove item from cart?",
   "dialog.edit.product.group": "Are you sure you want to edit product group name?",
+  "dialog.remove.rate": "Are you sure you want remove rate?",
 
   "exception.occurred": "Exception occurred",
   "exception.unknown": "Unknown error",
