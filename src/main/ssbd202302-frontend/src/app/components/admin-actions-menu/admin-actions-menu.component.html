@@ -46,7 +46,8 @@
         matTooltipShowDelay="500">
         <button mat-menu-item
                 (click)="openRemoveRoleDialog(account)"
-                [disabled]="!canRemoveRole(account)">
+                [disabled]="!canRemoveRole(account)"
+                class="remove-role-button">
           <mat-icon>person_remove</mat-icon>
           <span>{{'account.removerole' | translate}}</span>
         </button>

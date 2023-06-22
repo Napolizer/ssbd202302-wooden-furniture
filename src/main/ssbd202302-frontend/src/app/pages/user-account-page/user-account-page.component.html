@@ -170,7 +170,7 @@
                 </small>
                 <div class="row">
                   <div class="col-sm-12 text-center">
-                    <button *ngIf="canAddRole()" mat-button color="primary" (click)="redirectToAddAccountRolesPage()">
+                    <button *ngIf="canAddRole()" mat-button color="primary" (click)="redirectToAddAccountRolesPage()" class="add-role-button">
                       <mat-icon>add</mat-icon>
                       {{'account.addrole' | translate}}
                     </button>
