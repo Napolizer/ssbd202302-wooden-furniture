@@ -1,4 +1,4 @@
-name: Test
+name: Integration Test
 
 on:
   push:
@@ -19,5 +19,5 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Test
-        run: mvn --batch-mode -Dcheckstyle.skip test
+      - name: Integration Test
+        run: mvn --batch-mode -Dcheckstyle.skip verify
