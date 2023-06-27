@@ -1,7 +1,19 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
+import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static org.hamcrest.Matchers.equalTo;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+
 import jakarta.ws.rs.core.MediaType;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestInstance;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.Color;
@@ -12,11 +24,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.ProductUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-import static io.restassured.RestAssured.given;
-import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static org.hamcrest.Matchers.equalTo;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.CLIENT;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
