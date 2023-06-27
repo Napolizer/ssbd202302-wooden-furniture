@@ -503,6 +503,7 @@
   "product.id": "ID Produktu",
   "product.is.available": "Produkt jest dostępny",
   "product.is.unavailable": "Produkt jest niedostępny",
+  "product.unavailable": "Produkt jest niedostępny",
 
   "archive.success": "Pomyślnie zarchiwizowano produkt",
   "dearchive.success": "Pomyślnie zdearchiwizowano produkt",

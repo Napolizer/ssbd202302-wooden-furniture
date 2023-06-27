@@ -34,7 +34,7 @@
             {{ product.furnitureDimensions.height }}m</mat-card-subtitle
           >
           <mat-card-subtitle
-            ><strong>Price: {{ product.price }},-</strong></mat-card-subtitle
+            ><strong>{{"product.price" | translate}}: {{ product.price }},-</strong></mat-card-subtitle
           >
           <mat-card-subtitle
             *ngIf="!product.archive && product.amount > 0"

@@ -242,7 +242,7 @@
 </div>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="openEditProductDialog()">
+  <button mat-menu-item [disabled]="product.archive" (click)="openEditProductDialog()">
     <mat-icon>edit</mat-icon>
     <span>{{'product.edit' | translate}}</span>
   </button>

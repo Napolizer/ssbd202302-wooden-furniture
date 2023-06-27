@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Amount;
 import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Hash;
 
 @Data
@@ -15,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.annotations.validation.Hash;
 public class EditProductDto {
   @NotNull
   private Double price;
-  @Amount
+  @NotNull
   private Integer amount;
   @NotNull
   @Hash
