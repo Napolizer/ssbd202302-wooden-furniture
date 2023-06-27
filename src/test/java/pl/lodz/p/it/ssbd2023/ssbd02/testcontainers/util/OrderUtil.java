@@ -1,11 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 import static pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState.CREATED;
 
 import io.restassured.http.Header;
-import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 

@@ -1,13 +1,21 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.QueryParam;
+import static io.restassured.RestAssured.given;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
+import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
+
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import java.util.List;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestInstance;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.OrderState;
@@ -15,11 +23,6 @@ import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.order.OrderDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.OrderUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import static io.restassured.RestAssured.given;
-import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static org.hamcrest.Matchers.*;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.EMPLOYEE;
-import static pl.lodz.p.it.ssbd2023.ssbd02.config.Role.SALES_REP;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

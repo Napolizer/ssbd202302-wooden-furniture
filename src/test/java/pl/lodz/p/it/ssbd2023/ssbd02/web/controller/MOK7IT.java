@@ -19,9 +19,7 @@ import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AccountUtil;
 import pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util.AuthUtil;
-import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)

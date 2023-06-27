@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd02.testcontainers.util;
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;

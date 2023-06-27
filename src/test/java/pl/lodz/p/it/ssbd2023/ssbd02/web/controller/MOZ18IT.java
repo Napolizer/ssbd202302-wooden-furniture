@@ -1,19 +1,22 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.web.controller;
 
-import org.junit.jupiter.api.*;
-import org.microshed.testing.SharedContainerConfig;
-import org.microshed.testing.jupiter.MicroShedTest;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
-import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
-
-import java.util.List;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.lodz.p.it.ssbd2023.ssbd02.web.InitData.getAllClientProducts;
+
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.microshed.testing.SharedContainerConfig;
+import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
+import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
 
 @MicroShedTest
 @SharedContainerConfig(AppContainerConfig.class)
