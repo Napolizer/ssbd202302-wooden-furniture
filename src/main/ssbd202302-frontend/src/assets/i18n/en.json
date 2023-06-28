@@ -226,7 +226,7 @@
   "edit.validity.price.max": "Max price is 9999999.00",
   "edit.validity.amount.min": "Minimum amount is 0",
   "edit.validity.amount.max": "Maximum amount is 9999999",
-  "edit.enterNewAmount": "Podaj nową ilość produktu",
+  "edit.enterNewAmount": "Enter new product amount",
 
   "save": "Save",
   "reset": "Reset",
