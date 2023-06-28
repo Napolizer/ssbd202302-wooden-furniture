@@ -110,8 +110,8 @@
                 {{ "cart.other.shipment.data.checkbox" | translate }}
               </mat-checkbox>
             </mat-card-subtitle>
-            <form [formGroup]="shippingDataForm">
-              <div *ngIf="checked" class="row gy-3">
+            <form [formGroup]="shippingDataForm" *ngIf="checked">
+              <div class="row gy-3">
                 <div class="col-6">
                   <mat-form-field
                     hintLabel="{{ 'register.hint.max.20' | translate }}"
@@ -309,16 +309,16 @@
                   </button>
                 </div>
               </div>
-              <button
-                *ngIf="!checked"
-                mat-raised-button
-                (click)="onConfirm()"
-                color="primary"
-                [disabled]="isAnyProductArchive()">
-                {{ "cart.make.order" | translate }}
-                <mat-icon>arrow_forward</mat-icon>
-              </button>
             </form>
+            <button
+              *ngIf="!checked"
+              mat-raised-button
+              (click)="onConfirm()"
+              color="primary"
+              [disabled]="isAnyProductArchive()">
+              {{ "cart.make.order" | translate }}
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
           </mat-card-content>
         </mat-card>
       </div>
