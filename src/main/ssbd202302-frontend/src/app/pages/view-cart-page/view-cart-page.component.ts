@@ -287,7 +287,15 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
           ]);
     } else {
       this.shippingDataForm.reset();
+      this.shippingDataForm.get('recipientFirstName')?.setErrors(null);
+      this.shippingDataForm.get('recipientLastName')?.setErrors(null);
+      this.shippingDataForm.get('country')?.setErrors(null);
+      this.shippingDataForm.get('city')?.setErrors(null);
+      this.shippingDataForm.get('street')?.setErrors(null);
+      this.shippingDataForm.get('streetNumber')?.setErrors(null);
+      this.shippingDataForm.get('postalCode')?.setErrors(null);
       this.shippingDataForm.clearValidators();
+      this.shippingDataForm.updateValueAndValidity();
     }
   }
 
@@ -329,7 +337,7 @@ export class ViewCartPageComponent implements OnInit, OnDestroy {
               this.alertService.success(msg);
             })
           this.cartService.clearCart();
-          void this.navigationService.redirectToClientPage();
+          void this.navigationService.redirectToClientOrdersPage();
         },
         error: (e: HttpErrorResponse) => {
           this.orderedProducts.forEach(orderedProduct => {
