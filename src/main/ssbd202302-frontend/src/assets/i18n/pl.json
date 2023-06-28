@@ -310,6 +310,7 @@
   "exception.invalid.image.file.format": "Wybrany plik nie jest obrazem, wybierz inny plik",
   "exception.image.required": "Produkt musi zawierać zdjęcie",
   "exception.moz.product.not.found": "Produkt nie istnieje",
+  "exception.moz.product.rate.exists": "Ocena na tę grupę produktów została już przez ciebie wystawiona",
   "exception.moz.product.change.state.archive": "Produkt jest już zarchiwizowany",
   "exception.moz.product.change.state.dearchive": "Produkt jest już zdearchiwizowany",
   "exception.moz.invalid.order.state.transition": "Niepoprawna zmiana stanu zamówienia",

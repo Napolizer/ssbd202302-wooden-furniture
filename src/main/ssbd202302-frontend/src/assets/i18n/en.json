@@ -310,6 +310,7 @@
   "exception.invalid.image.file.format": "The selected file is not a valid image, please upload an image file",
   "exception.image.required": "Product must have an image",
   "exception.moz.product.not.found": "Product not found",
+  "exception.moz.product.rate.exists": "You have already rate for this product group",
   "exception.moz.product.change.state.archive": "Product is already archived",
   "exception.moz.product.change.state.dearchive": "Product is already dearchived",
   "exception.moz.product.is.archive": "One or more products are unavailable",
