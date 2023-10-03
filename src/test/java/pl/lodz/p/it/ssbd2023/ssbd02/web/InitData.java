@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
+
+import org.hamcrest.Matchers;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.enums.TokenType;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd02.entities.TimeZone;
@@ -18,10 +20,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.EditPersonInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.SetEmailToSendPasswordDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.dto.UserCredentialsDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.impl.security.TokenService;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.EditProductDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.OrderProductWithRateDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductCreateWithImageDto;
-import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.*;
 
 public class InitData {
 
@@ -52,6 +51,7 @@ public class InitData {
             .statusCode(200)
             .contentType("application/json")
             .extract()
+            .response()
             .path("hash");
   }
 
@@ -159,6 +159,20 @@ public class InitData {
             .email("register123MT@example.com")
             .timeZone(TimeZone.EUROPE_WARSAW.name())
             .build();
+  }
+
+  public static ProductGroupInfoDto createProductGroup(ProductGroupCreateDto dto) {
+    return given()
+            .when()
+            .contentType("application/json")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + retrieveEmployeeToken())
+            .body(InitData.mapToJsonString(dto))
+            .post("/product/group")
+            .then()
+            .statusCode(201)
+            .extract()
+            .body()
+            .as(ProductGroupInfoDto.class);
   }
 
   public static AccountRegisterDto getAccountWithCompany() {

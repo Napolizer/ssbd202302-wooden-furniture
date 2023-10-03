@@ -94,18 +94,18 @@
       <artifactId>eclipselink</artifactId>
       <version>4.0.1</version>
     </dependency>
-      <dependency>
-          <groupId>fish.payara.arquillian</groupId>
-          <artifactId>arquillian-payara-server-managed</artifactId>
-          <version>${arquillian-payara.version}</version>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.jboss.arquillian.junit5</groupId>
-          <artifactId>arquillian-junit5-container</artifactId>
-          <version>1.7.0.Alpha14</version>
-          <scope>test</scope>
-      </dependency>
+<!--      <dependency>-->
+<!--          <groupId>fish.payara.arquillian</groupId>-->
+<!--          <artifactId>arquillian-payara-server-managed</artifactId>-->
+<!--          <version>${arquillian-payara.version}</version>-->
+<!--          <scope>test</scope>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--          <groupId>org.jboss.arquillian.junit5</groupId>-->
+<!--          <artifactId>arquillian-junit5-container</artifactId>-->
+<!--          <version>1.7.0.Alpha14</version>-->
+<!--          <scope>test</scope>-->
+<!--      </dependency>-->
       <dependency>
           <groupId>org.hamcrest</groupId>
           <artifactId>hamcrest</artifactId>
@@ -272,83 +272,83 @@
                     </environmentVariables>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>fish.payara.distributions</groupId>
-                                    <artifactId>payara</artifactId>
-                                    <version>${payara.version}</version>
-                                    <type>zip</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-jacoco</id>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <phase>compile</phase>
-                        <configuration>
-                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
-                            <includeClassifiers>runtime</includeClassifiers>
-                            <outputDirectory>${project.build.directory}/jacoco-agent</outputDirectory>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>
-                    <execution>
-                        <id>pre-test</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>integration-coverage-report</id>
-                        <goals>
-                            <goal>report-integration</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${project.build.directory}/jacoco-agent/jacoco-it.exec</dataFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <version>${maven-dependency-plugin.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>unpack</id>-->
+<!--                        <phase>pre-integration-test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>unpack</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <artifactItems>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>fish.payara.distributions</groupId>-->
+<!--                                    <artifactId>payara</artifactId>-->
+<!--                                    <version>${payara.version}</version>-->
+<!--                                    <type>zip</type>-->
+<!--                                    <overWrite>false</overWrite>-->
+<!--                                    <outputDirectory>${project.build.directory}</outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                            </artifactItems>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>copy-jacoco</id>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-dependencies</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <configuration>-->
+<!--                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>-->
+<!--                            <includeClassifiers>runtime</includeClassifiers>-->
+<!--                            <outputDirectory>${project.build.directory}/jacoco-agent</outputDirectory>-->
+<!--                            <stripVersion>true</stripVersion>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.jacoco</groupId>-->
+<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--                <version>${jacoco.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>pre-test</id>-->
+<!--                        <goals>-->
+<!--                            <goal>prepare-agent</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>report</id>-->
+<!--                        <phase>prepare-package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>report</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>integration-coverage-report</id>-->
+<!--                        <goals>-->
+<!--                            <goal>report-integration</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <dataFile>${project.build.directory}/jacoco-agent/jacoco-it.exec</dataFile>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
-                    <systemPropertyVariables>
-                        <payara.home>${project.build.directory}/payara6</payara.home>
-                        <arquillian.launch>payara-managed</arquillian.launch>
-                    </systemPropertyVariables>
+<!--                    <systemPropertyVariables>-->
+<!--                        <payara.home>${project.build.directory}/payara6</payara.home>-->
+<!--                        <arquillian.launch>payara-managed</arquillian.launch>-->
+<!--                    </systemPropertyVariables>-->
                     <environmentVariables>
                         <MAIL_MAIL>${mail.mail}</MAIL_MAIL>
                         <MAIL_PASSWORD>${mail.password}</MAIL_PASSWORD>

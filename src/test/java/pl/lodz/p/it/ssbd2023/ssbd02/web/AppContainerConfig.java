@@ -23,8 +23,8 @@ public class AppContainerConfig implements SharedContainerConfiguration {
       .withEnv("DB_HOST", "db")
       .withEnv("MAIL_MAIL", System.getenv("MAIL_MAIL"))
       .withEnv("MAIL_PASSWORD", System.getenv("MAIL_PASSWORD"))
-      .withEnv("JAVA_TOOL_OPTIONS",
-          "-javaagent:/jacoco-agent/org.jacoco.agent-runtime.jar=destfile=/jacoco-agent/jacoco-it.exec")
+//      .withEnv("JAVA_TOOL_OPTIONS",
+//          "-javaagent:/jacoco-agent/org.jacoco.agent-runtime.jar=destfile=/jacoco-agent/jacoco-it.exec")
       .withReadinessPath("/api/v1/health")
       .dependsOn(postgres)
       .withStartupTimeout(Duration.ofMinutes(5));
