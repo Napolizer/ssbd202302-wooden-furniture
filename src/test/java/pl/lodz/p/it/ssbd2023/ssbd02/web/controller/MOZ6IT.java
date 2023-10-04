@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.microshed.testing.SharedContainerConfig;
 import org.microshed.testing.jupiter.MicroShedTest;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupCreateDto;
+import pl.lodz.p.it.ssbd2023.ssbd02.moz.dto.product.ProductGroupInfoDto;
 import pl.lodz.p.it.ssbd2023.ssbd02.utils.security.CryptHashUtils;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.AppContainerConfig;
 import pl.lodz.p.it.ssbd2023.ssbd02.web.InitData;
@@ -29,53 +31,59 @@ public class MOZ6IT {
     @DisplayName("Should properly edit product group name")
     @Order(1)
     void shouldProperlyEditProductGroupName() {
+      ProductGroupCreateDto dto = new ProductGroupCreateDto("FirstName", "LOCKER");
+      ProductGroupInfoDto productGroup = InitData.createProductGroup(dto);
+      String token = InitData.retrieveEmployeeToken();
+      String hash = productGroup.getHash();
       given()
-          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .header("Authorization", "Bearer " + token)
           .contentType("application/json")
           .body("""
             {
               "name": "Zmieniona",
               "hash": "$hash"
             }
-          """.replace("$hash", CryptHashUtils.hashVersion(1L)))
+          """.replace("$hash", hash))
           .when()
-          .put("/product/group/id/50")
+          .put("/product/group/id/" + productGroup.getId())
           .then()
           .statusCode(200)
           .body("name", equalTo("Zmieniona"));
 
-      given()
-          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+      hash = given()
+          .header("Authorization", "Bearer " + token)
           .when()
-          .get("/product/group/id/50")
+          .get("/product/group/id/" + productGroup.getId())
           .then()
           .contentType(MediaType.APPLICATION_JSON)
           .statusCode(200)
-          .body("name", equalTo("Zmieniona"));
+          .body("name", equalTo("Zmieniona"))
+          .extract()
+          .path("hash");
 
       given()
-          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .header("Authorization", "Bearer " + token)
           .contentType("application/json")
           .body("""
             {
-              "name": "HarmonyHaven Double Bed",
+              "name": "SecondChange",
               "hash": "$hash"
             }
-          """.replace("$hash", CryptHashUtils.hashVersion(2L)))
+          """.replace("$hash", hash))
           .when()
-          .put("/product/group/id/50")
+          .put("/product/group/id/" + productGroup.getId())
           .then()
           .statusCode(200)
-          .body("name", equalTo("HarmonyHaven Double Bed"));
+          .body("name", equalTo("SecondChange"));
 
       given()
-          .header("Authorization", "Bearer " + InitData.retrieveEmployeeToken())
+          .header("Authorization", "Bearer " + token)
           .when()
-          .get("/product/group/id/50")
+          .get("/product/group/id/" + productGroup.getId())
           .then()
           .contentType(MediaType.APPLICATION_JSON)
           .statusCode(200)
-          .body("name", equalTo("HarmonyHaven Double Bed"));
+          .body("name", equalTo("SecondChange"));
     }
   }
 
