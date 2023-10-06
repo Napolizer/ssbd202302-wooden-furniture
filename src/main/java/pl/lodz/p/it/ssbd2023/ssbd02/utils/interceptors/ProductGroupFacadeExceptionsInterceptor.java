@@ -15,7 +15,8 @@ public class ProductGroupFacadeExceptionsInterceptor {
     } catch (OptimisticLockException ole) {
       throw ole;
     } catch (PersistenceException pe) {
-      if (pe.getMessage().contains("product_group_name_key")) {
+      String msg = pe.getMessage();
+      if (msg.contains("product_group_name_key") || msg.contains("product_group.NAME")) {
         throw ApplicationExceptionFactory.createProductGroupAlreadyExistsException();
       } else {
         if (pe.getCause() instanceof BaseWebApplicationException exception) {
