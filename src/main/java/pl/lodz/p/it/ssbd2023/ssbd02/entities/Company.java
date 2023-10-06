@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude = "client")
 @Entity
+@Table(name = "company")
 @NamedQueries({
     @NamedQuery(name = Company.FIND_BY_NIP,
         query = "SELECT company FROM Company company WHERE company.nip = :nip"),

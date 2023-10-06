@@ -11,6 +11,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.AccountType;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
+@Table(name = "account")
 @NamedQueries({
     @NamedQuery(name = Account.FIND_BY_ACCOUNT_ID,
         query = "SELECT account FROM Account account WHERE account.id = :id"),
