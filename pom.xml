@@ -83,11 +83,6 @@
       <version>1.18.26</version>
     </dependency>
     <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.5.4</version>
-    </dependency>
-    <dependency>
       <groupId>org.eclipse.persistence</groupId>
       <artifactId>eclipselink</artifactId>
       <version>4.0.1</version>
@@ -135,6 +130,11 @@
           <scope>test</scope>
       </dependency>
       <dependency>
+          <groupId>com.mysql</groupId>
+          <artifactId>mysql-connector-j</artifactId>
+          <version>8.1.0</version>
+      </dependency>
+      <dependency>
           <groupId>org.testcontainers</groupId>
           <artifactId>testcontainers</artifactId>
           <version>1.17.6</version>
@@ -148,8 +148,8 @@
       </dependency>
       <dependency>
           <groupId>org.testcontainers</groupId>
-          <artifactId>postgresql</artifactId>
-          <version>1.18.0</version>
+          <artifactId>mysql</artifactId>
+          <version>1.18.3</version>
           <scope>test</scope>
       </dependency>
       <dependency>

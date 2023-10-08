@@ -14,11 +14,12 @@ public class AccountFacadeExceptionsInterceptor {
     } catch (OptimisticLockException ole) {
       throw ole;
     } catch (PersistenceException pe) {
-      if (pe.getMessage().contains("account_login_key")) {
+      String msg = pe.getMessage();
+      if (msg.contains("account_login_key") || msg.contains("account.LOGIN")) {
         throw ApplicationExceptionFactory.createLoginAlreadyExistsException(pe);
-      } else if (pe.getMessage().contains("account_email_key")) {
+      } else if (msg.contains("account_email_key") || msg.contains("account.EMAIL")) {
         throw ApplicationExceptionFactory.createEmailAlreadyExistsException(pe);
-      } else if (pe.getMessage().contains("company_nip_key")) {
+      } else if (msg.contains("company_nip_key") || msg.contains("company.NIP")) {
         throw ApplicationExceptionFactory.createNipAlreadyExistsException(pe);
       } else {
         throw pe;

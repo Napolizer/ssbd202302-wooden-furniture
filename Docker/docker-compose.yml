@@ -1,12 +1,15 @@
 version: '3'
 services:
-  db:
-    image: postgres:15.2
+  mysql:
+    image: mysql:8.0
     environment:
-      POSTGRES_DB: ssbd02
-      POSTGRES_USER: ssbd02admin
-      POSTGRES_PASSWORD: dbadmin
+      MYSQL_DATABASE: ssbd02
+      MYSQL_USER: ssbd02admin
+      MYSQL_PASSWORD: dbadmin
+      MYSQL_ROOT_PASSWORD: dbadmin
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_REQUIRE_SECURE_TRANSPORT: '0'
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - ./docker-entrypoint-initdb.d/init-users.sql:/docker-entrypoint-initdb.d/init-users.sql
+      - ./docker-entrypoint-initdb.d/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql

@@ -1,83 +1,79 @@
-GRANT SELECT,INSERT,DELETE ON TABLE access_level TO ssbd02mok;
-GRANT SELECT,INSERT,UPDATE ON TABLE password_history TO ssbd02mok;
-GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE account TO ssbd02mok;
-GRANT SELECT,INSERT,UPDATE ON TABLE address TO ssbd02mok;
-GRANT SELECT,INSERT,DELETE ON TABLE administrator TO ssbd02mok;
-GRANT SELECT,INSERT,DELETE ON TABLE client TO ssbd02mok;
-GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE company TO ssbd02mok;
-GRANT SELECT,INSERT,DELETE ON TABLE employee TO ssbd02mok;
-GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE person TO ssbd02mok;
-GRANT SELECT,INSERT,DELETE ON TABLE sales_rep TO ssbd02mok;
-GRANT SELECT ON TABLE sales_order TO ssbd02mok;
+GRANT SELECT,INSERT,DELETE ON ssbd02.access_level TO 'ssbd02mok'@'%';
+GRANT SELECT,INSERT,UPDATE ON ssbd02.password_history TO 'ssbd02mok'@'%';
+GRANT SELECT,INSERT,UPDATE,DELETE ON ssbd02.account TO 'ssbd02mok'@'%';
+GRANT SELECT,INSERT,UPDATE ON ssbd02.address TO 'ssbd02mok'@'%';
+GRANT SELECT,INSERT,DELETE ON ssbd02.administrator TO 'ssbd02mok'@'%';
+GRANT SELECT,INSERT,DELETE ON ssbd02.client TO 'ssbd02mok'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ssbd02.company TO 'ssbd02mok'@'%';
+GRANT SELECT, INSERT, DELETE ON ssbd02.employee TO 'ssbd02mok'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ssbd02.person TO 'ssbd02mok'@'%';
+GRANT SELECT, INSERT, DELETE ON ssbd02.sales_rep TO 'ssbd02mok'@'%';
+GRANT SELECT ON ssbd02.sales_order TO 'ssbd02mok'@'%';
 
-GRANT SELECT ON TABLE access_level TO ssbd02moz;
-GRANT SELECT ON TABLE account TO ssbd02moz;
-GRANT SELECT ON TABLE category TO ssbd02moz;
-GRANT SELECT ON TABLE client TO ssbd02moz;
-GRANT SELECT ON TABLE company TO ssbd02moz;
-GRANT SELECT ON TABLE image TO ssbd02moz;
-GRANT SELECT ON TABLE person TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE ON TABLE address TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE ON TABLE image TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE ON TABLE product TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE ON TABLE product_group TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE rate TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE ON TABLE sales_order TO ssbd02moz;
-GRANT SELECT,INSERT ON TABLE sales_order_product TO ssbd02moz;
-GRANT SELECT,INSERT,UPDATE ON TABLE product_history TO ssbd02moz;
+GRANT SELECT ON ssbd02.access_level TO 'ssbd02moz'@'%';
+GRANT SELECT ON ssbd02.account TO 'ssbd02moz'@'%';
+GRANT SELECT ON ssbd02.category TO 'ssbd02moz'@'%';
+GRANT SELECT ON ssbd02.client TO 'ssbd02moz'@'%';
+GRANT SELECT ON ssbd02.company TO 'ssbd02moz'@'%';
+GRANT SELECT ON ssbd02.image TO 'ssbd02moz'@'%';
+GRANT SELECT ON ssbd02.person TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE ON ssbd02.address TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE ON ssbd02.image TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE ON ssbd02.product TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE ON ssbd02.product_group TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ssbd02.rate TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE ON ssbd02.sales_order TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT ON ssbd02.sales_order_product TO 'ssbd02moz'@'%';
+GRANT SELECT, INSERT, UPDATE ON ssbd02.product_history TO 'ssbd02moz'@'%';
 
-GRANT SELECT ON account TO ssbd02auth;
-GRANT SELECT ON access_level TO ssbd02auth;
-GRANT SELECT ON client  TO ssbd02auth;
-GRANT SELECT ON administrator TO ssbd02auth;
-GRANT SELECT ON employee TO ssbd02auth;
-GRANT SELECT ON sales_rep TO ssbd02auth;
+GRANT SELECT ON ssbd02.account TO 'ssbd02auth'@'%';
+GRANT SELECT ON ssbd02.access_level TO 'ssbd02auth'@'%';
+GRANT SELECT ON ssbd02.client TO 'ssbd02auth'@'%';
+GRANT SELECT ON ssbd02.administrator TO 'ssbd02auth'@'%';
+GRANT SELECT ON ssbd02.employee TO 'ssbd02auth'@'%';
+GRANT SELECT ON ssbd02.sales_rep TO 'ssbd02auth'@'%';
 
-GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02mok;
-GRANT USAGE, SELECT,UPDATE ON SEQUENCE seq_gen_sequence TO ssbd02moz;
-
-INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Aleje Testowe', '55', now());
-INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Jan', 'Kowalski', (SELECT id FROM address WHERE street = 'Aleje Testowe'), now());
-INSERT INTO account (id, version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'administrator', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Jan'), now(), 'DARK');
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'administrator', (SELECT id FROM account WHERE login = 'administrator'), now());
+INSERT INTO address (version, archive, city, country, postal_code, street, street_number, created_at) VALUES (1, false, 'Lodz', 'Poland', '93-590', 'Aleje Testowe', '55', now());
+INSERT INTO person (version, archive, first_name, last_name, address_id, created_at) VALUES (1, false, 'Jan', 'Kowalski', (SELECT id FROM address WHERE street = 'Aleje Testowe'), now());
+INSERT INTO account (version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'admin@gmail.com', 0, 'pl', 'administrator', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Jan'), now(), 'DARK');
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'administrator', (SELECT id FROM account WHERE login = 'administrator'), now());
 INSERT INTO administrator (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'administrator'));
 
-INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-590', 'Politechniki', '50', now());
-INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Steve', 'Jobs', (SELECT id FROM address WHERE street = 'Politechniki'), now());
-INSERT INTO account (id, version, time_zone,type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'steve.jobs@gmail.com', 0, 'pl', 'clientemployee', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Steve'), now(), 'LIGHT');
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'employee', (SELECT id FROM account WHERE login = 'clientemployee'), now());
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'clientemployee'), now());
+INSERT INTO address (version, archive, city, country, postal_code, street, street_number, created_at) VALUES (1, false, 'Lodz', 'Poland', '93-590', 'Politechniki', '50', now());
+INSERT INTO person (version, archive, first_name, last_name, address_id, created_at) VALUES (1, false, 'Steve', 'Jobs', (SELECT id FROM address WHERE street = 'Politechniki'), now());
+INSERT INTO account (version, time_zone,type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'steve.jobs@gmail.com', 0, 'pl', 'clientemployee', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Steve'), now(), 'LIGHT');
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'employee', (SELECT id FROM account WHERE login = 'clientemployee'), now());
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'client', (SELECT id FROM account WHERE login = 'clientemployee'), now());
 INSERT INTO employee (id) VALUES ((SELECT id FROM access_level WHERE dtype = 'employee'));
 INSERT INTO client (id, company_id) VALUES ((SELECT id FROM access_level WHERE dtype = 'client'), NULL);
 
-INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-116', 'Przybyszewskiego', '13', now());
-INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Adam', 'Mickiewicz', (SELECT id FROM address WHERE street = 'Przybyszewskiego'), now());
-INSERT INTO account (id, version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'adam.mickiewicz@gmail.com', 0, 'pl', 'client', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Adam'), now(), 'LIGHT');
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'client'), now());
+INSERT INTO address (version, archive, city, country, postal_code, street, street_number, created_at) VALUES (1, false, 'Lodz', 'Poland', '93-116', 'Przybyszewskiego', '13', now());
+INSERT INTO person (version, archive, first_name, last_name, address_id, created_at) VALUES (1, false, 'Adam', 'Mickiewicz', (SELECT id FROM address WHERE street = 'Przybyszewskiego'), now());
+INSERT INTO account (version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'adam.mickiewicz@gmail.com', 0, 'pl', 'client', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Adam'), now(), 'LIGHT');
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'client', (SELECT id FROM account WHERE login = 'client'), now());
 INSERT INTO client (id, company_id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'client')), NULL);
 
-INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Lodz', 'Poland', '93-116', 'Sienkiewicza', '15', now());
-INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Henryk', 'Sienkiewicz', (SELECT id FROM address WHERE street = 'Sienkiewicza'), now());
-INSERT INTO account (id, version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'henryk.sienkiewicz00@example.com', 0, 'pl', 'client2', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Henryk'), now(), 'LIGHT');
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'client', (SELECT id FROM account WHERE login = 'client2'), now());
+INSERT INTO address (version, archive, city, country, postal_code, street, street_number, created_at) VALUES (1, false, 'Lodz', 'Poland', '93-116', 'Sienkiewicza', '15', now());
+INSERT INTO person (version, archive, first_name, last_name, address_id, created_at) VALUES (1, false, 'Henryk', 'Sienkiewicz', (SELECT id FROM address WHERE street = 'Sienkiewicza'), now());
+INSERT INTO account (version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'henryk.sienkiewicz00@example.com', 0, 'pl', 'client2', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Henryk'), now(), 'LIGHT');
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'client', (SELECT id FROM account WHERE login = 'client2'), now());
 INSERT INTO client (id, company_id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'client2')), NULL);
 
-
-INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Warszawa', 'Poland', '22-192', 'Piłsudskiego', '21', now());
-INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Juliusz', 'Słowacki', (SELECT id FROM address WHERE street = 'Piłsudskiego'), now());
-INSERT INTO account (id, version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'juliusz.slowacki@gmail.com', 0, 'pl', 'employee', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Juliusz'), now(), 'LIGHT');
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'employee', (SELECT id FROM account WHERE login = 'employee'), now());
+INSERT INTO address (version, archive, city, country, postal_code, street, street_number, created_at) VALUES (1, false, 'Warszawa', 'Poland', '22-192', 'Piłsudskiego', '21', now());
+INSERT INTO person (version, archive, first_name, last_name, address_id, created_at) VALUES (1, false, 'Juliusz', 'Słowacki', (SELECT id FROM address WHERE street = 'Piłsudskiego'), now());
+INSERT INTO account (version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'juliusz.slowacki@gmail.com', 0, 'pl', 'employee', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Juliusz'), now(), 'LIGHT');
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'employee', (SELECT id FROM account WHERE login = 'employee'), now());
 INSERT INTO employee (id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'employee')));
 
-INSERT INTO address (id, version, archive, city, country, postal_code, street, street_number, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Szczecin', 'Poland', '12-121', 'Paprykarza', '12', now());
-INSERT INTO person (id, version, archive, first_name, last_name, address_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'Cyprian', 'Norwid', (SELECT id FROM address WHERE street = 'Paprykarza'), now());
-INSERT INTO account (id, version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (nextval('seq_gen_sequence'), 1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'cyprian.norwid@gmail.com', 0, 'pl', 'salesrep', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Cyprian'), now(), 'LIGHT');
-INSERT INTO access_level (id, version, archive, dtype, account_id, created_at) VALUES (nextval('seq_gen_sequence'), 1, false, 'sales_rep', (SELECT id FROM account WHERE login = 'salesrep'), now());
+INSERT INTO address (version, archive, city, country, postal_code, street, street_number, created_at) VALUES (1, false, 'Szczecin', 'Poland', '12-121', 'Paprykarza', '12', now());
+INSERT INTO person (version, archive, first_name, last_name, address_id, created_at) VALUES (1, false, 'Cyprian', 'Norwid', (SELECT id FROM address WHERE street = 'Paprykarza'), now());
+INSERT INTO account (version, time_zone, type, archive, account_state, email, failed_login_counter, locale, login, password, person_id, created_at, mode) VALUES (1, 'EUROPE_WARSAW', 'NORMAL', false, 'ACTIVE', 'cyprian.norwid@gmail.com', 0, 'pl', 'salesrep', '$2a$12$X7QVm.XkCx3l97z0/LbxzewopH6ift/IU9kDPfq834MYPfV7w27pe', (SELECT id FROM person WHERE first_name = 'Cyprian'), now(), 'LIGHT');
+INSERT INTO access_level (version, archive, dtype, account_id, created_at) VALUES (1, false, 'sales_rep', (SELECT id FROM account WHERE login = 'salesrep'), now());
 INSERT INTO sales_rep (id) VALUES ((SELECT id FROM access_level WHERE account_id = (SELECT id FROM account WHERE login = 'salesrep')));
 
 -- Categories
-INSERT INTO image (id, version, url, archive, created_at) VALUES (1, 1, 'https://storage.googleapis.com/furniture-store-images/ee85e2fb-54b5-4616-8fd6-82988ba1b366', false, now()),(2, 1, 'https://storage.googleapis.com/furniture-store-images/a48f1cb0-21f7-4a92-8509-c7ebdec82d37', false, now()),(3, 1, 'https://storage.googleapis.com/furniture-store-images/a98b5675-2dc6-41d3-80f4-3e0d74180cc9', false, now()),(4, 1, 'https://storage.googleapis.com/furniture-store-images/22c6665f-78c1-4f1c-94d9-41a9f843f9c8', false, now()),(5, 1, 'https://storage.googleapis.com/furniture-store-images/ee85e2fb-54b5-4616-8fd6-82988ba1b366', false, now()),(6, 1, 'https://storage.googleapis.com/furniture-store-images/4e114977-f553-4ebe-aca9-9aee1a8eea04', false, now()),(7, 1, 'https://storage.googleapis.com/furniture-store-images/4ab36b9a-cd75-47d6-ba95-3b982bf33f12', false, now()),(8, 1, 'https://storage.googleapis.com/furniture-store-images/b6d11ea1-2121-4029-a272-517901ed24e4', false, now()),(9, 1, 'https://storage.googleapis.com/furniture-store-images/fd685006-3d7f-45a6-af6c-acc6363ad7cc', false, now()),(10, 1, 'https://storage.googleapis.com/furniture-store-images/5ae7b72c-10b6-45aa-ba0f-daef25a02828', false, now()),(11, 1, 'https://storage.googleapis.com/furniture-store-images/71ef816a-9ff6-4eb5-b7e9-b38bdf98dd87', false, now()),(12, 1, 'https://storage.googleapis.com/furniture-store-images/9f3154ba-f18e-451e-a42b-3db47ba7eb2f', false, now()),(13, 1, 'https://storage.googleapis.com/furniture-store-images/3ec0bfc3-1eb9-440e-804c-502a8de75687', false, now()),(14, 1, 'https://storage.googleapis.com/furniture-store-images/b198ac5e-fc0c-4388-95d0-bf40417f43cd', false, now()),(15, 1, 'https://storage.googleapis.com/furniture-store-images/b8d1e057-4ca2-4ebe-bbb9-8cfe9a083c31', false, now()),(16, 1, 'https://storage.googleapis.com/furniture-store-images/d527ac89-dcb3-48d4-ad14-44d2959f1c3c', false, now());
-INSERT INTO category (id, version, archive, category_name, parent_category_id, created_at, image_id) VALUES (1, 1, false, 'BED', null, now(), 1),(2, 1, false, 'CASE_FURNITURE', null, now(), 2),(3, 1, false, 'SEAT', null, now(), 3),(4, 1, false, 'TABLE', null, now(), 4),(5, 1, false, 'SINGLE_BED', 1, now(), 5),(6, 1, false, 'DOUBLE_BED', 1, now(), 6),(7, 1, false, 'KIDS', 1, now(), 7),(8, 1, false, 'WARDROBE', 2, now(), 8),(9, 1, false, 'DRESSER', 2, now(), 9),(10, 1, false, 'LOCKER', 2, now(), 10),(11, 1, false, 'DESK', 2, now(), 11),(12, 1, false, 'CHAIR', 3, now(), 12),(13, 1, false, 'STOOL', 3, now(), 13),(14, 1, false, 'ARMCHAIR', 3, now(), 14),(15, 1, false, 'ROUND_TABLE', 4, now(), 15),(16, 1, false, 'RECTANGULAR_TABLE', 4, now(), 16);
+INSERT INTO image (version, url, archive, created_at) VALUES (1, 'https://storage.googleapis.com/furniture-store-images/ee85e2fb-54b5-4616-8fd6-82988ba1b366', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/a48f1cb0-21f7-4a92-8509-c7ebdec82d37', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/a98b5675-2dc6-41d3-80f4-3e0d74180cc9', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/22c6665f-78c1-4f1c-94d9-41a9f843f9c8', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/ee85e2fb-54b5-4616-8fd6-82988ba1b366', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/4e114977-f553-4ebe-aca9-9aee1a8eea04', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/4ab36b9a-cd75-47d6-ba95-3b982bf33f12', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/b6d11ea1-2121-4029-a272-517901ed24e4', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/fd685006-3d7f-45a6-af6c-acc6363ad7cc', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/5ae7b72c-10b6-45aa-ba0f-daef25a02828', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/71ef816a-9ff6-4eb5-b7e9-b38bdf98dd87', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/9f3154ba-f18e-451e-a42b-3db47ba7eb2f', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/3ec0bfc3-1eb9-440e-804c-502a8de75687', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/b198ac5e-fc0c-4388-95d0-bf40417f43cd', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/b8d1e057-4ca2-4ebe-bbb9-8cfe9a083c31', false, now()),(1, 'https://storage.googleapis.com/furniture-store-images/d527ac89-dcb3-48d4-ad14-44d2959f1c3c', false, now());
+INSERT INTO category (version, archive, category_name, parent_category_id, created_at, image_id) VALUES (1, false, 'BED', null, now(), 1),(1, false, 'CASE_FURNITURE', null, now(), 2),(1, false, 'SEAT', null, now(), 3),(1, false, 'TABLE', null, now(), 4),(1, false, 'SINGLE_BED', 1, now(), 5),(1, false, 'DOUBLE_BED', 1, now(), 6),(1, false, 'KIDS', 1, now(), 7),(1, false, 'WARDROBE', 2, now(), 8),(1, false, 'DRESSER', 2, now(), 9),(1, false, 'LOCKER', 2, now(), 10),(1, false, 'DESK', 2, now(), 11),(1, false, 'CHAIR', 3, now(), 12),(1, false, 'STOOL', 3, now(), 13),(1, false, 'ARMCHAIR', 3, now(), 14),(1, false, 'ROUND_TABLE', 4, now(), 15),(1, false, 'RECTANGULAR_TABLE', 4, now(), 16);
 
 -- Product Groups
 INSERT INTO product_group VALUES (1, false, 4.5, now(), 'TimberDream Single Bed', NULL, 1,(SELECT id from category WHERE category_name = 'SINGLE_BED'), (SELECT id FROM account WHERE login = 'employee'), NULL);
@@ -359,12 +355,12 @@ INSERT INTO product (id, amount, archive, color, created_at, image_id, price, up
 INSERT INTO product (id, amount, archive, color, created_at, image_id, price, updated_at, version, weight, weight_in_package, wood_type, furniture_width, furniture_height, furniture_depth, package_width, package_height, package_depth, created_by, updated_by, product_group_id) VALUES (111, 0, true, 'BLACK', now(), (SELECT id FROM image WHERE url = 'https://storage.googleapis.com/furniture-store-images/111.jpg'), 3299.99, NULL, 1, 40.3, 44.1, 'DARK_OAK', 137, 36, 190, 141, 40, 195, (SELECT id FROM account WHERE login = 'employee'), NULL, (SELECT id FROM product_group WHERE name = 'HarmonyHaven Double Bed'));
 INSERT INTO product (id, amount, archive, color, created_at, image_id, price, updated_at, version, weight, weight_in_package, wood_type, furniture_width, furniture_height, furniture_depth, package_width, package_height, package_depth, created_by, updated_by, product_group_id) VALUES (112, 0, true, 'RED', now(), (SELECT id FROM image WHERE url = 'https://storage.googleapis.com/furniture-store-images/112.jpg'), 3299.99, NULL, 1, 40.3, 44.1, 'DARK_OAK', 137, 36, 190, 141, 40, 195, (SELECT id FROM account WHERE login = 'employee'), NULL, (SELECT id FROM product_group WHERE name = 'HarmonyHaven Double Bed'));
 
-INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (1, false, now(), now() + INTERVAL '3 month', false, 'CREATED', 13199.96, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Adam', 'Mickiewicz', NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
+INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (1, false, now(), DATE_ADD(NOW(), INTERVAL 3 MONTH), false, 'CREATED', 13199.96, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Adam', 'Mickiewicz', NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (1, 4, false, now(), 3299.99, NULL, 1, (SELECT id FROM account WHERE login = 'client'), 1, 111, NULL);
-INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (2, true, now(), now() + INTERVAL '3 month', false, 'DELIVERED', 6599.98, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Steve', 'Jobs', NULL, (SELECT id FROM address WHERE street = 'Politechniki'));
+INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (2, true, now(), DATE_ADD(NOW(), INTERVAL 3 MONTH), false, 'DELIVERED', 6599.98, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Steve', 'Jobs', NULL, (SELECT id FROM address WHERE street = 'Politechniki'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (2, 2, false, now(), 3299.99, NULL, 1, (SELECT id FROM account WHERE login = 'client'), 2, 112, NULL);
 
-INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (3, false, now(), now() + INTERVAL '3 month', false, 'COMPLETED', 2299.99*7+299.99*2+3*399.99+2*499.99+5*899.99+3*2799.99+1*1699.99+3*3399.99, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Adam', 'Mickiewicz', NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
+INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (3, false, now(), DATE_ADD(NOW(), INTERVAL 3 MONTH), false, 'COMPLETED', 2299.99*7+299.99*2+3*399.99+2*499.99+5*899.99+3*2799.99+1*1699.99+3*3399.99, NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Adam', 'Mickiewicz', NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (3, 7, false, now(), (SELECT price FROM product p WHERE p.id = 1), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 3, 1, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (4, 2, false, now(), (SELECT price FROM product p WHERE p.id = 15), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 3, 15, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (5, 3, false, now(), (SELECT price FROM product p WHERE p.id = 20), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 3, 20, NULL);
@@ -373,7 +369,8 @@ INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (8, 3, false, now(), (SELECT price FROM product p WHERE p.id = 35), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 3, 35, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (9, 1, false, now(), (SELECT price FROM product p WHERE p.id = 40), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 3, 40, NULL);
 
-INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (4, false, '2023-05-20 00:00:00', '2023-05-20 00:00:00'::timestamp + INTERVAL '3 month', false, 'DELIVERED', 4*2299.99+3*1899.99+2*1999.99+1*1599.99+2*1899.99+3 , NULL, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), 'Adam', 'Mickiewicz', NULL, (SELECT id FROM address WHERE street = 'Przybyszewskiego'));
+SET @modification_block_time := DATE_ADD('2023-05-20 00:00:00', INTERVAL 3 MONTH);
+INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, version, account_id, created_by, recipient_first_name, recipient_last_name, delivery_address_id) VALUES (4,false,'2023-05-20 00:00:00',@modification_block_time,false,'DELIVERED',4 * 2299.99 + 3 * 1899.99 + 2 * 1999.99 + 1 * 1599.99 + 2 * 1899.99 + 3,1,(SELECT id FROM account WHERE login = 'client'),(SELECT id FROM account WHERE login = 'client'),'Adam','Mickiewicz',(SELECT id FROM address WHERE street = 'Przybyszewskiego'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (10, 4, false, '2023-05-20 00:00:00', (SELECT price FROM product p WHERE p.id = 3), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 4, 3, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (11, 3, false, '2023-05-20 00:00:00', (SELECT price FROM product p WHERE p.id = 9), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 4, 9, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (12, 2, false, '2023-05-20 00:00:00', (SELECT price FROM product p WHERE p.id = 33), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 4, 33, NULL);
@@ -381,12 +378,12 @@ INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (14, 2, false, '2023-05-20 00:00:00', (SELECT price FROM product p WHERE p.id = 81), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 4, 81, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (15, 3, false, '2023-05-20 00:00:00', (SELECT price FROM product p WHERE p.id = 100), NULL, 1, (SELECT id FROM account WHERE login = 'client'), 4, 100, NULL);
 
-INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (5, false, now(), now() + INTERVAL '3 month', false, 'DELIVERED', 2299.99 + 1899.99 + 1999.99, NULL, 1, (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM account WHERE login = 'client2'), 'Henryk', 'Sienkiewicz', NULL, (SELECT id FROM address WHERE street = 'Sienkiewicza'));
+INSERT INTO sales_order (id, archive, created_at, modification_block_time, observed, order_state, total_price, updated_at, version, account_id, created_by, recipient_first_name, recipient_last_name, updated_by, delivery_address_id) VALUES (5, false, now(), DATE_ADD(NOW(), INTERVAL 3 MONTH), false, 'DELIVERED', 2299.99 + 1899.99 + 1999.99, NULL, 1, (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM account WHERE login = 'client2'), 'Henryk', 'Sienkiewicz', NULL, (SELECT id FROM address WHERE street = 'Sienkiewicza'));
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (16, 1, false, now(), (SELECT price FROM product p WHERE p.id = 3), NULL, 1, (SELECT id FROM account WHERE login = 'client2'), 5, 3, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (17, 1, false, now(), (SELECT price FROM product p WHERE p.id = 9), NULL, 1, (SELECT id FROM account WHERE login = 'client2'), 5, 9, NULL);
 INSERT INTO sales_order_product (id, amount, archive, created_at, price, updated_at, version, created_by, order_id, product_id, updated_by) VALUES (18, 1, false, now(), (SELECT price FROM product p WHERE p.id = 33), NULL, 1, (SELECT id FROM account WHERE login = 'client2'), 5, 33, NULL);
 
-INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (1, false, now(), null, now() + INTERVAL '1 minute', 5, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM product_group WHERE name = 'TimberDream Single Bed'), null);
-INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (2, false, now(), null, now() + INTERVAL '1 month', 4, 1, (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM product_group WHERE name = 'TimberDream Single Bed'), null);
-INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (3, false, now(), null, now() + INTERVAL '1 month', 4, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM product_group WHERE name = 'CedarGrove Wardrobe'), null);
-INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (4, false, now(), null, now() + INTERVAL '1 month', 3, 1, (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM product_group WHERE name = 'CedarGrove Wardrobe'), null);
+INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (1, false, now(), null, DATE_ADD(NOW(), INTERVAL 1 MINUTE), 5, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM product_group WHERE name = 'TimberDream Single Bed'), null);
+INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (2, false, now(), null, DATE_ADD(NOW(), INTERVAL 1 MONTH), 4, 1, (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM product_group WHERE name = 'TimberDream Single Bed'), null);
+INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (3, false, now(), null, DATE_ADD(NOW(), INTERVAL 1 MONTH), 4, 1, (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM account WHERE login = 'client'), (SELECT id FROM product_group WHERE name = 'CedarGrove Wardrobe'), null);
+INSERT INTO rate (id, archive, created_at, updated_at, modificationblocktime, value, version, account_id, created_by, product_group_id, updated_by) VALUES (4, false, now(), null, DATE_ADD(NOW(), INTERVAL 1 MONTH), 3, 1, (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM account WHERE login = 'client2'), (SELECT id FROM product_group WHERE name = 'CedarGrove Wardrobe'), null);

@@ -36,8 +36,8 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.enums.WoodType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
-                  @Index(name = "product_image_id", columnList = "image_id")},
+@Table(name = "product", indexes = {@Index(name = "product_product_group_id", columnList = "product_group_id"),
+    @Index(name = "product_image_id", columnList = "image_id")},
        uniqueConstraints = { @UniqueConstraint(name = "product_details",
                columnNames = {"product_group_id",
                               "color",

@@ -14,7 +14,8 @@ public class OrderFacadeExceptionsInterceptor {
     } catch (OptimisticLockException ole) {
       throw ole;
     } catch (PersistenceException pe) {
-      if (pe.getMessage().contains("order_name_key")) {
+      String msg = pe.getMessage();
+      if (msg.contains("order_name_key") || msg.contains("order.NAME")) {
         throw ApplicationExceptionFactory.createOrderAlreadyExistsException();
       } else {
         throw pe;
