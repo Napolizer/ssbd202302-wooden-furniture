@@ -1,0 +1,66 @@
+<server description="SSBD02 Open Liberty server">
+    <featureManager>
+        <feature>mpHealth-4.0</feature>
+        <feature>xmlBinding-4.0</feature>
+        <feature>restfulWS-3.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jdbc-4.3</feature>
+        <feature>jakartaee-10.0</feature>
+        <feature>appSecurity-5.0</feature>
+    </featureManager>
+
+    <library id="jdbcLib">
+        <fileset dir="jdbc" includes="*.jar"/>
+    </library>
+
+    <dataSource id="adminDataSource" jndiName="jdbc/ssbd02admin">
+        <jdbcDriver libraryRef="jdbcLib"/>
+        <properties serverName="localhost" portNumber="3306"
+                    databaseName="ssbd02"
+                    user="ssbd02admin"
+                    password="dbadmin"/>
+    </dataSource>
+    <dataSource id="mokDataSource" jndiName="jdbc/ssbd02mok">
+        <jdbcDriver libraryRef="jdbcLib"/>
+        <properties serverName="localhost" portNumber="3306"
+                    databaseName="ssbd02"
+                    user="ssbd02mok"
+                    password="dbmok"/>
+    </dataSource>
+    <dataSource id="mozDataSource" jndiName="jdbc/ssbd02moz">
+        <jdbcDriver libraryRef="jdbcLib"/>
+        <properties serverName="localhost" portNumber="3306"
+                    databaseName="ssbd02"
+                    user="ssbd02moz"
+                    password="dbmoz"/>
+    </dataSource>
+    <dataSource id="authDataSource" jndiName="jdbc/ssbd02auth">
+        <jdbcDriver libraryRef="jdbcLib"/>
+        <properties serverName="localhost" portNumber="3306"
+                    databaseName="ssbd02"
+                    user="ssbd02auth"
+                    password="dbauth"/>
+    </dataSource>
+
+    <webApplication location="ssbd02-Kv1.0.war" contextRoot="/">
+        <authorization-roles id="ssbdAuthRoles">
+            <security-role name="client">
+                <group access-id="CLIENT" name="CLIENT"/>
+            </security-role>
+            <security-role name="employee">
+                <group access-id="EMPLOYEE" name="EMPLOYEE"/>
+            </security-role>
+            <security-role name="administrator">
+                <group access-id="ADMINISTRATOR" name="ADMINISTRATOR"/>
+            </security-role>
+            <security-role name="sales_rep">
+                <group access-id="SALES_REP" name="SALES_REP"/>
+            </security-role>
+        </authorization-roles>
+    </webApplication>
+
+    <httpEndpoint host="*" httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}" id="defaultHttpEndpoint">
+        <cors enabled="false"/>
+    </httpEndpoint>
+</server>

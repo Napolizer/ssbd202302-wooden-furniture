@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd02.config.authentication;
 
-import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
@@ -14,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.entities.AccessLevel;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.security.TokenClaims;
 import pl.lodz.p.it.ssbd2023.ssbd02.mok.service.api.TokenServiceOperations;
 
-@Stateless
+@ApplicationScoped
 public class RequestAuthenticationMechanism implements HttpAuthenticationMechanism {
   @Inject
   private TokenServiceOperations tokenService;
@@ -36,7 +36,7 @@ public class RequestAuthenticationMechanism implements HttpAuthenticationMechani
         Set<String> groups = tokenClaims.getAccessLevels()
             .stream()
             .map(AccessLevel::getRoleName)
-            .map(String::toUpperCase)
+            .map(String::toLowerCase)
             .collect(Collectors.toSet());
         return httpMessageContext.notifyContainerAboutLogin(tokenClaims.getLogin(), groups);
       } catch (Exception e) {

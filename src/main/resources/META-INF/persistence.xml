@@ -5,7 +5,7 @@
              version="3.0">
     <persistence-unit name="ssbd02adminPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd02admin</jta-data-source>
+        <jta-data-source>jdbc/ssbd02admin</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
@@ -18,7 +18,7 @@
 
     <persistence-unit name="ssbd02mokPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd02mok</jta-data-source>
+        <jta-data-source>jdbc/ssbd02mok</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
@@ -29,7 +29,7 @@
 
     <persistence-unit name="ssbd02mozPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd02moz</jta-data-source>
+        <jta-data-source>jdbc/ssbd02moz</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
@@ -40,7 +40,7 @@
 
     <persistence-unit name="ssbd02authPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd02auth</jta-data-source>
+        <jta-data-source>jdbc/ssbd02auth</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>NONE</shared-cache-mode>
         <properties>

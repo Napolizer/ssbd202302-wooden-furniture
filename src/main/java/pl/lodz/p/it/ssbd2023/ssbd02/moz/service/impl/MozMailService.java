@@ -27,7 +27,7 @@ import pl.lodz.p.it.ssbd2023.ssbd02.utils.sharedmod.service.AbstractService;
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({LoggerInterceptor.class})
 @DenyAll
-public class MailService extends AbstractService implements MailServiceOperations {
+public class MozMailService extends AbstractService implements MailServiceOperations {
   @Inject
   private EnvironmentConfig environmentConfig;
 
