@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8080/api/v1',
+  apiBaseUrl: 'http://localhost:9080/api/v1',
   tokenKey: 'token',
   accountTypeKey: 'type',
   currentRoleKey: 'role',
