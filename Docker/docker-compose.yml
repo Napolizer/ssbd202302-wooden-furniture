@@ -1,7 +1,24 @@
 version: '3'
 services:
+  openliberty:
+    build:
+      context: ../
+      dockerfile: ./Docker/backend.Dockerfile
+    ports:
+      - "9080:9080"
+    restart: on-failure
+    environment:
+      - DB_SERVER_NAME=mysql
+      - DB_PORT=3306
+      - DB_NAME=ssbd02
+    networks:
+      - internal_network
+    depends_on:
+      - mysql
+
   mysql:
     image: mysql:8.0
+    restart: always
     environment:
       MYSQL_DATABASE: ssbd02
       MYSQL_USER: ssbd02admin
@@ -9,16 +26,11 @@ services:
       MYSQL_ROOT_PASSWORD: dbadmin
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_REQUIRE_SECURE_TRANSPORT: '0'
-    ports:
-      - "3306:3306"
     volumes:
-      - ./docker-entrypoint-initdb.d/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql
+      - ../src/main/resources/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql
+    networks:
+      - internal_network
 
-  openliberty:
-    image: open-liberty:full
-    ports:
-      - "9080:9080"
-      - "9443:9443"
-    restart: always
-    depends_on:
-      - mysql
+networks:
+  internal_network:
+    driver: bridge

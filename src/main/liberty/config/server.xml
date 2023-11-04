@@ -15,34 +15,34 @@
 
     <dataSource id="adminDataSource" jndiName="jdbc/ssbd02admin">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3306"
-                    databaseName="ssbd02"
+        <properties serverName="${db.server.name}" portNumber="${db.port}"
+                    databaseName="${db.name}"
                     user="ssbd02admin"
                     password="dbadmin"/>
     </dataSource>
     <dataSource id="mokDataSource" jndiName="jdbc/ssbd02mok">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3306"
-                    databaseName="ssbd02"
+        <properties serverName="${db.server.name}" portNumber="${db.port}"
+                    databaseName="${db.name}"
                     user="ssbd02mok"
                     password="dbmok"/>
     </dataSource>
     <dataSource id="mozDataSource" jndiName="jdbc/ssbd02moz">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3306"
-                    databaseName="ssbd02"
+        <properties serverName="${db.server.name}" portNumber="${db.port}"
+                    databaseName="${db.name}"
                     user="ssbd02moz"
                     password="dbmoz"/>
     </dataSource>
     <dataSource id="authDataSource" jndiName="jdbc/ssbd02auth">
         <jdbcDriver libraryRef="jdbcLib"/>
-        <properties serverName="localhost" portNumber="3306"
-                    databaseName="ssbd02"
+        <properties serverName="${db.server.name}" portNumber="${db.port}"
+                    databaseName="${db.name}"
                     user="ssbd02auth"
                     password="dbauth"/>
     </dataSource>
 
-    <webApplication location="apps/ssbd02-Kv1.0.war" contextRoot="/">
+    <webApplication location="ssbd02-Kv1.0.war" contextRoot="/">
         <authorization-roles id="ssbdAuthRoles">
             <security-role name="client">
                 <group access-id="CLIENT" name="CLIENT"/>
@@ -59,8 +59,8 @@
         </authorization-roles>
     </webApplication>
 
-    <httpEndpoint host="*" httpPort="9080"
-                  httpsPort="9443" id="defaultHttpEndpoint">
+    <httpEndpoint host="*" httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}" id="defaultHttpEndpoint">
         <cors enabled="false"/>
     </httpEndpoint>
 </server>
