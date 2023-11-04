@@ -13,3 +13,12 @@ services:
       - "3306:3306"
     volumes:
       - ./docker-entrypoint-initdb.d/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql
+
+  openliberty:
+    image: open-liberty:full
+    ports:
+      - "9080:9080"
+      - "9443:9443"
+    restart: always
+    depends_on:
+      - mysql
