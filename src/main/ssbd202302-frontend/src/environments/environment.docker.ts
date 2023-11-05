@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:9080/api/v1',
+  apiBaseUrl: 'https://tua202302.com/api/v1',
   tokenKey: 'token',
   accountTypeKey: 'type',
   currentRoleKey: 'role',
