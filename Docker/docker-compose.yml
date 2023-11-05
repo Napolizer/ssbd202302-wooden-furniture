@@ -1,12 +1,24 @@
 version: '3'
 services:
+  frontend:
+    build:
+      context: ../
+      dockerfile: ./Docker/frontend.Dockerfile
+    ports:
+      - "8080:80"
+    restart: on-failure
+    networks:
+      - internal_network
+    depends_on:
+      - openliberty
+
   openliberty:
     build:
       context: ../
       dockerfile: ./Docker/backend.Dockerfile
+    restart: on-failure
     ports:
       - "9080:9080"
-    restart: on-failure
     environment:
       - DB_SERVER_NAME=mysql
       - DB_PORT=3306
