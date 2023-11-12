@@ -1,7 +1,47 @@
 version: '3'
 services:
+  gateway:
+    image: nginx:alpine
+    restart: on-failure
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./cert:/etc/nginx/cert
+    networks:
+      - internal_network
+    depends_on:
+      - openliberty
+      - frontend
+
+  frontend:
+    build:
+      context: ../
+      dockerfile: ./Docker/frontend.Dockerfile
+    restart: on-failure
+    networks:
+      - internal_network
+    depends_on:
+      - openliberty
+
+  openliberty:
+    build:
+      context: ../
+      dockerfile: ./Docker/backend.Dockerfile
+    restart: on-failure
+    environment:
+      - DB_SERVER_NAME=mysql
+      - DB_PORT=3306
+      - DB_NAME=ssbd02
+    networks:
+      - internal_network
+    depends_on:
+      - mysql
+
   mysql:
     image: mysql:8.0
+    restart: always
     environment:
       MYSQL_DATABASE: ssbd02
       MYSQL_USER: ssbd02admin
@@ -9,7 +49,11 @@ services:
       MYSQL_ROOT_PASSWORD: dbadmin
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_REQUIRE_SECURE_TRANSPORT: '0'
-    ports:
-      - "3306:3306"
     volumes:
-      - ./docker-entrypoint-initdb.d/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql
+      - ../src/main/resources/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql
+    networks:
+      - internal_network
+
+networks:
+  internal_network:
+    driver: bridge
