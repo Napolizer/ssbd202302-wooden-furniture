@@ -40,7 +40,9 @@ services:
       - mysql
 
   mysql:
-    image: mysql:8.0
+    build:
+      context: ../
+      dockerfile: ./Docker/mysql.Dockerfile
     restart: always
     environment:
       MYSQL_DATABASE: ssbd02
@@ -49,8 +51,6 @@ services:
       MYSQL_ROOT_PASSWORD: dbadmin
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_REQUIRE_SECURE_TRANSPORT: '0'
-    volumes:
-      - ../src/main/resources/init-users-mysql.sql:/docker-entrypoint-initdb.d/init-users-mysql.sql
     networks:
       - internal_network
 
