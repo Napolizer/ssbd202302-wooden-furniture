@@ -8,17 +8,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd02.config.HealthConfig;
 
-@Path("/health")
-public class HealthController {
+@Path("/break")
+public class BreakController {
   @Inject
   private HealthConfig healthConfig;
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)
-  public Response getHealth() {
-    if (!healthConfig.isHealthy()) {
-      return Response.serverError().build();
-    }
-    return Response.ok("OK").build();
+  public Response breakHealth() {
+    healthConfig.setHealthy(!healthConfig.isHealthy());
+    return Response.ok("Healthy: " + healthConfig.isHealthy()).build();
   }
 }
